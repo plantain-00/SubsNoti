@@ -9,17 +9,17 @@ export const config = {
         /*
          * production: 'localhost'
          * testing: 'localhost'
-         * development: '115.29.42.125'
+         * development: ''
          * */
-        host: '115.29.42.125',
-        user: 'root',
-        password: '123',
+        host: '',
+        user: '',
+        password: '',
         /*
-         * production: 'main_db'
-         * testing: 'main_db'
-         * development: 'main_db'
+         * production: ''
+         * testing: ''
+         * development: ''
          * */
-        database: 'main_db'
+        database: ''
     },
     website: {
         /*
@@ -29,6 +29,11 @@ export const config = {
          * */
         port: 10240,
         hostname: "0.0.0.0",
-        ip: "115.29.42.125"
+        ip: ""
+    },
+    smtp: {
+        host: "",
+        name: "",
+        password: ""
     }
 };

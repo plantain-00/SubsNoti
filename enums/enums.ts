@@ -1,0 +1,1 @@
+export import UserStatus = require("./UserStatus");

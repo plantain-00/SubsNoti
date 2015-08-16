@@ -30,3 +30,6 @@ typings/
 *.map
 /*.js
 public/*.html
+enums/*.js
+interfaces/*.js
+services/*.js
