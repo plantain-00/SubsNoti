@@ -28,5 +28,5 @@ node_modules
 .idea/
 typings/
 *.map
-*.js
-*.html
+/*.js
+public/*.html
