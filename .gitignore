@@ -33,3 +33,4 @@ public/*.html
 enums/*.js
 interfaces/*.js
 services/*.js
+controllers/*.js
