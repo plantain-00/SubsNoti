@@ -2,8 +2,8 @@ import libs = require("../libs");
 import settings = require("../settings");
 import enums = require("../enums/enums");
 
-const enum UserStatus{
-    normal
+const enum ErrorCode{
+    success
 }
 
-export = UserStatus;
+export = ErrorCode;

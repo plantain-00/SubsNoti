@@ -5,11 +5,12 @@ export const cookieParser = require('cookie-parser');
 export const compression = require("compression");
 export import path = require("path");
 export import http = require("http");
-export var nodeMailer = require("nodemailer");
-//export import mysql = require("mysql");
+export const nodeMailer = require("nodemailer");
+export import mysql = require("mysql");
+export const md5 = require("md5");
 
 export import Request = express.Request;
 export import Response = express.Response;
-//export import MysqlError = mysql.IError;
-//export import MysqlConnection = mysql.IConnection;
+export import MysqlError = mysql.IError;
+export import MysqlConnection = mysql.IConnection;
 export import ServerResponse = http.ServerResponse;

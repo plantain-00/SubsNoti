@@ -4,4 +4,6 @@ import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
-export import email = require("./email");
+export function sendError(response:libs.Response, errorMessage:string, errorCode:number) {
+
+}

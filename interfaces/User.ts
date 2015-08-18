@@ -1,7 +1,15 @@
 import libs = require("../libs");
 import settings = require("../settings");
 import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
-export import email = require("./email");
+class User {
+    id:number;
+    name:string;
+    emailHead:string;
+    emailTail:string;
+    organizationId:number;
+    status:enums.UserStatus;
+}
+
+export = User;

@@ -1,6 +1,8 @@
 import libs = require("../libs");
 import settings = require("../settings");
-import services = require("./services");
+import enums = require("../enums/enums");
+import interfaces = require("../interfaces/interfaces");
+import services = require("../services/services");
 
 var transporter = libs.nodeMailer.createTransport({
     host: settings.config.smtp.host,
