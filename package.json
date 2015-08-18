@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "a subscription and notification website",
   "repository": "https://github.com/plantain-00/SubsNoti",
+  "license": "MIT",
   "dependencies": {
     "compression": "^1.5.2",
     "express": "^4.13.3",

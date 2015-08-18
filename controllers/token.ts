@@ -1,9 +1,10 @@
 import libs = require("../libs");
 import settings = require("../settings");
 import enums = require("../enums/enums");
+import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
-export const createDocument = {
+export const createDocument:interfaces.ApiDocument = {
     name: "create a token for a given email",
     url: "/api/token",
     description: "will send a link with it to the given email",
@@ -48,5 +49,8 @@ export const createDocument = {
 };
 
 export function create(request:libs.Request, response:libs.Response) {
-
+    if (services.contentType.isNotJson(request)) {
+        services.response.sendContentTypeError(response, createDocument);
+        return;
+    }
 }

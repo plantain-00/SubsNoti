@@ -3,7 +3,8 @@ import settings = require("../settings");
 import enums = require("../enums/enums");
 
 const enum ErrorCode{
-    success
+    success,
+    wrongContentType
 }
 
 export = ErrorCode;

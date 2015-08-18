@@ -3,3 +3,4 @@ import settings = require("../settings");
 import enums = require("../enums/enums");
 
 export import User = require("./User");
+export import ApiDocument = require("./ApiDocument");
