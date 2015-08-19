@@ -4,7 +4,11 @@ import enums = require("../enums/enums");
 
 const enum ErrorCode{
     success,
-    wrongContentType
+    wrongContentType,
+    parameterMissed,
+    accountInWrongStatus,
+    dbAccessError,
+    emailServiceError
 }
 
 export = ErrorCode;

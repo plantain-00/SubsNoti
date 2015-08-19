@@ -9,6 +9,7 @@
     "express": "^4.13.3",
     "md5": "^2.0.0",
     "mysql": "^2.8.0",
+    "node-uuid": "^1.4.3",
     "nodemailer": "^1.4.0"
   },
   "devDependencies": {

@@ -13,8 +13,8 @@ const enum StatusCode{
     notFound = 404,
     notAcceptable = 406,
     gone = 410,
-    unprocesableEntity = 422,
-    InternalServerError = 500
+    unprocessableEntity = 422,
+    internalServerError = 500
 }
 
 export = StatusCode;

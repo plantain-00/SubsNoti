@@ -9,7 +9,22 @@ class User {
     emailHead:string;
     emailTail:string;
     organizationId:number;
+    salt:string;
     status:enums.UserStatus;
+
+    constructor(row:any) {
+        this.id = row.ID;
+        this.name = row.Name;
+        this.emailHead = row.EmailHead;
+        this.emailTail = row.EmailTail;
+        this.organizationId = row.OrganizationID;
+        this.salt = row.Salt;
+        this.status = row.Status;
+    }
+
+    getEmail() {
+        return this.emailHead + "@" + this.emailTail;
+    }
 }
 
 export = User;
