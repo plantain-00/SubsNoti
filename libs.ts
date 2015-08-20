@@ -2,6 +2,7 @@
 
 export import express = require("express");
 export const cookieParser = require('cookie-parser');
+export const bodyParser = require('body-parser');
 export const compression = require("compression");
 export import path = require("path");
 export import http = require("http");

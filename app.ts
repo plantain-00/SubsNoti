@@ -12,6 +12,9 @@ app.use(libs.compression());
 
 app.use(libs.cookieParser());
 
+app.use(libs.bodyParser.json());
+app.use(libs.bodyParser.urlencoded({extended: true}));
+
 app.use(libs.express.static(libs.path.join(__dirname, 'public')));
 
 import token = require("./controllers/token");

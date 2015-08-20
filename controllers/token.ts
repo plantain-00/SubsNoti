@@ -68,7 +68,7 @@ export function create(request:libs.Request, response:libs.Response) {
         return;
     }
 
-    services.db.access("select * from Users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
+    services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
         if (error) {
             services.response.send(response, error.message, enums.ErrorCode.dbAccessError, enums.StatusCode.internalServerError, documentUrl);
             return;
