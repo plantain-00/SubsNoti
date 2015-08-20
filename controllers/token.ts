@@ -70,7 +70,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
     services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
         if (error) {
-            services.response.send(response, error.message, enums.ErrorCode.dbAccessError, enums.StatusCode.internalServerError, documentUrl);
+            services.response.sendDBAccessError(response, error.message, documentUrl);
             return;
         }
 
@@ -78,7 +78,7 @@ export function create(request:libs.Request, response:libs.Response) {
             var salt = libs.generateUuid();
             services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows)=> {
                 if (error) {
-                    services.response.send(response, error.message, enums.ErrorCode.dbAccessError, enums.StatusCode.internalServerError, documentUrl);
+                    services.response.sendDBAccessError(response, error.message, documentUrl);
                     return;
                 }
 
@@ -86,11 +86,11 @@ export function create(request:libs.Request, response:libs.Response) {
 
                 sendEmail(id, salt, emailHead + "@" + emailTail, error=> {
                     if (error) {
-                        services.response.send(response, error.message, enums.ErrorCode.emailServiceError, enums.StatusCode.internalServerError, documentUrl);
+                        services.response.sendDBAccessError(response, error.message, documentUrl);
                         return;
                     }
 
-                    services.response.send(response, "", enums.ErrorCode.success, enums.StatusCode.createdOrModified, documentUrl);
+                    services.response.sendCreatedOrModified(response, documentUrl);
                 });
             });
         } else if (rows.length == 1) {
@@ -98,14 +98,14 @@ export function create(request:libs.Request, response:libs.Response) {
 
             sendEmail(user.id, user.salt, user.getEmail(), error=> {
                 if (error) {
-                    services.response.send(response, error.message, enums.ErrorCode.emailServiceError, enums.StatusCode.internalServerError, documentUrl);
+                    services.response.sendDBAccessError(response, error.message, documentUrl);
                     return;
                 }
 
-                services.response.send(response, "", enums.ErrorCode.success, enums.StatusCode.createdOrModified, documentUrl);
+                services.response.sendCreatedOrModified(response, documentUrl);
             });
         } else {
-            services.response.send(response, "the account is in wrong status now", enums.ErrorCode.accountInWrongStatus, enums.StatusCode.unprocessableEntity, documentUrl);
+            services.response.sendAccountInWrongStatusError(response, "the account is in wrong status now", documentUrl);
         }
     });
 }
