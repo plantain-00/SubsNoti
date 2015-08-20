@@ -10,6 +10,7 @@ export const nodeMailer = require("nodemailer");
 export import mysql = require("mysql");
 export const md5 = require("md5");
 const uuid = require("node-uuid");
+export import moment = require("moment");
 
 export import Request = express.Request;
 export import Response = express.Response;

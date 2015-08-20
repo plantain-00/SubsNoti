@@ -28,8 +28,8 @@ export const config = {
          * development: 10240
          * */
         port: 10240,
-        hostname: "0.0.0.0",
-        ip: ""
+        innerHostName: "0.0.0.0",
+        outerHostName: "localhost"
     },
     smtp: {
         host: "",

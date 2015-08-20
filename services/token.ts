@@ -4,52 +4,53 @@ import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
-export function generate(password:string, strategy = null):{
-    result:string;
-    milliseconds:string} {
-    var milliseconds = new Date().getTime().toString(16);
-    if (strategy == null) {
-        return {
-            result: libs.md5(password + milliseconds),
-            milliseconds: milliseconds
-        }
-    }
-    return {
-        result: libs.md5(password + milliseconds + strategy),
-        milliseconds: milliseconds
-    };
+export function generate(userId:number, salt:string):string {
+    const milliseconds = new Date().getTime().toString(16);
+    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds + "g" + userId.toString(16);
 }
 
-export function isValid(password:string, milliseconds:string, result:string, timeSpan:number, strategy:string = null):boolean {
-    var s = parseInt(milliseconds, 16);
-    if (new Date().getTime() < s
-        || new Date().getTime() > s + timeSpan) {
-        return false;
-    }
-    if (strategy == null) {
-        return libs.md5(password + milliseconds) == result;
-    }
-    return libs.md5(password + milliseconds + strategy) == result;
-}
-
-export function validate(token:string, password:string, next:(error)=>void) {
+export function validate(token:string, next:(error:Error)=>void) {
     if (settings.config.environment == "development") {
         next(null);
         return;
     }
+
     if (!token || typeof token != "string") {
-        next(new Error("wrong token"));
-        return;
-    }
-    const tmp = token.split("g");
-    if (tmp.length != 3) {
-        next(new Error("wrong token"));
+        next(new Error("invalid token"));
         return;
     }
 
-    if (isValid(password, tmp[1], tmp[0], 30 * 24 * 60 * 60 * 1000)) {
-        next(null);
-    } else {
-        next(new Error("token is invalid or out of date"));
+    const tmp = token.split("g");
+    if (tmp.length != 3) {
+        next(new Error("invalid token"));
+        return;
     }
+
+    const milliseconds = parseInt(tmp[1], 16);
+    const userId = parseInt(tmp[2], 16);
+    const now = new Date().getTime();
+
+    if (now < milliseconds
+        || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
+        next(new Error("token is out of date"));
+        return;
+    }
+
+    services.user.getById(userId, (error, user)=> {
+        if (error) {
+            next(error);
+            return;
+        }
+
+        if (!user) {
+            next(new Error("invalid user"));
+            return;
+        }
+
+        if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
+            next(null);
+        } else {
+            next(new Error("invalid token"));
+        }
+    });
 }

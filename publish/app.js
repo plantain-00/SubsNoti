@@ -5,7 +5,7 @@ app.settings.env = settings.config.environment;
 app.use(libs.compression());
 app.use(libs.cookieParser());
 app.use(libs.express.static(libs.path.join(__dirname, 'public')));
-app.listen(settings.config.website.port, settings.config.website.hostname, function () {
+app.listen(settings.config.website.port, settings.config.website.innerHostName, function () {
     console.log("Server has started at port: " + settings.config.website.port);
 });
 //# sourceMappingURL=app.js.map

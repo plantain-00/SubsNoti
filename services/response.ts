@@ -33,3 +33,15 @@ export function sendCreatedOrModified(response:libs.Response, documentUrl:string
 export function sendAccountInWrongStatusError(response:libs.Response, errorMessage:string, documentUrl:string):void {
     send(response, errorMessage, enums.ErrorCode.accountInWrongStatus, enums.StatusCode.unprocessableEntity, documentUrl);
 }
+
+export function sendEmailServiceError(response:libs.Response, errorMessage:string, documentUrl:string):void {
+    send(response, errorMessage, enums.ErrorCode.emailServiceError, enums.StatusCode.internalServerError, documentUrl);
+}
+
+export function sendUnauthorizedError(response:libs.Response, errorMessage:string, documentUrl:string):void {
+    send(response, errorMessage, enums.ErrorCode.unauthorizedError, enums.StatusCode.unauthorized, documentUrl);
+}
+
+export function sendOK(response:libs.Response, documentUrl:string):void {
+    send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl);
+}

@@ -14,6 +14,7 @@ const enum StatusCode{
     notAcceptable = 406,
     gone = 410,
     unprocessableEntity = 422,
+    tooManyRequest = 429,
     internalServerError = 500
 }
 

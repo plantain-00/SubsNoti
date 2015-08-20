@@ -4,55 +4,50 @@ import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
-export const createDocument:interfaces.ApiDocument = {
-    name: "create a token for a given email",
-    url: "/api/token",
+export const generateDocument:interfaces.ApiDocument = {
+    name: "get a token for a given email",
+    url: "/api/token/generate",
     description: "will send a link with it to the given email",
     method: "POST",
-    expirationDate: "no",
     contentType: "application/json",
-    parameters: {
-        v: {
-            type: "number",
-            description: "no v means the newest version"
-        }
-    },
-    versions: {
-        1: {
-            expirationDate: "no",
-            requestBody: {
-                emailHead: {
-                    type: "string",
-                    required: true
-                },
-                emailTail: {
-                    type: "string",
-                    required: true
-                },
-                name: {
-                    type: "string"
-                }
+    expirationDate: "no",
+    versions: [{
+        expirationDate: "no",
+        parameters: {
+            v: 1
+        },
+        requestBody: {
+            emailHead: {
+                type: "string",
+                required: true
             },
-            responseBody: {
-                isSuccess: {
-                    type: "boolean"
-                },
-                statusCode: {
-                    type: "number"
-                },
-                errorCode: {
-                    type: "number"
-                },
-                errorMessage: {
-                    type: "string"
-                }
+            emailTail: {
+                type: "string",
+                required: true
+            },
+            name: {
+                type: "string"
+            }
+        },
+        responseBody: {
+            isSuccess: {
+                type: "boolean"
+            },
+            statusCode: {
+                type: "number"
+            },
+            errorCode: {
+                type: "number"
+            },
+            errorMessage: {
+                type: "string"
             }
         }
-    }
+    }]
 };
 
-export function create(request:libs.Request, response:libs.Response) {
-    var documentUrl = createDocument.documentUrl;
+export function generate(request:libs.Request, response:libs.Response) {
+    var documentUrl = generateDocument.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
         services.response.sendContentTypeError(response, documentUrl);
@@ -86,7 +81,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
                 sendEmail(id, salt, emailHead + "@" + emailTail, error=> {
                     if (error) {
-                        services.response.sendDBAccessError(response, error.message, documentUrl);
+                        services.response.sendEmailServiceError(response, error.message, documentUrl);
                         return;
                     }
 
@@ -98,7 +93,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
             sendEmail(user.id, user.salt, user.getEmail(), error=> {
                 if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
+                    services.response.sendEmailServiceError(response, error.message, documentUrl);
                     return;
                 }
 
@@ -111,8 +106,110 @@ export function create(request:libs.Request, response:libs.Response) {
 }
 
 function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=>void) {
-    var tmp = services.token.generate(salt + userId);
-    var token = tmp.result + "g" + tmp.milliseconds + "g" + userId.toString(16);
+    var token = services.token.generate(userId, salt);
 
-    services.email.send(email, "your token", "you can click " + token + " to access the website", next)
+    services.email.send(email, "your token", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + acceptDocument.url + "?token=" + token + " to access the website", next)
+}
+
+export const acceptDocument:interfaces.ApiDocument = {
+    name: "accept a token",
+    url: "/api/token/accept",
+    description: "will store it to cookie named 'token', and will redirect to home page",
+    method: "GET",
+    expirationDate: "no",
+    versions: [{
+        expirationDate: "no",
+        parameters: {
+            v: 1,
+            token: {
+                type: "string",
+                required: true
+            }
+        },
+        responseBody: {
+            isSuccess: {
+                type: "boolean"
+            },
+            statusCode: {
+                type: "number"
+            },
+            errorCode: {
+                type: "number"
+            },
+            errorMessage: {
+                type: "string"
+            }
+        }
+    }]
+};
+
+export function accept(request:libs.Request, response:libs.Response) {
+    var documentUrl = acceptDocument.documentUrl;
+
+    var token = request.query.token;
+
+    if (!token) {
+        services.response.sendParameterMissedError(response, documentUrl);
+        return;
+    }
+
+    response.cookie("token", token, {
+        expires: libs.moment().clone().add(1, "months").toDate(),
+        httpOnly: true
+    });
+
+    response.redirect("/index.html");
+}
+
+export const validateDocument:interfaces.ApiDocument = {
+    name: "validate whether current user is verified",
+    url: "/api/token/validate",
+    description: "the token should be stored in a cookie named 'token'",
+    method: "GET",
+    expirationDate: "no",
+    versions: [{
+        expirationDate: "no",
+        parameters: {
+            v: 1
+        },
+        cookieNames: {
+            token: {
+                type: "string",
+                required: true
+            }
+        },
+        responseBody: {
+            isSuccess: {
+                type: "boolean"
+            },
+            statusCode: {
+                type: "number"
+            },
+            errorCode: {
+                type: "number"
+            },
+            errorMessage: {
+                type: "string"
+            }
+        }
+    }]
+};
+
+export function validate(request:libs.Request, response:libs.Response):void {
+    var documentUrl = validateDocument.documentUrl;
+
+    const token = request.cookies["token"];
+    if (!token) {
+        services.response.sendUnauthorizedError(response, "cookie is expired", documentUrl);
+        return;
+    }
+
+    services.token.validate(token, error=> {
+        if (error) {
+            services.response.sendUnauthorizedError(response, error.message, documentUrl);
+            return;
+        }
+
+        services.response.sendOK(response, documentUrl);
+    });
 }

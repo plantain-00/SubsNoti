@@ -4,15 +4,12 @@ import enums = require("../enums/enums");
 import interfaces = require("./interfaces");
 import services = require("../services/services");
 
-interface ApiDocument {
-    name:string;
-    url:string;
-    description:string;
-    method:string;
+interface ApiDocumentVersion {
     expirationDate:string;
-    contentType?:string;
-    versions:interfaces.ApiDocumentVersion[];
-    documentUrl?:string;
+    parameters:any;
+    requestBody?:any;
+    responseBody:any;
+    cookieNames?:any;
 }
 
-export = ApiDocument;
+export = ApiDocumentVersion;
