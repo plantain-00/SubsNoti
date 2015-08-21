@@ -48,3 +48,7 @@ export function sendUnauthorizedError(response:libs.Response, errorMessage:strin
 export function sendOK(response:libs.Response, documentUrl:string):void {
     send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl);
 }
+
+export function sendWrongHttpMethod(response:libs.Response, documentUrl:string):void {
+    send(response, "current http method is not right for the api", enums.ErrorCode.wrongHttpMethod, enums.StatusCode.invalidRequest, documentUrl);
+}

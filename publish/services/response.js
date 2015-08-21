@@ -40,4 +40,8 @@ function sendOK(response, documentUrl) {
     send(response, "", 0 /* success */, 200 /* OK */, documentUrl);
 }
 exports.sendOK = sendOK;
+function sendWrongHttpMethod(response, documentUrl) {
+    send(response, "current http method is not right for the api", 7 /* wrongHttpMethod */, 400 /* invalidRequest */, documentUrl);
+}
+exports.sendWrongHttpMethod = sendWrongHttpMethod;
 //# sourceMappingURL=response.js.map

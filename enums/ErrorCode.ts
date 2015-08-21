@@ -5,7 +5,8 @@ const enum ErrorCode{
     accountInWrongStatus,
     dbAccessError,
     emailServiceError,
-    unauthorizedError
+    unauthorizedError,
+    wrongHttpMethod
 }
 
 export = ErrorCode;

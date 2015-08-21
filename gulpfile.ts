@@ -20,6 +20,10 @@ gulp.task('publish', function () {
             .pipe(gulp.dest('./publish/'));
         gulp.src('./libs.js')
             .pipe(gulp.dest('./publish/'));
+        gulp.src('./docs.js')
+            .pipe(gulp.dest('./publish/'));
+        gulp.src('./router.js')
+            .pipe(gulp.dest('./publish/'));
 
         gulp.src('./enums/enums.js')
             .pipe(gulp.dest('./publish/enums/'));

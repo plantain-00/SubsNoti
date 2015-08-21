@@ -11,12 +11,14 @@ export import mysql = require("mysql");
 export const md5 = require("md5");
 const uuid = require("node-uuid");
 export import moment = require("moment");
+export import _ = require("lodash");
 
 export import Request = express.Request;
 export import Response = express.Response;
 export import MysqlError = mysql.IError;
 export import MysqlConnection = mysql.IConnection;
 export import ServerResponse = http.ServerResponse;
+export import Application = express.Application;
 
 export function generateUuid() {
     return uuid.v4().replace(/-/g, "");

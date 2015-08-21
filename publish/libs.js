@@ -10,6 +10,7 @@ exports.mysql = require("mysql");
 exports.md5 = require("md5");
 var uuid = require("node-uuid");
 exports.moment = require("moment");
+exports._ = require("lodash");
 function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }
