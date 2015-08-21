@@ -21,6 +21,13 @@ gulp.task('publish', function () {
         gulp.src('./libs.js')
             .pipe(gulp.dest('./publish/'));
 
+        gulp.src('./controllers/*.js')
+            .pipe(gulp.dest('./publish/controllers/'));
+        gulp.src('./interfaces/*.js')
+            .pipe(gulp.dest('./publish/interfaces/'));
+        gulp.src('./services/*.js')
+            .pipe(gulp.dest('./publish/services/'));
+
         gulp.src("./public/*.html")
             .pipe(gulp.dest("publish/public/"));
     });
