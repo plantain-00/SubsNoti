@@ -35,3 +35,4 @@ interfaces/*.js
 services/*.js
 controllers/*.js
 models/*.js
+tests/*.js

@@ -201,13 +201,7 @@ export const validateDocument:interfaces.ApiDocument = {
 export function validate(request:libs.Request, response:libs.Response):void {
     var documentUrl = validateDocument.documentUrl;
 
-    const token = request.cookies["token"];
-    if (!token) {
-        services.response.sendUnauthorizedError(response, "cookie is expired", documentUrl);
-        return;
-    }
-
-    services.token.validate(token, error=> {
+    services.token.validate(request, response, documentUrl, (error, user)=> {
         if (error) {
             services.response.sendUnauthorizedError(response, error.message, documentUrl);
             return;

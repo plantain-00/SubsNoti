@@ -12,6 +12,7 @@ export const md5 = require("md5");
 const uuid = require("node-uuid");
 export import moment = require("moment");
 export import _ = require("lodash");
+export import redis = require("redis");
 
 export import Request = express.Request;
 export import Response = express.Response;
