@@ -9,6 +9,7 @@ exports.nodeMailer = require("nodemailer");
 exports.mysql = require("mysql");
 exports.md5 = require("md5");
 var uuid = require("node-uuid");
+exports.moment = require("moment");
 function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }

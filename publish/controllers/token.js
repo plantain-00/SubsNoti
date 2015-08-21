@@ -1,7 +1,7 @@
 var libs = require("../libs");
 var settings = require("../settings");
 var enums = require("../enums/enums");
-var interfaces = require("../interfaces/interfaces");
+var models = require("../models/models");
 var services = require("../services/services");
 exports.generateDocument = {
     name: "get a token for a given email",
@@ -80,7 +80,7 @@ function generate(request, response) {
             });
         }
         else if (rows.length == 1) {
-            var user = new interfaces.User(rows[0]);
+            var user = new models.User(rows[0]);
             sendEmail(user.id, user.salt, user.getEmail(), function (error) {
                 if (error) {
                     services.response.sendEmailServiceError(response, error.message, documentUrl);

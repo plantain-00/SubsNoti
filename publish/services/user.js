@@ -1,4 +1,4 @@
-var interfaces = require("../interfaces/interfaces");
+var models = require("../models/models");
 var services = require("../services/services");
 function getById(id, next) {
     if (typeof id != "number") {
@@ -14,7 +14,7 @@ function getById(id, next) {
             next(null, null);
             return;
         }
-        next(null, new interfaces.User(rows[0]));
+        next(null, new models.User(rows[0]));
     });
 }
 exports.getById = getById;

@@ -1,7 +1,10 @@
 import libs = require("../libs");
 import settings = require("../settings");
+
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
+import models = require("../models/models");
+
 import services = require("../services/services");
 
 export const generateDocument:interfaces.ApiDocument = {
@@ -89,7 +92,7 @@ export function generate(request:libs.Request, response:libs.Response) {
                 });
             });
         } else if (rows.length == 1) {
-            var user = new interfaces.User(rows[0]);
+            var user = new models.User(rows[0]);
 
             sendEmail(user.id, user.salt, user.getEmail(), error=> {
                 if (error) {

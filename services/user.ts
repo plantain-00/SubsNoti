@@ -1,10 +1,13 @@
 import libs = require("../libs");
 import settings = require("../settings");
+
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
+import models = require("../models/models");
+
 import services = require("../services/services");
 
-export function getById(id:number, next:(error:Error, user:interfaces.User)=>void) {
+export function getById(id:number, next:(error:Error, user:models.User)=>void) {
     if (typeof id != "number") {
         next(null, null);
         return;
@@ -21,6 +24,6 @@ export function getById(id:number, next:(error:Error, user:interfaces.User)=>voi
             return;
         }
 
-        next(null, new interfaces.User(rows[0]));
+        next(null, new models.User(rows[0]));
     });
 }

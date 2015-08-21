@@ -23,12 +23,14 @@ gulp.task('publish', function () {
 
         gulp.src('./enums/enums.js')
             .pipe(gulp.dest('./publish/enums/'));
-        gulp.src('./controllers/*.js')
-            .pipe(gulp.dest('./publish/controllers/'));
-        gulp.src('./interfaces/*.js')
+        gulp.src('./interfaces/interfaces.js')
             .pipe(gulp.dest('./publish/interfaces/'));
+        gulp.src('./models/*.js')
+            .pipe(gulp.dest('./publish/models/'));
         gulp.src('./services/*.js')
             .pipe(gulp.dest('./publish/services/'));
+        gulp.src('./controllers/*.js')
+            .pipe(gulp.dest('./publish/controllers/'));
 
         gulp.src("./public/*.html")
             .pipe(gulp.dest("publish/public/"));

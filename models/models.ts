@@ -1,0 +1,1 @@
+export import User = require("./User");
