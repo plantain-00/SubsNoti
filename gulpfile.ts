@@ -21,6 +21,8 @@ gulp.task('publish', function () {
         gulp.src('./libs.js')
             .pipe(gulp.dest('./publish/'));
 
+        gulp.src('./enums/enums.js')
+            .pipe(gulp.dest('./publish/enums/'));
         gulp.src('./controllers/*.js')
             .pipe(gulp.dest('./publish/controllers/'));
         gulp.src('./interfaces/*.js')
