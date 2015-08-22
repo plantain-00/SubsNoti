@@ -35,5 +35,9 @@ export const config = {
         host: "",
         name: "",
         password: ""
+    },
+    redis: {
+        host: "",
+        port: 6379
     }
 };
