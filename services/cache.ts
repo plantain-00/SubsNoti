@@ -19,12 +19,18 @@ export function getString(key:string, next:(error:Error, reply:string)=>void) {
     });
 }
 
-export function setString(key:string, value:string) {
+export function setString(key:string, value:string, seconds?:number) {
     client.set(key, value);
+    if (seconds) {
+        client.expire(key, seconds);
+    }
 }
 
-export function set(key:string, value:any) {
+export function set(key:string, value:any, seconds?:number) {
     client.hmset(key, value);
+    if (seconds) {
+        client.expire(key, seconds);
+    }
 }
 
 export function get(key:string, field:string, next:(error:Error, reply:any)=>void) {

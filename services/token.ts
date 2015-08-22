@@ -64,7 +64,7 @@ export function validate(request:libs.Request, response:libs.Response, documentU
             }
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
-                services.cache.setString("user_" + token, JSON.stringify(user));
+                services.cache.setString("user_" + token, JSON.stringify(user), 8 * 60 * 60);
                 next(null, user);
             } else {
                 next(new Error("invalid token"), null);
