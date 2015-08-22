@@ -8,28 +8,13 @@ export const config:SettingsInterface = {
      * */
     environment: "development",
     db: {
-        /*
-         * production: 'localhost'
-         * testing: 'localhost'
-         * development: ''
-         * */
         host: '',
         user: '',
         password: '',
-        /*
-         * production: ''
-         * testing: ''
-         * development: ''
-         * */
         database: ''
     },
     website: {
-        /*
-         * production: 80
-         * testing: 80
-         * development: 10240
-         * */
-        port: 10240,
+        port: 8888,
         innerHostName: "0.0.0.0",
         outerHostName: "localhost"
     },
@@ -40,6 +25,7 @@ export const config:SettingsInterface = {
     },
     redis: {
         host: "",
-        port: 6379
+        port: 6379,
+        auth_pass: ""
     }
 };
