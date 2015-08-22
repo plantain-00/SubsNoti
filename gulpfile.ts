@@ -51,6 +51,8 @@ gulp.task('publish', function () {
 
         gulp.src("./public/*.html")
             .pipe(gulp.dest("publish/public/"));
+        gulp.src("./public/doc/api/*.html")
+            .pipe(gulp.dest("publish/public/doc/api"));
     });
 });
 
@@ -63,31 +65,33 @@ gulp.task('index', function () {
 });
 
 gulp.task("document", function () {
-    const documentsHome = {
-        name: "API document",
-        apis: []
-    };
+    del(["./public/doc/api/*"], function () {
+        const documentsHome = {
+            name: "API document",
+            apis: []
+        };
 
-    libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
-        api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
-        documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
+        libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
+            api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
+            documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
 
-        var document = JSON.parse(JSON.stringify(api));
+            var document = JSON.parse(JSON.stringify(api));
 
-        document.url = "<a href='" + api.url + "'>" + api.url + "</a>";
+            document.url = "<a href='" + api.url + "'>" + api.url + "</a>";
 
-        var data = "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
+            var data = "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
 
-        libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
+            libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
+                if (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        libs.fs.writeFile(libs.path.join(__dirname, 'public') + "/doc/api/index.html", "<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "</pre>", error=> {
             if (error) {
                 console.log(error);
             }
         });
-    });
-
-    libs.fs.writeFile(libs.path.join(__dirname, 'public') + "/doc/api/index.html", "<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "</pre>", error=> {
-        if (error) {
-            console.log(error);
-        }
     });
 });
