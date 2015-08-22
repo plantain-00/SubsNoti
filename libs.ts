@@ -13,6 +13,7 @@ const uuid = require("node-uuid");
 export import moment = require("moment");
 export import _ = require("lodash");
 export import redis = require("redis");
+export import fs = require('fs');
 
 export import Request = express.Request;
 export import Response = express.Response;

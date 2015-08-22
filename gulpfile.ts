@@ -1,11 +1,24 @@
 /// <reference path="./typings/tsd.d.ts" />
 
-const gulp = require('gulp');
+import gulp = require('gulp');
 const rename = require('gulp-rename');
 const ejs = require("gulp-ejs");
 const webpack = require('gulp-webpack');
 const minifyHtml = require('gulp-minify-html');
 const del = require('del');
+
+import libs = require("./libs");
+import settings = require("./settings");
+
+import enums = require("./enums/enums");
+import interfaces = require("./interfaces/interfaces");
+import models = require("./models/models");
+
+import services = require("./services/services");
+
+import controllers = require("./controllers/controllers");
+
+import docs = require("./docs");
 
 var minifyHtmlConfig = {
     conditionals: true,
@@ -47,4 +60,34 @@ gulp.task('index', function () {
         .pipe(minifyHtml(minifyHtmlConfig))
         .pipe(rename('index.html'))
         .pipe(gulp.dest("./public/"));
+});
+
+gulp.task("document", function () {
+    const documentsHome = {
+        name: "API document",
+        apis: []
+    };
+
+    libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
+        api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
+        documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
+
+        var document = JSON.parse(JSON.stringify(api));
+
+        document.url = "<a href='" + api.url + "'>" + api.url + "</a>";
+
+        var data = "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
+
+        libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
+            if (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    libs.fs.writeFile(libs.path.join(__dirname, 'public') + "/doc/api/index.html", "<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "</pre>", error=> {
+        if (error) {
+            console.log(error);
+        }
+    });
 });

@@ -11,6 +11,8 @@ exports.md5 = require("md5");
 var uuid = require("node-uuid");
 exports.moment = require("moment");
 exports._ = require("lodash");
+exports.redis = require("redis");
+exports.fs = require('fs');
 function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }

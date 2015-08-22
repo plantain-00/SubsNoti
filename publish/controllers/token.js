@@ -179,12 +179,7 @@ exports.validateDocument = {
 };
 function validate(request, response) {
     var documentUrl = exports.validateDocument.documentUrl;
-    var token = request.cookies["token"];
-    if (!token) {
-        services.response.sendUnauthorizedError(response, "cookie is expired", documentUrl);
-        return;
-    }
-    services.token.validate(token, function (error) {
+    services.token.validate(request, response, documentUrl, function (error, user) {
         if (error) {
             services.response.sendUnauthorizedError(response, error.message, documentUrl);
             return;

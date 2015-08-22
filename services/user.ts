@@ -13,7 +13,7 @@ export function getById(id:number, next:(error:Error, user:models.User)=>void) {
         return;
     }
 
-    services.db.access("select * from Users where ID = ?", [id], (error, rows)=> {
+    services.db.access("select * from users where ID = ?", [id], (error, rows)=> {
         if (error) {
             next(error, null);
             return;

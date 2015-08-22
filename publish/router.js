@@ -11,20 +11,8 @@ function apply(app) {
             services.response.sendWrongHttpMethod(response, api.documentUrl);
         });
     });
-    var documentsHome = {
-        name: "API document",
-        apis: []
-    };
     libs._.each(docs.allDocuments, function (api) {
-        api.documentUrl = "/doc/api/" + libs.md5(api.name);
-        documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
-        api.url = "<a href='" + api.url + "'>" + api.url + "</a>";
-        app.get(api.documentUrl, function (request, response) {
-            response.status(200).type('html').send("<style>*{font-family: 'Courier New'}</style><title>" + api.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(api, null, 4) + "<pre>");
-        });
-    });
-    app.get("/api", function (request, response) {
-        response.status(200).type('html').send("<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "<pre>");
+        api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
     });
 }
 exports.apply = apply;

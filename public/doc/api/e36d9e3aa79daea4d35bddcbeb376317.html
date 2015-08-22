@@ -1,0 +1,44 @@
+<style>*{font-family: 'Courier New'}</style><title>get a token for a given email</title><pre style='font-size:16px;'>{
+    "name": "get a token for a given email",
+    "url": "<a href='/api/token/generate'>/api/token/generate</a>",
+    "description": "will send a link with it to the given email",
+    "method": "POST",
+    "contentType": "application/json",
+    "expirationDate": "no",
+    "versions": [
+        {
+            "expirationDate": "no",
+            "parameters": {
+                "v": 1
+            },
+            "requestBody": {
+                "emailHead": {
+                    "type": "string",
+                    "required": true
+                },
+                "emailTail": {
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "responseBody": {
+                "isSuccess": {
+                    "type": "boolean"
+                },
+                "statusCode": {
+                    "type": "number"
+                },
+                "errorCode": {
+                    "type": "number"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        }
+    ],
+    "documentUrl": "/doc/api/e36d9e3aa79daea4d35bddcbeb376317.html"
+}</pre>

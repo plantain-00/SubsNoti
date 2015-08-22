@@ -1,0 +1,36 @@
+<style>*{font-family: 'Courier New'}</style><title>validate whether current user is verified</title><pre style='font-size:16px;'>{
+    "name": "validate whether current user is verified",
+    "url": "<a href='/api/token/validate'>/api/token/validate</a>",
+    "description": "the token should be stored in a cookie named 'token'",
+    "method": "GET",
+    "expirationDate": "no",
+    "versions": [
+        {
+            "expirationDate": "no",
+            "parameters": {
+                "v": 1
+            },
+            "cookieNames": {
+                "token": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "responseBody": {
+                "isSuccess": {
+                    "type": "boolean"
+                },
+                "statusCode": {
+                    "type": "number"
+                },
+                "errorCode": {
+                    "type": "number"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        }
+    ],
+    "documentUrl": "/doc/api/a3e7715124c933719a237a5cd3628b68.html"
+}</pre>

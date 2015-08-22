@@ -5,7 +5,7 @@ function getById(id, next) {
         next(null, null);
         return;
     }
-    services.db.access("select * from Users where ID = ?", [id], function (error, rows) {
+    services.db.access("select * from users where ID = ?", [id], function (error, rows) {
         if (error) {
             next(error, null);
             return;
