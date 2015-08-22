@@ -7,7 +7,7 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-const client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, {});
+const client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
 
 client.on("error", error=> {
     console.log(error);

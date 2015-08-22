@@ -18,7 +18,10 @@ interface SettingsInterface {
     },
     redis: {
         host: string
-        port: number
+        port: number,
+        options: {
+            auth_pass: string
+        }
     }
 }
 

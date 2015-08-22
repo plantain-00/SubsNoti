@@ -26,6 +26,8 @@ export const config:SettingsInterface = {
     redis: {
         host: "",
         port: 6379,
-        auth_pass: ""
+        options: {
+            auth_pass: ""
+        }
     }
 };

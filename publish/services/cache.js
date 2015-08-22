@@ -1,6 +1,6 @@
 var libs = require("../libs");
 var settings = require("../settings");
-var client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, {});
+var client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
 client.on("error", function (error) {
     console.log(error);
 });

@@ -10,7 +10,7 @@ import services = require("../services/services");
 services.cache.set("key2", {
     a: "abc",
     b: 123
-});
+}, 10);
 
 services.cache.get("key2", "b", (error, reply)=> {
     if (error) {
