@@ -8,8 +8,8 @@ import models = require("../models/models");
 import services = require("../services/services");
 
 export function generate(userId:number, salt:string):string {
-    const milliseconds = new Date().getTime().toString(16);
-    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds + "g" + userId.toString(16);
+    const milliseconds = new Date().getTime();
+    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds.toString(16) + "g" + userId.toString(16);
 }
 
 export function validate(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:models.User)=>void) {

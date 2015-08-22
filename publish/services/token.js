@@ -2,8 +2,8 @@ var libs = require("../libs");
 var settings = require("../settings");
 var services = require("../services/services");
 function generate(userId, salt) {
-    var milliseconds = new Date().getTime().toString(16);
-    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds + "g" + userId.toString(16);
+    var milliseconds = new Date().getTime();
+    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds.toString(16) + "g" + userId.toString(16);
 }
 exports.generate = generate;
 function validate(request, response, documentUrl, next) {
