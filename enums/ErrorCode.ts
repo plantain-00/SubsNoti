@@ -1,12 +1,12 @@
 const enum ErrorCode{
-    success,
-    wrongContentType,
-    parameterMissed,
-    accountInWrongStatus,
-    dbAccessError,
-    emailServiceError,
-    unauthorizedError,
-    wrongHttpMethod
+    success = 0,
+    wrongContentType = 1,
+    parameterMissed = 2,
+    accountInWrongStatus = 3,
+    dbAccessError = 4,
+    emailServiceError = 5,
+    unauthorizedError = 6,
+    wrongHttpMethod = 7
 }
 
 export = ErrorCode;
