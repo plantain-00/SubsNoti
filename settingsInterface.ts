@@ -22,6 +22,11 @@ interface SettingsInterface {
         options: {
             auth_pass: string
         }
+    },
+    mongodb:{
+        url:string,
+        user:string,
+        password:string
     }
 }
 

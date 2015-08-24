@@ -88,8 +88,16 @@ export function generate(request:libs.Request, response:libs.Response) {
                         return;
                     }
 
-                    services.response.sendCreatedOrModified(response, documentUrl);
+                    services.logger.log(generateDocument.url, request, error=> {
+                        if (error) {
+                            console.log(error);
+                        }
+
+                        services.response.sendCreatedOrModified(response, documentUrl);
+                    });
                 });
+
+
             });
         } else if (rows.length == 1) {
             var user = new models.User(rows[0]);

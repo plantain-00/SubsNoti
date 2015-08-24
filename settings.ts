@@ -29,5 +29,10 @@ export const config:SettingsInterface = {
         options: {
             auth_pass: ""
         }
+    },
+    mongodb: {
+        url: "",
+        user: "",
+        password: ""
     }
 };

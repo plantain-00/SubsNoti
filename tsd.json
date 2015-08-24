@@ -34,6 +34,9 @@
     },
     "redis/redis.d.ts": {
       "commit": "38fb591c6eba840e0b53d1110302b8e4fb04651c"
+    },
+    "mongodb/mongodb.d.ts": {
+      "commit": "8f081073e6cb416f901b272810d8b04d6e01c9e0"
     }
   }
 }

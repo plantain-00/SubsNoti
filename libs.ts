@@ -14,6 +14,7 @@ export import moment = require("moment");
 export import _ = require("lodash");
 export import redis = require("redis");
 export import fs = require('fs');
+export import mongodb = require('mongodb');
 
 export import Request = express.Request;
 export import Response = express.Response;
@@ -21,6 +22,7 @@ export import MysqlError = mysql.IError;
 export import MysqlConnection = mysql.IConnection;
 export import ServerResponse = http.ServerResponse;
 export import Application = express.Application;
+export import Collection = mongodb.Collection;
 
 export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
