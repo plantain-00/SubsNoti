@@ -35,6 +35,11 @@ libs.mongodb.MongoClient.connect(settings.config.mongodb.url, (error, db)=> {
     });
 });
 
+services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
+services.cache.client.on("error", error=> {
+    console.log(error);
+});
+
 app.listen(settings.config.website.port, settings.config.website.innerHostName, ()=> {
     console.log("Server has started at port: " + settings.config.website.port);
 });

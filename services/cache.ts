@@ -7,11 +7,7 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-const client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
-
-client.on("error", error=> {
-    console.log(error);
-});
+export var client:libs.RedisClient;
 
 export function getString(key:string, next:(error:Error, reply:string)=>void) {
     client.get(key, (error, reply)=> {

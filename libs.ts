@@ -23,6 +23,7 @@ export import MysqlConnection = mysql.IConnection;
 export import ServerResponse = http.ServerResponse;
 export import Application = express.Application;
 export import Collection = mongodb.Collection;
+export import RedisClient = redis.RedisClient;
 
 export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
