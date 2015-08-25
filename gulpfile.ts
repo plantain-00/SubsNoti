@@ -95,3 +95,5 @@ gulp.task("document", function () {
         });
     });
 });
+
+gulp.task("default", ["document", "publish", "index"]);
