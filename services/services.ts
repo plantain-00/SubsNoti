@@ -6,3 +6,4 @@ export import db = require("./db");
 export import user = require("./user");
 export import cache = require("./cache");
 export import logger = require("./logger");
+export import frequency = require("./frequency");
