@@ -7,23 +7,7 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-var logs:libs.Collection;
-
-libs.mongodb.MongoClient.connect(settings.config.mongodb.url, (error, db)=> {
-    if (error) {
-        console.log(error);
-        return;
-    }
-
-    db.authenticate(settings.config.mongodb.user, settings.config.mongodb.password, (error)=> {
-        if (error) {
-            console.log(error);
-            return;
-        }
-
-        logs = db.collection("logs");
-    });
-});
+export var logs:libs.Collection;
 
 export function log(url:string, request:libs.Request, next:(error:Error)=>void) {
     var data:any = {
