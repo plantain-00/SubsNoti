@@ -44,3 +44,4 @@ publish/interfaces/*.js
 publish/models/*.js
 publish/services/*.js
 publish/public/*
+demos/*.js
