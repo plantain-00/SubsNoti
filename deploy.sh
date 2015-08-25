@@ -10,7 +10,7 @@ cd $SRC_ROOT
 git pull
 npm --registry https://registry.npm.taobao.org install
 tsd install
-tsc -m commonjs
+tsc -m commonjs *.ts
 gulp default
 rsync -a $SRC_ROOT/publish/ $WEBSITE_ROOT
 FOREVER_ROOT=$WEBSITE_ROOT forever restart -l $WEBSITE_ROOT/forever.log $WEBSITE_ROOT/app.js
