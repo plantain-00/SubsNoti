@@ -117,9 +117,16 @@ export function generate(request:libs.Request, response:libs.Response) {
 }
 
 function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=>void) {
-    var token = services.token.generate(userId, salt);
+    services.frequency.limit(email, 60 * 60, error=> {
+        if (error) {
+            next(error);
+            return;
+        }
 
-    services.email.send(email, "your token", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + acceptDocument.url + "?token=" + token + " to access the website", next)
+        var token = services.token.generate(userId, salt);
+
+        services.email.send(email, "your token", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + acceptDocument.url + "?token=" + token + " to access the website", next)
+    });
 }
 
 export const acceptDocument:interfaces.ApiDocument = {
