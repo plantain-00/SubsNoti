@@ -11,7 +11,7 @@ import controllers = require("./controllers/controllers");
 
 export const allDocuments:interfaces.ApiDocument[] = [
     controllers.authenticationCredential.createDocument,
-    controllers.authenticationCredential.updateDocument,
+    controllers.authenticationCredential.getDocument,
     controllers.currentUser.getDocument
 ];
 

@@ -11,7 +11,7 @@ export const createDocument:interfaces.ApiDocument = {
     name: "get a authentication credential for a given email",
     url: "/api/authentication_credential",
     description: "will send a link with it to the given email",
-    method: "POST",
+    method: "post",
     contentType: "application/json",
     expirationDate: "no",
     versions: [{
@@ -125,15 +125,15 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
 
         var token = services.authenticationCredential.create(userId, salt);
 
-        services.email.send(email, "your authentication credential", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + updateDocument.url + "?authentication_credential=" + token + " to access the website", next)
+        services.email.send(email, "your authentication credential", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token + " to access the website", next)
     });
 }
 
-export const updateDocument:interfaces.ApiDocument = {
-    name: "update a authentication credential",
+export const getDocument:interfaces.ApiDocument = {
+    name: "get authentication credential",
     url: "/api/authentication_credential",
-    description: "will update the cookie named '" + services.cookieKey.authenticationCredential + "', and then will redirect to home page",
-    method: "PUT",
+    description: "will get authentication credential, and then store it to a cookie named '" + services.cookieKey.authenticationCredential + "', and then will redirect to home page",
+    method: "get",
     expirationDate: "no",
     versions: [{
         expirationDate: "no",
@@ -161,8 +161,8 @@ export const updateDocument:interfaces.ApiDocument = {
     }]
 };
 
-export function update(request:libs.Request, response:libs.Response) {
-    var documentUrl = updateDocument.documentUrl;
+export function get(request:libs.Request, response:libs.Response) {
+    var documentUrl = getDocument.documentUrl;
 
     var authenticationCredential = request.query.authentication_credential;
 
@@ -177,4 +177,9 @@ export function update(request:libs.Request, response:libs.Response) {
     });
 
     response.redirect("/index.html");
+}
+
+export function route(app:libs.Application) {
+    app[createDocument.method](createDocument.url, create);
+    app[getDocument.method](getDocument.url, get);
 }

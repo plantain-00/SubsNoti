@@ -11,7 +11,7 @@ export const getDocument:interfaces.ApiDocument = {
     name: "get current user",
     url: "/api/current_user.json",
     description: "the authentication credential should be stored in a cookie named '" + services.cookieKey.authenticationCredential + "'",
-    method: "GET",
+    method: "get",
     expirationDate: "no",
     versions: [{
         expirationDate: "no",
@@ -52,4 +52,8 @@ export function get(request:libs.Request, response:libs.Response):void {
 
         services.response.sendOK(response, documentUrl);
     });
+}
+
+export function route(app:libs.Application) {
+    app[getDocument.method](getDocument.url, get);
 }
