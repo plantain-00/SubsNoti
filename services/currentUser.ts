@@ -7,24 +7,19 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-export function generate(userId:number, salt:string):string {
-    const milliseconds = new Date().getTime();
-    return libs.md5(salt + milliseconds + userId) + "g" + milliseconds.toString(16) + "g" + userId.toString(16);
-}
-
-export function validate(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:models.User)=>void) {
+export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:models.User)=>void) {
     if (settings.config.environment == "development") {
         next(null, null);
         return;
     }
 
-    const token = request.cookies["token"];
-    if (!token || typeof token != "string") {
+    const authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
+    if (!authenticationCredential || typeof authenticationCredential != "string") {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
-    services.cache.getString("user_" + token, (error, reply)=> {
+    services.cache.getString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), (error, reply)=> {
         if (error) {
             next(error, null);
             return;
@@ -36,9 +31,9 @@ export function validate(request:libs.Request, response:libs.Response, documentU
             return;
         }
 
-        const tmp = token.split("g");
+        const tmp = authenticationCredential.split("g");
         if (tmp.length != 3) {
-            next(new Error("invalid token"), null);
+            next(new Error("invalid authentication credential"), null);
             return;
         }
 
@@ -48,7 +43,7 @@ export function validate(request:libs.Request, response:libs.Response, documentU
 
         if (now < milliseconds
             || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-            next(new Error("token is out of date"), null);
+            next(new Error("authentication credential is out of date"), null);
             return;
         }
 
@@ -64,10 +59,10 @@ export function validate(request:libs.Request, response:libs.Response, documentU
             }
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
-                services.cache.setString("user_" + token, JSON.stringify(user), 8 * 60 * 60);
+                services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
                 next(null, user);
             } else {
-                next(new Error("invalid token"), null);
+                next(new Error("invalid authentication credential"), null);
             }
         });
     });

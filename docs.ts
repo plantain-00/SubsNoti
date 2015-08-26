@@ -10,11 +10,11 @@ import services = require("./services/services");
 import controllers = require("./controllers/controllers");
 
 export const allDocuments:interfaces.ApiDocument[] = [
-    controllers.token.generateDocument,
-    controllers.token.acceptDocument,
-    controllers.token.validateDocument
+    controllers.authenticationCredential.createDocument,
+    controllers.authenticationCredential.updateDocument,
+    controllers.currentUser.getDocument
 ];
 
 export const notGetDocuments:interfaces.ApiDocument[] = [
-    controllers.token.generateDocument
+    controllers.currentUser.getDocument
 ];

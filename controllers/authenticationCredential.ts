@@ -7,9 +7,9 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-export const generateDocument:interfaces.ApiDocument = {
-    name: "get a token for a given email",
-    url: "/api/token/generate",
+export const createDocument:interfaces.ApiDocument = {
+    name: "get a authentication credential for a given email",
+    url: "/api/authentication_credential",
     description: "will send a link with it to the given email",
     method: "POST",
     contentType: "application/json",
@@ -49,8 +49,8 @@ export const generateDocument:interfaces.ApiDocument = {
     }]
 };
 
-export function generate(request:libs.Request, response:libs.Response) {
-    var documentUrl = generateDocument.documentUrl;
+export function create(request:libs.Request, response:libs.Response) {
+    var documentUrl = createDocument.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
         services.response.sendContentTypeError(response, documentUrl);
@@ -88,7 +88,7 @@ export function generate(request:libs.Request, response:libs.Response) {
                         return;
                     }
 
-                    services.logger.log(generateDocument.url, request, error=> {
+                    services.logger.log(createDocument.url, request, error=> {
                         if (error) {
                             console.log(error);
                         }
@@ -123,17 +123,17 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
             return;
         }
 
-        var token = services.token.generate(userId, salt);
+        var token = services.authenticationCredential.create(userId, salt);
 
-        services.email.send(email, "your token", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + acceptDocument.url + "?token=" + token + " to access the website", next)
+        services.email.send(email, "your authentication credential", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + updateDocument.url + "?authentication_credential=" + token + " to access the website", next)
     });
 }
 
-export const acceptDocument:interfaces.ApiDocument = {
-    name: "accept a token",
-    url: "/api/token/accept",
-    description: "will store it to cookie named 'token', and will redirect to home page",
-    method: "GET",
+export const updateDocument:interfaces.ApiDocument = {
+    name: "update a authentication credential",
+    url: "/api/authentication_credential",
+    description: "will update the cookie named '" + services.cookieKey.authenticationCredential + "', and then will redirect to home page",
+    method: "PUT",
     expirationDate: "no",
     versions: [{
         expirationDate: "no",
@@ -161,67 +161,20 @@ export const acceptDocument:interfaces.ApiDocument = {
     }]
 };
 
-export function accept(request:libs.Request, response:libs.Response) {
-    var documentUrl = acceptDocument.documentUrl;
+export function update(request:libs.Request, response:libs.Response) {
+    var documentUrl = updateDocument.documentUrl;
 
-    var token = request.query.token;
+    var authenticationCredential = request.query.authentication_credential;
 
-    if (!token) {
+    if (!authenticationCredential) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
-    response.cookie("token", token, {
+    response.cookie(services.cookieKey.authenticationCredential, authenticationCredential, {
         expires: libs.moment().clone().add(1, "months").toDate(),
         httpOnly: true
     });
 
     response.redirect("/index.html");
-}
-
-export const validateDocument:interfaces.ApiDocument = {
-    name: "validate whether current user is verified",
-    url: "/api/token/validate",
-    description: "the token should be stored in a cookie named 'token'",
-    method: "GET",
-    expirationDate: "no",
-    versions: [{
-        expirationDate: "no",
-        parameters: {
-            v: 1
-        },
-        cookieNames: {
-            token: {
-                type: "string",
-                required: true
-            }
-        },
-        responseBody: {
-            isSuccess: {
-                type: "boolean"
-            },
-            statusCode: {
-                type: "number"
-            },
-            errorCode: {
-                type: "number"
-            },
-            errorMessage: {
-                type: "string"
-            }
-        }
-    }]
-};
-
-export function validate(request:libs.Request, response:libs.Response):void {
-    var documentUrl = validateDocument.documentUrl;
-
-    services.token.validate(request, response, documentUrl, (error, user)=> {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        services.response.sendOK(response, documentUrl);
-    });
 }

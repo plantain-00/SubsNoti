@@ -13,9 +13,9 @@ import docs = require("./docs");
 
 export function apply(app:libs.Application) {
 
-    app.post(controllers.token.generateDocument.url, controllers.token.generate);
-    app.get(controllers.token.acceptDocument.url, controllers.token.accept);
-    app.get(controllers.token.validateDocument.url, controllers.token.validate);
+    app.post(controllers.authenticationCredential.createDocument.url, controllers.authenticationCredential.create);
+    app.put(controllers.authenticationCredential.updateDocument.url, controllers.authenticationCredential.update);
+    app.get(controllers.currentUser.getDocument.url, controllers.currentUser.get);
 
     libs._.each(docs.notGetDocuments, (api:interfaces.ApiDocument)=> {
         app.get(api.url, (request:libs.Request, response:libs.Response)=> {

@@ -8,7 +8,7 @@ import models = require("../models/models");
 import services = require("../services/services");
 
 export function limit(key:string, seconds:number, next:(error:Error)=>void) {
-    services.cache.getString("frequency" + key, (error, value)=> {
+    services.cache.getString(services.cacheKeyRule.getFrequency(key), (error, value)=> {
         if (error) {
             next(error);
             return;
@@ -19,7 +19,7 @@ export function limit(key:string, seconds:number, next:(error:Error)=>void) {
             return;
         }
 
-        services.cache.setString("frequency" + key, key, seconds);
+        services.cache.setString(services.cacheKeyRule.getFrequency(key), key, seconds);
         next(null);
     });
 }

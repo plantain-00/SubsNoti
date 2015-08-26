@@ -1,1 +1,2 @@
-export import token = require("./token");
+export import currentUser = require("./currentUser");
+export import authenticationCredential = require("./authenticationCredential");
