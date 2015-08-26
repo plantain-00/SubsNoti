@@ -131,7 +131,7 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
 
 export const getDocument:interfaces.ApiDocument = {
     name: "get authentication credential",
-    url: "/api/authentication_credential",
+    url: "/api/authentication_credential.html",
     description: "will get authentication credential, and then store it to a cookie named '" + services.cookieKey.authenticationCredential + "', and then will redirect to home page",
     method: "get",
     expirationDate: "no",
@@ -181,6 +181,7 @@ export function get(request:libs.Request, response:libs.Response) {
 
 export function route(app:libs.Application) {
     app[createDocument.method](createDocument.url, create);
+    services.response.notGet(app, createDocument);
 
     app[getDocument.method](getDocument.url, get);
 }
