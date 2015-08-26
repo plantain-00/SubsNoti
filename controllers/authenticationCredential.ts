@@ -181,5 +181,6 @@ export function get(request:libs.Request, response:libs.Response) {
 
 export function route(app:libs.Application) {
     app[createDocument.method](createDocument.url, create);
+
     app[getDocument.method](getDocument.url, get);
 }

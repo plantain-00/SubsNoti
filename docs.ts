@@ -14,7 +14,3 @@ export const allDocuments:interfaces.ApiDocument[] = [
     controllers.authenticationCredential.getDocument,
     controllers.currentUser.getDocument
 ];
-
-export const notGetDocuments:interfaces.ApiDocument[] = [
-    controllers.currentUser.getDocument
-];
