@@ -45,3 +45,4 @@ publish/models/*.js
 publish/services/*.js
 publish/public/*
 demos/*.js
+public/scripts/*.js

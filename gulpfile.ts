@@ -6,6 +6,7 @@ const ejs = require("gulp-ejs");
 const webpack = require('gulp-webpack');
 const minifyHtml = require('gulp-minify-html');
 const del = require('del');
+const rev = require('gulp-rev-hash');
 
 import libs = require("./libs");
 import settings = require("./settings");
@@ -64,6 +65,27 @@ gulp.task('index', function () {
         .pipe(gulp.dest("./public/"));
 });
 
+gulp.task('login', function () {
+    gulp.src('./scripts/login.js')
+        .pipe(webpack({
+            module: {
+                loaders: []
+            },
+            plugins: [
+                new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
+            ]
+        }))
+        .pipe(rename('login.min.js'))
+        .pipe(gulp.dest('./scripts/'));
+
+    gulp.src("./public/login.ejs")
+        .pipe(ejs({}))
+        .pipe(rev())
+        .pipe(minifyHtml(minifyHtmlConfig))
+        .pipe(rename('login.html'))
+        .pipe(gulp.dest("./public/"));
+});
+
 gulp.task("document", function () {
     del(["./public/doc/api/*"], function () {
         const documentsHome = {
@@ -96,4 +118,4 @@ gulp.task("document", function () {
     });
 });
 
-gulp.task("default", ["document", "publish", "index"]);
+gulp.task("default", ["document", "publish", "index", "login"]);

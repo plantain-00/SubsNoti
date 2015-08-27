@@ -24,6 +24,7 @@
     "gulp-ejs": "^1.1.1",
     "gulp-minify-html": "^1.0.4",
     "gulp-rename": "^1.2.2",
+    "gulp-rev-hash": "0.0.2",
     "gulp-webpack": "^1.5.0"
   }
 }
