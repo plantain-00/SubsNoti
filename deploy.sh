@@ -17,11 +17,14 @@ git pull
 npm --registry https://registry.npm.taobao.org install
 tsd install
 
+# gulp task clean
+gulp clean
+
 # compile
 tsc -m commonjs *.ts
 
-# gulp task
-gulp default
+# gulp task publish
+gulp publish
 
 # publish
 rsync -a $SRC_ROOT/node_modules/ $SRC_ROOT/publish/node_modules
