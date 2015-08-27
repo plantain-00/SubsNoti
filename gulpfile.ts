@@ -70,7 +70,9 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/"));
     gulp.src("./public/scripts/*.min.js")
         .pipe(gulp.dest("./publish/public/scripts/"));
-    gulp.src("./public/doc/api/*.min.html")
+    gulp.src("./public/styles/*.min.css")
+        .pipe(gulp.dest("./publish/public/styles/"));
+    gulp.src("./public/doc/api/*.html")
         .pipe(gulp.dest("./publish/public/doc/api"));
 });
 
