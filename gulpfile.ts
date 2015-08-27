@@ -52,6 +52,8 @@ gulp.task('publish', function () {
 
         gulp.src("./public/*.html")
             .pipe(gulp.dest("publish/public/"));
+        gulp.src("./public/scripts/*.js")
+            .pipe(gulp.dest("publish/public/scripts/"));
         gulp.src("./public/doc/api/*.html")
             .pipe(gulp.dest("publish/public/doc/api"));
     });
@@ -60,24 +62,24 @@ gulp.task('publish', function () {
 gulp.task('index', function () {
     gulp.src("./public/index.ejs")
         .pipe(ejs({}))
+        .pipe(rev())
         .pipe(minifyHtml(minifyHtmlConfig))
         .pipe(rename('index.html'))
         .pipe(gulp.dest("./public/"));
 });
 
-gulp.task('login', function () {
-    gulp.src('./scripts/login.js')
+gulp.task('login-js', function () {
+    gulp.src('./public/scripts/login.js')
         .pipe(webpack({
-            module: {
-                loaders: []
-            },
             plugins: [
                 new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
             ]
         }))
         .pipe(rename('login.min.js'))
-        .pipe(gulp.dest('./scripts/'));
+        .pipe(gulp.dest('./public/scripts/'));
+});
 
+gulp.task('login', ['login-js'], function () {
     gulp.src("./public/login.ejs")
         .pipe(ejs({}))
         .pipe(rev())
