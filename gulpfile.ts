@@ -41,7 +41,9 @@ gulp.task('clean', ()=> {
         './publish/*']);
 });
 
-gulp.task('publish', ['document', 'index', 'login'], ()=> {
+gulp.task('pack', ['document', 'index', 'login']);
+
+gulp.task('publish', ()=> {
     gulp.src('./app.js')
         .pipe(gulp.dest('./publish/'));
     gulp.src('./libs.js')
@@ -63,11 +65,11 @@ gulp.task('publish', ['document', 'index', 'login'], ()=> {
         .pipe(gulp.dest('./publish/controllers/'));
 
     gulp.src("./public/*.html")
-        .pipe(gulp.dest("publish/public/"));
+        .pipe(gulp.dest("./publish/public/"));
     gulp.src("./public/scripts/*.js")
-        .pipe(gulp.dest("publish/public/scripts/"));
+        .pipe(gulp.dest("./publish/public/scripts/"));
     gulp.src("./public/doc/api/*.html")
-        .pipe(gulp.dest("publish/public/doc/api"));
+        .pipe(gulp.dest("./publish/public/doc/api"));
 });
 
 gulp.task('index', ()=> {
