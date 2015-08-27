@@ -41,7 +41,9 @@ gulp.task('clean', ()=> {
         './publish/*']);
 });
 
-gulp.task('pack', ['document', 'index', 'login']);
+gulp.task('pack-js', ['login.js']);
+
+gulp.task('pack-html', ['document', 'index', 'login']);
 
 gulp.task('publish', ()=> {
     gulp.src('./app.js')
@@ -66,9 +68,9 @@ gulp.task('publish', ()=> {
 
     gulp.src("./public/*.html")
         .pipe(gulp.dest("./publish/public/"));
-    gulp.src("./public/scripts/*.js")
+    gulp.src("./public/scripts/*.min.js")
         .pipe(gulp.dest("./publish/public/scripts/"));
-    gulp.src("./public/doc/api/*.html")
+    gulp.src("./public/doc/api/*.min.html")
         .pipe(gulp.dest("./publish/public/doc/api"));
 });
 
@@ -88,11 +90,11 @@ gulp.task('login.js', ()=> {
                 new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
             ]
         }))
-        .pipe(rename('login.js'))
+        .pipe(rename('login.min.js'))
         .pipe(gulp.dest('./public/scripts/'));
 });
 
-gulp.task('login', ['login.js'], ()=> {
+gulp.task('login', ()=> {
     gulp.src("./public/login.ejs")
         .pipe(ejs({}))
         .pipe(rev())
