@@ -35,10 +35,9 @@ gulp.task('clean', ()=> {
         './models/*.js',
         './services/*.js',
         './tests/*.js',
-        './public/*.html',
-        './public/doc/api/*.html',
-        './public/styles/*.css',
-        './public/scripts/*.js',
+        './public/**/*.html',
+        './public/**/*.css',
+        './public/**/*.js',
         './publish/*']);
 });
 
@@ -80,7 +79,7 @@ gulp.task('index', ()=> {
         .pipe(gulp.dest("./public/"));
 });
 
-gulp.task('login-js', ()=> {
+gulp.task('login.js', ()=> {
     gulp.src('./public/scripts/login.js')
         .pipe(webpack({
             plugins: [
@@ -91,7 +90,7 @@ gulp.task('login-js', ()=> {
         .pipe(gulp.dest('./public/scripts/'));
 });
 
-gulp.task('login', ['login-js'], ()=> {
+gulp.task('login', ['login.js'], ()=> {
     gulp.src("./public/login.ejs")
         .pipe(ejs({}))
         .pipe(rev())

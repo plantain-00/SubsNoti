@@ -17,6 +17,9 @@ git pull
 npm --registry https://registry.npm.taobao.org install
 tsd install
 
+# compile gulpfile.ts
+tsc -m commonjs gulpfile.ts
+
 # gulp task clean
 gulp clean
 
