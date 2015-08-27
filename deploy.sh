@@ -25,6 +25,7 @@ gulp clean
 
 # compile
 tsc -m commonjs *.ts
+tsc -m commonjs ./public/scripts/*.ts
 
 # gulp task publish
 gulp publish

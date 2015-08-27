@@ -86,7 +86,7 @@ gulp.task('login.js', ()=> {
                 new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
             ]
         }))
-        .pipe(rename('login.min.js'))
+        .pipe(rename('login.js'))
         .pipe(gulp.dest('./public/scripts/'));
 });
 
