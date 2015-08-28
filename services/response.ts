@@ -7,14 +7,17 @@ import models = require("../models/models");
 
 import services = require("../services/services");
 
-function send(response:libs.Response, errorMessage:string, errorCode:enums.ErrorCode, statusCode:enums.StatusCode, documentUrl:string) {
-    response.status(200).json({
-        isSuccess: errorCode == enums.ErrorCode.success,
-        statusCode: statusCode,
-        errorCode: errorCode,
-        errorMessage: errorMessage,
-        documentUrl: documentUrl
-    });
+function send(response:libs.Response, errorMessage:string, errorCode:enums.ErrorCode, statusCode:enums.StatusCode, documentUrl:string, result?:any) {
+    if (!result) {
+        result = {}
+    }
+    result.isSuccess = errorCode == enums.ErrorCode.success;
+    result.statusCode = statusCode;
+    result.errorCode = errorCode;
+    result.errorMessage = errorMessage;
+    result.documentUrl = documentUrl;
+
+    response.status(200).json(result);
 }
 
 export function sendContentTypeError(response:libs.Response, documentUrl:string):void {
@@ -45,8 +48,8 @@ export function sendUnauthorizedError(response:libs.Response, errorMessage:strin
     send(response, errorMessage, enums.ErrorCode.unauthorizedError, enums.StatusCode.unauthorized, documentUrl);
 }
 
-export function sendOK(response:libs.Response, documentUrl:string):void {
-    send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl);
+export function sendOK(response:libs.Response, documentUrl:string, result?:any):void {
+    send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl, result);
 }
 
 export function sendWrongHttpMethod(response:libs.Response, documentUrl:string):void {

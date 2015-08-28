@@ -3,6 +3,8 @@ var Vue;
 declare
 var $;
 
+import base = require("./base");
+
 var vue;
 var vueModel = new Vue({
     el: "#vue",
@@ -48,7 +50,7 @@ var vueModel = new Vue({
     methods: {
         login: function () {
             this.isSending = true;
-            this.loginText = "is sending email now..."
+            this.loginText = "is sending email now...";
             var self = this;
             $.ajax({
                 url: "/api/authentication_credential",
@@ -76,4 +78,10 @@ var vueModel = new Vue({
 
 $(document).ready(function () {
     vue = new Vue(vueModel);
+
+    base.authenticate((error, data)=> {
+        if (!error) {
+            location.href = "/";
+        }
+    });
 });

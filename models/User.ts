@@ -23,10 +23,6 @@ class User {
         this.salt = row.Salt;
         this.status = row.Status;
     }
-
-    getEmail() {
-        return this.emailHead + "@" + this.emailTail;
-    }
 }
 
 export = User;

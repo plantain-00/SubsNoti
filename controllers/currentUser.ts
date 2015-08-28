@@ -36,6 +36,14 @@ export const getDocument:interfaces.ApiDocument = {
             },
             errorMessage: {
                 type: "string"
+            },
+            email: {
+                type: "string",
+                description: "exists when is success"
+            },
+            name: {
+                type: "string",
+                description: "exists when is success"
             }
         }
     }]
@@ -50,7 +58,10 @@ export function get(request:libs.Request, response:libs.Response):void {
             return;
         }
 
-        services.response.sendOK(response, documentUrl);
+        services.response.sendOK(response, documentUrl, {
+            email: user.emailHead + "@" + user.emailTail,
+            name: user.name
+        });
     });
 }
 
