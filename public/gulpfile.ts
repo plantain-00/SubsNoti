@@ -12,9 +12,20 @@ var minifyHtmlConfig = {
     spare: true
 };
 
-gulp.task('pack-js', ['login.js']);
+gulp.task('pack-js', ['index.js', 'login.js']);
 
 gulp.task('pack-html', ['index', 'login']);
+
+gulp.task('index.js', ()=> {
+    gulp.src('./scripts/index.js')
+        .pipe(webpack({
+            plugins: [
+                new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
+            ]
+        }))
+        .pipe(rename('index.min.js'))
+        .pipe(gulp.dest('./scripts/'));
+});
 
 gulp.task('index', ()=> {
     gulp.src("./index.ejs")
