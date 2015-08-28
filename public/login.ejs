@@ -27,7 +27,9 @@
                             <button type="button" class="btn btn-primary" disabled v-show="!canLogin">Please input
                                 email
                             </button>
-                            <button type="button" class="btn btn-primary" v-show="canLogin">Login</button>
+                            <button type="button" class="btn btn-primary" v-show="canLogin" v-on="click:login();">
+                                Login
+                            </button>
                         </div>
                     </div>
                 </form>
