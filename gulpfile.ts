@@ -1,12 +1,7 @@
 /// <reference path="./typings/tsd.d.ts" />
 
 import gulp = require('gulp');
-const rename = require('gulp-rename');
-const ejs = require("gulp-ejs");
-const webpack = require('gulp-webpack');
-const minifyHtml = require('gulp-minify-html');
 const del = require('del');
-const rev = require('gulp-rev-hash');
 
 import libs = require("./libs");
 import settings = require("./settings");
@@ -20,11 +15,6 @@ import services = require("./services/services");
 import controllers = require("./controllers/controllers");
 
 import docs = require("./docs");
-
-var minifyHtmlConfig = {
-    conditionals: true,
-    spare: true
-};
 
 gulp.task('clean', ()=> {
     del(['./*.js',
@@ -40,10 +30,6 @@ gulp.task('clean', ()=> {
         './public/**/*.js',
         './publish/*']);
 });
-
-gulp.task('pack-js', ['login.js']);
-
-gulp.task('pack-html', ['document', 'index', 'login']);
 
 gulp.task('publish', ()=> {
     gulp.src('./app.js')
@@ -74,35 +60,6 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/styles/"));
     gulp.src("./public/doc/api/*.html")
         .pipe(gulp.dest("./publish/public/doc/api"));
-});
-
-gulp.task('index', ()=> {
-    gulp.src("./public/index.ejs")
-        .pipe(ejs({}))
-        .pipe(rev())
-        .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename('index.html'))
-        .pipe(gulp.dest("./public/"));
-});
-
-gulp.task('login.js', ()=> {
-    gulp.src('./public/scripts/login.js')
-        .pipe(webpack({
-            plugins: [
-                new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
-            ]
-        }))
-        .pipe(rename('login.min.js'))
-        .pipe(gulp.dest('./public/scripts/'));
-});
-
-gulp.task('login', ()=> {
-    gulp.src("./public/login.ejs")
-        .pipe(ejs({}))
-        .pipe(rev())
-        .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename('login.html'))
-        .pipe(gulp.dest("./public/"));
 });
 
 gulp.task("document", ()=> {

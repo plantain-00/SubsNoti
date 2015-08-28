@@ -28,8 +28,11 @@ tsc -m commonjs *.ts
 tsc -m commonjs ./public/scripts/*.ts
 
 # gulp task publish
+gulp document
+cd ./public/
 gulp pack-js
 gulp pack-html
+cd ..
 gulp publish
 
 # publish
