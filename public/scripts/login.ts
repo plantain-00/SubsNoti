@@ -24,7 +24,7 @@ var vueModel = new Vue({
                 return this.innerEmailHead;
             },
             set: function (value) {
-                this.innerEmailHead = value.trim();
+                this.innerEmailHead = value.trim().toLowerCase();
             }
         },
         emailTail: {
@@ -32,7 +32,7 @@ var vueModel = new Vue({
                 return this.innerEmailTail;
             },
             set: function (value) {
-                this.innerEmailTail = value.trim();
+                this.innerEmailTail = value.trim().toLowerCase();
             }
         },
         name: {

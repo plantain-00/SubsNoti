@@ -57,14 +57,17 @@ export function create(request:libs.Request, response:libs.Response) {
         return;
     }
 
-    var emailHead = request.body.emailHead;
-    var emailTail = request.body.emailTail;
+    var emailHead:string = request.body.emailHead;
+    var emailTail:string = request.body.emailTail;
     var name = request.body.name;
 
     if (!emailHead || !emailTail) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
+
+    emailHead = emailHead.toLowerCase();
+    emailTail = emailTail.toLowerCase();
 
     services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
         if (error) {
