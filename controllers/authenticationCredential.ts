@@ -102,7 +102,7 @@ export function create(request:libs.Request, response:libs.Response) {
         } else if (rows.length == 1) {
             var user = new models.User(rows[0]);
 
-            sendEmail(user.id, user.salt, user.getEmail(), error=> {
+            sendEmail(user.id, user.salt, user.emailHead + "@" + user.emailTail, error=> {
                 if (error) {
                     services.response.sendEmailServiceError(response, error.message, documentUrl);
                     return;
