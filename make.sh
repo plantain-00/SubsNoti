@@ -20,6 +20,7 @@ gulp clean
 tsc -m commonjs *.ts
 tsc -m commonjs ./public/scripts/*.ts
 tsc -m commonjs ./public/*.ts
+tsc -m commonjs ./tests/*.ts
 
 # test
 mocha ./tests/
