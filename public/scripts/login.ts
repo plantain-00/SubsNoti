@@ -1,16 +1,21 @@
-declare var Vue;
-declare var $;
+declare
+var Vue;
+declare
+var $;
 
-var vue = new Vue({
+var vue;
+var vueModel = new Vue({
     el: "#vue",
     data: {
         innerEmailHead: "",
         innerEmailTail: "",
-        innerName: ""
+        innerName: "",
+        loginText: "Please input email",
+        isSending: false
     },
     computed: {
         canLogin: function () {
-            return this.emailHead && this.emailTail;
+            return this.emailHead && this.emailTail && !this.isSending;
         },
         emailHead: {
             get: function () {
@@ -42,6 +47,9 @@ var vue = new Vue({
     },
     methods: {
         login: function () {
+            this.isSending = true;
+            this.loginText = "is sending email now..."
+            var self = this;
             $.ajax({
                 url: "/api/authentication_credential",
                 data: JSON.stringify({
@@ -52,13 +60,20 @@ var vue = new Vue({
                 type: "POST",
                 contentType: "application/json",
                 success: function (data) {
+                    self.isSending = false;
+                    self.loginText = "Please input email";
                     if (data.isSuccess) {
                         alert("success, please check your email.");
+                        location.href = "/";
                     } else {
-                        alert(data.error_message);
+                        alert(data.errorMessage);
                     }
                 }
             });
         }
     }
+});
+
+$(document).ready(function () {
+    vue = new Vue(vueModel);
 });

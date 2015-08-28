@@ -24,8 +24,7 @@
                             <input type="text" class="form-control" v-model="name">
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary" disabled v-show="!canLogin">Please input
-                                email
+                            <button type="button" class="btn btn-primary" disabled v-show="!canLogin">{{loginText}}
                             </button>
                             <button type="button" class="btn btn-primary" v-show="canLogin" v-on="click:login();">
                                 Login
