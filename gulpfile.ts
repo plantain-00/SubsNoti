@@ -64,17 +64,17 @@ gulp.task("document", ()=> {
         apis: []
     };
 
-    var meta = '<meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">';
+    const meta = '<meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">';
 
     libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
         api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
         documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
 
-        var document = JSON.parse(JSON.stringify(api));
+        const document = JSON.parse(JSON.stringify(api));
 
         document.url = "<a href='" + api.url + "'>" + api.url + "</a>";
 
-        var data = meta + "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
+        const data = meta + "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
 
         libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
             if (error) {

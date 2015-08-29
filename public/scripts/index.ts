@@ -1,5 +1,4 @@
-declare
-var $;
+declare const $;
 
 import base = require("./base");
 

@@ -33,7 +33,7 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
         }
 
         if (reply) {
-            var userFromCache:interfaces.User = JSON.parse(reply);
+            const userFromCache:interfaces.User = JSON.parse(reply);
             next(null, userFromCache);
             return;
         }

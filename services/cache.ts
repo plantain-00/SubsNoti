@@ -6,7 +6,7 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export var client:libs.RedisClient;
+export let client:libs.RedisClient;
 
 export function getString(key:string, next:(error:Error, reply:string)=>void) {
     client.get(key, (error, reply)=> {

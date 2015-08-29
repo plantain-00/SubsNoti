@@ -1,5 +1,5 @@
-declare var Vue;
-declare var $;
+declare const Vue;
+declare const $;
 
 export function authenticate(next:(error:Error, data:any)=>void) {
     $.ajax({
@@ -19,7 +19,7 @@ export function authenticate(next:(error:Error, data:any)=>void) {
     });
 }
 
-var vueHeadModel = {
+const vueHeadModel = {
     el: "#vue-head",
     data: {
         loginStatus: 0,
@@ -27,4 +27,4 @@ var vueHeadModel = {
     }
 };
 
-export var vueHead = new Vue(vueHeadModel);
+export const vueHead = new Vue(vueHeadModel);

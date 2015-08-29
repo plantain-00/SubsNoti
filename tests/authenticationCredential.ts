@@ -10,7 +10,7 @@ import assert = require("assert");
 
 describe('create', ()=> {
     it('should work', () => {
-        var salt = libs.generateUuid();
+        const salt = libs.generateUuid();
         services.authenticationCredential.create(123, salt);
     });
 });

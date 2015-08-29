@@ -1,10 +1,10 @@
-declare var Vue;
-declare var $;
+declare const Vue;
+declare const $;
 
 import base = require("./base");
 
-var vueBody;
-var vueBodyModel = new Vue({
+let vueBody;
+const vueBodyModel = new Vue({
     el: "#vue-body",
     data: {
         innerEmailHead: "",
@@ -49,7 +49,7 @@ var vueBodyModel = new Vue({
         login: function () {
             this.isSending = true;
             this.loginText = "is sending email now...";
-            var self = this;
+            const self = this;
             $.ajax({
                 url: "/api/authentication_credential",
                 data: JSON.stringify({

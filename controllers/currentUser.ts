@@ -49,7 +49,7 @@ export const getDocument:interfaces.ApiDocument = {
 };
 
 export function get(request:libs.Request, response:libs.Response):void {
-    var documentUrl = getDocument.documentUrl;
+    const documentUrl = getDocument.documentUrl;
 
     services.currentUser.get(request, response, documentUrl, (error, user)=> {
         if (error) {

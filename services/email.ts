@@ -6,7 +6,7 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-var transporter = libs.nodeMailer.createTransport({
+const transporter = libs.nodeMailer.createTransport({
     host: settings.config.smtp.host,
     auth: {
         user: settings.config.smtp.name,
@@ -15,7 +15,7 @@ var transporter = libs.nodeMailer.createTransport({
 });
 
 export function send(to:string, subject:string, html:string, next:(error:Error)=>void) {
-    var mailOptions = {
+    const mailOptions = {
         from: settings.config.smtp.name,
         to: to,
         subject: subject,
