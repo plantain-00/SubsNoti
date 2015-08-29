@@ -33,3 +33,9 @@ export function get(key:string, field:string, next:(error:Error, reply:any)=>voi
         next(error, reply);
     });
 }
+
+export function ttl(key:string, next:(error:Error, reply:number)=>void) {
+    client.ttl(key, (error, reply)=> {
+        next(error, reply);
+    })
+}
