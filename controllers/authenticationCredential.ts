@@ -3,7 +3,6 @@ import settings = require("../settings");
 
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
-import models = require("../models/models");
 
 import services = require("../services/services");
 
@@ -103,9 +102,9 @@ export function create(request:libs.Request, response:libs.Response) {
 
             });
         } else if (rows.length == 1) {
-            var user = new models.User(rows[0]);
+            var user = services.user.getFromRow(rows[0]);
 
-            sendEmail(user.id, user.salt, user.emailHead + "@" + user.emailTail, error=> {
+            sendEmail(user.id, user.salt, services.user.getEmail(user), error=> {
                 if (error) {
                     services.response.sendEmailServiceError(response, error.message, documentUrl);
                     return;
@@ -127,8 +126,9 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
         }
 
         var token = services.authenticationCredential.create(userId, salt);
+        var url = "http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token;
 
-        services.email.send(email, "your authentication credential", "you can click http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token + " to access the website", next)
+        services.email.send(email, "your authentication credential", "you can click <a href='" + url + "'>" + url + "</a> to access the website", next)
     });
 }
 

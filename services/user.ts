@@ -3,11 +3,10 @@ import settings = require("../settings");
 
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
-import models = require("../models/models");
 
 import services = require("../services/services");
 
-export function getById(id:number, next:(error:Error, user:models.User)=>void) {
+export function getById(id:number, next:(error:Error, user:interfaces.User)=>void) {
     if (typeof id != "number") {
         next(null, null);
         return;
@@ -24,6 +23,22 @@ export function getById(id:number, next:(error:Error, user:models.User)=>void) {
             return;
         }
 
-        next(null, new models.User(rows[0]));
+        next(null, getFromRow(rows[0]));
     });
+}
+
+export function getFromRow(row:any):interfaces.User {
+    return {
+        id: row.ID,
+        name: row.Name,
+        emailHead: row.EmailHead,
+        emailTail: row.EmailTail,
+        organizationId: row.OrganizationID,
+        salt: row.Salt,
+        status: row.Status
+    }
+}
+
+export function getEmail(user:interfaces.User):string {
+    return user.emailHead + "@" + user.emailTail;
 }

@@ -1,5 +1,5 @@
-declare
-var $;
+declare var Vue;
+declare var $;
 
 export function authenticate(next:(error:Error, data:any)=>void) {
     $.ajax({
@@ -8,11 +8,23 @@ export function authenticate(next:(error:Error, data:any)=>void) {
         cache: false,
         success: function (data) {
             if (data.isSuccess) {
-                $("#currentUserName").html(data.name);
+                vueHead.$data.loginStatus = 2;
+                vueHead.$data.currentUserName = data.name;
                 next(null, data);
             } else {
-                next(new Error(data.error_message), null);
+                vueHead.$data.loginStatus = 1;
+                next(new Error(data.errorMessage), null);
             }
         }
     });
 }
+
+var vueHeadModel = {
+    el: "#vue-head",
+    data: {
+        loginStatus: 0,
+        currentUserName: ""
+    }
+};
+
+export var vueHead = new Vue(vueHeadModel);

@@ -3,7 +3,6 @@ import settings = require("../settings");
 
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
-import models = require("../models/models");
 
 import services = require("../services/services");
 
@@ -59,7 +58,7 @@ export function get(request:libs.Request, response:libs.Response):void {
         }
 
         services.response.sendOK(response, documentUrl, {
-            email: user.emailHead + "@" + user.emailTail,
+            email: services.user.getEmail(user),
             name: user.name
         });
     });

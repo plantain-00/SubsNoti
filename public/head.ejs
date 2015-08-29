@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-<header class="navbar navbar-inverse" role="banner">
+<header class="navbar navbar-inverse" role="banner" id="vue-head">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -22,22 +22,25 @@
         </div>
         <div class="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li id="home-focus">
-                    <a href="./login.html">Login</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav">
-                <li id="home-focus">
+                <li>
                     <a href="./doc/api/index.html">API</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#"><span class="glyphicon glyphicon-user" style="top:2px"></span>&nbsp;<span
-                                id="currentUserName"></span></a>
+                    <a href="javascript:void(0)" v-show="loginStatus != 1">
+                        <span class="glyphicon glyphicon-user" style="top:2px"></span>
+                        &nbsp;
+                        <span v-show="loginStatus == 0">Login now...</span>
+                        <span v-show="loginStatus == 2" style="display: none;">{{currentUserName}}</span>
+                    </a>
+                    <a href="./login.html" v-show="loginStatus == 1" style="display: none;">
+                        <span class="glyphicon glyphicon-user" style="top:2px"></span>
+                        &nbsp;Login
+                    </a>
                 </li>
                 <li>
-                    <a href="./exit">Exit</a>
+                    <a href="javascript:void(0)">Exit</a>
                 </li>
             </ul>
         </div>

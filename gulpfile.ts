@@ -8,7 +8,6 @@ import settings = require("./settings");
 
 import enums = require("./enums/enums");
 import interfaces = require("./interfaces/interfaces");
-import models = require("./models/models");
 
 import services = require("./services/services");
 
@@ -22,7 +21,6 @@ gulp.task('clean', ()=> {
         './demos/*.js',
         './enums/*.js',
         './interfaces/*.js',
-        './models/*.js',
         './services/*.js',
         './tests/*.js',
         './public/**/*.html',
@@ -45,8 +43,6 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest('./publish/enums/'));
     gulp.src('./interfaces/interfaces.js')
         .pipe(gulp.dest('./publish/interfaces/'));
-    gulp.src('./models/*.js')
-        .pipe(gulp.dest('./publish/models/'));
     gulp.src('./services/*.js')
         .pipe(gulp.dest('./publish/services/'));
     gulp.src('./controllers/*.js')

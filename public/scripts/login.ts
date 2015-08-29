@@ -1,13 +1,11 @@
-declare
-var Vue;
-declare
-var $;
+declare var Vue;
+declare var $;
 
 import base = require("./base");
 
-var vue;
-var vueModel = new Vue({
-    el: "#vue",
+var vueBody;
+var vueBodyModel = new Vue({
+    el: "#vue-body",
     data: {
         innerEmailHead: "",
         innerEmailTail: "",
@@ -77,11 +75,14 @@ var vueModel = new Vue({
 });
 
 $(document).ready(function () {
-    vue = new Vue(vueModel);
+    vueBody = new Vue(vueBodyModel);
 
     base.authenticate((error, data)=> {
-        if (!error) {
-            location.href = "/";
+        if (error) {
+            return
         }
+
+        alert("You are already logged in, will be redirect to home page now.");
+        location.href = "/";
     });
 });

@@ -3,13 +3,20 @@ import settings = require("../settings");
 
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
-import models = require("../models/models");
 
 import services = require("../services/services");
 
-export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:models.User)=>void) {
+export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:interfaces.User)=>void) {
     if (settings.config.environment == "development") {
-        next(null, null);
+        next(null, {
+            id: 0,
+            name: "test",
+            emailHead: "test",
+            emailTail: "test.com",
+            organizationId: null,
+            salt: libs.generateUuid(),
+            status: enums.UserStatus.normal
+        });
         return;
     }
 
@@ -26,7 +33,7 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
         }
 
         if (reply) {
-            var userFromCache:models.User = JSON.parse(reply);
+            var userFromCache:interfaces.User = JSON.parse(reply);
             next(null, userFromCache);
             return;
         }

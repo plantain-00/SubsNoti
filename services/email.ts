@@ -3,7 +3,6 @@ import settings = require("../settings");
 
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
-import models = require("../models/models");
 
 import services = require("../services/services");
 
@@ -15,12 +14,12 @@ var transporter = libs.nodeMailer.createTransport({
     }
 });
 
-export function send(to:string, subject:string, text:string, next:(error:Error)=>void) {
+export function send(to:string, subject:string, html:string, next:(error:Error)=>void) {
     var mailOptions = {
         from: settings.config.smtp.name,
         to: to,
         subject: subject,
-        text: text
+        html: html
     };
     transporter.sendMail(mailOptions, error=> {
         next(error);
