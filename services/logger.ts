@@ -6,10 +6,10 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export var logs:libs.Collection;
+export let logs:libs.Collection;
 
 export function log(url:string, request:libs.Request, next:(error:Error)=>void) {
-    var data:any = {
+    const data:any = {
         url: url,
         time: new Date()
     };

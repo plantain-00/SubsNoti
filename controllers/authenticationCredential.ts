@@ -49,16 +49,16 @@ export const createDocument:interfaces.ApiDocument = {
 };
 
 export function create(request:libs.Request, response:libs.Response) {
-    var documentUrl = createDocument.documentUrl;
+    const documentUrl = createDocument.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
     }
 
-    var emailHead:string = request.body.emailHead;
-    var emailTail:string = request.body.emailTail;
-    var name = request.body.name;
+    let emailHead:string = request.body.emailHead;
+    let emailTail:string = request.body.emailTail;
+    const name = request.body.name;
 
     if (!emailHead || !emailTail) {
         services.response.sendParameterMissedError(response, documentUrl);
@@ -75,7 +75,7 @@ export function create(request:libs.Request, response:libs.Response) {
         }
 
         if (rows.length == 0) {
-            var salt = libs.generateUuid();
+            const salt = libs.generateUuid();
             services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows)=> {
                 if (error) {
                     services.response.sendDBAccessError(response, error.message, documentUrl);
@@ -102,7 +102,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
             });
         } else if (rows.length == 1) {
-            var user = services.user.getFromRow(rows[0]);
+            const user = services.user.getFromRow(rows[0]);
 
             sendEmail(user.id, user.salt, services.user.getEmail(user), error=> {
                 if (error) {
@@ -125,8 +125,8 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
             return;
         }
 
-        var token = services.authenticationCredential.create(userId, salt);
-        var url = "http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token;
+        const token = services.authenticationCredential.create(userId, salt);
+        const url = "http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token;
 
         services.email.send(email, "your authentication credential", "you can click <a href='" + url + "'>" + url + "</a> to access the website", next)
     });
@@ -165,9 +165,9 @@ export const getDocument:interfaces.ApiDocument = {
 };
 
 export function get(request:libs.Request, response:libs.Response) {
-    var documentUrl = getDocument.documentUrl;
+    const documentUrl = getDocument.documentUrl;
 
-    var authenticationCredential = request.query.authentication_credential;
+    const authenticationCredential = request.query.authentication_credential;
 
     if (!authenticationCredential) {
         services.response.sendParameterMissedError(response, documentUrl);

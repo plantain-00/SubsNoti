@@ -7,7 +7,7 @@ const webpack = require('gulp-webpack');
 const minifyHtml = require('gulp-minify-html');
 const rev = require('gulp-rev-hash');
 
-var minifyHtmlConfig = {
+const minifyHtmlConfig = {
     conditionals: true,
     spare: true
 };
