@@ -66,7 +66,7 @@ gulp.task("document", ()=> {
 
     const meta = '<meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">';
 
-    libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
+    for (let api of docs.allDocuments) {
         api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
         documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
 
@@ -81,7 +81,7 @@ gulp.task("document", ()=> {
                 console.log(error);
             }
         });
-    });
+    }
 
     libs.fs.writeFile(libs.path.join(__dirname, 'public') + "/doc/api/index.html", meta + "<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "</pre>", error=> {
         if (error) {

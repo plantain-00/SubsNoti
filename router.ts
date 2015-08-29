@@ -14,7 +14,7 @@ export function apply(app:libs.Application) {
     controllers.authenticationCredential.route(app);
     controllers.currentUser.route(app);
 
-    libs._.each(docs.allDocuments, (api:interfaces.ApiDocument)=> {
+    for (let api of docs.allDocuments) {
         api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
-    });
+    }
 }
