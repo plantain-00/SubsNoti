@@ -19,20 +19,10 @@ app.use(libs.express.static(libs.path.join(__dirname, 'public')));
 import router = require("./router");
 router.apply(app);
 
-libs.mongodb.MongoClient.connect(settings.config.mongodb.url, (error, db)=> {
+services.mongo.connect((error, logs)=> {
     if (error) {
         console.log(error);
-        return;
     }
-
-    db.authenticate(settings.config.mongodb.user, settings.config.mongodb.password, (error)=> {
-        if (error) {
-            console.log(error);
-            return;
-        }
-
-        services.logger.logs = db.collection("logs");
-    });
 });
 
 services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
