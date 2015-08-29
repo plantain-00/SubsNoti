@@ -7,14 +7,22 @@ import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
 export function limit(key:string, seconds:number, next:(error:Error)=>void) {
-    services.cache.getString(services.cacheKeyRule.getFrequency(key), (error, value)=> {
+    const frequencyKey = services.cacheKeyRule.getFrequency(key);
+    services.cache.getString(frequencyKey, (error, value)=> {
         if (error) {
             next(error);
             return;
         }
 
         if (value) {
-            next(new Error("do it later after " + seconds + " seconds"));
+            services.cache.ttl(frequencyKey, (error, reply)=> {
+                if (error) {
+                    next(error);
+                    return;
+                }
+
+                next(new Error("do it later after " + reply + " seconds"));
+            });
             return;
         }
 
