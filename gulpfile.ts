@@ -67,14 +67,14 @@ gulp.task("document", ()=> {
     const meta = '<meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">';
 
     for (let api of docs.allDocuments) {
-        api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
-        documentsHome.apis.push("<a href='" + api.documentUrl + "'>" + api.name + "</a> -  <a href='" + api.url + "'>" + api.url + "</a> - " + api.method);
+        api.documentUrl = `/doc/api/${libs.md5(api.name)}.html`;
+        documentsHome.apis.push(`<a href='${api.documentUrl}'>${api.name}</a> -  <a href='${api.url}'>${api.url}</a> - ${api.method}`);
 
-        const document = JSON.parse(JSON.stringify(api));
+        let document = JSON.parse(JSON.stringify(api));
 
-        document.url = "<a href='" + api.url + "'>" + api.url + "</a>";
+        document.url = `<a href='${api.url}'>${api.url}</a>`;
 
-        const data = meta + "<style>*{font-family: 'Courier New'}</style><title>" + document.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(document, null, 4) + "</pre>";
+        let data = `${meta}<style>*{font-family: 'Courier New'}</style><title>${document.name}</title><pre style='font-size:16px;'>${JSON.stringify(document, null, 4)}</pre>`;
 
         libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
             if (error) {
@@ -83,7 +83,7 @@ gulp.task("document", ()=> {
         });
     }
 
-    libs.fs.writeFile(libs.path.join(__dirname, 'public') + "/doc/api/index.html", meta + "<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>" + documentsHome.name + "</title><pre style='font-size:16px;'>" + JSON.stringify(documentsHome, null, 4) + "</pre>", error=> {
+    libs.fs.writeFile(`${libs.path.join(__dirname, 'public')}/doc/api/index.html`, `${meta}<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>${documentsHome.name}</title><pre style='font-size:16px;'>${JSON.stringify(documentsHome, null, 4)}</pre>`, error=> {
         if (error) {
             console.log(error);
         }

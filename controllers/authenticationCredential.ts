@@ -84,7 +84,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
                 const id = rows.insertId;
 
-                sendEmail(id, salt, emailHead + "@" + emailTail, error=> {
+                sendEmail(id, salt, `${emailHead}@${emailTail}`, error=> {
                     if (error) {
                         services.response.sendEmailServiceError(response, error.message, documentUrl);
                         return;
@@ -126,16 +126,16 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
         }
 
         const token = services.authenticationCredential.create(userId, salt);
-        const url = "http://" + settings.config.website.outerHostName + ":" + settings.config.website.port + getDocument.url + "?authentication_credential=" + token;
+        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${getDocument.url}?authentication_credential=${token}`;
 
-        services.email.send(email, "your authentication credential", "you can click <a href='" + url + "'>" + url + "</a> to access the website", next)
+        services.email.send(email, "your authentication credential", `you can click <a href='" + url + "'>${url}</a> to access the website`, next)
     });
 }
 
 export const getDocument:interfaces.ApiDocument = {
     name: "get authentication credential",
     url: "/api/authentication_credential.html",
-    description: "will get authentication credential, and then store it to a cookie named '" + services.cookieKey.authenticationCredential + "', and then will redirect to home page",
+    description: `will get authentication credential, and then store it to a cookie named '${services.cookieKey.authenticationCredential}', and then will redirect to home page`,
     method: "get",
     expirationDate: "no",
     versions: [{

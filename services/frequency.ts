@@ -21,7 +21,7 @@ export function limit(key:string, seconds:number, next:(error:Error)=>void) {
                     return;
                 }
 
-                next(new Error("do it later after " + reply + " seconds"));
+                next(new Error(`do it later after ${reply} seconds`));
             });
             return;
         }

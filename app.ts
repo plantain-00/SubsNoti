@@ -31,5 +31,5 @@ services.cache.client.on("error", error=> {
 });
 
 app.listen(settings.config.website.port, settings.config.website.innerHostName, ()=> {
-    console.log("Server has started at port: " + settings.config.website.port);
+    console.log(`Server has started at port: ${settings.config.website.port}`);
 });
