@@ -9,7 +9,7 @@ import services = require("../services/services");
 export const getDocument:interfaces.ApiDocument = {
     name: "get current user",
     url: "/api/current_user.json",
-    description: "the authentication credential should be stored in a cookie named '" + services.cookieKey.authenticationCredential + "'",
+    description: `the authentication credential should be stored in a cookie named '${services.cookieKey.authenticationCredential}'`,
     method: "get",
     expirationDate: "no",
     versions: [{

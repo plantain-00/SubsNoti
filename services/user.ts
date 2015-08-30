@@ -40,5 +40,5 @@ export function getFromRow(row:any):interfaces.User {
 }
 
 export function getEmail(user:interfaces.User):string {
-    return user.emailHead + "@" + user.emailTail;
+    return `${user.emailHead}@${user.emailTail}`;
 }

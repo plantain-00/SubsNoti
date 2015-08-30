@@ -15,6 +15,6 @@ export function apply(app:libs.Application) {
     controllers.currentUser.route(app);
 
     for (let api of docs.allDocuments) {
-        api.documentUrl = "/doc/api/" + libs.md5(api.name) + ".html";
+        api.documentUrl = `/doc/api/${libs.md5(api.name)}.html`;
     }
 }
