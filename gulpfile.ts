@@ -17,7 +17,6 @@ import docs = require("./docs");
 
 gulp.task('clean', ()=> {
     del(['./*.js',
-        './*.ico',
         './controllers/*.js',
         './demos/*.js',
         './enums/*.js',
@@ -39,8 +38,6 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest('./publish/'));
     gulp.src('./router.js')
         .pipe(gulp.dest('./publish/'));
-    gulp.src('./favicon.ico')
-        .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')
         .pipe(gulp.dest('./publish/enums/'));
@@ -59,6 +56,8 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/styles/"));
     gulp.src("./public/doc/api/*.html")
         .pipe(gulp.dest("./publish/public/doc/api"));
+    gulp.src('./public/favicon.ico')
+        .pipe(gulp.dest('./publish/'));
 });
 
 gulp.task("document", ()=> {
