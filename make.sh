@@ -28,10 +28,7 @@ echo 'Finished "gulp clean".'
 
 # compile
 echo 'Starting "tsc"...'
-tsc -m commonjs *.ts
-tsc -m commonjs ./public/scripts/*.ts
-tsc -m commonjs ./public/*.ts
-tsc -m commonjs ./tests/*.ts
+tsc
 echo 'Finished "tsc".'
 
 # test
