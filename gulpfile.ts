@@ -17,6 +17,7 @@ import docs = require("./docs");
 
 gulp.task('clean', ()=> {
     del(['./*.js',
+        './*.ico',
         './controllers/*.js',
         './demos/*.js',
         './enums/*.js',
@@ -37,6 +38,8 @@ gulp.task('publish', ()=> {
     gulp.src('./docs.js')
         .pipe(gulp.dest('./publish/'));
     gulp.src('./router.js')
+        .pipe(gulp.dest('./publish/'));
+    gulp.src('./favicon.ico')
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')
