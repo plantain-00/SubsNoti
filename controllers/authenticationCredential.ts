@@ -128,7 +128,7 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
         const token = services.authenticationCredential.create(userId, salt);
         const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${getDocument.url}?authentication_credential=${token}`;
 
-        services.email.send(email, "your authentication credential", `you can click <a href='" + url + "'>${url}</a> to access the website`, next)
+        services.email.send(email, "your authentication credential", `you can click <a href='${url}'>${url}</a> to access the website`, next)
     });
 }
 
