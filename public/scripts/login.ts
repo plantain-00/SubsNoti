@@ -7,38 +7,39 @@ let vueBody;
 const vueBodyModel = new Vue({
     el: "#vue-body",
     data: {
-        innerEmailHead: "",
-        innerEmailTail: "",
+        emailHead: "",
+        emailTail: "",
         innerName: "",
         loginText: "Please input email",
-        isSending: false
+        isSending: false,
+        innerRawEmail: ""
     },
     computed: {
+        rawEmail: {
+            get: function () {
+                return this.innerRawEmail;
+            },
+            set: function (value) {
+                if (/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(value)) {
+                    var tmp = value.trim().toLowerCase().split("@");
+                    this.emailHead = tmp[0];
+                    this.emailTail = tmp[1];
+                } else {
+                    this.emailHead = "";
+                    this.emailTail = "";
+                }
+                this.innerRawEmail = value;
+            }
+        },
         canLogin: function () {
             return this.emailHead && this.emailTail && !this.isSending;
-        },
-        emailHead: {
-            get: function () {
-                return this.innerEmailHead;
-            },
-            set: function (value) {
-                this.innerEmailHead = value.trim().toLowerCase();
-            }
-        },
-        emailTail: {
-            get: function () {
-                return this.innerEmailTail;
-            },
-            set: function (value) {
-                this.innerEmailTail = value.trim().toLowerCase();
-            }
         },
         name: {
             get: function () {
                 if (this.innerName) {
                     return this.innerName;
                 }
-                return this.innerEmailHead;
+                return this.emailHead;
             },
             set: function (value) {
                 this.innerName = value.trim();
