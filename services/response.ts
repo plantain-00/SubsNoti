@@ -51,12 +51,12 @@ export function sendOK(response:libs.Response, documentUrl:string, result?:any):
     send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl, result);
 }
 
-export function sendWrongHttpMethod(response:libs.Response, documentUrl:string):void {
+function sendWrongHttpMethod(response:libs.Response, documentUrl:string):void {
     send(response, "current http method is not right for the api", enums.ErrorCode.wrongHttpMethod, enums.StatusCode.invalidRequest, documentUrl);
 }
 
 export function notGet(app:libs.Application, api:interfaces.ApiDocument) {
     app.get(api.url, (request:libs.Request, response:libs.Response)=> {
-        services.response.sendWrongHttpMethod(response, api.documentUrl);
+        sendWrongHttpMethod(response, api.documentUrl);
     });
 }
