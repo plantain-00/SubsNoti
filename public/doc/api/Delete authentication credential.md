@@ -1,6 +1,6 @@
-# Create a authentication credential for a given email
+# Delete authentication credential
 
-will send a link with it to the given email.
+will delete authentication credential from cookie.
 
 ## Url
 
@@ -8,11 +8,7 @@ will send a link with it to the given email.
 
 ## Method
 
-post
-
-## ContentType
-
-application/json
+delete
 
 ## API Expiration Date
 
@@ -30,13 +26,11 @@ key name | value type | required
 --- | --- | ---
 v | number | false
 
-### Request Body
+### Cookies
 
 key name | value type | required
 --- | --- | ---
-emailHead | string | true
-emailTail | string | true
-name | string | false
+authentication_credential | string | false
 
 ### Response Body
 
