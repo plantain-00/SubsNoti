@@ -10,10 +10,6 @@ will delete authentication credential from cookie.
 
 delete
 
-## API Expiration Date
-
-no
-
 ## version 1
 
 ### Expiration Date

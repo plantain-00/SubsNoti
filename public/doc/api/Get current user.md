@@ -10,10 +10,6 @@ the authentication credential should be stored in a cookie named 'authentication
 
 get
 
-## API Expiration Date
-
-no
-
 ## version 1
 
 ### Expiration Date
