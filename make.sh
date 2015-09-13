@@ -38,7 +38,9 @@ echo 'Finished "test".'
 
 # gulp task publish
 echo 'Starting "generate document"...'
-gulp document
+cd ./public/doc/api/
+gitbook build
+cd ../../../
 echo 'Finished "generate document".'
 cd ./public/
 echo 'Starting "generate js"...'

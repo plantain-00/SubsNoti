@@ -13,8 +13,6 @@ import services = require("./services/services");
 
 import controllers = require("./controllers/controllers");
 
-import docs = require("./docs");
-
 gulp.task('clean', ()=> {
     del(['./*.js',
         './controllers/*.js',
@@ -58,36 +56,4 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/doc/api"));
     gulp.src('./public/favicon.ico')
         .pipe(gulp.dest('./publish/'));
-});
-
-gulp.task("document", ()=> {
-    const documentsHome = {
-        name: "API document",
-        apis: []
-    };
-
-    const meta = '<meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">';
-
-    for (let api of docs.allDocuments) {
-        api.documentUrl = `/doc/api/${libs.md5(api.name)}.html`;
-        documentsHome.apis.push(`<a href='${api.documentUrl}'>${api.name}</a> -  <a href='${api.url}'>${api.url}</a> - ${api.method}`);
-
-        let document = JSON.parse(JSON.stringify(api));
-
-        document.url = `<a href='${api.url}'>${api.url}</a>`;
-
-        let data = `${meta}<style>*{font-family: 'Courier New'}</style><title>${document.name}</title><pre style='font-size:16px;'>${JSON.stringify(document, null, 4)}</pre>`;
-
-        libs.fs.writeFile(libs.path.join(__dirname, 'public') + document.documentUrl, data, error=> {
-            if (error) {
-                console.log(error);
-            }
-        });
-    }
-
-    libs.fs.writeFile(`${libs.path.join(__dirname, 'public')}/doc/api/index.html`, `${meta}<style>*{font-family: 'Courier New'}a:link{color:black;text-decoration: none}a:visited {color:black;text-decoration: none}a:hover {color:black;text-decoration: none}a:active {color:black;text-decoration: none}</style><title>${documentsHome.name}</title><pre style='font-size:16px;'>${JSON.stringify(documentsHome, null, 4)}</pre>`, error=> {
-        if (error) {
-            console.log(error);
-        }
-    });
 });

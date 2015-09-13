@@ -8,3 +8,4 @@
 8. mysql || mariadb
 9. mongodb
 10. redis
+11. gitbook-cli

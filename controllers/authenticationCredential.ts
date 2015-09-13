@@ -9,43 +9,8 @@ import services = require("../services/services");
 export const createDocument:interfaces.ApiDocument = {
     name: "get a authentication credential for a given email",
     url: "/api/authentication_credential",
-    description: "will send a link with it to the given email",
     method: "post",
-    contentType: "application/json",
-    expirationDate: "no",
-    versions: [{
-        expirationDate: "no",
-        parameters: {
-            v: 1
-        },
-        requestBody: {
-            emailHead: {
-                type: "string",
-                required: true
-            },
-            emailTail: {
-                type: "string",
-                required: true
-            },
-            name: {
-                type: "string"
-            }
-        },
-        responseBody: {
-            isSuccess: {
-                type: "boolean"
-            },
-            statusCode: {
-                type: "number"
-            },
-            errorCode: {
-                type: "number"
-            },
-            errorMessage: {
-                type: "string"
-            }
-        }
-    }]
+    documentUrl: "/doc/api/_book/Create a authentication credential for a given email.html"
 };
 
 export function create(request:libs.Request, response:libs.Response) {
@@ -135,33 +100,8 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
 export const getDocument:interfaces.ApiDocument = {
     name: "get authentication credential",
     url: "/api/authentication_credential.html",
-    description: `will get authentication credential, and then store it to a cookie named '${services.cookieKey.authenticationCredential}', and then will redirect to home page`,
     method: "get",
-    expirationDate: "no",
-    versions: [{
-        expirationDate: "no",
-        parameters: {
-            v: 1,
-            token: {
-                type: "string",
-                required: true
-            }
-        },
-        responseBody: {
-            isSuccess: {
-                type: "boolean"
-            },
-            statusCode: {
-                type: "number"
-            },
-            errorCode: {
-                type: "number"
-            },
-            errorMessage: {
-                type: "string"
-            }
-        }
-    }]
+    documentUrl: "/doc/api/_book/Get authentication credential.html"
 };
 
 export function get(request:libs.Request, response:libs.Response) {
