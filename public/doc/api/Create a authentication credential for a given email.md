@@ -14,10 +14,6 @@ post
 
 application/json
 
-## API Expiration Date
-
-no
-
 ## version 1
 
 ### Expiration Date

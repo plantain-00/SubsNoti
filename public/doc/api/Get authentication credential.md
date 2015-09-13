@@ -10,10 +10,6 @@ will get authentication credential, and then store it to a cookie named 'authent
 
 get
 
-## API Expiration Date
-
-no
-
 ## version 1
 
 ### Expiration Date
