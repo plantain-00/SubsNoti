@@ -48,6 +48,14 @@ const vueBodyModel = new Vue({
     },
     methods: {
         login: function () {
+            const lastSuccessfulEmailTime = window.localStorage.getItem("lastSuccessfulEmailTime");
+            if (lastSuccessfulEmailTime) {
+                const time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
+                if (time < 60 * 1000) {
+                    alert("please do it after " + time / 1000 + " seconds");
+                    return;
+                }
+            }
             this.isSending = true;
             this.loginText = "is sending email now...";
             const self = this;
@@ -65,6 +73,7 @@ const vueBodyModel = new Vue({
                     self.loginText = "Please input email";
                     if (data.isSuccess) {
                         alert("success, please check your email.");
+                        window.localStorage.setItem("lastSuccessfulEmailTime", new Date().getTime().toString());
                     } else {
                         alert(data.errorMessage);
                     }
