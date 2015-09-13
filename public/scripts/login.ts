@@ -65,7 +65,6 @@ const vueBodyModel = new Vue({
                     self.loginText = "Please input email";
                     if (data.isSuccess) {
                         alert("success, please check your email.");
-                        location.href = "/";
                     } else {
                         alert(data.errorMessage);
                     }
