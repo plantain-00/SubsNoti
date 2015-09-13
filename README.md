@@ -1,7 +1,7 @@
 1. git
-2. (node.js || io.js) && npm && n
+2. node.js 4.0+ && npm && n
 3. tsd
-4. typescript
+4. typescript 1.5+
 5. gulp
 6. forever
 7. mocha

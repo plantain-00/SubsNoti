@@ -7,7 +7,6 @@ import interfaces = require("../interfaces/interfaces");
 import services = require("../services/services");
 
 export const documentOfCreate:interfaces.ApiDocument = {
-    name: "get a authentication credential for a given email",
     url: "/api/authentication_credential",
     method: "post",
     documentUrl: "/doc/api/Create a authentication credential for a given email.html"
@@ -98,7 +97,6 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
 }
 
 export const documentOfGet:interfaces.ApiDocument = {
-    name: "get authentication credential",
     url: "/api/authentication_credential.html",
     method: "get",
     documentUrl: "/doc/api/Get authentication credential.html"
@@ -123,7 +121,6 @@ export function get(request:libs.Request, response:libs.Response) {
 }
 
 export const documentOfDelete:interfaces.ApiDocument = {
-    name: "delete authentication credential",
     url: "/api/authentication_credential",
     method: "delete",
     documentUrl: "/doc/api/Delete authentication credential.html"

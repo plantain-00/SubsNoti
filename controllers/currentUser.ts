@@ -6,15 +6,14 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export const getDocument:interfaces.ApiDocument = {
-    name: "get current user",
+export const documentOfGet:interfaces.ApiDocument = {
     url: "/api/current_user.json",
     method: "get",
     documentUrl: "/doc/api/Get current user.html"
 };
 
 export function get(request:libs.Request, response:libs.Response):void {
-    const documentUrl = getDocument.documentUrl;
+    const documentUrl = documentOfGet.documentUrl;
 
     services.currentUser.get(request, response, documentUrl, (error, user)=> {
         if (error) {
@@ -30,5 +29,5 @@ export function get(request:libs.Request, response:libs.Response):void {
 }
 
 export function route(app:libs.Application) {
-    app[getDocument.method](getDocument.url, get);
+    app[documentOfGet.method](documentOfGet.url, get);
 }
