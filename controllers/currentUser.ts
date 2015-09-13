@@ -10,7 +10,7 @@ export const getDocument:interfaces.ApiDocument = {
     name: "get current user",
     url: "/api/current_user.json",
     method: "get",
-    documentUrl: "/doc/api/_book/Get current user.html"
+    documentUrl: "/doc/api/Get current user.html"
 };
 
 export function get(request:libs.Request, response:libs.Response):void {

@@ -32,8 +32,6 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest('./publish/'));
     gulp.src('./libs.js')
         .pipe(gulp.dest('./publish/'));
-    gulp.src('./docs.js')
-        .pipe(gulp.dest('./publish/'));
     gulp.src('./router.js')
         .pipe(gulp.dest('./publish/'));
 
@@ -52,8 +50,8 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/scripts/"));
     gulp.src("./public/styles/*.min.css")
         .pipe(gulp.dest("./publish/public/styles/"));
-    gulp.src("./public/doc/api/*.html")
-        .pipe(gulp.dest("./publish/public/doc/api"));
+    gulp.src("./public/doc/api/_book/**")
+        .pipe(gulp.dest("./publish/public/doc/api/"));
     gulp.src('./public/favicon.ico')
         .pipe(gulp.dest('./publish/'));
 });
