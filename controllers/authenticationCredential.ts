@@ -10,7 +10,7 @@ export const createDocument:interfaces.ApiDocument = {
     name: "get a authentication credential for a given email",
     url: "/api/authentication_credential",
     method: "post",
-    documentUrl: "/doc/api/_book/Create a authentication credential for a given email.html"
+    documentUrl: "/doc/api/Create a authentication credential for a given email.html"
 };
 
 export function create(request:libs.Request, response:libs.Response) {
@@ -101,7 +101,7 @@ export const getDocument:interfaces.ApiDocument = {
     name: "get authentication credential",
     url: "/api/authentication_credential.html",
     method: "get",
-    documentUrl: "/doc/api/_book/Get authentication credential.html"
+    documentUrl: "/doc/api/Get authentication credential.html"
 };
 
 export function get(request:libs.Request, response:libs.Response) {
