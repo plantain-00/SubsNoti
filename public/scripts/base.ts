@@ -24,6 +24,20 @@ const vueHeadModel = {
     data: {
         loginStatus: 0,
         currentUserName: ""
+    },
+    methods: {
+        exit: function () {
+            var self = this;
+            $.ajax({
+                type: "DELETE",
+                url: "/api/authentication_credential",
+                cache: false,
+                success: function () {
+                    self.loginStatus = 1;
+                    self.currentUserName = "";
+                }
+            });
+        }
     }
 };
 

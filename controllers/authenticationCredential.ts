@@ -6,7 +6,7 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export const createDocument:interfaces.ApiDocument = {
+export const documentOfCreate:interfaces.ApiDocument = {
     name: "get a authentication credential for a given email",
     url: "/api/authentication_credential",
     method: "post",
@@ -14,7 +14,7 @@ export const createDocument:interfaces.ApiDocument = {
 };
 
 export function create(request:libs.Request, response:libs.Response) {
-    const documentUrl = createDocument.documentUrl;
+    const documentUrl = documentOfCreate.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
         services.response.sendContentTypeError(response, documentUrl);
@@ -55,7 +55,7 @@ export function create(request:libs.Request, response:libs.Response) {
                         return;
                     }
 
-                    services.logger.log(createDocument.url, request, error=> {
+                    services.logger.log(documentOfCreate.url, request, error=> {
                         if (error) {
                             console.log(error);
                         }
@@ -91,13 +91,13 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
         }
 
         const token = services.authenticationCredential.create(userId, salt);
-        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${getDocument.url}?authentication_credential=${token}`;
+        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${documentOfGet.url}?authentication_credential=${token}`;
 
         services.email.send(email, "your authentication credential", `you can click <a href='${url}'>${url}</a> to access the website`, next)
     });
 }
 
-export const getDocument:interfaces.ApiDocument = {
+export const documentOfGet:interfaces.ApiDocument = {
     name: "get authentication credential",
     url: "/api/authentication_credential.html",
     method: "get",
@@ -105,7 +105,7 @@ export const getDocument:interfaces.ApiDocument = {
 };
 
 export function get(request:libs.Request, response:libs.Response) {
-    const documentUrl = getDocument.documentUrl;
+    const documentUrl = documentOfGet.documentUrl;
 
     const authenticationCredential = request.query.authentication_credential;
 
@@ -122,9 +122,25 @@ export function get(request:libs.Request, response:libs.Response) {
     response.redirect("/index.html");
 }
 
-export function route(app:libs.Application) {
-    app[createDocument.method](createDocument.url, create);
-    services.response.notGet(app, createDocument);
+export const documentOfDelete:interfaces.ApiDocument = {
+    name: "delete authentication credential",
+    url: "/api/authentication_credential",
+    method: "delete",
+    documentUrl: "/doc/api/Delete authentication credential.html"
+};
 
-    app[getDocument.method](getDocument.url, get);
+export function deleteThis(request:libs.Request, response:libs.Response) {
+    const documentUrl = documentOfDelete.documentUrl;
+
+    response.clearCookie(services.cookieKey.authenticationCredential);
+
+    services.response.sendOK(response, documentUrl);
+}
+
+export function route(app:libs.Application) {
+    app[documentOfCreate.method](documentOfCreate.url, create);
+    services.response.notGet(app, documentOfCreate);
+    app[documentOfDelete.method](documentOfDelete.url, deleteThis);
+
+    app[documentOfGet.method](documentOfGet.url, get);
 }
