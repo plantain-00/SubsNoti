@@ -4,7 +4,7 @@ will send a link with it to the given email.
 
 ## Url
 
-[/api/authentication_credential](/api/authentication_credential)
+/api/authentication_credential
 
 ## Method
 
@@ -14,7 +14,7 @@ post
 
 application/json
 
-## Expiration Date
+## API Expiration Date
 
 no
 

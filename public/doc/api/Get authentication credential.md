@@ -4,13 +4,13 @@ will get authentication credential, and then store it to a cookie named 'authent
 
 ## Url
 
-[/api/authentication_credential.html](/api/authentication_credential.html)
+/api/authentication_credential.html
 
 ## Method
 
 get
 
-## Expiration Date
+## API Expiration Date
 
 no
 

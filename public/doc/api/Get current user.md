@@ -4,13 +4,13 @@ the authentication credential should be stored in a cookie named 'authentication
 
 ## Url
 
-[/api/current_user.json](/api/current_user.json)
+/api/current_user.json
 
 ## Method
 
 get
 
-## Expiration Date
+## API Expiration Date
 
 no
 
