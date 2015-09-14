@@ -33,8 +33,8 @@ authentication_credential | string | true
 key name | value type | description
 --- | --- | ---
 isSuccess | boolean |
-statusCode | number | 0 when is success
+statusCode | number |
 errorCode | number | 0 when is success
-errorMessage | string | '' when is success
+errorMessage | string | empty when is success
 email | string | exists when is success
 name | string | exists when is success
