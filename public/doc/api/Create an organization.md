@@ -1,10 +1,8 @@
-# Create a authentication credential for a given email
-
-will send a link with it to the given email.
+# Create an organization
 
 ## Url
 
-/api/authentication_credential
+/api/organization
 
 ## Method
 
@@ -30,9 +28,13 @@ v | number | false
 
 key name | value type | required
 --- | --- | ---
-emailHead | string | true
-emailTail | string | true
-name | string | false
+organizationName | string | true
+
+### Cookies
+
+key name | value type | required
+--- | --- | ---
+authentication_credential | string | true
 
 ### Response Body
 

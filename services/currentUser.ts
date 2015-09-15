@@ -9,7 +9,7 @@ import services = require("../services/services");
 export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:interfaces.User)=>void) {
     if (settings.config.environment == "development") {
         next(null, {
-            id: 0,
+            id: 1,
             name: "test",
             emailHead: "test",
             emailTail: "test.com",

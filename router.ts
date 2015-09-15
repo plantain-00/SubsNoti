@@ -11,4 +11,5 @@ import controllers = require("./controllers/controllers");
 export function apply(app:libs.Application) {
     controllers.authenticationCredential.route(app);
     controllers.currentUser.route(app);
+    controllers.organization.route(app);
 }
