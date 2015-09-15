@@ -9,7 +9,7 @@ import services = require("../services/services");
 export const documentOfCreate:interfaces.ApiDocument = {
     url: "/api/authentication_credential",
     method: "post",
-    documentUrl: "/doc/api/Create a authentication credential for a given email.html"
+    documentUrl: "/doc/api/Create an authentication credential for a given email.html"
 };
 
 export function create(request:libs.Request, response:libs.Response) {

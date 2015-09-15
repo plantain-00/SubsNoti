@@ -51,6 +51,10 @@ export function sendOK(response:libs.Response, documentUrl:string, result?:any):
     send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl, result);
 }
 
+export function sendAlreadyExistError(response:libs.Response, errorMessage:string, documentUrl:string):void {
+    send(response, errorMessage, enums.ErrorCode.alreadyExistError, enums.StatusCode.invalidRequest, documentUrl);
+}
+
 function sendWrongHttpMethod(response:libs.Response, documentUrl:string):void {
     send(response, "current http method is not right for the api", enums.ErrorCode.wrongHttpMethod, enums.StatusCode.invalidRequest, documentUrl);
 }
