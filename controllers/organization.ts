@@ -61,7 +61,7 @@ export function create(request:libs.Request, response:libs.Response) {
                         return;
                     }
 
-                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatedBy) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows)=> {
+                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows)=> {
                         if (error) {
                             services.response.sendDBAccessError(response, error.message, documentUrl);
                             return;
