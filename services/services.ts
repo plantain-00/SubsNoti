@@ -11,3 +11,4 @@ export import authenticationCredential = require("./authenticationCredential");
 export import cacheKeyRule = require("./cacheKeyRule");
 export import cookieKey = require("./cookieKey");
 export import mongo = require("./mongo");
+export import organization = require("./organization");

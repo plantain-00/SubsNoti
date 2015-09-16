@@ -4,13 +4,11 @@ import settings = require("../settings");
 import enums = require("../enums/enums");
 import interfaces = require("../interfaces/interfaces");
 
-interface User {
+interface Organization {
     id:number;
     name:string;
-    emailHead:string;
-    emailTail:string;
-    salt:string;
-    status:enums.UserStatus;
+    status:enums.OrganizationStatus;
+    createdBy:number;
 }
 
-export = User;
+export = Organization;

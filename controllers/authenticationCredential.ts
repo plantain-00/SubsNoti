@@ -32,13 +32,22 @@ export function create(request:libs.Request, response:libs.Response) {
     emailHead = emailHead.toLowerCase();
     emailTail = emailTail.toLowerCase();
 
-    services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
+    services.user.getByEmail(emailHead, emailTail, (error, user)=> {
         if (error) {
             services.response.sendDBAccessError(response, error.message, documentUrl);
             return;
         }
 
-        if (rows.length == 0) {
+        if (user) {
+            sendEmail(user.id, user.salt, services.user.getEmail(user), error=> {
+                if (error) {
+                    services.response.sendEmailServiceError(response, error.message, documentUrl);
+                    return;
+                }
+
+                services.response.sendCreatedOrModified(response, documentUrl);
+            });
+        } else {
             const salt = libs.generateUuid();
             services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows)=> {
                 if (error) {
@@ -62,22 +71,7 @@ export function create(request:libs.Request, response:libs.Response) {
                         services.response.sendCreatedOrModified(response, documentUrl);
                     });
                 });
-
-
             });
-        } else if (rows.length == 1) {
-            const user = services.user.getFromRow(rows[0]);
-
-            sendEmail(user.id, user.salt, services.user.getEmail(user), error=> {
-                if (error) {
-                    services.response.sendEmailServiceError(response, error.message, documentUrl);
-                    return;
-                }
-
-                services.response.sendCreatedOrModified(response, documentUrl);
-            });
-        } else {
-            services.response.sendAccountInWrongStatusError(response, "the account is in wrong status now", documentUrl);
         }
     });
 }

@@ -33,44 +33,56 @@ export function create(request:libs.Request, response:libs.Response) {
             return;
         }
 
-        services.db.access("select * from organizations where Name = ?", [organizationName], (error, rows)=> {
+        services.organization.existsByName(organizationName, (error, exists)=> {
             if (error) {
                 services.response.sendDBAccessError(response, error.message, documentUrl);
                 return;
             }
 
-            if (rows.length > 0) {
+            if (exists) {
                 services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
                 return;
             }
 
-            services.db.beginTransaction((error, connection)=> {
+            services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
                 if (error) {
                     services.response.sendDBAccessError(response, error.message, documentUrl);
                     return;
                 }
 
-                services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatedBy) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows)=> {
+                if (organizationIds.length >= 3) {
+                    services.response.sendAlreadyExistError(response, "you already created 3 organizations.", documentUrl);
+                    return;
+                }
+
+                services.db.beginTransaction((error, connection)=> {
                     if (error) {
                         services.response.sendDBAccessError(response, error.message, documentUrl);
                         return;
                     }
 
-                    const organizationId = rows.insertId;
-
-                    services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, 1], (error, rows)=> {
+                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatedBy) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows)=> {
                         if (error) {
                             services.response.sendDBAccessError(response, error.message, documentUrl);
                             return;
                         }
 
-                        services.db.endTransaction(connection, error=> {
+                        const organizationId = rows.insertId;
+
+                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, 1], (error, rows)=> {
                             if (error) {
                                 services.response.sendDBAccessError(response, error.message, documentUrl);
                                 return;
                             }
 
-                            services.response.sendCreatedOrModified(response, documentUrl);
+                            services.db.endTransaction(connection, error=> {
+                                if (error) {
+                                    services.response.sendDBAccessError(response, error.message, documentUrl);
+                                    return;
+                                }
+
+                                services.response.sendCreatedOrModified(response, documentUrl);
+                            });
                         });
                     });
                 });
