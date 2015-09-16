@@ -28,11 +28,7 @@ gulp.task('clean', ()=> {
 });
 
 gulp.task('publish', ()=> {
-    gulp.src('./app.js')
-        .pipe(gulp.dest('./publish/'));
-    gulp.src('./libs.js')
-        .pipe(gulp.dest('./publish/'));
-    gulp.src('./router.js')
+    gulp.src(['./app.js', './libs.js', './router.js', './public/favicon.ico'])
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')
@@ -52,6 +48,4 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/styles/"));
     gulp.src("./public/doc/api/_book/**")
         .pipe(gulp.dest("./publish/public/doc/api/"));
-    gulp.src('./public/favicon.ico')
-        .pipe(gulp.dest('./publish/'));
 });
