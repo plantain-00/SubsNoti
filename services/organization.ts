@@ -34,6 +34,6 @@ export function getFromRow(row:any):interfaces.Organization {
         id: row.ID,
         name: row.Name,
         status: row.Status,
-        createdBy: row.CreatedBy
+        creatorId: row.CreatorID
     }
 }

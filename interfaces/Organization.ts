@@ -8,7 +8,7 @@ interface Organization {
     id:number;
     name:string;
     status:enums.OrganizationStatus;
-    createdBy:number;
+    creatorId:number;
 }
 
 export = Organization;
