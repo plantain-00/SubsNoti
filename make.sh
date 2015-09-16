@@ -39,6 +39,7 @@ echo 'Finished "test".'
 # gulp task publish
 echo 'Starting "generate document"...'
 cd ./public/doc/api/
+dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
 gitbook build
 cd ../../../
 echo 'Finished "generate document".'

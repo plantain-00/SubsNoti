@@ -1,0 +1,8 @@
+graph G {
+    Organizations -- Members [taillabel="*" headlabel="1..*"]
+    Organizations -- Themes [taillabel="1" headlabel="*"]
+    Organizations -- Creators [taillabel="*" headlabel="1"]
+    Themes -- Owners [taillabel="*" headlabel="1..*"]
+    Themes -- Watchers [taillabel="*" headlabel="1..*"]
+    Themes -- Creators [taillabel="*" headlabel="1"]
+}
