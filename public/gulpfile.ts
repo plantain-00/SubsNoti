@@ -17,61 +17,45 @@ gulp.task('pack-js', ['index.js', 'login.js', 'newOrganization.js']);
 gulp.task('pack-html', ['index', 'login', 'newOrganization']);
 
 gulp.task('index.js', ()=> {
-    gulp.src('./scripts/index.js')
-        .pipe(webpack({
-            plugins: [
-                new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
-            ]
-        }))
-        .pipe(rename('index.min.js'))
-        .pipe(gulp.dest('./scripts/'));
+    bundleAndUglifyJs("index");
 });
 
 gulp.task('index', ()=> {
-    gulp.src("./index.ejs")
-        .pipe(ejs({}))
-        .pipe(rev())
-        .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename('index.html'))
-        .pipe(gulp.dest("./"));
+    bundleAndUglifyHtml("index");
 });
 
 gulp.task('login.js', ()=> {
-    gulp.src('./scripts/login.js')
-        .pipe(webpack({
-            plugins: [
-                new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
-            ]
-        }))
-        .pipe(rename('login.min.js'))
-        .pipe(gulp.dest('./scripts/'));
+    bundleAndUglifyJs("login");
 });
 
 gulp.task('login', ()=> {
-    gulp.src("./login.ejs")
-        .pipe(ejs({}))
-        .pipe(rev())
-        .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename('login.html'))
-        .pipe(gulp.dest("./"));
+    bundleAndUglifyHtml("login");
 });
 
 gulp.task('newOrganization.js', ()=> {
-    gulp.src('./scripts/newOrganization.js')
+    bundleAndUglifyJs("newOrganization");
+});
+
+gulp.task('newOrganization', ()=> {
+    bundleAndUglifyHtml("newOrganization");
+});
+
+function bundleAndUglifyJs(name:string) {
+    gulp.src('./scripts/' + name + '.js')
         .pipe(webpack({
             plugins: [
                 new webpack.webpack.optimize.UglifyJsPlugin({minimize: true})
             ]
         }))
-        .pipe(rename('newOrganization.min.js'))
+        .pipe(rename(name + '.min.js'))
         .pipe(gulp.dest('./scripts/'));
-});
+}
 
-gulp.task('newOrganization', ()=> {
-    gulp.src("./newOrganization.ejs")
+function bundleAndUglifyHtml(name:string) {
+    gulp.src('./' + name + ".ejs")
         .pipe(ejs({}))
         .pipe(rev())
         .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename('newOrganization.html'))
+        .pipe(rename(name + '.html'))
         .pipe(gulp.dest("./"));
-});
+}
