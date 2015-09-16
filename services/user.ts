@@ -27,13 +27,33 @@ export function getById(id:number, next:(error:Error, user:interfaces.User)=>voi
     });
 }
 
+export function getByEmail(emailHead:string, emailTail:string, next:(error:Error, user:interfaces.User)=>void) {
+    services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
+        if (error) {
+            next(error, null);
+            return;
+        }
+
+        if (rows.length == 0) {
+            next(null, null);
+            return;
+        }
+
+        if (rows.length > 1) {
+            next(new Error("the account is in wrong status now"), null);
+            return;
+        }
+
+        next(null, getFromRow(rows[0]));
+    });
+}
+
 export function getFromRow(row:any):interfaces.User {
     return {
         id: row.ID,
         name: row.Name,
         emailHead: row.EmailHead,
         emailTail: row.EmailTail,
-        organizationId: row.OrganizationID,
         salt: row.Salt,
         status: row.Status
     }

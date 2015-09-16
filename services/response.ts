@@ -35,10 +35,6 @@ export function sendCreatedOrModified(response:libs.Response, documentUrl:string
     send(response, "", enums.ErrorCode.success, enums.StatusCode.createdOrModified, documentUrl);
 }
 
-export function sendAccountInWrongStatusError(response:libs.Response, errorMessage:string, documentUrl:string):void {
-    send(response, errorMessage, enums.ErrorCode.accountInWrongStatus, enums.StatusCode.unprocessableEntity, documentUrl);
-}
-
 export function sendEmailServiceError(response:libs.Response, errorMessage:string, documentUrl:string):void {
     send(response, errorMessage, enums.ErrorCode.emailServiceError, enums.StatusCode.internalServerError, documentUrl);
 }
