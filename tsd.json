@@ -6,40 +6,46 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "serve-static/serve-static.d.ts": {
-      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "mime/mime.d.ts": {
-      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "express/express.d.ts": {
-      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "gulp/gulp.d.ts": {
-      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "mysql/mysql.d.ts": {
-      "commit": "832c51db815c766fa42a2e995a7b3136ec6d15c2"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "moment/moment.d.ts": {
-      "commit": "38fb591c6eba840e0b53d1110302b8e4fb04651c"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "moment/moment-node.d.ts": {
-      "commit": "38fb591c6eba840e0b53d1110302b8e4fb04651c"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "lodash/lodash.d.ts": {
-      "commit": "38fb591c6eba840e0b53d1110302b8e4fb04651c"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "redis/redis.d.ts": {
-      "commit": "38fb591c6eba840e0b53d1110302b8e4fb04651c"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "mongodb/mongodb.d.ts": {
-      "commit": "8f081073e6cb416f901b272810d8b04d6e01c9e0"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
     "mocha/mocha.d.ts": {
-      "commit": "e5de5c4daf8cdc33ed60704cd6e8021c99a89f92"
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
+    },
+    "orchestrator/orchestrator.d.ts": {
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
+    },
+    "q/Q.d.ts": {
+      "commit": "4356af494c045299110677b21e62000957e7a72e"
     }
   }
 }

@@ -1,7 +1,5 @@
-declare
-const Vue;
-declare
-const $;
+declare let Vue;
+declare let $;
 
 import base = require("./base");
 

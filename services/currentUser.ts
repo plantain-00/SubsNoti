@@ -13,7 +13,6 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
             name: "test",
             emailHead: "test",
             emailTail: "test.com",
-            organizationId: null,
             salt: libs.generateUuid(),
             status: enums.UserStatus.normal
         });
