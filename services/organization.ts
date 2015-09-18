@@ -29,6 +29,8 @@ export function getByCreatorId(creatorId:number, next:(error:Error, organization
     });
 }
 
+export const maxNumberUserCanCreate = 3;
+
 export function getFromRow(row:any):interfaces.Organization {
     return {
         id: row.ID,

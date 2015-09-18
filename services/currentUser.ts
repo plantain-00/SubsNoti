@@ -8,13 +8,23 @@ import services = require("../services/services");
 
 export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:interfaces.User)=>void) {
     if (settings.config.environment == "development") {
-        next(null, {
+        const user:interfaces.User = {
             id: 1,
             name: "test",
             emailHead: "test",
             emailTail: "test.com",
             salt: libs.generateUuid(),
             status: enums.UserStatus.normal
+        };
+        services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
+            if (error) {
+                next(error, null);
+                return;
+            }
+
+            user.createdOrganizationIds = organizationIds;
+
+            next(null, user);
         });
         return;
     }
@@ -66,10 +76,22 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
                 services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
-                next(null, user);
+
+                services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
+                    if (error) {
+                        next(error, null);
+                        return;
+                    }
+
+                    user.createdOrganizationIds = organizationIds;
+
+                    next(null, user);
+                });
             } else {
                 next(new Error("invalid authentication credential"), null);
             }
+
+
         });
     });
 }

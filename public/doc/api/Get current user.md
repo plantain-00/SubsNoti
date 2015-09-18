@@ -38,3 +38,4 @@ errorCode | number | 0 when is success
 errorMessage | string | empty when is success
 email | string | exists when is success
 name | string | exists when is success
+canCreateOrganization | boolean | exists when is success

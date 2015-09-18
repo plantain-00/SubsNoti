@@ -2,6 +2,7 @@ declare let Vue;
 declare let $;
 
 import base = require("./base");
+import interfaces = require("../../interfaces/interfaces");
 
 let vueBody;
 const vueBodyModel = new Vue({
@@ -28,7 +29,7 @@ const vueBodyModel = new Vue({
                 }),
                 type: "POST",
                 contentType: "application/json",
-                success: function (data) {
+                success: function (data:interfaces.Response) {
                     self.isSending = false;
                     self.loginText = "Please input organization name";
                     if (data.isSuccess) {

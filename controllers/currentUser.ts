@@ -21,10 +21,13 @@ export function get(request:libs.Request, response:libs.Response):void {
             return;
         }
 
-        services.response.sendOK(response, documentUrl, {
+        const result:interfaces.GetCurrentUserRespopnse = {
             email: services.user.getEmail(user),
-            name: user.name
-        });
+            name: user.name,
+            canCreateOrganization: user.createdOrganizationIds.length < services.organization.maxNumberUserCanCreate
+        };
+
+        services.response.sendOK(response, documentUrl, result);
     });
 }
 
