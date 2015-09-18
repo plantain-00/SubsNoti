@@ -6,17 +6,20 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-function send(response:libs.Response, errorMessage:string, errorCode:enums.ErrorCode, statusCode:enums.StatusCode, documentUrl:string, result?:any) {
+function send(response:libs.Response, errorMessage:string, errorCode:enums.ErrorCode, statusCode:enums.StatusCode, documentUrl:string, result?:Object) {
     if (!result) {
-        result = {}
+        result = {};
     }
-    result.isSuccess = errorCode == enums.ErrorCode.success;
-    result.statusCode = statusCode;
-    result.errorCode = errorCode;
-    result.errorMessage = errorMessage;
-    result.documentUrl = documentUrl;
 
-    response.status(200).json(result);
+    var baseResponse:interfaces.Response = {
+        isSuccess: errorCode == enums.ErrorCode.success,
+        statusCode: statusCode,
+        errorCode: errorCode,
+        errorMessage: errorMessage,
+        documentUrl: documentUrl
+    };
+
+    response.status(200).json(libs._.extend(baseResponse, result));
 }
 
 export function sendContentTypeError(response:libs.Response, documentUrl:string):void {
@@ -43,7 +46,7 @@ export function sendUnauthorizedError(response:libs.Response, errorMessage:strin
     send(response, errorMessage, enums.ErrorCode.unauthorizedError, enums.StatusCode.unauthorized, documentUrl);
 }
 
-export function sendOK(response:libs.Response, documentUrl:string, result?:any):void {
+export function sendOK(response:libs.Response, documentUrl:string, result?:Object):void {
     send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl, result);
 }
 

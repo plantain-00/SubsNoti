@@ -50,8 +50,8 @@ export function create(request:libs.Request, response:libs.Response) {
                     return;
                 }
 
-                if (organizationIds.length >= 3) {
-                    services.response.sendAlreadyExistError(response, "you already created 3 organizations.", documentUrl);
+                if (organizationIds.length >= services.organization.maxNumberUserCanCreate) {
+                    services.response.sendAlreadyExistError(response, "you already created " + organizationIds.length + " organizations.", documentUrl);
                     return;
                 }
 

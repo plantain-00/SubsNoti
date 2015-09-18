@@ -11,6 +11,8 @@ interface User {
     emailTail:string;
     salt:string;
     status:enums.UserStatus;
+
+    createdOrganizationIds?:number[];
 }
 
 export = User;
