@@ -75,8 +75,6 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
             }
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
-                services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
-
                 services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
                     if (error) {
                         next(error, null);
@@ -85,13 +83,13 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
 
                     user.createdOrganizationIds = organizationIds;
 
+                    services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
+
                     next(null, user);
                 });
             } else {
                 next(new Error("invalid authentication credential"), null);
             }
-
-
         });
     });
 }
