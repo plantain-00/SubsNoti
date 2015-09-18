@@ -53,7 +53,7 @@ const vueBodyModel = new Vue({
             if (lastSuccessfulEmailTime) {
                 const time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
                 if (time < 60 * 1000) {
-                    alert("please do it after " + time / 1000 + " seconds");
+                    alert("please do it after " + (60 - time / 1000) + " seconds");
                     return;
                 }
             }
