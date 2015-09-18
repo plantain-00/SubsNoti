@@ -97,12 +97,10 @@ export const documentOfGet:interfaces.ApiDocument = {
 };
 
 export function get(request:libs.Request, response:libs.Response) {
-    const documentUrl = documentOfGet.documentUrl;
-
     const authenticationCredential = request.query.authentication_credential;
 
     if (!authenticationCredential) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        response.redirect("/index.html");
         return;
     }
 
