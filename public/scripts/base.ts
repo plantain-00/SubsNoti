@@ -58,6 +58,7 @@ const vueHeadModel = {
                 success: function () {
                     self.loginStatus = 1;
                     self.currentUserName = "";
+                    window.sessionStorage.removeItem("loginResult");
                 }
             });
         }
