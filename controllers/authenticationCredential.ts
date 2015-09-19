@@ -109,7 +109,7 @@ export function get(request:libs.Request, response:libs.Response) {
         httpOnly: true
     });
 
-    response.redirect("/index.html");
+    response.redirect("/index.html?clear_previous_status=√");
 }
 
 export const documentOfDelete:interfaces.ApiDocument = {
