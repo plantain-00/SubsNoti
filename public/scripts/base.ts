@@ -6,8 +6,33 @@ interface GetCurrentUserResponse extends interfaces.GetCurrentUserRespopnse,inte
 
 }
 
+export const sessionStorageNames = {
+    loginResult: "loginResult"
+};
+
+export const localStorageNames = {
+    lastSuccessfulEmailTime: "lastSuccessfulEmailTime"
+};
+
+function getUrlParameter(name:string):string {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return decodeURI(r[2]);
+    }
+    return null;
+}
+
 function getCurrentUser(next:(data:GetCurrentUserResponse)=>void) {
-    const loginResult = window.sessionStorage.getItem("loginResult");
+    const willClearPreviousStatus = getUrlParameter("clear_previous_status");
+
+    let loginResult = null;
+
+    if (willClearPreviousStatus == "√") {
+        window.sessionStorage.removeItem(sessionStorageNames.loginResult);
+    } else {
+        loginResult = window.sessionStorage.getItem(sessionStorageNames.loginResult);
+    }
 
     if (loginResult) {
         const data:GetCurrentUserResponse = JSON.parse(loginResult);
@@ -18,7 +43,7 @@ function getCurrentUser(next:(data:GetCurrentUserResponse)=>void) {
             data: {},
             cache: false,
             success: function (data:GetCurrentUserResponse) {
-                window.sessionStorage.setItem("loginResult", JSON.stringify(data));
+                window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
 
                 next(data);
             }
