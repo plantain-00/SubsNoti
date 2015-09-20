@@ -3,16 +3,6 @@
 import gulp = require('gulp');
 const del = require('del');
 
-import libs = require("./libs");
-import settings = require("./settings");
-
-import enums = require("./enums/enums");
-import interfaces = require("./interfaces/interfaces");
-
-import services = require("./services/services");
-
-import controllers = require("./controllers/controllers");
-
 gulp.task('clean', ()=> {
     del(['./*.js',
         './controllers/*.js',
