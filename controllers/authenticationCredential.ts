@@ -6,7 +6,7 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export const documentOfCreate:interfaces.ApiDocument = {
+const documentOfCreate:interfaces.ApiDocument = {
     url: "/api/authentication_credential",
     method: "post",
     documentUrl: "/doc/api/Create an authentication credential for a given email.html"
@@ -112,7 +112,7 @@ export function get(request:libs.Request, response:libs.Response) {
     response.redirect("/index.html?clear_previous_status=√");
 }
 
-export const documentOfDelete:interfaces.ApiDocument = {
+const documentOfDelete:interfaces.ApiDocument = {
     url: "/api/authentication_credential",
     method: "delete",
     documentUrl: "/doc/api/Delete authentication credential.html"

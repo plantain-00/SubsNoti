@@ -1,8 +1,8 @@
-declare const Vue;
-declare const $;
+declare let Vue;
+declare let $;
 
 import interfaces = require("../../interfaces/interfaces");
-interface GetCurrentUserResponse extends interfaces.GetCurrentUserRespopnse,interfaces.Response {
+interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse,interfaces.Response {
 
 }
 

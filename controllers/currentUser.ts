@@ -6,7 +6,7 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export const documentOfGet:interfaces.ApiDocument = {
+const documentOfGet:interfaces.ApiDocument = {
     url: "/api/current_user.json",
     method: "get",
     documentUrl: "/doc/api/Get current user.html"
@@ -21,7 +21,7 @@ export function get(request:libs.Request, response:libs.Response):void {
             return;
         }
 
-        const result:interfaces.GetCurrentUserRespopnse = {
+        const result:interfaces.GetCurrentUserResponse = {
             email: services.user.getEmail(user),
             name: user.name,
             canCreateOrganization: user.createdOrganizationIds.length < services.organization.maxNumberUserCanCreate

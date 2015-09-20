@@ -1,10 +1,8 @@
-# Create an authentication credential for a given email
-
-will send a link with it to the given email.
+# Create a theme
 
 ## Url
 
-/api/authentication_credential
+/api/themes
 
 ## Method
 
@@ -30,9 +28,15 @@ v | number | false
 
 key name | value type | required
 --- | --- | ---
-emailHead | string | true
-emailTail | string | true
-name | string | false
+themeTitle | string | true
+themeDetail | string | false
+organizationId | number | true
+
+### Cookies
+
+key name | value type | required
+--- | --- | ---
+authentication_credential | string | true
 
 ### Response Body
 

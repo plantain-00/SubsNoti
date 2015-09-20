@@ -31,6 +31,18 @@ export function getByCreatorId(creatorId:number, next:(error:Error, organization
 
 export const maxNumberUserCanCreate = 3;
 
+export function getByMemberId(memberId:number, next:(error:Error, organizations:interfaces.Organization[])=>void) {
+    services.db.access("select o.* from organization_members om left join organizations o on om.OrganizationID = o.ID where MemberID = ?", [memberId], (error, rows)=> {
+        if (error) {
+            next(error, null);
+            return;
+        }
+
+        const organizations = libs._.map(rows, (row:any)=>getFromRow(row));
+        next(null, organizations);
+    });
+}
+
 export function getFromRow(row:any):interfaces.Organization {
     return {
         id: row.ID,

@@ -6,15 +6,26 @@ const ejs = require("gulp-ejs");
 const webpack = require('gulp-webpack');
 const minifyHtml = require('gulp-minify-html');
 const rev = require('gulp-rev-hash');
+const less = require('gulp-less');
+const path = require('path');
+const minifyCSS = require('gulp-minify-css');
+const autoprefixer = require('autoprefixer');
+const postcss = require('gulp-postcss');
 
 const minifyHtmlConfig = {
     conditionals: true,
     spare: true
 };
 
+gulp.task('pack-css', ['base.css']);
+
 gulp.task('pack-js', ['index.js', 'login.js', 'newOrganization.js']);
 
 gulp.task('pack-html', ['index', 'login', 'newOrganization']);
+
+gulp.task('base.css', ()=> {
+    uglifyCss("base");
+});
 
 gulp.task('index.js', ()=> {
     bundleAndUglifyJs("index");
@@ -39,6 +50,15 @@ gulp.task('newOrganization.js', ()=> {
 gulp.task('newOrganization', ()=> {
     bundleAndUglifyHtml("newOrganization");
 });
+
+function uglifyCss(name:string) {
+    gulp.src('./styles/' + name + '.less')
+        .pipe(less())
+        .pipe(postcss([autoprefixer({browsers: ['last 2 versions']})]))
+        .pipe(minifyCSS())
+        .pipe(rename(name + '.min.css'))
+        .pipe(gulp.dest('./styles/'));
+}
 
 function bundleAndUglifyJs(name:string) {
     gulp.src('./scripts/' + name + '.js')

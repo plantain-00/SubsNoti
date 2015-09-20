@@ -7,6 +7,9 @@
     <title></title>
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <!-- rev-hash -->
+    <link rel="stylesheet" href="./styles/base.min.css">
+    <!-- end -->
 </head>
 <body>
 <header class="navbar navbar-inverse" role="banner" id="vue-head">
@@ -25,7 +28,7 @@
                 <li>
                     <a href="./doc/api/index.html">API</a>
                 </li>
-                <li v-show="canCreateOrganization">
+                <li v-show="canCreateOrganization" style="display: none;">
                     <a href="./newOrganization.html">New Organization</a>
                 </li>
             </ul>

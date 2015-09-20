@@ -30,6 +30,10 @@ export function sendParameterMissedError(response:libs.Response, documentUrl:str
     send(response, "parameter is missed", enums.ErrorCode.parameterMissed, enums.StatusCode.invalidRequest, documentUrl);
 }
 
+export function sendInvalidParameterError(response:libs.Response, documentUrl:string):void {
+    send(response, "parameter is invalid", enums.ErrorCode.invalidParameter, enums.StatusCode.invalidRequest, documentUrl);
+}
+
 export function sendDBAccessError(response:libs.Response, errorMessage:string, documentUrl:string):void {
     send(response, errorMessage, enums.ErrorCode.dbAccessError, enums.StatusCode.internalServerError, documentUrl);
 }

@@ -6,8 +6,8 @@ import interfaces = require("../interfaces/interfaces");
 
 import services = require("../services/services");
 
-export const documentOfCreate:interfaces.ApiDocument = {
-    url: "/api/organization",
+const documentOfCreate:interfaces.ApiDocument = {
+    url: "/api/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
 };
@@ -69,7 +69,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
                         const organizationId = rows.insertId;
 
-                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, 1], (error, rows)=> {
+                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true], (error, rows)=> {
                             if (error) {
                                 services.response.sendDBAccessError(response, error.message, documentUrl);
                                 return;
@@ -81,7 +81,13 @@ export function create(request:libs.Request, response:libs.Response) {
                                     return;
                                 }
 
-                                services.response.sendCreatedOrModified(response, documentUrl);
+                                services.logger.log(documentOfCreate.url, request, error=> {
+                                    if (error) {
+                                        console.log(error);
+                                    }
+
+                                    services.response.sendCreatedOrModified(response, documentUrl);
+                                });
                             });
                         });
                     });
@@ -91,7 +97,50 @@ export function create(request:libs.Request, response:libs.Response) {
     });
 }
 
+const documentOfGet:interfaces.ApiDocument = {
+    url: "/api/organizations.json",
+    method: "get",
+    documentUrl: "/doc/api/Get organizations.html"
+};
+
+export function get(request:libs.Request, response:libs.Response):void {
+    const documentUrl = documentOfGet.documentUrl;
+
+    const type:enums.OrganizationQueryType = request.query.type;
+
+    services.currentUser.get(request, response, documentUrl, (error, user)=> {
+        if (error) {
+            services.response.sendUnauthorizedError(response, error.message, documentUrl);
+            return;
+        }
+
+        if (type == enums.OrganizationQueryType.currentUserIn) {
+            services.organization.getByMemberId(user.id, (error, organizations)=> {
+                if (error) {
+                    services.response.sendDBAccessError(response, error.message, documentUrl);
+                    return;
+                }
+
+                const result:interfaces.GetOrganizationsResponse = {
+                    organizations: libs._.map(organizations, (o:interfaces.Organization)=> {
+                        return {
+                            id: o.id,
+                            name: o.name
+                        };
+                    })
+                };
+
+                services.response.sendOK(response, documentUrl, result);
+            });
+        } else {
+            services.response.sendInvalidParameterError(response, documentUrl);
+        }
+    });
+}
+
 export function route(app:libs.Application) {
     app[documentOfCreate.method](documentOfCreate.url, create);
     services.response.notGet(app, documentOfCreate);
+
+    app[documentOfGet.method](documentOfGet.url, get);
 }

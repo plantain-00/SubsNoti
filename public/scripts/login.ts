@@ -1,11 +1,11 @@
-declare const Vue;
-declare const $;
+declare let Vue;
+declare let $;
 
 import base = require("./base");
 import interfaces = require("../../interfaces/interfaces");
 
 let vueBody;
-const vueBodyModel = new Vue({
+const vueBodyModel = {
     el: "#vue-body",
     data: {
         emailHead: "",
@@ -82,7 +82,7 @@ const vueBodyModel = new Vue({
             });
         }
     }
-});
+};
 
 $(document).ready(function () {
     vueBody = new Vue(vueBodyModel);
