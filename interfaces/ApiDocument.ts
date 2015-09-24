@@ -1,13 +1,11 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("./interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "./interfaces";
 
-interface ApiDocument {
+export interface ApiDocument {
     url:string;
     method:string;
     documentUrl?:string;
 }
-
-export = ApiDocument;

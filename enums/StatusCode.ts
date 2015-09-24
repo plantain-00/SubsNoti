@@ -1,4 +1,4 @@
-const enum StatusCode{
+export const enum StatusCode {
     OK = 200,
     createdOrModified = 201,
     accepted = 202,
@@ -13,5 +13,3 @@ const enum StatusCode{
     tooManyRequest = 429,
     internalServerError = 500
 }
-
-export = StatusCode;

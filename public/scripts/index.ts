@@ -1,9 +1,9 @@
 declare let $;
 declare let Vue;
 
-import base = require("./base");
-import interfaces = require("../../interfaces/interfaces");
-import OrganizationQueryType = require("../../enums/OrganizationQueryType");
+import * as base from "./base";
+import * as interfaces from "../../interfaces/interfaces";
+import {OrganizationQueryType} from "../../enums/OrganizationQueryType";
 
 interface GetOrganizationsResponse extends interfaces.GetOrganizationsResponse,interfaces.Response {
 

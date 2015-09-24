@@ -1,4 +1,4 @@
-const enum ErrorCode{
+export const enum ErrorCode {
     success = 0,
     wrongContentType = 1,
     parameterMissed = 2,
@@ -9,5 +9,3 @@ const enum ErrorCode{
     wrongHttpMethod = 7,
     alreadyExistError = 8
 }
-
-export = ErrorCode;

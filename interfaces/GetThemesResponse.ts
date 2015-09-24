@@ -1,10 +1,10 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "./interfaces";
 
-interface GetThemesResponse {
+export interface GetThemesResponse {
     themes:{
         id: number;
         title: string;
@@ -13,5 +13,3 @@ interface GetThemesResponse {
         createTime: number;
     }[];
 }
-
-export = GetThemesResponse;

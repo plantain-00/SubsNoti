@@ -1,5 +1,3 @@
-const enum ThemeStatus{
+export const enum ThemeStatus {
     normal
 }
-
-export = ThemeStatus;

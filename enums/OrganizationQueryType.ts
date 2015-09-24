@@ -1,6 +1,4 @@
-const enum OrganizationQueryType{
+export const enum OrganizationQueryType {
     currentUserIn = 0,
     currentUserCreated = 1
 }
-
-export = OrganizationQueryType;

@@ -1,6 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import gulp = require('gulp');
+import * as gulp from 'gulp';
 const rename = require('gulp-rename');
 const ejs = require("gulp-ejs");
 const webpack = require('gulp-webpack');

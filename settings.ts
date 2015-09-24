@@ -1,6 +1,6 @@
-import SettingsInterface = require("./SettingsInterface");
+import {SettingsInterface} from "./SettingsInterface";
 
-export const config:SettingsInterface = {
+export const config: SettingsInterface = {
     /*
      * production: "production"
      * testing: "testing"

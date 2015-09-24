@@ -1,8 +1,8 @@
 declare let Vue;
 declare let $;
 
-import base = require("./base");
-import interfaces = require("../../interfaces/interfaces");
+import * as base from "./base";
+import * as interfaces from "../../interfaces/interfaces";
 
 let vueBody;
 const vueBodyModel = {

@@ -1,5 +1,3 @@
-enum ThemeQueryType{
+export const enum ThemeQueryType {
     inOrganization
 }
-
-export = ThemeQueryType;

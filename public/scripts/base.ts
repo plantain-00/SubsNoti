@@ -1,8 +1,9 @@
 declare let Vue;
 declare let $;
 
-import interfaces = require("../../interfaces/interfaces");
-interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse,interfaces.Response {
+import * as interfaces from "../../interfaces/interfaces";
+
+interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse, interfaces.Response {
 
 }
 
@@ -14,7 +15,7 @@ export const localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime"
 };
 
-function getUrlParameter(name:string):string {
+function getUrlParameter(name: string): string {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) {
@@ -23,7 +24,7 @@ function getUrlParameter(name:string):string {
     return null;
 }
 
-function getCurrentUser(next:(data:GetCurrentUserResponse)=>void) {
+function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
     const willClearPreviousStatus = getUrlParameter("clear_previous_status");
 
     let loginResult = null;
@@ -35,14 +36,14 @@ function getCurrentUser(next:(data:GetCurrentUserResponse)=>void) {
     }
 
     if (loginResult) {
-        const data:GetCurrentUserResponse = JSON.parse(loginResult);
+        const data: GetCurrentUserResponse = JSON.parse(loginResult);
         next(data);
     } else {
         $.ajax({
             url: "/api/current_user.json",
             data: {},
             cache: false,
-            success: function (data:GetCurrentUserResponse) {
+            success: function(data: GetCurrentUserResponse) {
                 window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
 
                 next(data);
@@ -51,7 +52,7 @@ function getCurrentUser(next:(data:GetCurrentUserResponse)=>void) {
     }
 }
 
-export function authenticate(next:(error:Error, data:GetCurrentUserResponse)=>void) {
+export function authenticate(next: (error: Error, data: GetCurrentUserResponse) => void) {
     getCurrentUser(data=> {
         if (data.isSuccess) {
             vueHead.$data.loginStatus = 2;
@@ -74,13 +75,13 @@ const vueHeadModel = {
         canCreateOrganization: false
     },
     methods: {
-        exit: function () {
+        exit: function() {
             var self = this;
             $.ajax({
                 type: "DELETE",
                 url: "/api/authentication_credential",
                 cache: false,
-                success: function () {
+                success: function() {
                     self.loginStatus = 1;
                     self.currentUserName = "";
                     window.sessionStorage.removeItem("loginResult");

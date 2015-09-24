@@ -1,9 +1,9 @@
-import libs = require("./libs");
-import settings = require("./settings");
+import * as libs from "./libs";
+import * as settings from "./settings";
 
-import services = require("./services/services");
+import * as services from "./services/services";
 
-const app:libs.Application = libs.express();
+const app: libs.Application = libs.express();
 
 app.settings.env = settings.config.environment;
 
@@ -12,14 +12,14 @@ app.use(libs.compression());
 app.use(libs.cookieParser());
 
 app.use(libs.bodyParser.json());
-app.use(libs.bodyParser.urlencoded({extended: true}));
+app.use(libs.bodyParser.urlencoded({ extended: true }));
 
 app.use(libs.express.static(libs.path.join(__dirname, 'public')));
 
-import router = require("./router");
+import * as router from "./router";
 router.apply(app);
 
-services.mongo.connect((error, logs)=> {
+services.mongo.connect((error, logs) => {
     if (error) {
         console.log(error);
     }
@@ -30,6 +30,6 @@ services.cache.client.on("error", error=> {
     console.log(error);
 });
 
-app.listen(settings.config.website.port, settings.config.website.innerHostName, ()=> {
+app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
     console.log(`Server has started at port: ${settings.config.website.port}`);
 });

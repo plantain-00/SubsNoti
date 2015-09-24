@@ -1,10 +1,10 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "./interfaces";
 
-interface Theme {
+export interface Theme {
     id:number;
     title:string;
     detail:string;
@@ -13,5 +13,3 @@ interface Theme {
     creatorId:number;
     createTime:Date;
 }
-
-export = Theme;

@@ -1,6 +1,6 @@
 /// <reference path="./typings/tsd.d.ts" />
 
-import gulp = require('gulp');
+import * as gulp from 'gulp';
 const del = require('del');
 
 gulp.task('clean', ()=> {
