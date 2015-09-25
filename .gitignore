@@ -51,3 +51,4 @@ public/doc/api/_book/
 publish/*.ico
 public/doc/api/*.svg
 public/styles/*.css
+secret.ts

@@ -3,7 +3,7 @@
 import * as gulp from 'gulp';
 const del = require('del');
 
-gulp.task('clean', ()=> {
+gulp.task('clean', () => {
     del(['./*.js',
         './controllers/*.js',
         './demos/*.js',
@@ -17,8 +17,8 @@ gulp.task('clean', ()=> {
         './publish/*']);
 });
 
-gulp.task('publish', ()=> {
-    gulp.src(['./app.js', './libs.js', './router.js', './public/favicon.ico'])
+gulp.task('publish', () => {
+    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', './public/favicon.ico'])
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')

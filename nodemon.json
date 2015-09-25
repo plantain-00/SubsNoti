@@ -1,0 +1,13 @@
+{
+	"ignore": [
+		"./public",
+		"./publish",
+		"*.ts",
+		"./typings"
+	],
+	"verbose": true,
+	"execMap": {
+		"js": "node"
+	},
+	"ext": "js json"
+}

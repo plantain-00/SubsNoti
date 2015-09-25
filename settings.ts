@@ -36,3 +36,10 @@ export const config: SettingsInterface = {
         password: ""
     }
 };
+
+try {
+    const secret = require("./secret");
+    secret.load(config);
+} catch (e) {
+    console.log(e);
+}
