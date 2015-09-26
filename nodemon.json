@@ -1,13 +1,14 @@
 {
 	"ignore": [
-		"./public",
-		"./publish",
-		"*.ts",
-		"./typings"
+		"./public/",
+		"./publish/",
+		"**/*.ts",
+		"./typings/",
+		"**/*.min.js",
+		"./frontends/",
 	],
 	"verbose": true,
 	"execMap": {
 		"js": "node"
-	},
-	"ext": "js json"
+	}
 }

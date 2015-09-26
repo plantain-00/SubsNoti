@@ -52,3 +52,12 @@ publish/*.ico
 public/doc/api/*.svg
 public/styles/*.css
 secret.ts
+frontends/*.js
+frontends/scripts/*.js
+frontends/*.html
+frontends/doc/api/*.html
+frontends/doc/api/_book/
+frontends/doc/api/*.svg
+frontends/styles/*.css
+public/Users/York Yao/Documents/SubsNoti/frontends/rev-manifest.json
+frontends/build/

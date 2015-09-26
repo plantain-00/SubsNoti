@@ -38,15 +38,21 @@ echo 'Finished "test".'
 
 # gulp task publish
 echo 'Starting "generate document"...'
-cd ./public/doc/api/
+cd ./frontends/doc/api/
 dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
 gitbook build
 cd ../../../
 echo 'Finished "generate document".'
-cd ./public/
+cd ./frontends/
+echo 'Starting "generate css"...'
+gulp pack-css
+echo 'Finished "generate css".'
 echo 'Starting "generate js"...'
 gulp pack-js
 echo 'Finished "generate js".'
+echo 'Starting "rev"...'
+gulp rev
+echo 'Finished "rev".'
 echo 'Starting "generate html"...'
 gulp pack-html
 echo 'Finished "generate html".'
