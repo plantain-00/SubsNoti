@@ -1,10 +1,10 @@
-# Create an authentication credential for a given email
+# Send token via email
 
 will send a link with it to the given email.
 
 ## Url
 
-/api/authentication_credential
+/api/token_sent
 
 ## Method
 

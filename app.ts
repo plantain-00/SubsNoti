@@ -17,7 +17,7 @@ app.use(libs.bodyParser.urlencoded({ extended: true }));
 app.use(libs.express.static(libs.path.join(__dirname, 'public')));
 
 import * as router from "./router";
-router.apply(app);
+router.route(app);
 
 services.mongo.connect((error, logs) => {
     if (error) {

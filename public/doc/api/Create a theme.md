@@ -2,7 +2,7 @@
 
 ## Url
 
-/api/themes
+/api/user/themes
 
 ## Method
 

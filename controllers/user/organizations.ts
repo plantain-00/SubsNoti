@@ -1,18 +1,18 @@
-import * as libs from "../libs";
-import * as settings from "../settings";
+import * as libs from "../../libs";
+import * as settings from "../../settings";
 
-import * as enums from "../enums/enums";
-import * as interfaces from "../interfaces/interfaces";
+import * as enums from "../../enums/enums";
+import * as interfaces from "../../interfaces/interfaces";
 
-import * as services from "../services/services";
+import * as services from "../../services/services";
 
-const documentOfCreate:interfaces.ApiDocument = {
-    url: "/api/organizations",
+const documentOfCreate: interfaces.ApiDocument = {
+    url: "/api/user/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
 };
 
-export function create(request:libs.Request, response:libs.Response) {
+export function create(request: libs.Request, response: libs.Response) {
     const documentUrl = documentOfCreate.documentUrl;
 
     let organizationName = request.body.organizationName;
@@ -27,13 +27,13 @@ export function create(request:libs.Request, response:libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, response, documentUrl, (error, user)=> {
+    services.currentUser.get(request, response, documentUrl, (error, user) => {
         if (error) {
             services.response.sendUnauthorizedError(response, error.message, documentUrl);
             return;
         }
 
-        services.organization.existsByName(organizationName, (error, exists)=> {
+        services.organization.existsByName(organizationName, (error, exists) => {
             if (error) {
                 services.response.sendDBAccessError(response, error.message, documentUrl);
                 return;
@@ -44,7 +44,7 @@ export function create(request:libs.Request, response:libs.Response) {
                 return;
             }
 
-            services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
+            services.organization.getByCreatorId(user.id, (error, organizationIds) => {
                 if (error) {
                     services.response.sendDBAccessError(response, error.message, documentUrl);
                     return;
@@ -55,13 +55,13 @@ export function create(request:libs.Request, response:libs.Response) {
                     return;
                 }
 
-                services.db.beginTransaction((error, connection)=> {
+                services.db.beginTransaction((error, connection) => {
                     if (error) {
                         services.response.sendDBAccessError(response, error.message, documentUrl);
                         return;
                     }
 
-                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows)=> {
+                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows) => {
                         if (error) {
                             services.response.sendDBAccessError(response, error.message, documentUrl);
                             return;
@@ -69,7 +69,7 @@ export function create(request:libs.Request, response:libs.Response) {
 
                         const organizationId = rows.insertId;
 
-                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true], (error, rows)=> {
+                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true], (error, rows) => {
                             if (error) {
                                 services.response.sendDBAccessError(response, error.message, documentUrl);
                                 return;
@@ -97,50 +97,7 @@ export function create(request:libs.Request, response:libs.Response) {
     });
 }
 
-const documentOfGet:interfaces.ApiDocument = {
-    url: "/api/organizations.json",
-    method: "get",
-    documentUrl: "/doc/api/Get organizations.html"
-};
-
-export function get(request:libs.Request, response:libs.Response):void {
-    const documentUrl = documentOfGet.documentUrl;
-
-    const type:enums.OrganizationQueryType = request.query.type;
-
-    services.currentUser.get(request, response, documentUrl, (error, user)=> {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        if (type == enums.OrganizationQueryType.currentUserIn) {
-            services.organization.getByMemberId(user.id, (error, organizations)=> {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
-
-                const result:interfaces.GetOrganizationsResponse = {
-                    organizations: libs._.map(organizations, (o:interfaces.Organization)=> {
-                        return {
-                            id: o.id,
-                            name: o.name
-                        };
-                    })
-                };
-
-                services.response.sendOK(response, documentUrl, result);
-            });
-        } else {
-            services.response.sendInvalidParameterError(response, documentUrl);
-        }
-    });
-}
-
-export function route(app:libs.Application) {
+export function route(app: libs.Application) {
     app[documentOfCreate.method](documentOfCreate.url, create);
     services.response.notGet(app, documentOfCreate);
-
-    app[documentOfGet.method](documentOfGet.url, get);
 }

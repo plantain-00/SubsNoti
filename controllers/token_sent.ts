@@ -6,13 +6,13 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const documentOfCreate:interfaces.ApiDocument = {
-    url: "/api/authentication_credential",
+const documentOfCreate: interfaces.ApiDocument = {
+    url: "/api/token_sent",
     method: "post",
-    documentUrl: "/doc/api/Create an authentication credential for a given email.html"
+    documentUrl: "/doc/api/Send token via email.html"
 };
 
-export function create(request:libs.Request, response:libs.Response) {
+export function create(request: libs.Request, response: libs.Response) {
     const documentUrl = documentOfCreate.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
@@ -20,8 +20,8 @@ export function create(request:libs.Request, response:libs.Response) {
         return;
     }
 
-    let emailHead:string = request.body.emailHead;
-    let emailTail:string = request.body.emailTail;
+    let emailHead: string = request.body.emailHead;
+    let emailTail: string = request.body.emailTail;
     const name = request.body.name;
 
     if (!emailHead || !emailTail) {
@@ -32,7 +32,7 @@ export function create(request:libs.Request, response:libs.Response) {
     emailHead = emailHead.toLowerCase();
     emailTail = emailTail.toLowerCase();
 
-    services.user.getByEmail(emailHead, emailTail, (error, user)=> {
+    services.user.getByEmail(emailHead, emailTail, (error, user) => {
         if (error) {
             services.response.sendDBAccessError(response, error.message, documentUrl);
             return;
@@ -49,7 +49,7 @@ export function create(request:libs.Request, response:libs.Response) {
             });
         } else {
             const salt = libs.generateUuid();
-            services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows)=> {
+            services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows) => {
                 if (error) {
                     services.response.sendDBAccessError(response, error.message, documentUrl);
                     return;
@@ -76,7 +76,7 @@ export function create(request:libs.Request, response:libs.Response) {
     });
 }
 
-function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=>void) {
+function sendEmail(userId: number, salt: string, email: string, next: (error: Error) => void) {
     services.frequency.limit(email, 60 * 60, error=> {
         if (error) {
             next(error);
@@ -84,52 +84,13 @@ function sendEmail(userId:number, salt:string, email:string, next:(error:Error)=
         }
 
         const token = services.authenticationCredential.create(userId, salt);
-        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${documentOfGet.url}?authentication_credential=${token}`;
+        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
-        services.email.send(email, "your authentication credential", `you can click <a href='${url}'>${url}</a> to access the website`, next)
+        services.email.send(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`, next)
     });
 }
 
-export const documentOfGet:interfaces.ApiDocument = {
-    url: "/api/authentication_credential.html",
-    method: "get",
-    documentUrl: "/doc/api/Get authentication credential.html"
-};
-
-export function get(request:libs.Request, response:libs.Response) {
-    const authenticationCredential = request.query.authentication_credential;
-
-    if (!authenticationCredential) {
-        response.redirect("/index.html");
-        return;
-    }
-
-    response.cookie(services.cookieKey.authenticationCredential, authenticationCredential, {
-        expires: libs.moment().clone().add(1, "months").toDate(),
-        httpOnly: true
-    });
-
-    response.redirect("/index.html?clear_previous_status=√");
-}
-
-const documentOfDelete:interfaces.ApiDocument = {
-    url: "/api/authentication_credential",
-    method: "delete",
-    documentUrl: "/doc/api/Delete authentication credential.html"
-};
-
-export function deleteThis(request:libs.Request, response:libs.Response) {
-    const documentUrl = documentOfDelete.documentUrl;
-
-    response.clearCookie(services.cookieKey.authenticationCredential);
-
-    services.response.sendOK(response, documentUrl);
-}
-
-export function route(app:libs.Application) {
+export function route(app: libs.Application) {
     app[documentOfCreate.method](documentOfCreate.url, create);
     services.response.notGet(app, documentOfCreate);
-    app[documentOfDelete.method](documentOfDelete.url, deleteThis);
-
-    app[documentOfGet.method](documentOfGet.url, get);
 }

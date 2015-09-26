@@ -27,6 +27,9 @@ interface SettingsInterface {
         url: string,
         user: string,
         password: string
+    },
+    urls: {
+        login: string
     }
 }
 

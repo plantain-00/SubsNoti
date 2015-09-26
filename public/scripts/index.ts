@@ -3,9 +3,8 @@ declare let Vue;
 
 import * as base from "./base";
 import * as interfaces from "../../interfaces/interfaces";
-import {OrganizationQueryType} from "../../enums/OrganizationQueryType";
 
-interface GetOrganizationsResponse extends interfaces.GetOrganizationsResponse,interfaces.Response {
+interface GetOrganizationsResponse extends interfaces.GetOrganizationsResponse, interfaces.Response {
 
 }
 
@@ -17,16 +16,15 @@ const vueBodyModel = {
         currentOrganizationId: 0
     },
     methods: {
-        getOrganizationsCurrentUserIn: function () {
+        getOrganizationsCurrentUserIn: function() {
             const self = this;
 
             $.ajax({
-                url: "/api/organizations.json",
+                url: "/api/user/joined/organizations",
                 data: {
-                    type: OrganizationQueryType.currentUserIn
                 },
                 cache: false,
-                success: function (data:GetOrganizationsResponse) {
+                success: function(data: GetOrganizationsResponse) {
                     self.organizationsCurrentUserIn = data.organizations;
                     if (data.organizations.length > 0) {
                         self.currentOrganizationId = data.organizations[0].id;
@@ -34,16 +32,16 @@ const vueBodyModel = {
                 }
             });
         },
-        clickOrganization: function (item) {
+        clickOrganization: function(item) {
             this.currentOrganizationId = item.$data.id;
         }
     }
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     vueBody = new Vue(vueBodyModel);
 
-    base.authenticate((error, data)=> {
+    base.authenticate((error, data) => {
         vueBody.getOrganizationsCurrentUserIn();
     });
 });

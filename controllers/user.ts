@@ -7,7 +7,7 @@ import * as interfaces from "../interfaces/interfaces";
 import * as services from "../services/services";
 
 const documentOfGet:interfaces.ApiDocument = {
-    url: "/api/current_user.json",
+    url: "/api/user",
     method: "get",
     documentUrl: "/doc/api/Get current user.html"
 };

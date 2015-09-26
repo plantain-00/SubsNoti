@@ -40,7 +40,7 @@ function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
         next(data);
     } else {
         $.ajax({
-            url: "/api/current_user.json",
+            url: "/api/user",
             data: {},
             cache: false,
             success: function(data: GetCurrentUserResponse) {
@@ -79,7 +79,7 @@ const vueHeadModel = {
             var self = this;
             $.ajax({
                 type: "DELETE",
-                url: "/api/authentication_credential",
+                url: "/api/user/logged_in",
                 cache: false,
                 success: function() {
                     self.loginStatus = 1;

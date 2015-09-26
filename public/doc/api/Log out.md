@@ -1,10 +1,10 @@
-# Delete authentication credential
+# Log out
 
 will delete authentication credential from cookie.
 
 ## Url
 
-/api/authentication_credential
+/api/logged_in
 
 ## Method
 

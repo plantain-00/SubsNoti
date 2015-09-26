@@ -1,8 +1,8 @@
-# Get themes
+# Get organizations
 
 ## Url
 
-/api/themes.json
+/api/user/joined/organizations
 
 ## Method
 
@@ -19,8 +19,6 @@ no
 key name | value type | required
 --- | --- | ---
 v | number | false
-type | [ThemeQueryType](#themequerytype) | true
-organizationId | number | false
 
 ### Cookies
 
@@ -36,20 +34,11 @@ isSuccess | boolean |
 statusCode | number |
 errorCode | [ErrorCode](./Error codes.html) |
 errorMessage | string | empty when is success
-themes | [Theme](#theme)[] | exists when is success
+organizations | [Organization](#organization)[] | exists when is success
 
-### Theme
+### Organization
 
 key name | value type
 --- | ---
 id | number
-title | string
-detail | string
-organizationId | number
-createTime | number
-
-### ThemeQueryType
-
-value | description
---- | ---
-0 | the themes in an organization
+name | string

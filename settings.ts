@@ -34,6 +34,9 @@ export const config: SettingsInterface = {
         url: "",
         user: "",
         password: ""
+    },
+    urls: {
+        login: "/api/logged_in"
     }
 };
 

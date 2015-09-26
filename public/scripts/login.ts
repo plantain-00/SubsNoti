@@ -61,7 +61,7 @@ const vueBodyModel = {
             this.loginText = "is sending email now...";
             const self = this;
             $.ajax({
-                url: "/api/authentication_credential",
+                url: "/api/token_sent",
                 data: JSON.stringify({
                     emailHead: this.emailHead,
                     emailTail: this.emailTail,

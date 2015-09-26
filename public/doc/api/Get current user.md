@@ -4,7 +4,7 @@ the authentication credential should be stored in a cookie named 'authentication
 
 ## Url
 
-/api/current_user.json
+/api/user
 
 ## Method
 

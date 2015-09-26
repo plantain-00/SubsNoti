@@ -23,7 +23,7 @@ const vueBodyModel = {
             this.loginText = "is adding now...";
             const self = this;
             $.ajax({
-                url: "/api/organizations",
+                url: "/api/user/organizations",
                 data: JSON.stringify({
                     organizationName: this.organizationName
                 }),
