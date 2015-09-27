@@ -19,11 +19,11 @@ app.use(libs.express.static(libs.path.join(__dirname, 'public')));
 import * as router from "./router";
 router.route(app);
 
-services.mongo.connect((error, logs) => {
-    if (error) {
-        console.log(error);
-    }
-});
+services.mongo.connectAsync().then(logs=> {
+
+}, error=> {
+    console.log(error);
+}).done();
 
 services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
 services.cache.client.on("error", error=> {

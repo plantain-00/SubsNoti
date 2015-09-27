@@ -6,31 +6,28 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const documentOfGet:interfaces.ApiDocument = {
+const documentOfGet: interfaces.ApiDocument = {
     url: "/api/user",
     method: "get",
     documentUrl: "/doc/api/Get current user.html"
 };
 
-export function get(request:libs.Request, response:libs.Response):void {
+export function get(request: libs.Request, response: libs.Response): void {
     const documentUrl = documentOfGet.documentUrl;
 
-    services.currentUser.get(request, response, documentUrl, (error, user)=> {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        const result:interfaces.GetCurrentUserResponse = {
+    services.currentUser.get(request, response, documentUrl).then(user=> {
+        const result: interfaces.GetCurrentUserResponse = {
             email: services.user.getEmail(user),
             name: user.name,
             canCreateOrganization: user.createdOrganizationIds.length < services.organization.maxNumberUserCanCreate
         };
 
         services.response.sendOK(response, documentUrl, result);
+    }, error=> {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
     });
 }
 
-export function route(app:libs.Application) {
+export function route(app: libs.Application) {
     app[documentOfGet.method](documentOfGet.url, get);
 }

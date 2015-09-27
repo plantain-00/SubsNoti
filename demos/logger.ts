@@ -6,13 +6,8 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-services.mongo.connect((error, logs)=> {
-    if (error) {
-        console.log(error);
-        return;
-    }
-
-    logs.find({}).toArray((error, docs)=> {
+services.mongo.connectAsync().then(logs=> {
+    logs.find({}).toArray((error, docs) => {
         if (error) {
             console.log(error);
             return;
@@ -20,4 +15,6 @@ services.mongo.connect((error, logs)=> {
 
         console.log(docs);
     });
+}, error=> {
+    console.log(error);
 });

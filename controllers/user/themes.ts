@@ -36,57 +36,30 @@ export function create(request: libs.Request, response: libs.Response) {
 
     const themeDetail = request.body.themeDetail;
 
-    services.currentUser.get(request, response, documentUrl, (error, user) => {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        services.db.beginTransaction((error, connection) => {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
-
-            services.db.accessInTransaction(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id], (error, rows) => {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
-
+    services.currentUser.get(request, response, documentUrl).then(user=> {
+        return services.db.beginTransactionAsync().then(connection=> {
+            return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
                 const themeId = rows.insertId;
 
-                services.db.accessInTransaction(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id], (error, rows) => {
-                    if (error) {
-                        services.response.sendDBAccessError(response, error.message, documentUrl);
-                        return;
-                    }
-
-                    services.db.accessInTransaction(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id], (error, rows) => {
-                        if (error) {
-                            services.response.sendDBAccessError(response, error.message, documentUrl);
-                            return;
-                        }
-
-                        services.db.endTransaction(connection, error=> {
-                            if (error) {
-                                services.response.sendDBAccessError(response, error.message, documentUrl);
-                                return;
-                            }
-
-                            services.logger.log(documentOfCreate.url, request, error=> {
-                                if (error) {
-                                    console.log(error);
-                                }
-
+                return services.db.accessInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]).then(rows=> {
+                    return services.db.accessInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]).then(rows=> {
+                        return services.db.endTransactionAsync(connection).then(() => {
+                            services.logger.logAsync(documentOfCreate.url, request).then(() => {
+                                services.response.sendCreatedOrModified(response, documentUrl);
+                            }, error=> {
+                                console.log(error);
                                 services.response.sendCreatedOrModified(response, documentUrl);
                             });
                         });
                     });
                 });
             });
+        }, error=> {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
         });
-    });
+    }, error=> {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 
 export function route(app: libs.Application) {

@@ -5,7 +5,7 @@
 		"**/*.ts",
 		"./typings/",
 		"**/*.min.js",
-		"./frontends/",
+		"./frontends/"
 	],
 	"verbose": true,
 	"execMap": {

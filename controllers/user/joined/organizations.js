@@ -7,16 +7,8 @@ var documentOfGet = {
 };
 function get(request, response) {
     var documentUrl = documentOfGet.documentUrl;
-    services.currentUser.get(request, response, documentUrl, function (error, user) {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-        services.organization.getByMemberId(user.id, function (error, organizations) {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
+    services.currentUser.get(request, response, documentUrl).then(function (user) {
+        return services.organization.getByMemberId(user.id).then(function (organizations) {
             var result = {
                 organizations: libs._.map(organizations, function (o) {
                     return {
@@ -26,8 +18,12 @@ function get(request, response) {
                 })
             };
             services.response.sendOK(response, documentUrl, result);
+        }).catch(function (error) {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
         });
-    });
+    }, function (error) {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 exports.get = get;
 function route(app) {

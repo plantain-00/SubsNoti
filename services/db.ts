@@ -8,14 +8,14 @@ import * as services from "../services/services";
 
 const pool = libs.mysql.createPool(settings.config.db);
 
-export function access(sql:string, parameters:any[], next:(error:Error, rows:any)=>void) {
-    pool.getConnection((error, connection)=> {
+function access(sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
+    pool.getConnection((error, connection) => {
         if (error) {
             next(error, null);
             return;
         }
 
-        connection.query(sql, parameters, (error, rows)=> {
+        connection.query(sql, parameters, (error, rows) => {
             if (error) {
                 connection.release();
                 next(error, null);
@@ -28,8 +28,10 @@ export function access(sql:string, parameters:any[], next:(error:Error, rows:any
     });
 }
 
-export function beginTransaction(next:(error:Error, connection:libs.MysqlConnection)=>void):void {
-    pool.getConnection((error, connection)=> {
+export const accessAsync = libs.Promise.promisify(access);
+
+function beginTransaction(next: (error: Error, connection: libs.MysqlConnection) => void): void {
+    pool.getConnection((error, connection) => {
         if (error) {
             next(error, null);
             return;
@@ -47,10 +49,14 @@ export function beginTransaction(next:(error:Error, connection:libs.MysqlConnect
     });
 }
 
-export function accessInTransaction(connection:libs.MysqlConnection, sql:string, parameters:any[], next:(error:Error, rows:any)=>void) {
-    connection.query(sql, parameters, (error, rows)=> {
+export const beginTransactionAsync = libs.Promise.promisify(beginTransaction);
+
+export const accessInTransactionAsync = libs.Promise.promisify(accessInTransaction);
+
+function accessInTransaction(connection: libs.MysqlConnection, sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
+    connection.query(sql, parameters, (error, rows) => {
         if (error) {
-            rollback(connection, ()=> {
+            rollback(connection, () => {
                 next(error, null);
             });
             return;
@@ -60,17 +66,19 @@ export function accessInTransaction(connection:libs.MysqlConnection, sql:string,
     });
 }
 
-export function rollback(connection:libs.MysqlConnection, next:()=>void):void {
-    connection.rollback(()=> {
+function rollback(connection: libs.MysqlConnection, next: () => void): void {
+    connection.rollback(() => {
         connection.release();
         next();
     });
 }
 
-export function endTransaction(connection:libs.MysqlConnection, next:(error:Error)=>void):void {
+export const rollbackAsync = libs.Promise.promisify(rollback);
+
+function endTransaction(connection: libs.MysqlConnection, next: (error: Error) => void): void {
     connection.commit(error=> {
         if (error) {
-            rollback(connection, ()=> {
+            rollback(connection, () => {
                 next(error);
             });
             return;
@@ -80,3 +88,5 @@ export function endTransaction(connection:libs.MysqlConnection, next:(error:Erro
         next(null);
     });
 }
+
+export const endTransactionAsync = libs.Promise.promisify(endTransaction);

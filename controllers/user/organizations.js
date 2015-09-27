@@ -17,54 +17,26 @@ function create(request, response) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
-    services.currentUser.get(request, response, documentUrl, function (error, user) {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-        services.organization.existsByName(organizationName, function (error, exists) {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
+    services.currentUser.get(request, response, documentUrl).then(function (user) {
+        return services.organization.existsByName(organizationName).then(function (exists) {
             if (exists) {
                 services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
                 return;
             }
-            services.organization.getByCreatorId(user.id, function (error, organizationIds) {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
+            return services.organization.getByCreatorId(user.id).then(function (organizationIds) {
                 if (organizationIds.length >= services.organization.maxNumberUserCanCreate) {
                     services.response.sendAlreadyExistError(response, "you already created " + organizationIds.length + " organizations.", documentUrl);
                     return;
                 }
-                services.db.beginTransaction(function (error, connection) {
-                    if (error) {
-                        services.response.sendDBAccessError(response, error.message, documentUrl);
-                        return;
-                    }
-                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, 0 /* normal */, user.id], function (error, rows) {
-                        if (error) {
-                            services.response.sendDBAccessError(response, error.message, documentUrl);
-                            return;
-                        }
+                return services.db.beginTransactionAsync().then(function (connection) {
+                    return services.db.accessInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, 0 /* normal */, user.id]).then(function (rows) {
                         var organizationId = rows.insertId;
-                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true], function (error, rows) {
-                            if (error) {
-                                services.response.sendDBAccessError(response, error.message, documentUrl);
-                                return;
-                            }
-                            services.db.endTransaction(connection, function (error) {
-                                if (error) {
-                                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                                    return;
-                                }
-                                services.logger.log(documentOfCreate.url, request, function (error) {
-                                    if (error) {
-                                        console.log(error);
-                                    }
+                        return services.db.accessInTransactionAsync(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true]).then(function (rows) {
+                            return services.db.endTransactionAsync(connection).then(function () {
+                                return services.logger.logAsync(documentOfCreate.url, request).then(function () {
+                                    services.response.sendCreatedOrModified(response, documentUrl);
+                                }, function (error) {
+                                    console.log(error);
                                     services.response.sendCreatedOrModified(response, documentUrl);
                                 });
                             });
@@ -72,8 +44,12 @@ function create(request, response) {
                     });
                 });
             });
+        }, function (error) {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
         });
-    });
+    }, function (error) {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 exports.create = create;
 function route(app) {

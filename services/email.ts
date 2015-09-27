@@ -14,7 +14,7 @@ const transporter = libs.nodeMailer.createTransport({
     }
 });
 
-export function send(to:string, subject:string, html:string, next:(error:Error)=>void) {
+function send(to: string, subject: string, html: string, next: (error: Error) => void) {
     const mailOptions = {
         from: settings.config.smtp.name,
         to: to,
@@ -25,3 +25,5 @@ export function send(to:string, subject:string, html:string, next:(error:Error)=
         next(error);
     });
 }
+
+export const sendAsync = libs.Promise.promisify(send);

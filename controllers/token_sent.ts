@@ -32,61 +32,43 @@ export function create(request: libs.Request, response: libs.Response) {
     emailHead = emailHead.toLowerCase();
     emailTail = emailTail.toLowerCase();
 
-    services.user.getByEmail(emailHead, emailTail, (error, user) => {
-        if (error) {
-            services.response.sendDBAccessError(response, error.message, documentUrl);
-            return;
-        }
-
+    services.user.getByEmail(emailHead, emailTail).then(user=> {
         if (user) {
-            sendEmail(user.id, user.salt, services.user.getEmail(user), error=> {
-                if (error) {
-                    services.response.sendEmailServiceError(response, error.message, documentUrl);
-                    return;
-                }
-
+            return sendEmail(user.id, user.salt, services.user.getEmail(user)).then(() => {
                 services.response.sendCreatedOrModified(response, documentUrl);
+            }, error=> {
+                services.response.sendEmailServiceError(response, error.message, documentUrl);
             });
         } else {
             const salt = libs.generateUuid();
-            services.db.access("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal], (error, rows) => {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
-
+            services.db.accessAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]).then(rows=> {
                 const id = rows.insertId;
 
-                sendEmail(id, salt, `${emailHead}@${emailTail}`, error=> {
-                    if (error) {
-                        services.response.sendEmailServiceError(response, error.message, documentUrl);
-                        return;
-                    }
-
-                    services.logger.log(documentOfCreate.url, request, error=> {
-                        if (error) {
-                            console.log(error);
-                        }
-
+                return sendEmail(id, salt, `${emailHead}@${emailTail}`).then(() => {
+                    return services.logger.logAsync(documentOfCreate.url, request).then(() => {
+                        services.response.sendCreatedOrModified(response, documentUrl);
+                    }, error=> {
+                        console.log(error);
                         services.response.sendCreatedOrModified(response, documentUrl);
                     });
+                }, error=> {
+                    services.response.sendEmailServiceError(response, error.message, documentUrl);
                 });
+            }, error=> {
+                services.response.sendDBAccessError(response, error.message, documentUrl);
             });
         }
-    });
+    }, error=> {
+        services.response.sendDBAccessError(response, error.message, documentUrl);
+    }).done();
 }
 
-function sendEmail(userId: number, salt: string, email: string, next: (error: Error) => void) {
-    services.frequency.limit(email, 60 * 60, error=> {
-        if (error) {
-            next(error);
-            return;
-        }
-
+function sendEmail(userId: number, salt: string, email: string): libs.Promise<{}> {
+    return services.frequency.limit(email, 60 * 60).then(() => {
         const token = services.authenticationCredential.create(userId, salt);
         const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
-        services.email.send(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`, next)
+        return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
     });
 }
 

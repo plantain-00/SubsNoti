@@ -12,25 +12,13 @@ function get(request, response) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
-    services.currentUser.get(request, response, documentUrl, function (error, user) {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-        services.organization.getByMemberId(user.id, function (error, organizations) {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
+    services.currentUser.get(request, response, documentUrl).then(function (user) {
+        return services.organization.getByMemberId(user.id).then(function (organizations) {
             if (libs._.every(organizations, function (o) { return o.id != organizationId; })) {
                 services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
                 return;
             }
-            services.theme.getInOrganizationId(organizationId, function (error, themes) {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
+            return services.theme.getInOrganizationId(organizationId).then(function (themes) {
                 var result = {
                     themes: libs._.map(themes, function (t) {
                         return {
@@ -43,9 +31,15 @@ function get(request, response) {
                     })
                 };
                 services.response.sendOK(response, documentUrl, result);
+            }, function (error) {
+                services.response.sendDBAccessError(response, error.message, documentUrl);
             });
+        }, function (error) {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
         });
-    });
+    }, function (error) {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 exports.get = get;
 function route(app) {

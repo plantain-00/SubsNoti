@@ -6,49 +6,31 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export function getById(id:number, next:(error:Error, user:interfaces.User)=>void) {
-    if (typeof id != "number") {
-        next(null, null);
-        return;
-    }
-
-    services.db.access("select * from users where ID = ?", [id], (error, rows)=> {
-        if (error) {
-            next(error, null);
-            return;
-        }
-
+export function getById(id: number): libs.Promise<interfaces.User> {
+    return services.db.accessAsync("select * from users where ID = ?", [id]).then(rows=> {
         if (rows.length == 0) {
-            next(null, null);
-            return;
+            return Promise.resolve<interfaces.User>(null);
         }
 
-        next(null, getFromRow(rows[0]));
+        return Promise.resolve(getFromRow(rows[0]));
     });
 }
 
-export function getByEmail(emailHead:string, emailTail:string, next:(error:Error, user:interfaces.User)=>void) {
-    services.db.access("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail], (error, rows)=> {
-        if (error) {
-            next(error, null);
-            return;
-        }
-
+export function getByEmail(emailHead: string, emailTail: string): libs.Promise<interfaces.User> {
+    return services.db.accessAsync("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail]).then(rows=> {
         if (rows.length == 0) {
-            next(null, null);
-            return;
+            return libs.Promise.resolve(null);
         }
 
         if (rows.length > 1) {
-            next(new Error("the account is in wrong status now"), null);
-            return;
+            return libs.Promise.reject(new Error("the account is in wrong status now"));
         }
 
-        next(null, getFromRow(rows[0]));
+        return libs.Promise.resolve(getFromRow(rows[0]));
     });
 }
 
-export function getFromRow(row:any):interfaces.User {
+export function getFromRow(row: any): interfaces.User {
     return {
         id: row.ID,
         name: row.Name,
@@ -59,6 +41,6 @@ export function getFromRow(row:any):interfaces.User {
     }
 }
 
-export function getEmail(user:interfaces.User):string {
+export function getEmail(user: interfaces.User): string {
     return `${user.emailHead}@${user.emailTail}`;
 }

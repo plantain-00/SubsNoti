@@ -22,29 +22,14 @@ export function get(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, response, documentUrl, (error, user) => {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        services.organization.getByMemberId(user.id, (error, organizations) => {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
-
+    services.currentUser.get(request, response, documentUrl).then(user=> {
+        return services.organization.getByMemberId(user.id).then(organizations=> {
             if (libs._.every(organizations, (o: interfaces.Organization) => o.id != organizationId)) {
                 services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
                 return;
             }
 
-            services.theme.getInOrganizationId(organizationId, (error, themes) => {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
-
+            return services.theme.getInOrganizationId(organizationId).then(themes=> {
                 const result: interfaces.GetThemesResponse = {
                     themes: libs._.map(themes, (t: interfaces.Theme) => {
                         return {
@@ -58,9 +43,15 @@ export function get(request: libs.Request, response: libs.Response) {
                 };
 
                 services.response.sendOK(response, documentUrl, result);
+            }, error=> {
+                services.response.sendDBAccessError(response, error.message, documentUrl);
             });
+        }, error=> {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
         });
-    });
+    }, error=> {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 
 export function route(app: libs.Application) {

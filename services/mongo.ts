@@ -6,14 +6,14 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export function connect(next:(error:Error, logs:libs.Collection)=>void) {
-    libs.mongodb.MongoClient.connect(settings.config.mongodb.url, (error, db)=> {
+function connect(next: (error: Error, logs: libs.Collection) => void) {
+    libs.mongodb.MongoClient.connect(settings.config.mongodb.url, (error, db) => {
         if (error) {
             next(error, null);
             return;
         }
 
-        db.authenticate(settings.config.mongodb.user, settings.config.mongodb.password, (error)=> {
+        db.authenticate(settings.config.mongodb.user, settings.config.mongodb.password, (error) => {
             if (error) {
                 next(error, null);
                 return;
@@ -24,3 +24,5 @@ export function connect(next:(error:Error, logs:libs.Collection)=>void) {
         });
     });
 }
+
+export const connectAsync = libs.Promise.promisify(connect);

@@ -6,10 +6,10 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export function getAuthenticationCredential(authenticationCredential:string):string {
+export function getAuthenticationCredential(authenticationCredential: string): string {
     return "user_" + authenticationCredential;
 }
 
-export function getFrequency(key:string):string {
+export function getFrequency(key: string): string {
     return "frequency_" + key;
 }

@@ -6,18 +6,13 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export function getInOrganizationId(organizationId:number, next:(error:Error, themes:interfaces.Theme[])=>void) {
-    services.db.access("select * from themes where OrganizationID = ?", [organizationId], (error, rows)=> {
-        if (error) {
-            next(error, null);
-            return;
-        }
-
-        next(null, libs._.map(rows, (row:any)=>getFromRow(row)));
+export function getInOrganizationId(organizationId: number): libs.Promise<interfaces.Theme[]> {
+    return services.db.accessAsync("select * from themes where OrganizationID = ?", [organizationId]).then(rows=> {
+        return libs.Promise.resolve(libs._.map(rows, (row: any) => getFromRow(row)));
     });
 }
 
-export function getFromRow(row:any):interfaces.Theme {
+export function getFromRow(row: any): interfaces.Theme {
     return {
         id: row.ID,
         title: row.Title,

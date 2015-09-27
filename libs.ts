@@ -23,6 +23,9 @@ export const nodeMailer = require("nodemailer");
 import * as mysql from "mysql";
 export {mysql};
 
+import * as Promise from "bluebird";
+export {Promise};
+
 export const md5 = require("md5");
 
 const uuid = require("node-uuid");

@@ -6,10 +6,10 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export let logs:libs.Collection;
+export let logs: libs.Collection;
 
-export function log(url:string, request:libs.Request, next:(error:Error)=>void) {
-    const data:any = {
+function log(url: string, request: libs.Request, next: (error: Error) => void) {
+    const data: any = {
         url: url,
         time: new Date()
     };
@@ -26,3 +26,5 @@ export function log(url:string, request:libs.Request, next:(error:Error)=>void) 
 
     logs.insertOne(data, next);
 }
+
+export const logAsync = libs.Promise.promisify(log);

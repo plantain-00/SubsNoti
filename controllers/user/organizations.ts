@@ -27,65 +27,29 @@ export function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, response, documentUrl, (error, user) => {
-        if (error) {
-            services.response.sendUnauthorizedError(response, error.message, documentUrl);
-            return;
-        }
-
-        services.organization.existsByName(organizationName, (error, exists) => {
-            if (error) {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-                return;
-            }
-
+    services.currentUser.get(request, response, documentUrl).then(user=> {
+        return services.organization.existsByName(organizationName).then(exists=> {
             if (exists) {
                 services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
                 return;
             }
 
-            services.organization.getByCreatorId(user.id, (error, organizationIds) => {
-                if (error) {
-                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                    return;
-                }
-
+            return services.organization.getByCreatorId(user.id).then(organizationIds=> {
                 if (organizationIds.length >= services.organization.maxNumberUserCanCreate) {
                     services.response.sendAlreadyExistError(response, "you already created " + organizationIds.length + " organizations.", documentUrl);
                     return;
                 }
 
-                services.db.beginTransaction((error, connection) => {
-                    if (error) {
-                        services.response.sendDBAccessError(response, error.message, documentUrl);
-                        return;
-                    }
-
-                    services.db.accessInTransaction(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id], (error, rows) => {
-                        if (error) {
-                            services.response.sendDBAccessError(response, error.message, documentUrl);
-                            return;
-                        }
-
+                return services.db.beginTransactionAsync().then(connection=> {
+                    return services.db.accessInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id]).then(rows=> {
                         const organizationId = rows.insertId;
 
-                        services.db.accessInTransaction(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true], (error, rows) => {
-                            if (error) {
-                                services.response.sendDBAccessError(response, error.message, documentUrl);
-                                return;
-                            }
-
-                            services.db.endTransaction(connection, error=> {
-                                if (error) {
-                                    services.response.sendDBAccessError(response, error.message, documentUrl);
-                                    return;
-                                }
-
-                                services.logger.log(documentOfCreate.url, request, error=> {
-                                    if (error) {
-                                        console.log(error);
-                                    }
-
+                        return services.db.accessInTransactionAsync(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true]).then(rows=> {
+                            return services.db.endTransactionAsync(connection).then(() => {
+                                return services.logger.logAsync(documentOfCreate.url, request).then(() => {
+                                    services.response.sendCreatedOrModified(response, documentUrl);
+                                }, error=> {
+                                    console.log(error);
                                     services.response.sendCreatedOrModified(response, documentUrl);
                                 });
                             });
@@ -93,8 +57,12 @@ export function create(request: libs.Request, response: libs.Response) {
                     });
                 });
             });
-        });
-    });
+        }, error=> {
+            services.response.sendDBAccessError(response, error.message, documentUrl);
+        })
+    }, error=> {
+        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+    }).done();
 }
 
 export function route(app: libs.Application) {
