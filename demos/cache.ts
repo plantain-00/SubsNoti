@@ -1,21 +1,23 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
+
+services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
+services.cache.client.on("error", error=> {
+    console.log(error);
+});
 
 services.cache.set("key2", {
     a: "abc",
     b: 123
 }, 10);
 
-services.cache.get("key2", "b", (error, reply)=> {
-    if (error) {
-        console.log(error);
-        return;
-    }
-
+services.cache.getAsync("key2", "b").then(reply=> {
     console.log(reply);
+}, error=> {
+    console.log(error);
 });

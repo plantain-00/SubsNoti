@@ -46,6 +46,9 @@
     },
     "q/Q.d.ts": {
       "commit": "4356af494c045299110677b21e62000957e7a72e"
+    },
+    "bluebird/bluebird.d.ts": {
+      "commit": "54f064352a3615443f7bff4198078db15e28247b"
     }
   }
 }

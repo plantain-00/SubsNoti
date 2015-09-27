@@ -1,10 +1,10 @@
-# Get authentication credential
+# Log in
 
 will get authentication credential, and then store it to a cookie named 'authentication_credential', and then will redirect to home page.
 
 ## Url
 
-/api/authentication_credential.html
+/api/logged_in
 
 ## Method
 

@@ -1,15 +1,15 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
 
-export let logs:libs.Collection;
+export let logs: libs.Collection;
 
-export function log(url:string, request:libs.Request, next:(error:Error)=>void) {
-    const data:any = {
+function log(url: string, request: libs.Request, next: (error: Error) => void) {
+    const data: any = {
         url: url,
         time: new Date()
     };
@@ -26,3 +26,5 @@ export function log(url:string, request:libs.Request, next:(error:Error)=>void) 
 
     logs.insertOne(data, next);
 }
+
+export const logAsync = libs.Promise.promisify(log);

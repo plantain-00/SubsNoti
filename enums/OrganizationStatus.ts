@@ -1,5 +1,3 @@
-const enum OrganizationStatus{
+export const enum OrganizationStatus {
     normal
 }
-
-export = OrganizationStatus;

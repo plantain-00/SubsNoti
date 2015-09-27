@@ -1,15 +1,13 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("./interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "./interfaces";
 
-interface Response {
+export interface Response {
     isSuccess: boolean;
     statusCode: enums.StatusCode;
     errorCode: enums.ErrorCode;
     errorMessage: string;
     documentUrl: string;
 }
-
-export = Response;

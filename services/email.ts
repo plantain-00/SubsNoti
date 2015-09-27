@@ -1,10 +1,10 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
 
 const transporter = libs.nodeMailer.createTransport({
     host: settings.config.smtp.host,
@@ -14,7 +14,7 @@ const transporter = libs.nodeMailer.createTransport({
     }
 });
 
-export function send(to:string, subject:string, html:string, next:(error:Error)=>void) {
+function send(to: string, subject: string, html: string, next: (error: Error) => void) {
     const mailOptions = {
         from: settings.config.smtp.name,
         to: to,
@@ -25,3 +25,5 @@ export function send(to:string, subject:string, html:string, next:(error:Error)=
         next(error);
     });
 }
+
+export const sendAsync = libs.Promise.promisify(send);

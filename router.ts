@@ -1,15 +1,29 @@
-import libs = require("./libs");
-import settings = require("./settings");
+import * as libs from "./libs";
+import * as settings from "./settings";
 
-import enums = require("./enums/enums");
-import interfaces = require("./interfaces/interfaces");
+import * as enums from "./enums/enums";
+import * as interfaces from "./interfaces/interfaces";
 
-import services = require("./services/services");
+import * as services from "./services/services";
 
-import controllers = require("./controllers/controllers");
+import * as user from "./controllers/user";
+import * as userLoggedIn from "./controllers/user/logged_in";
+import * as userJoinedOrganizations from "./controllers/user/joined/organizations";
+import * as userOrganizations from "./controllers/user/organizations";
+import * as userThemes from "./controllers/user/themes";
 
-export function apply(app:libs.Application) {
-    controllers.authenticationCredential.route(app);
-    controllers.currentUser.route(app);
-    controllers.organization.route(app);
+import * as tokenSent from "./controllers/token_sent";
+
+import * as organizationsThemes from "./controllers/organizations/themes";
+
+export function route(app: libs.Application) {
+    user.route(app);
+    userLoggedIn.route(app);
+    userJoinedOrganizations.route(app);
+    userOrganizations.route(app);
+    userThemes.route(app);
+
+    tokenSent.route(app);
+
+    organizationsThemes.route(app);
 }

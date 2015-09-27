@@ -1,5 +1,3 @@
-const enum UserStatus{
+export const enum UserStatus {
     normal
 }
-
-export = UserStatus;

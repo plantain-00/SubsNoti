@@ -1,21 +1,19 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
-
-import assert = require("assert");
+import * as services from "../services/services";
 
 describe('getAuthenticationCredential', ()=> {
     it('should work', () => {
-        assert.equal(services.cacheKeyRule.getAuthenticationCredential("abc"), "user_abc");
+        libs.assert.equal(services.cacheKeyRule.getAuthenticationCredential("abc"), "user_abc");
     });
 });
 
 describe('getFrequency', ()=> {
     it('should work', () => {
-        assert.equal(services.cacheKeyRule.getFrequency("abc"), "frequency_abc");
+        libs.assert.equal(services.cacheKeyRule.getFrequency("abc"), "frequency_abc");
     });
 });

@@ -1,15 +1,15 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
 
-export function getAuthenticationCredential(authenticationCredential:string):string {
+export function getAuthenticationCredential(authenticationCredential: string): string {
     return "user_" + authenticationCredential;
 }
 
-export function getFrequency(key:string):string {
+export function getFrequency(key: string): string {
     return "frequency_" + key;
 }

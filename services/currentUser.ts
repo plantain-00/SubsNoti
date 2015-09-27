@@ -1,14 +1,14 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
 
-export function get(request:libs.Request, response:libs.Response, documentUrl:string, next:(error:Error, user:interfaces.User)=>void) {
+export function get(request: libs.Request, response: libs.Response, documentUrl: string): libs.Promise<interfaces.User> {
     if (settings.config.environment == "development") {
-        const user:interfaces.User = {
+        const user: interfaces.User = {
             id: 1,
             name: "test",
             emailHead: "test",
@@ -16,17 +16,11 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
             salt: libs.generateUuid(),
             status: enums.UserStatus.normal
         };
-        services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
-            if (error) {
-                next(error, null);
-                return;
-            }
-
+        return services.organization.getByCreatorId(user.id).then(organizationIds=> {
             user.createdOrganizationIds = organizationIds;
 
-            next(null, user);
+            return libs.Promise.resolve(user);
         });
-        return;
     }
 
     const authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
@@ -35,22 +29,15 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
         return;
     }
 
-    services.cache.getString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), (error, reply)=> {
-        if (error) {
-            next(error, null);
-            return;
-        }
-
+    return services.cache.getStringAsync(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential)).then(reply=> {
         if (reply) {
-            const userFromCache:interfaces.User = JSON.parse(reply);
-            next(null, userFromCache);
-            return;
+            const userFromCache: interfaces.User = JSON.parse(reply);
+            return libs.Promise.resolve(userFromCache);
         }
 
         const tmp = authenticationCredential.split("g");
         if (tmp.length != 3) {
-            next(new Error("invalid authentication credential"), null);
-            return;
+            return libs.Promise.reject(new Error("invalid authentication credential"));
         }
 
         const milliseconds = parseInt(tmp[1], 16);
@@ -59,36 +46,24 @@ export function get(request:libs.Request, response:libs.Response, documentUrl:st
 
         if (now < milliseconds
             || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-            next(new Error("authentication credential is out of date"), null);
-            return;
+            return libs.Promise.reject(new Error("authentication credential is out of date"));
         }
 
-        services.user.getById(userId, (error, user)=> {
-            if (error) {
-                next(error, null);
-                return;
-            }
-
+        return services.user.getById(userId).then(user=> {
             if (!user) {
-                next(new Error("invalid user"), null);
-                return;
+                return libs.Promise.reject(new Error("invalid user"));
             }
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
-                services.organization.getByCreatorId(user.id, (error, organizationIds)=> {
-                    if (error) {
-                        next(error, null);
-                        return;
-                    }
-
+                return services.organization.getByCreatorId(user.id).then(organizationIds=> {
                     user.createdOrganizationIds = organizationIds;
 
                     services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
 
-                    next(null, user);
+                    return libs.Promise.resolve(user);
                 });
             } else {
-                next(new Error("invalid authentication credential"), null);
+                return libs.Promise.reject(new Error("invalid authentication credential"));
             }
         });
     });

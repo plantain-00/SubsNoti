@@ -14,7 +14,7 @@ interface SettingsInterface {
     smtp: {
         host: string,
         name: string,
-        password:string
+        password: string
     },
     redis: {
         host: string
@@ -23,11 +23,14 @@ interface SettingsInterface {
             auth_pass: string
         }
     },
-    mongodb:{
-        url:string,
-        user:string,
-        password:string
+    mongodb: {
+        url: string,
+        user: string,
+        password: string
+    },
+    urls: {
+        login: string
     }
 }
 
-export = SettingsInterface;
+export {SettingsInterface};

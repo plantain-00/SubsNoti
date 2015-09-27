@@ -1,23 +1,22 @@
-import libs = require("../libs");
-import settings = require("../settings");
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import enums = require("../enums/enums");
-import interfaces = require("../interfaces/interfaces");
+import * as enums from "../enums/enums";
+import * as interfaces from "../interfaces/interfaces";
 
-import services = require("../services/services");
+import * as services from "../services/services";
 
-services.frequency.limit("test", 2, error=> {
-    if (error) {
-        console.log(error);
-        return;
-    }
+services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
+services.cache.client.on("error", error=> {
+    console.log(error);
+});
 
-    services.frequency.limit("test", 2, error=> {
-        if (error) {
-            console.log(error);
-            return;
-        }
-
+services.frequency.limit("test", 2).then(() => {
+    return services.frequency.limit("test", 2).then(() => {
         console.log(true);
+    }, error=> {
+        console.log(error);
     });
+}, error=> {
+    console.log(error);
 });

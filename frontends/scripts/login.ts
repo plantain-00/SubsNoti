@@ -1,11 +1,11 @@
-declare const Vue;
-declare const $;
+declare let Vue;
+declare let $;
 
-import base = require("./base");
-import interfaces = require("../../interfaces/interfaces");
+import * as base from "./base";
+import * as interfaces from "../../interfaces/interfaces";
 
 let vueBody;
-const vueBodyModel = new Vue({
+const vueBodyModel = {
     el: "#vue-body",
     data: {
         emailHead: "",
@@ -61,7 +61,7 @@ const vueBodyModel = new Vue({
             this.loginText = "is sending email now...";
             const self = this;
             $.ajax({
-                url: "/api/authentication_credential",
+                url: "/api/token_sent",
                 data: JSON.stringify({
                     emailHead: this.emailHead,
                     emailTail: this.emailTail,
@@ -82,7 +82,7 @@ const vueBodyModel = new Vue({
             });
         }
     }
-});
+};
 
 $(document).ready(function () {
     vueBody = new Vue(vueBodyModel);

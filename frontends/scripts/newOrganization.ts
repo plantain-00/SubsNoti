@@ -1,11 +1,11 @@
 declare let Vue;
 declare let $;
 
-import base = require("./base");
-import interfaces = require("../../interfaces/interfaces");
+import * as base from "./base";
+import * as interfaces from "../../interfaces/interfaces";
 
 let vueBody;
-const vueBodyModel = new Vue({
+const vueBodyModel = {
     el: "#vue-body",
     data: {
         organizationName: "",
@@ -23,7 +23,7 @@ const vueBodyModel = new Vue({
             this.loginText = "is adding now...";
             const self = this;
             $.ajax({
-                url: "/api/organization",
+                url: "/api/user/organizations",
                 data: JSON.stringify({
                     organizationName: this.organizationName
                 }),
@@ -41,7 +41,7 @@ const vueBodyModel = new Vue({
             });
         }
     }
-});
+};
 
 $(document).ready(function () {
     vueBody = new Vue(vueBodyModel);

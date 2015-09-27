@@ -1,19 +1,9 @@
 /// <reference path="./typings/tsd.d.ts" />
 
-import gulp = require('gulp');
+import * as gulp from 'gulp';
 const del = require('del');
 
-import libs = require("./libs");
-import settings = require("./settings");
-
-import enums = require("./enums/enums");
-import interfaces = require("./interfaces/interfaces");
-
-import services = require("./services/services");
-
-import controllers = require("./controllers/controllers");
-
-gulp.task('clean', ()=> {
+gulp.task('clean', () => {
     del(['./*.js',
         './controllers/*.js',
         './demos/*.js',
@@ -27,17 +17,17 @@ gulp.task('clean', ()=> {
         './publish/*']);
 });
 
-gulp.task('publish', ()=> {
-    gulp.src(['./app.js', './libs.js', './router.js', './public/favicon.ico'])
+gulp.task('publish', () => {
+    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', './public/favicon.ico'])
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')
         .pipe(gulp.dest('./publish/enums/'));
     gulp.src('./interfaces/interfaces.js')
         .pipe(gulp.dest('./publish/interfaces/'));
-    gulp.src('./services/*.js')
+    gulp.src('./services/**/*.js')
         .pipe(gulp.dest('./publish/services/'));
-    gulp.src('./controllers/*.js')
+    gulp.src('./controllers/**/*.js')
         .pipe(gulp.dest('./publish/controllers/'));
 
     gulp.src("./public/*.html")
@@ -46,6 +36,6 @@ gulp.task('publish', ()=> {
         .pipe(gulp.dest("./publish/public/scripts/"));
     gulp.src("./public/styles/*.min.css")
         .pipe(gulp.dest("./publish/public/styles/"));
-    gulp.src("./public/doc/api/_book/**")
+    gulp.src("./frontends/doc/api/_book/**")
         .pipe(gulp.dest("./publish/public/doc/api/"));
 });

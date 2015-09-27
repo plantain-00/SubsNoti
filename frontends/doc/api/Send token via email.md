@@ -1,8 +1,10 @@
-# Create an organization
+# Send token via email
+
+will send a link with it to the given email.
 
 ## Url
 
-/api/organization
+/api/token_sent
 
 ## Method
 
@@ -28,13 +30,9 @@ v | number | false
 
 key name | value type | required
 --- | --- | ---
-organizationName | string | true
-
-### Cookies
-
-key name | value type | required
---- | --- | ---
-authentication_credential | string | true
+emailHead | string | true
+emailTail | string | true
+name | string | false
 
 ### Response Body
 
@@ -42,5 +40,5 @@ key name | value type | description
 --- | --- | ---
 isSuccess | boolean |
 statusCode | number |
-errorCode | number | 0 when is success
+errorCode | [ErrorCode](./Error codes.html) |
 errorMessage | string | empty when is success

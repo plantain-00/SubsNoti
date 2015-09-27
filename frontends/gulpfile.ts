@@ -1,0 +1,92 @@
+/// <reference path="../typings/tsd.d.ts" />
+
+import * as gulp from 'gulp';
+const rename = require('gulp-rename');
+const ejs = require("gulp-ejs");
+const webpack = require('gulp-webpack');
+const minifyHtml = require('gulp-minify-html');
+const rev = require('gulp-rev');
+const less = require('gulp-less');
+const path = require('path');
+const minifyCSS = require('gulp-minify-css');
+const autoprefixer = require('autoprefixer');
+const postcss = require('gulp-postcss');
+const watch = require('gulp-watch');
+const batch = require('gulp-batch');
+const revReplace = require('gulp-rev-replace');
+
+const minifyHtmlConfig = {
+    conditionals: true,
+    spare: true
+};
+
+gulp.task('watch', function() {
+    watch('./styles/*.less', batch(function(events, done) {
+        gulp.start('pack-css', done);
+    }));
+    watch("./scripts/*.js", batch(function(events, done) {
+        gulp.start('pack-js', done);
+    }));
+    watch('./*.ejs', batch(function(events, done) {
+        gulp.start('pack-html', done);
+    }));
+});
+
+gulp.task('pack-css', () => {
+    for (let file of ["base"]) {
+        uglifyCss(file);
+    }
+});
+
+gulp.task('pack-js', () => {
+    for (let file of ['index', 'login', 'newOrganization']) {
+        bundleAndUglifyJs(file);
+    }
+});
+
+gulp.task('rev', () => {
+    gulp.src(["./build/styles/*.css", "./build/scripts/*.js"], { base: './build/' })
+        .pipe(rev())
+        .pipe(gulp.dest("../public/"))
+        .pipe(rev.manifest())
+        .pipe(gulp.dest("./build/"));
+});
+
+gulp.task('pack-html', () => {
+    for (let file of ['index', 'login', 'newOrganization']) {
+        bundleAndUglifyHtml(file);
+    }
+});
+
+function uglifyCss(name: string) {
+    gulp.src('./styles/' + name + '.less')
+        .pipe(less())
+        .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
+        .pipe(minifyCSS())
+        .pipe(rename(name + ".min.css"))
+        .pipe(gulp.dest('./build/styles/'));
+}
+
+function bundleAndUglifyJs(name: string) {
+    gulp.src('./scripts/' + name + '.js')
+        .pipe(webpack({
+            plugins: [
+                new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
+            ]
+        }))
+        .pipe(rename(name + ".min.js"))
+        .pipe(gulp.dest('./build/scripts/'));
+}
+
+function bundleAndUglifyHtml(name: string) {
+    var manifest = gulp.src("./build/rev-manifest.json");
+
+    gulp.src('./' + name + '.ejs')
+        .pipe(ejs({}))
+        .pipe(minifyHtml(minifyHtmlConfig))
+        .pipe(rename(name + ".html"))
+        .pipe(revReplace({
+            manifest: manifest
+        }))
+        .pipe(gulp.dest("../public/"));
+}

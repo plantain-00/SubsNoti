@@ -1,10 +1,8 @@
-# Get current user
-
-the authentication credential should be stored in a cookie named 'authentication_credential'.
+# Get themes of an organization
 
 ## Url
 
-/api/current_user.json
+/api/organizations/:organization_id/themes
 
 ## Method
 
@@ -34,8 +32,16 @@ key name | value type | description
 --- | --- | ---
 isSuccess | boolean |
 statusCode | number |
-errorCode | number | 0 when is success
+errorCode | [ErrorCode](./Error codes.html) |
 errorMessage | string | empty when is success
-email | string | exists when is success
-name | string | exists when is success
-canCreateOrganization | boolean | exists when is success
+themes | [Theme](#theme)[] | exists when is success
+
+### Theme
+
+key name | value type
+--- | ---
+id | number
+title | string
+detail | string
+organizationId | number
+createTime | number

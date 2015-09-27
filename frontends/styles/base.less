@@ -1,0 +1,28 @@
+@border-and-word-color: #d44137;
+@background-color: white;
+
+.the-label {
+    border: @border-and-word-color 1px solid;
+    border-radius: 5px;
+
+    padding: 5px 10px;
+    margin: 3px 0;
+
+    display: inline-block;
+
+    background-color: @background-color;
+    color: @border-and-word-color;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+.the-label:hover {
+    box-shadow: 0 0 10px @border-and-word-color;
+}
+
+.label-active {
+    background-color: @border-and-word-color;
+    color: @background-color;
+}

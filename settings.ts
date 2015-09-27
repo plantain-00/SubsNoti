@@ -1,6 +1,6 @@
-import SettingsInterface = require("./SettingsInterface");
+import {SettingsInterface} from "./SettingsInterface";
 
-export const config:SettingsInterface = {
+export const config: SettingsInterface = {
     /*
      * production: "production"
      * testing: "testing"
@@ -34,5 +34,15 @@ export const config:SettingsInterface = {
         url: "",
         user: "",
         password: ""
+    },
+    urls: {
+        login: "/api/logged_in"
     }
 };
+
+try {
+    const secret = require("./secret");
+    secret.load(config);
+} catch (e) {
+    console.log(e);
+}
