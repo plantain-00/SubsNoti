@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SRC_ROOT=/opt/src
+SRC_ROOT=
 
 # pull the source code
 cd $SRC_ROOT
@@ -38,10 +38,10 @@ echo 'Finished "test".'
 
 # gulp task publish
 echo 'Starting "generate document"...'
-cd ./frontends/doc/api/
+cd ./doc/api/
 dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
 gitbook build
-cd ../../../
+cd ../../
 echo 'Finished "generate document".'
 cd ./frontends/
 echo 'Starting "generate css"...'

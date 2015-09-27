@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SRC_ROOT=/opt/src
-WEBSITE_ROOT=/opt/SubsNoti
+SRC_ROOT=
+WEBSITE_ROOT=
 
 # backup the website
 cd $WEBSITE_ROOT

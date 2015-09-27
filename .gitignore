@@ -61,3 +61,5 @@ frontends/doc/api/*.svg
 frontends/styles/*.css
 public/Users/York Yao/Documents/SubsNoti/frontends/rev-manifest.json
 frontends/build/
+doc/api/_book/
+doc/api/*.svg

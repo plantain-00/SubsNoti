@@ -36,6 +36,6 @@ gulp.task('publish', () => {
         .pipe(gulp.dest("./publish/public/scripts/"));
     gulp.src("./public/styles/*.min.css")
         .pipe(gulp.dest("./publish/public/styles/"));
-    gulp.src("./frontends/doc/api/_book/**")
+    gulp.src("./doc/api/_book/**")
         .pipe(gulp.dest("./publish/public/doc/api/"));
 });
