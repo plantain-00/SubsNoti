@@ -27,9 +27,20 @@ gulp.task('watch', function() {
     watch("./scripts/*.js", batch(function(events, done) {
         gulp.start('pack-js', done);
     }));
-    watch('./*.ejs', batch(function(events, done) {
+    watch(["./build/styles/*.css", "./build/scripts/*.js"], batch(function(events, done) {
+        gulp.start('rev', done);
+    }));
+    watch(['./*.ejs', "./build/rev-manifest.json"], batch(function(events, done) {
         gulp.start('pack-html', done);
     }));
+    watch(['../doc/api/_book/*.html', "../doc/api/_book/*.svg"], batch(function(events, done) {
+        gulp.start('pack-doc', done);
+    }));
+});
+
+gulp.task('pack-doc', () => {
+    gulp.src("../doc/api/_book/**")
+        .pipe(gulp.dest("../public/doc/api/"));
 });
 
 gulp.task('pack-css', () => {

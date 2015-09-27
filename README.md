@@ -1,15 +1,70 @@
 # tools and global npm packages
 
-1. git
-2. node.js 4.0.0+ && npm && n
-3. tsd
-4. typescript 1.6+
-5. gulp
-6. forever
-7. mocha
-8. mysql || mariadb
-9. mongodb
-10. redis
-11. gitbook-cli
-12. graphviz
-13. nodemon
++ git
++ node.js 4.0.0+ && npm && n
++ tsd
++ typescript 1.6+
++ gulp
++ mocha
++ mysql || mariadb
++ mongodb
++ redis
++ gitbook-cli
++ graphviz
+
+## server only
+
++ forever
+
+## development only
+
++ nodemon
+
+# development
+
+## init
+
++ npm install
++ tsd install
++ cd frontends/
+
+```
+gulp pack-css
+gulp pack-js
+gulp rev
+gulp pack-html
+gulp pack-doc
+```
+
++ cd doc/api/
+
+```
+dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
+gitbook build
+```
+
+## watch
+
++ tsc --watch
++ nodemon --delay 0.5
++ cd frontends/
+
+```
+gulp watch
+
+```
++ cd doc/api/
+
+```
+dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
+gitbook build
+```
+
+# deploy
+
++ make.sh
++ deploy.sh
+
+# tests
+
+mocha ./tests/
