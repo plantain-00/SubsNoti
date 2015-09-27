@@ -51,7 +51,6 @@ gitbook build
 
 ```
 gulp watch
-
 ```
 + cd doc/api/
 
@@ -62,8 +61,8 @@ gitbook build
 
 # deploy
 
-+ make.sh
-+ deploy.sh
++ scripts/make.sh
++ scripts/deploy.sh
 
 # tests
 
