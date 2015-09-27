@@ -22,7 +22,7 @@ export function get(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, response, documentUrl).then(user=> {
+    services.currentUser.get(request, documentUrl).then(user=> {
         return services.organization.getByMemberId(user.id).then(organizations=> {
             if (libs._.every(organizations, (o: interfaces.Organization) => o.id != organizationId)) {
                 services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
@@ -51,7 +51,7 @@ export function get(request: libs.Request, response: libs.Response) {
         });
     }, error=> {
         services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    }).done();
+    });
 }
 
 export function route(app: libs.Application) {

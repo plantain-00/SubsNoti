@@ -6,7 +6,7 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export function get(request: libs.Request, response: libs.Response, documentUrl: string): libs.Promise<interfaces.User> {
+export function get(request: libs.Request, documentUrl: string): libs.Promise<interfaces.User> {
     if (settings.config.environment == "development") {
         const user: interfaces.User = {
             id: 1,
@@ -25,8 +25,7 @@ export function get(request: libs.Request, response: libs.Response, documentUrl:
 
     const authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
-        services.response.sendParameterMissedError(response, documentUrl);
-        return;
+        return libs.Promise.reject(new Error("no authentication credential"));
     }
 
     return services.cache.getStringAsync(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential)).then(reply=> {

@@ -27,7 +27,7 @@ export function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, response, documentUrl).then(user=> {
+    services.currentUser.get(request, documentUrl).then(user=> {
         return services.organization.existsByName(organizationName).then(exists=> {
             if (exists) {
                 services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
@@ -62,7 +62,7 @@ export function create(request: libs.Request, response: libs.Response) {
         })
     }, error=> {
         services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    }).done();
+    });
 }
 
 export function route(app: libs.Application) {
