@@ -60,7 +60,7 @@ export function create(request: libs.Request, response: libs.Response) {
         }
     }, error=> {
         services.response.sendDBAccessError(response, error.message, documentUrl);
-    }).done();
+    });
 }
 
 function sendEmail(userId: number, salt: string, email: string): libs.Promise<{}> {

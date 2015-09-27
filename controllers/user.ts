@@ -15,7 +15,7 @@ const documentOfGet: interfaces.ApiDocument = {
 export function get(request: libs.Request, response: libs.Response): void {
     const documentUrl = documentOfGet.documentUrl;
 
-    services.currentUser.get(request, response, documentUrl).then(user=> {
+    services.currentUser.get(request, documentUrl).then(user=> {
         const result: interfaces.GetCurrentUserResponse = {
             email: services.user.getEmail(user),
             name: user.name,

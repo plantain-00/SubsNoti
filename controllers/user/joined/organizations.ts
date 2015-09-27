@@ -15,7 +15,7 @@ const documentOfGet: interfaces.ApiDocument = {
 export function get(request: libs.Request, response: libs.Response): void {
     const documentUrl = documentOfGet.documentUrl;
 
-    services.currentUser.get(request, response, documentUrl).then(user=> {
+    services.currentUser.get(request, documentUrl).then(user=> {
 		return services.organization.getByMemberId(user.id).then(organizations=> {
 			const result: interfaces.GetOrganizationsResponse = {
 				organizations: libs._.map(organizations, (o: interfaces.Organization) => {
@@ -32,7 +32,7 @@ export function get(request: libs.Request, response: libs.Response): void {
 		})
 	}, error=> {
 		services.response.sendUnauthorizedError(response, error.message, documentUrl);
-	}).done();
+	});
 }
 
 export function route(app: libs.Application) {

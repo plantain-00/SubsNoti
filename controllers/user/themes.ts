@@ -36,7 +36,7 @@ export function create(request: libs.Request, response: libs.Response) {
 
     const themeDetail = request.body.themeDetail;
 
-    services.currentUser.get(request, response, documentUrl).then(user=> {
+    services.currentUser.get(request, documentUrl).then(user=> {
         return services.db.beginTransactionAsync().then(connection=> {
             return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
                 const themeId = rows.insertId;
@@ -59,7 +59,7 @@ export function create(request: libs.Request, response: libs.Response) {
         });
     }, error=> {
         services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    }).done();
+    });
 }
 
 export function route(app: libs.Application) {
