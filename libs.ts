@@ -18,7 +18,11 @@ export {http};
 import * as assert from "assert";
 export {assert};
 
-export const nodeMailer = require("nodemailer");
+import * as nodemailer from "nodemailer";
+export {nodemailer};
+
+import * as bcrypt from "bcrypt";
+export {bcrypt};
 
 import * as mysql from "mysql";
 export {mysql};
@@ -28,7 +32,7 @@ export {Promise};
 
 export const md5 = require("md5");
 
-const uuid = require("node-uuid");
+import * as uuid from "node-uuid";
 
 import * as moment from "moment";
 export {moment};

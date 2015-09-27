@@ -6,7 +6,7 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const transporter = libs.nodeMailer.createTransport({
+const transporter = libs.nodemailer.createTransport({
     host: settings.config.smtp.host,
     auth: {
         user: settings.config.smtp.name,
