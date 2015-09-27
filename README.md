@@ -11,6 +11,7 @@
 + redis
 + gitbook-cli
 + graphviz
++ node-gyp build environment
 
 ## server only
 
