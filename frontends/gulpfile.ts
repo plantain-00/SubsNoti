@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import * as settings from '../settings';
 import * as gulp from 'gulp';
 const rename = require('gulp-rename');
 const ejs = require("gulp-ejs");
@@ -19,6 +20,8 @@ const minifyHtmlConfig = {
     conditionals: true,
     spare: true
 };
+
+const isDevelopment = settings.config.environment == 'development';
 
 gulp.task('watch', function() {
     watch('./styles/*.less', batch(function(events, done) {
@@ -70,34 +73,63 @@ gulp.task('pack-html', () => {
 });
 
 function uglifyCss(name: string) {
-    gulp.src('./styles/' + name + '.less')
-        .pipe(less())
-        .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
-        .pipe(minifyCSS())
-        .pipe(rename(name + ".min.css"))
-        .pipe(gulp.dest('./build/styles/'));
+    if (isDevelopment) {
+        gulp.src('./styles/' + name + '.less')
+            .pipe(less())
+            .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
+            .pipe(rename(name + ".css"))
+            .pipe(gulp.dest('./build/styles/'));
+    } else {
+        gulp.src('./styles/' + name + '.less')
+            .pipe(less())
+            .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
+            .pipe(minifyCSS())
+            .pipe(rename(name + ".min.css"))
+            .pipe(gulp.dest('./build/styles/'));
+    }
 }
 
 function bundleAndUglifyJs(name: string) {
-    gulp.src('./scripts/' + name + '.js')
-        .pipe(webpack({
-            plugins: [
-                new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
-            ]
-        }))
-        .pipe(rename(name + ".min.js"))
-        .pipe(gulp.dest('./build/scripts/'));
+    if (isDevelopment) {
+        gulp.src('./scripts/' + name + '.js')
+            .pipe(webpack())
+            .pipe(rename(name + ".js"))
+            .pipe(gulp.dest('./build/scripts/'));
+    } else {
+        gulp.src('./scripts/' + name + '.js')
+            .pipe(webpack({
+                plugins: [
+                    new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
+                ]
+            }))
+            .pipe(rename(name + ".min.js"))
+            .pipe(gulp.dest('./build/scripts/'));
+    }
 }
 
 function bundleAndUglifyHtml(name: string) {
     var manifest = gulp.src("./build/rev-manifest.json");
 
-    gulp.src('./' + name + '.ejs')
-        .pipe(ejs({}))
-        .pipe(minifyHtml(minifyHtmlConfig))
-        .pipe(rename(name + ".html"))
-        .pipe(revReplace({
-            manifest: manifest
-        }))
-        .pipe(gulp.dest("../public/"));
+    if (isDevelopment) {
+        gulp.src('./' + name + '.ejs')
+            .pipe(ejs({
+                dotMin: isDevelopment ? '' : '.min'
+            }))
+            .pipe(rename(name + ".html"))
+            .pipe(revReplace({
+                manifest: manifest
+            }))
+            .pipe(gulp.dest("../public/"));
+    } else {
+        gulp.src('./' + name + '.ejs')
+            .pipe(ejs({
+                dotMin: isDevelopment ? '' : '.min'
+            }))
+            .pipe(minifyHtml(minifyHtmlConfig))
+            .pipe(rename(name + ".html"))
+            .pipe(revReplace({
+                manifest: manifest
+            }))
+            .pipe(gulp.dest("../public/"));
+    }
 }
