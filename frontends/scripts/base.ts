@@ -2,6 +2,11 @@ declare let Vue;
 declare let $;
 
 import * as interfaces from "../../interfaces/interfaces";
+import {config} from "../settings";
+
+if (config.environment == "development") {
+    Vue.config.debug = true;
+}
 
 interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse, interfaces.Response {
 
