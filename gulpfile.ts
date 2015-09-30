@@ -17,7 +17,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('publish', () => {
-    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', './public/favicon.ico'])
+    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', 'environment.js', './public/favicon.ico'])
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')

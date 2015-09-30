@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import {config} from './settings';
+import * as environment from "../environment";
 import * as gulp from 'gulp';
 const rename = require('gulp-rename');
 const ejs = require("gulp-ejs");
@@ -21,7 +22,7 @@ const minifyHtmlConfig = {
     spare: true
 };
 
-const isDevelopment = config.environment == 'development';
+const isDevelopment = config.environment == environment.developmentEnvironment;
 
 gulp.task('watch', function() {
     watch('./styles/*.less', batch(function(events, done) {
