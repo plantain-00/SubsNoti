@@ -1,4 +1,7 @@
 test:
+  pre:
+    - npm install typescript -g
+
   override:
     - tsc
     - mocha tests/
