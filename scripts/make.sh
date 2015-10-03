@@ -33,30 +33,26 @@ echo 'Finished "tsc".'
 
 # test
 echo 'Starting "test"...'
-mocha ./tests/
+mocha tests/
 echo 'Finished "test".'
 
 # gulp task publish
 echo 'Starting "generate document"...'
-cd ./doc/api/
-dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
-gitbook build
-cd ../../
+dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
+gitbook build doc/api/
 echo 'Finished "generate document".'
-cd ./frontends/
 echo 'Starting "generate css"...'
-gulp css
+gulp css --gulpfile frontends/gulpfile.js
 echo 'Finished "generate css".'
 echo 'Starting "generate js"...'
-gulp js
+gulp js --gulpfile frontends/gulpfile.js
 echo 'Finished "generate js".'
 echo 'Starting "rev"...'
-gulp rev
+gulp rev --gulpfile frontends/gulpfile.js
 echo 'Finished "rev".'
 echo 'Starting "generate html"...'
-gulp html
+gulp html --gulpfile frontends/gulpfile.js
 echo 'Finished "generate html".'
-cd ..
 echo 'Starting "publish"...'
 gulp publish
 echo 'Finished "publish".'

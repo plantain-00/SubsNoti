@@ -9,8 +9,7 @@ test:
     - tsc
     - mocha tests/
     - gitbook build doc/api/
-    - cd frontends/
-    - gulp css
-    - gulp js
-    - gulp rev
-    - gulp html
+    - gulp css --gulpfile frontends/gulpfile.js
+    - gulp js --gulpfile frontends/gulpfile.js
+    - gulp rev --gulpfile frontends/gulpfile.js
+    - gulp html --gulpfile frontends/gulpfile.js

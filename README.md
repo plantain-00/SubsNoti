@@ -27,38 +27,21 @@
 
 + npm install
 + tsd install -ros
-+ cd frontends/
-
-```
-gulp css
-gulp js
-gulp rev
-gulp html
-gulp doc
-```
-
-+ cd doc/api/
-
-```
-dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
-gitbook build
-```
++ gulp css --gulpfile frontends/gulpfile.js
++ gulp js --gulpfile frontends/gulpfile.js
++ gulp rev --gulpfile frontends/gulpfile.js
++ gulp html --gulpfile frontends/gulpfile.js
++ gulp doc --gulpfile frontends/gulpfile.js
++ gitbook build doc/api/
++ dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
 
 ## watch
 
 + tsc --watch
 + nodemon --delay 0.5
-+ cd frontends/
-
-```
-gulp watch
-```
-+ cd doc/api/
-
-```
-dot -Tsvg DatabaseModels.dot > DatabaseModels.svg
-gitbook build
-```
++ gulp watch --gulpfile frontends/gulpfile.js
++ gitbook build doc/api/
++ dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
 
 # deploy
 
@@ -67,4 +50,4 @@ gitbook build
 
 # tests
 
-mocha ./tests/
+mocha tests/
