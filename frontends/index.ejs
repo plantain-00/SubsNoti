@@ -1,26 +1,58 @@
 <% include head %>
-<div class="container" style="margin-top: 60px;">
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Themes
-            </div>
-            <div class="panel-body">
-                <form class="form-horizontal" id="vue-body">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <label class="the-label {{$root.currentOrganizationId == id ? 'label-active':''}}"
-                                   v-repeat="organizationsCurrentUserIn"
-                                   v-on="click:clickOrganization(this);">{{name}}</label>
+    <div class="container" style="margin-top: 60px;">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Themes
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="vue-body">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label class="the-label {{$root.currentOrganizationId == id ? 'label-active':''}}" v-repeat="organizationsCurrentUserIn"
+                                v-on="click:clickOrganization(this);">{{name}}</label>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">title</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" v-model="newThemeTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">detail</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" v-model="newThemeDetail"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-2">
+                                <button type="button" class="btn btn-primary" v-on="click:createTheme()">create</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>title</th>
+                                            <th>time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-repeat="themes">
+                                            <td>{{title}}</td>
+                                            <td>{{createTime}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<% include scripts %>
-<!-- rev-hash -->
-<script type="text/javascript" src="./scripts/index<%- dotMin %>.js"></script>
-<!-- end -->
-<% include foot %>
+    <% include scripts %>
+        <script type="text/javascript" src="./scripts/index<%- dotMin %>.js"></script>
+        <% include foot %>

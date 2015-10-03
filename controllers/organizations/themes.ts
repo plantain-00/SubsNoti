@@ -15,12 +15,7 @@ const documentOfGet: interfaces.ApiDocument = {
 export function get(request: libs.Request, response: libs.Response) {
     const documentUrl = documentOfGet.documentUrl;
 
-    const organizationId = request.body.organizationId;
-
-    if (!organizationId) {
-        services.response.sendParameterMissedError(response, documentUrl);
-        return;
-    }
+    const organizationId = request.params.organization_id;
 
     services.currentUser.get(request, documentUrl).then(user=> {
         return services.organization.getByMemberId(user.id).then(organizations=> {
