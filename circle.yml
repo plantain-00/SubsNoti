@@ -1,8 +1,8 @@
 test:
   pre:
     - npm install typescript -g
-	- npm install tsd -g
-	- tsd install
+    - npm install tsd -g
+    - tsd install
 
   override:
     - tsc
