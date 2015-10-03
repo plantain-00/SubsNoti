@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/plantain-00/SubsNoti/tree/master.svg?style=svg)](https://circleci.com/gh/plantain-00/SubsNoti/tree/master)
+
 # tools and global npm packages
 
 + git
