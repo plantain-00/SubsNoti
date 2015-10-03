@@ -39,7 +39,7 @@
     "gulp-webpack": "latest"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=4.1.0"
   },
   "scripts": {
     "start": "node app.js"
