@@ -21,9 +21,6 @@ export {assert};
 import * as nodemailer from "nodemailer";
 export {nodemailer};
 
-import * as bcrypt from "bcrypt";
-export {bcrypt};
-
 import * as mysql from "mysql";
 export {mysql};
 

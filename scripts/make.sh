@@ -10,10 +10,10 @@ echo 'Finished "git pull".'
 
 # install
 echo 'Starting "npm install"...'
-npm --registry https://registry.npm.taobao.org install
+npm install
 echo 'Finished "npm install".'
 echo 'Starting "tsd install"...'
-tsd install
+tsd install -ros
 echo 'Finished "tsd install".'
 
 # compile gulpfile.ts

@@ -26,7 +26,7 @@
 ## init
 
 + npm install
-+ tsd install
++ tsd install -ros
 + cd frontends/
 
 ```
