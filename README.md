@@ -30,11 +30,11 @@
 + cd frontends/
 
 ```
-gulp pack-css
-gulp pack-js
+gulp css
+gulp js
 gulp rev
-gulp pack-html
-gulp pack-doc
+gulp html
+gulp doc
 ```
 
 + cd doc/api/

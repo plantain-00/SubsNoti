@@ -9,3 +9,8 @@ test:
     - tsc
     - mocha tests/
     - gitbook build doc/api/
+    - cd frontends/
+    - gulp css
+    - gulp js
+    - gulp rev
+    - gulp html

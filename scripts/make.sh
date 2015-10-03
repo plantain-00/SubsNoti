@@ -45,16 +45,16 @@ cd ../../
 echo 'Finished "generate document".'
 cd ./frontends/
 echo 'Starting "generate css"...'
-gulp pack-css
+gulp css
 echo 'Finished "generate css".'
 echo 'Starting "generate js"...'
-gulp pack-js
+gulp js
 echo 'Finished "generate js".'
 echo 'Starting "rev"...'
 gulp rev
 echo 'Finished "rev".'
 echo 'Starting "generate html"...'
-gulp pack-html
+gulp html
 echo 'Finished "generate html".'
 cd ..
 echo 'Starting "publish"...'

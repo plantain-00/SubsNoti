@@ -26,34 +26,34 @@ const isDevelopment = config.environment == environment.developmentEnvironment;
 
 gulp.task('watch', function() {
     watch('./styles/*.less', batch(function(events, done) {
-        gulp.start('pack-css', done);
+        gulp.start('css', done);
     }));
     watch("./scripts/*.js", batch(function(events, done) {
-        gulp.start('pack-js', done);
+        gulp.start('js', done);
     }));
     watch(["./build/styles/*.css", "./build/scripts/*.js"], batch(function(events, done) {
         gulp.start('rev', done);
     }));
     watch(['./*.ejs', "./build/rev-manifest.json"], batch(function(events, done) {
-        gulp.start('pack-html', done);
+        gulp.start('html', done);
     }));
     watch(['../doc/api/_book/*.html', "../doc/api/_book/*.svg"], batch(function(events, done) {
-        gulp.start('pack-doc', done);
+        gulp.start('doc', done);
     }));
 });
 
-gulp.task('pack-doc', () => {
+gulp.task('doc', () => {
     gulp.src("../doc/api/_book/**")
         .pipe(gulp.dest("../public/doc/api/"));
 });
 
-gulp.task('pack-css', () => {
+gulp.task('css', () => {
     for (let file of ["base"]) {
         uglifyCss(file);
     }
 });
 
-gulp.task('pack-js', () => {
+gulp.task('js', () => {
     for (let file of ['index', 'login', 'newOrganization']) {
         bundleAndUglifyJs(file);
     }
@@ -67,7 +67,7 @@ gulp.task('rev', () => {
         .pipe(gulp.dest("./build/"));
 });
 
-gulp.task('pack-html', () => {
+gulp.task('html', () => {
     for (let file of ['index', 'login', 'newOrganization']) {
         bundleAndUglifyHtml(file);
     }
