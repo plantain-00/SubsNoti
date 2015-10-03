@@ -7,22 +7,6 @@ import * as interfaces from "../interfaces/interfaces";
 import * as services from "../services/services";
 
 export function get(request: libs.Request, documentUrl: string): libs.Promise<interfaces.User> {
-    if (settings.config.environment == "development") {
-        const user: interfaces.User = {
-            id: 1,
-            name: "test",
-            emailHead: "test",
-            emailTail: "test.com",
-            salt: libs.generateUuid(),
-            status: enums.UserStatus.normal
-        };
-        return services.organization.getByCreatorId(user.id).then(organizationIds=> {
-            user.createdOrganizationIds = organizationIds;
-
-            return libs.Promise.resolve(user);
-        });
-    }
-
     const authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
         return libs.Promise.reject(new Error("no authentication credential"));

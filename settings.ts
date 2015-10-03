@@ -1,12 +1,8 @@
 import {SettingsInterface} from "./SettingsInterface";
+import * as environment from "./environment";
 
 export const config: SettingsInterface = {
-    /*
-     * production: "production"
-     * testing: "testing"
-     * development: "development"
-     * */
-    environment: "development",
+    environment: environment.developmentEnvironment,
     db: {
         host: '',
         user: '',

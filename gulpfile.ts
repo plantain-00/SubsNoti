@@ -5,20 +5,19 @@ const del = require('del');
 
 gulp.task('clean', () => {
     del(['./*.js',
-        './controllers/*.js',
-        './demos/*.js',
-        './enums/*.js',
-        './interfaces/*.js',
-        './services/*.js',
-        './tests/*.js',
-        './public/**/*.html',
-        './public/**/*.css',
-        './public/**/*.js',
-        './publish/*']);
+        './**/*.js',
+        './**/*.html',
+        './**/*.css',
+        './**/*.svg',
+        './doc/api/_book/',
+        './frontends/build/',
+        './public/doc/',
+        './publish/public/',
+        './publish/**/*.ico']);
 });
 
 gulp.task('publish', () => {
-    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', './public/favicon.ico'])
+    gulp.src(['./app.js', './libs.js', './router.js', 'settings.js', 'environment.js', './public/favicon.ico'])
         .pipe(gulp.dest('./publish/'));
 
     gulp.src('./enums/enums.js')
