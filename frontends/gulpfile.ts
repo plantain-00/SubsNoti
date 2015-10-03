@@ -5,7 +5,7 @@ import * as environment from "../environment";
 import * as gulp from 'gulp';
 const rename = require('gulp-rename');
 const ejs = require("gulp-ejs");
-const webpack = require('gulp-webpack');
+const webpack = require('webpack-stream');
 const minifyHtml = require('gulp-minify-html');
 const rev = require('gulp-rev');
 const less = require('gulp-less');
