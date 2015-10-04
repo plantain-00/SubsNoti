@@ -14,11 +14,11 @@ interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse, inte
 
 }
 
-export const sessionStorageNames = {
+export let sessionStorageNames = {
     loginResult: "loginResult"
 };
 
-export const localStorageNames = {
+export let localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime"
 };
 
@@ -32,7 +32,7 @@ function getUrlParameter(name: string): string {
 }
 
 function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
-    const willClearPreviousStatus = getUrlParameter("clear_previous_status");
+    let willClearPreviousStatus = getUrlParameter("clear_previous_status");
 
     let loginResult = null;
 
@@ -43,7 +43,7 @@ function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
     }
 
     if (loginResult) {
-        const data: GetCurrentUserResponse = JSON.parse(loginResult);
+        let data: GetCurrentUserResponse = JSON.parse(loginResult);
         next(data);
     } else {
         $.ajax({
@@ -74,7 +74,7 @@ export function authenticate(next: (error: Error, data: GetCurrentUserResponse) 
     });
 }
 
-const vueHeadModel = {
+let vueHeadModel = {
     el: "#vue-head",
     data: {
         loginStatus: 0,
@@ -98,4 +98,4 @@ const vueHeadModel = {
     }
 };
 
-export const vueHead = new Vue(vueHeadModel);
+export let vueHead = new Vue(vueHeadModel);

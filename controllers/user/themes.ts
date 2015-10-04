@@ -6,16 +6,16 @@ import * as interfaces from "../../interfaces/interfaces";
 
 import * as services from "../../services/services";
 
-const documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate: interfaces.ApiDocument = {
     url: "/api/user/themes",
     method: "post",
     documentUrl: "/doc/api/Create a theme.html"
 };
 
 export function create(request: libs.Request, response: libs.Response) {
-    const documentUrl = documentOfCreate.documentUrl;
+    let documentUrl = documentOfCreate.documentUrl;
 
-    const organizationId = request.body.organizationId;
+    let organizationId = request.body.organizationId;
 
     if (!organizationId) {
         services.response.sendParameterMissedError(response, documentUrl);
@@ -34,12 +34,12 @@ export function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    const themeDetail = request.body.themeDetail;
+    let themeDetail = request.body.themeDetail;
 
     services.currentUser.get(request, documentUrl).then(user=> {
         return services.db.beginTransactionAsync().then(connection=> {
             return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
-                const themeId = rows.insertId;
+                let themeId = rows.insertId;
 
                 return services.db.accessInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]).then(rows=> {
                     return services.db.accessInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]).then(rows=> {

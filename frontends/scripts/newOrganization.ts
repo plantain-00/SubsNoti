@@ -2,7 +2,7 @@ import * as base from "./base";
 import * as interfaces from "../../interfaces/interfaces";
 
 let vueBody;
-const vueBodyModel = {
+let vueBodyModel = {
     el: "#vue-body",
     data: {
         organizationName: "",
@@ -18,7 +18,7 @@ const vueBodyModel = {
         add: function () {
             this.isSending = true;
             this.loginText = "is adding now...";
-            const self = this;
+            let self = this;
             $.ajax({
                 url: "/api/user/organizations",
                 data: JSON.stringify({

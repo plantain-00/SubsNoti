@@ -3,11 +3,11 @@
 import * as express from "express";
 export {express};
 
-export const cookieParser = require('cookie-parser');
+export let cookieParser = require('cookie-parser');
 
-export const bodyParser = require('body-parser');
+export let bodyParser = require('body-parser');
 
-export const compression = require("compression");
+export let compression = require("compression");
 
 import * as path from "path";
 export {path};
@@ -27,7 +27,7 @@ export {mysql};
 import * as Promise from "bluebird";
 export {Promise};
 
-export const md5 = require("md5");
+export let md5 = require("md5");
 
 import * as uuid from "node-uuid";
 

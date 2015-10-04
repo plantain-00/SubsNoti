@@ -2,7 +2,7 @@ import * as base from "./base";
 import * as interfaces from "../../interfaces/interfaces";
 
 let vueBody;
-const vueBodyModel = {
+let vueBodyModel = {
     el: "#vue-body",
     data: {
         emailHead: "",
@@ -46,9 +46,9 @@ const vueBodyModel = {
     },
     methods: {
         login: function () {
-            const lastSuccessfulEmailTime = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
+            let lastSuccessfulEmailTime = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
             if (lastSuccessfulEmailTime) {
-                const time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
+                let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
                 if (time < 60 * 1000) {
                     alert("please do it after " + (60 - time / 1000) + " seconds");
                     return;
@@ -56,7 +56,7 @@ const vueBodyModel = {
             }
             this.isSending = true;
             this.loginText = "is sending email now...";
-            const self = this;
+            let self = this;
             $.ajax({
                 url: "/api/token_sent",
                 data: JSON.stringify({

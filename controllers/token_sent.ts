@@ -6,14 +6,14 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate: interfaces.ApiDocument = {
     url: "/api/token_sent",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html"
 };
 
 export function create(request: libs.Request, response: libs.Response) {
-    const documentUrl = documentOfCreate.documentUrl;
+    let documentUrl = documentOfCreate.documentUrl;
 
     if (services.contentType.isNotJson(request)) {
         services.response.sendContentTypeError(response, documentUrl);
@@ -22,7 +22,7 @@ export function create(request: libs.Request, response: libs.Response) {
 
     let emailHead: string = request.body.emailHead;
     let emailTail: string = request.body.emailTail;
-    const name = request.body.name;
+    let name = request.body.name;
 
     if (!emailHead || !emailTail) {
         services.response.sendParameterMissedError(response, documentUrl);
@@ -40,9 +40,9 @@ export function create(request: libs.Request, response: libs.Response) {
                 services.response.sendEmailServiceError(response, error.message, documentUrl);
             });
         } else {
-            const salt = libs.generateUuid();
+            let salt = libs.generateUuid();
             services.db.accessAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]).then(rows=> {
-                const id = rows.insertId;
+                let id = rows.insertId;
 
                 return sendEmail(id, salt, `${emailHead}@${emailTail}`).then(() => {
                     services.logger.log(documentOfCreate.url, request);
@@ -61,8 +61,8 @@ export function create(request: libs.Request, response: libs.Response) {
 
 function sendEmail(userId: number, salt: string, email: string): libs.Promise<{}> {
     return services.frequency.limit(email, 60 * 60).then(() => {
-        const token = services.authenticationCredential.create(userId, salt);
-        const url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
+        let token = services.authenticationCredential.create(userId, salt);
+        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
         return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
     });

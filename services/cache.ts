@@ -14,7 +14,7 @@ function getString(key: string, next: (error: Error, reply: string) => void) {
     });
 }
 
-export const getStringAsync = libs.Promise.promisify(getString);
+export let getStringAsync = libs.Promise.promisify(getString);
 
 export function setString(key: string, value: string, seconds?: number) {
     client.set(key, value);
@@ -36,7 +36,7 @@ function get(key: string, field: string, next: (error: Error, reply: any) => voi
     });
 }
 
-export const getAsync = libs.Promise.promisify(get);
+export let getAsync = libs.Promise.promisify(get);
 
 function ttl(key: string, next: (error: Error, reply: number) => void) {
     client.ttl(key, (error, reply) => {
@@ -44,4 +44,4 @@ function ttl(key: string, next: (error: Error, reply: number) => void) {
     })
 }
 
-export const ttlAsync = libs.Promise.promisify(ttl);
+export let ttlAsync = libs.Promise.promisify(ttl);

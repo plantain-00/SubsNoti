@@ -12,16 +12,16 @@ export function existsByName(name: string): libs.Promise<boolean> {
 
 export function getByCreatorId(creatorId: number): libs.Promise<number[]> {
     return services.db.accessAsync("select * from organization_members where MemberID = ? and IsAdministratorOf = 1", [creatorId]).then(rows=> {
-        const organizationIds = libs._.map(rows, (row: any) => row.OrganizationID);
+        let organizationIds = libs._.map(rows, (row: any) => row.OrganizationID);
         return libs.Promise.resolve(organizationIds);
     });
 }
 
-export const maxNumberUserCanCreate = 3;
+export let maxNumberUserCanCreate = 3;
 
 export function getByMemberId(memberId: number): libs.Promise<interfaces.Organization[]> {
     return services.db.accessAsync("select o.* from organization_members om left join organizations o on om.OrganizationID = o.ID where MemberID = ?", [memberId]).then(rows=> {
-        const organizations = libs._.map(rows, (row: any) => getFromRow(row));
+        let organizations = libs._.map(rows, (row: any) => getFromRow(row));
         return libs.Promise.resolve(organizations);
     });
 }

@@ -11,6 +11,7 @@ test:
 
   override:
     - tsc
+    - tsc -p frontends/
     - mocha tests/
     - gitbook build doc/api/
     - gulp js --gulpfile frontends/gulpfile.js

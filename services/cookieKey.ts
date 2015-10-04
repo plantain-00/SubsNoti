@@ -6,4 +6,4 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export const authenticationCredential = "authentication_credential";
+export let authenticationCredential = "authentication_credential";

@@ -1,7 +1,7 @@
 /// <reference path="./typings/tsd.d.ts" />
 
 import * as gulp from 'gulp';
-const del = require('del');
+let del = require('del');
 
 gulp.task('clean', () => {
     del(['*.js',

@@ -6,7 +6,7 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const transporter = libs.nodemailer.createTransport({
+let transporter = libs.nodemailer.createTransport({
     host: settings.config.smtp.host,
     auth: {
         user: settings.config.smtp.name,
@@ -15,7 +15,7 @@ const transporter = libs.nodemailer.createTransport({
 });
 
 function send(to: string, subject: string, html: string, next: (error: Error) => void) {
-    const mailOptions = {
+    let mailOptions = {
         from: settings.config.smtp.name,
         to: to,
         subject: subject,
@@ -26,4 +26,4 @@ function send(to: string, subject: string, html: string, next: (error: Error) =>
     });
 }
 
-export const sendAsync = libs.Promise.promisify(send);
+export let sendAsync = libs.Promise.promisify(send);
