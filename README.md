@@ -33,17 +33,17 @@
 + gulp js --gulpfile frontends/gulpfile.js
 + gulp rev --gulpfile frontends/gulpfile.js
 + gulp html --gulpfile frontends/gulpfile.js
-+ gulp doc --gulpfile frontends/gulpfile.js
-+ gitbook build doc/api/
 + dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
++ gitbook build doc/api/
++ gulp doc --gulpfile frontends/gulpfile.js
 
 ## watch
 
 + tsc --watch
 + nodemon --delay 0.5
 + gulp watch --gulpfile frontends/gulpfile.js
-+ gitbook build doc/api/
 + dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
++ gitbook build doc/api/
 
 # deploy
 

@@ -1,6 +1,3 @@
-declare let Vue;
-declare let $;
-
 import * as base from "./base";
 import * as interfaces from "../../interfaces/interfaces";
 

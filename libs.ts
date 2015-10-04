@@ -43,8 +43,8 @@ export {redis};
 import * as fs from 'fs';
 export {fs};
 
-import * as mongodb from 'mongodb';
-export {mongodb};
+import * as mongoose from 'mongoose';
+export {mongoose};
 
 import Request = express.Request;
 export {Request};
@@ -63,9 +63,6 @@ export {ServerResponse};
 
 import Application = express.Application;
 export {Application};
-
-import Collection = mongodb.Collection;
-export {Collection};
 
 import RedisClient = redis.RedisClient;
 export {RedisClient};
