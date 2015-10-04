@@ -1,4 +1,4 @@
-import * as environment from "../environment";
+import * as environment from "../common/environment";
 
 export let config = {
 	environment: environment.developmentEnvironment

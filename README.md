@@ -31,6 +31,7 @@
 
 + npm install
 + tsd install -ros
++ tsc
 + gulp css --gulpfile frontends/gulpfile.js
 + gulp js --gulpfile frontends/gulpfile.js
 + gulp rev --gulpfile frontends/gulpfile.js
@@ -41,10 +42,18 @@
 
 ## watch
 
+### frontend
+
 + tsc --watch
-+ tsc -p frontends/
-+ nodemon --delay 0.5
-+ gulp watch --gulpfile frontends/gulpfile.js
++ gulp watch
+
+### backend
+
++ tsc --watch
++ nodemon --delay 0.5 publish/backends/app.js
+
+### doc
+
 + dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
 + gitbook build doc/api/
 
@@ -55,4 +64,4 @@
 
 # tests
 
-mocha tests/
+mocha publish/backends/tests
