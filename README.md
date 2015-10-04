@@ -44,12 +44,12 @@
 
 ### frontend
 
-+ tsc --watch
++ tsc -w
 + gulp watch
 
 ### backend
 
-+ tsc --watch
++ tsc -w
 + nodemon --delay 0.5 publish/backends/app.js
 
 ### doc
