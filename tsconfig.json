@@ -5,6 +5,8 @@
   },
   "exclude": [
     "node_modules",
-    "frontends"
+    "frontends",
+    "backends",
+    "common"
   ]
 }

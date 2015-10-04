@@ -1,0 +1,11 @@
+{
+	"ignore": [
+		"demos/**/*.*",
+		"tests/**/*.*",
+		"**/*.ts"
+	],
+	"verbose": true,
+	"execMap": {
+		"js": "node"
+	}
+}

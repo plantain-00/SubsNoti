@@ -1,5 +1,5 @@
 import * as base from "./base";
-import * as interfaces from "../../interfaces/interfaces";
+import * as interfaces from "../../common/interfaces";
 
 let vueBody;
 let vueBodyModel = {

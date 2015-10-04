@@ -4,40 +4,25 @@ import * as gulp from 'gulp';
 let del = require('del');
 
 gulp.task('clean', () => {
-    del(['*.js',
+    del([
+        'backends/**/*.js',
+
+        'common/**/*.js',
+
         'doc/api/_book/',
-        'public/doc/',
-        'controllers/*.js',
-        'demos/*.js',
-        'enums/*.js',
-        'interfaces/*.js',
-        'services/*.js',
-        'tests/*.js',
-        'public/**/*.html',
-        'public/**/*.css',
-        'public/**/*.js',
-        'publish/**/*']);
-});
+        'doc/api/*.svg',
 
-gulp.task('publish', () => {
-    gulp.src(['app.js', 'libs.js', 'router.js', 'settings.js', 'environment.js', 'public/favicon.ico'])
-        .pipe(gulp.dest('./publish/'));
+        'frontends/build/',
+        'frontends/**/*.css',
+        'frontends/**/*.js',
+        'frontends/**/*.html',
 
-    gulp.src('enums/enums.js')
-        .pipe(gulp.dest('publish/enums/'));
-    gulp.src('interfaces/interfaces.js')
-        .pipe(gulp.dest('publish/interfaces/'));
-    gulp.src('services/**/*.js')
-        .pipe(gulp.dest('publish/services/'));
-    gulp.src('controllers/**/*.js')
-        .pipe(gulp.dest('publish/controllers/'));
+        'node_modules',
 
-    gulp.src("public/*.html")
-        .pipe(gulp.dest("publish/public/"));
-    gulp.src("public/scripts/*.min.js")
-        .pipe(gulp.dest("publish/public/scripts/"));
-    gulp.src("public/styles/*.min.css")
-        .pipe(gulp.dest("publish/public/styles/"));
-    gulp.src("doc/api/_book/**")
-        .pipe(gulp.dest("publish/public/doc/api/"));
+        'publish/public/',
+        'publish/backends/',
+        'publish/common/',
+
+        'typings/'
+    ]);
 });

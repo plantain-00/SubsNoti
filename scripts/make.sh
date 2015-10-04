@@ -18,7 +18,7 @@ echo 'Finished "tsd install".'
 
 # compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'
-tsc -m commonjs gulpfile.ts
+tsc
 echo 'Finished "tsc gulpfile.ts".'
 
 # gulp task clean
@@ -29,31 +29,38 @@ echo 'Finished "gulp clean".'
 # compile
 echo 'Starting "tsc"...'
 tsc
-tsc -p frontends/
+tsc -p frontends
+tsc -p backends
 echo 'Finished "tsc".'
 
 # test
 echo 'Starting "test"...'
-mocha tests/
+mocha publish/backends/tests
 echo 'Finished "test".'
 
 # gulp task publish
-echo 'Starting "generate document"...'
+echo 'Starting "publish document"...'
 dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
 gitbook build doc/api/
-echo 'Finished "generate document".'
-echo 'Starting "generate css"...'
+gulp doc --gulpfile frontends/gulpfile.js
+echo 'Finished "publish document".'
+
+echo 'Starting "publish icon".'
+gulp icon --gulpfile frontends/gulpfile.js
+echo 'Finished "publish icon"...'
+
+echo 'Starting "publish css"...'
 gulp css --gulpfile frontends/gulpfile.js
-echo 'Finished "generate css".'
-echo 'Starting "generate js"...'
+echo 'Finished "publish css".'
+
+echo 'Starting "publish js"...'
 gulp js --gulpfile frontends/gulpfile.js
-echo 'Finished "generate js".'
+echo 'Finished "publish js".'
+
 echo 'Starting "rev"...'
 gulp rev --gulpfile frontends/gulpfile.js
 echo 'Finished "rev".'
-echo 'Starting "generate html"...'
+
+echo 'Starting "publish html"...'
 gulp html --gulpfile frontends/gulpfile.js
-echo 'Finished "generate html".'
-echo 'Starting "publish"...'
-gulp publish
-echo 'Finished "publish".'
+echo 'Finished "publish html".'

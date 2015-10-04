@@ -1,7 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import {config} from './settings';
-import * as environment from "../environment";
+import * as environment from "../common/environment";
 import * as gulp from 'gulp';
 let rename = require('gulp-rename');
 let ejs = require("gulp-ejs");
@@ -44,7 +44,12 @@ gulp.task('watch', function() {
 
 gulp.task('doc', () => {
     gulp.src("../doc/api/_book/**")
-        .pipe(gulp.dest("../public/doc/api/"));
+        .pipe(gulp.dest("../publish/public/doc/api/"));
+});
+
+gulp.task('icon', () => {
+    gulp.src("favicon.ico")
+        .pipe(gulp.dest("../publish/public/"));
 });
 
 gulp.task('css', () => {
@@ -62,7 +67,7 @@ gulp.task('js', () => {
 gulp.task('rev', () => {
     gulp.src(["build/styles/*.css", "build/scripts/*.js"], { base: './build/' })
         .pipe(rev())
-        .pipe(gulp.dest("../public/"))
+        .pipe(gulp.dest("../publish/public/"))
         .pipe(rev.manifest())
         .pipe(gulp.dest("./build/"));
 });
@@ -120,7 +125,7 @@ function bundleAndUglifyHtml(name: string) {
             .pipe(revReplace({
                 manifest: manifest
             }))
-            .pipe(gulp.dest("../public/"));
+            .pipe(gulp.dest("../publish/public/"));
     } else {
         gulp.src(name + '.ejs')
             .pipe(ejs({
@@ -131,6 +136,6 @@ function bundleAndUglifyHtml(name: string) {
             .pipe(revReplace({
                 manifest: manifest
             }))
-            .pipe(gulp.dest("../public/"));
+            .pipe(gulp.dest("../publish/public/"));
     }
 }
