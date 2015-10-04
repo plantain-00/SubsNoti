@@ -13,11 +13,11 @@ echo 'Finished "backup".'
 
 # publish
 echo 'Starting "rsync"...'
-rsync -a $SRC_ROOT/node_modules/ $SRC_ROOT/publish/node_modules
 rsync -a $SRC_ROOT/publish/ $WEBSITE_ROOT
+rsync -a $SRC_ROOT/node_modules/ $WEBSITE_ROOT/node_modules
 echo 'Finished "rsync".'
 
 # restart
 echo 'Starting "restart"...'
-FOREVER_ROOT=$WEBSITE_ROOT forever restart -l $WEBSITE_ROOT/forever.log $WEBSITE_ROOT/app.js
+FOREVER_ROOT=$WEBSITE_ROOT forever restart -l $WEBSITE_ROOT/forever.log $WEBSITE_ROOT/backends/app.js
 echo 'Finished "restart".'

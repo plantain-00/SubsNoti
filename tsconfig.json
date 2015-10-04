@@ -7,6 +7,7 @@
     "node_modules",
     "frontends",
     "backends",
-    "common"
+    "common",
+    "publish"
   ]
 }
