@@ -17,12 +17,8 @@ gulp.task('clean', () => {
         'frontends/**/*.js',
         'frontends/**/*.html',
 
-        'node_modules',
-
         'publish/public/',
         'publish/backends/',
-        'publish/common/',
-
-        'typings/'
+        'publish/common/'
     ]);
 });
