@@ -6,16 +6,16 @@ import * as interfaces from "../../interfaces/interfaces";
 
 import * as services from "../../services/services";
 
-const documentOfGet: interfaces.ApiDocument = {
+let documentOfGet: interfaces.ApiDocument = {
     url: "/api/organizations/:organization_id/themes",
     method: "get",
     documentUrl: "/doc/api/Get themes of an organization.html"
 };
 
 export function get(request: libs.Request, response: libs.Response) {
-    const documentUrl = documentOfGet.documentUrl;
+    let documentUrl = documentOfGet.documentUrl;
 
-    const organizationId = request.params.organization_id;
+    let organizationId = request.params.organization_id;
 
     services.currentUser.get(request, documentUrl).then(user=> {
         return services.organization.getByMemberId(user.id).then(organizations=> {
@@ -25,7 +25,7 @@ export function get(request: libs.Request, response: libs.Response) {
             }
 
             return services.theme.getInOrganizationId(organizationId).then(themes=> {
-                const result: interfaces.GetThemesResponse = {
+                let result: interfaces.GetThemesResponse = {
                     themes: libs._.map(themes, (t: interfaces.Theme) => {
                         return {
                             id: t.id,

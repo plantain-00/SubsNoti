@@ -42,6 +42,7 @@
 ## watch
 
 + tsc --watch
++ tsc -p frontends/
 + nodemon --delay 0.5
 + gulp watch --gulpfile frontends/gulpfile.js
 + dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg

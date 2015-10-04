@@ -6,14 +6,14 @@ import * as interfaces from "../../interfaces/interfaces";
 
 import * as services from "../../services/services";
 
-const documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate: interfaces.ApiDocument = {
     url: "/api/user/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
 };
 
 export function create(request: libs.Request, response: libs.Response) {
-    const documentUrl = documentOfCreate.documentUrl;
+    let documentUrl = documentOfCreate.documentUrl;
 
     let organizationName = request.body.organizationName;
     if (!organizationName) {
@@ -42,7 +42,7 @@ export function create(request: libs.Request, response: libs.Response) {
 
                 return services.db.beginTransactionAsync().then(connection=> {
                     return services.db.accessInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id]).then(rows=> {
-                        const organizationId = rows.insertId;
+                        let organizationId = rows.insertId;
 
                         return services.db.accessInTransactionAsync(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true]).then(rows=> {
                             return services.db.endTransactionAsync(connection).then(() => {

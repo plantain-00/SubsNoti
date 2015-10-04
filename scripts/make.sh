@@ -29,6 +29,7 @@ echo 'Finished "gulp clean".'
 # compile
 echo 'Starting "tsc"...'
 tsc
+tsc -p frontends/
 echo 'Finished "tsc".'
 
 # test

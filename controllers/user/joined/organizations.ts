@@ -6,18 +6,18 @@ import * as interfaces from "../../../interfaces/interfaces";
 
 import * as services from "../../../services/services";
 
-const documentOfGet: interfaces.ApiDocument = {
+let documentOfGet: interfaces.ApiDocument = {
     url: "/api/user/joined/organizations",
     method: "get",
     documentUrl: "/doc/api/Get joined organizations.html"
 };
 
 export function get(request: libs.Request, response: libs.Response): void {
-    const documentUrl = documentOfGet.documentUrl;
+    let documentUrl = documentOfGet.documentUrl;
 
     services.currentUser.get(request, documentUrl).then(user=> {
 		return services.organization.getByMemberId(user.id).then(organizations=> {
-			const result: interfaces.GetOrganizationsResponse = {
+			let result: interfaces.GetOrganizationsResponse = {
 				organizations: libs._.map(organizations, (o: interfaces.Organization) => {
 					return {
 						id: o.id,

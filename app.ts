@@ -3,7 +3,7 @@ import * as settings from "./settings";
 
 import * as services from "./services/services";
 
-const app: libs.Application = libs.express();
+let app: libs.Application = libs.express();
 
 app.settings.env = settings.config.environment;
 

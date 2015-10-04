@@ -8,7 +8,7 @@ import * as services from "../services/services";
 
 describe('create', ()=> {
     it('should work', () => {
-        const salt = libs.generateUuid();
+        let salt = libs.generateUuid();
         services.authenticationCredential.create(123, salt);
     });
 });

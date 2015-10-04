@@ -7,7 +7,7 @@ import * as interfaces from "../interfaces/interfaces";
 import * as services from "../services/services";
 
 export function limit(key: string, seconds: number): libs.Promise<void> {
-    const frequencyKey = services.cacheKeyRule.getFrequency(key);
+    let frequencyKey = services.cacheKeyRule.getFrequency(key);
     return services.cache.getStringAsync(frequencyKey).then(value=> {
         if (value) {
             return services.cache.ttlAsync(frequencyKey).then(reply=> {

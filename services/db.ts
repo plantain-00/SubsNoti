@@ -6,7 +6,7 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-const pool = libs.mysql.createPool(settings.config.db);
+let pool = libs.mysql.createPool(settings.config.db);
 
 function access(sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
     pool.getConnection((error, connection) => {
@@ -28,7 +28,7 @@ function access(sql: string, parameters: any[], next: (error: Error, rows: any) 
     });
 }
 
-export const accessAsync = libs.Promise.promisify(access);
+export let accessAsync = libs.Promise.promisify(access);
 
 function beginTransaction(next: (error: Error, connection: libs.MysqlConnection) => void): void {
     pool.getConnection((error, connection) => {
@@ -49,9 +49,9 @@ function beginTransaction(next: (error: Error, connection: libs.MysqlConnection)
     });
 }
 
-export const beginTransactionAsync = libs.Promise.promisify(beginTransaction);
+export let beginTransactionAsync = libs.Promise.promisify(beginTransaction);
 
-export const accessInTransactionAsync = libs.Promise.promisify(accessInTransaction);
+export let accessInTransactionAsync = libs.Promise.promisify(accessInTransaction);
 
 function accessInTransaction(connection: libs.MysqlConnection, sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
     connection.query(sql, parameters, (error, rows) => {
@@ -73,7 +73,7 @@ function rollback(connection: libs.MysqlConnection, next: () => void): void {
     });
 }
 
-export const rollbackAsync = libs.Promise.promisify(rollback);
+export let rollbackAsync = libs.Promise.promisify(rollback);
 
 function endTransaction(connection: libs.MysqlConnection, next: (error: Error) => void): void {
     connection.commit(error=> {
@@ -89,4 +89,4 @@ function endTransaction(connection: libs.MysqlConnection, next: (error: Error) =
     });
 }
 
-export const endTransactionAsync = libs.Promise.promisify(endTransaction);
+export let endTransactionAsync = libs.Promise.promisify(endTransaction);

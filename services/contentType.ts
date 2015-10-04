@@ -7,6 +7,6 @@ import * as interfaces from "../interfaces/interfaces";
 import * as services from "../services/services";
 
 export function isNotJson(request: libs.Request): boolean {
-    const contentType = request.get('Content-Type');
+    let contentType = request.get('Content-Type');
     return !contentType || contentType.indexOf("application/json") == -1
 }

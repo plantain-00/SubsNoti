@@ -3,26 +3,26 @@
 import {config} from './settings';
 import * as environment from "../environment";
 import * as gulp from 'gulp';
-const rename = require('gulp-rename');
-const ejs = require("gulp-ejs");
-const webpack = require('webpack-stream');
-const minifyHtml = require('gulp-minify-html');
-const rev = require('gulp-rev');
-const less = require('gulp-less');
-const path = require('path');
-const minifyCSS = require('gulp-minify-css');
-const autoprefixer = require('autoprefixer');
-const postcss = require('gulp-postcss');
-const watch = require('gulp-watch');
-const batch = require('gulp-batch');
-const revReplace = require('gulp-rev-replace');
+let rename = require('gulp-rename');
+let ejs = require("gulp-ejs");
+let webpack = require('webpack-stream');
+let minifyHtml = require('gulp-minify-html');
+let rev = require('gulp-rev');
+let less = require('gulp-less');
+let path = require('path');
+let minifyCSS = require('gulp-minify-css');
+let autoprefixer = require('autoprefixer');
+let postcss = require('gulp-postcss');
+let watch = require('gulp-watch');
+let batch = require('gulp-batch');
+let revReplace = require('gulp-rev-replace');
 
-const minifyHtmlConfig = {
+let minifyHtmlConfig = {
     conditionals: true,
     spare: true
 };
 
-const isDevelopment = config.environment == environment.developmentEnvironment;
+let isDevelopment = config.environment == environment.developmentEnvironment;
 
 gulp.task('watch', function() {
     watch('styles/*.less', batch(function(events, done) {

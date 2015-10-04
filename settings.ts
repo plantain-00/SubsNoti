@@ -1,7 +1,7 @@
 import {SettingsInterface} from "./SettingsInterface";
 import * as environment from "./environment";
 
-export const config: SettingsInterface = {
+export let config: SettingsInterface = {
     environment: environment.developmentEnvironment,
     db: {
         host: '',
@@ -37,7 +37,7 @@ export const config: SettingsInterface = {
 };
 
 try {
-    const secret = require("./secret");
+    let secret = require("./secret");
     secret.load(config);
 } catch (e) {
     console.log(e);

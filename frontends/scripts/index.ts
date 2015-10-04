@@ -6,7 +6,7 @@ interface GetOrganizationsResponse extends interfaces.GetOrganizationsResponse, 
 interface GetThemesResponse extends interfaces.GetThemesResponse, interfaces.Response { }
 
 let vueBody;
-const vueBodyModel = {
+let vueBodyModel = {
     el: "#vue-body",
     data: {
         organizationsCurrentUserIn: [],
@@ -17,7 +17,7 @@ const vueBodyModel = {
     },
     methods: {
         getOrganizationsCurrentUserIn: function() {
-            const self = this;
+            let self = this;
 
             $.ajax({
                 url: "/api/user/joined/organizations",
@@ -48,6 +48,10 @@ const vueBodyModel = {
                 success: (data: GetThemesResponse) => {
                     if (data.isSuccess) {
                         self.themes = data.themes;
+
+                        for (let theme of self.themes) {
+                            theme.$add("createTimeText", moment(theme.createTime).fromNow());
+                        }
                     }
                     else {
                         alert(data.errorMessage);
@@ -78,6 +82,11 @@ const vueBodyModel = {
                     alert(data.errorMessage);
                 }
             });
+        },
+        setThemeCreateTimeText: function() {
+            for (let theme of this.themes) {
+                theme.createTimeText = moment(theme.createTime).fromNow();
+            }
         }
     }
 };
@@ -87,5 +96,7 @@ $(document).ready(function() {
 
     base.authenticate((error, data) => {
         vueBody.getOrganizationsCurrentUserIn();
+
+        setInterval(vueBody.setThemeCreateTimeText, 10000);
     });
 });
