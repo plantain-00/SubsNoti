@@ -45,12 +45,8 @@ export function create(request: libs.Request, response: libs.Response) {
                 const id = rows.insertId;
 
                 return sendEmail(id, salt, `${emailHead}@${emailTail}`).then(() => {
-                    return services.logger.logAsync(documentOfCreate.url, request).then(() => {
-                        services.response.sendCreatedOrModified(response, documentUrl);
-                    }, error=> {
-                        console.log(error);
-                        services.response.sendCreatedOrModified(response, documentUrl);
-                    });
+                    services.logger.log(documentOfCreate.url, request);
+                    services.response.sendCreatedOrModified(response, documentUrl);
                 }, error=> {
                     services.response.sendEmailServiceError(response, error.message, documentUrl);
                 });

@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "b937e64fc9245d299fa4ba26c6eddbeaed42a920"
+      "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
     },
     "serve-static/serve-static.d.ts": {
       "commit": "4356af494c045299110677b21e62000957e7a72e"
@@ -35,9 +35,6 @@
     "redis/redis.d.ts": {
       "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
-    "mongodb/mongodb.d.ts": {
-      "commit": "4356af494c045299110677b21e62000957e7a72e"
-    },
     "mocha/mocha.d.ts": {
       "commit": "4356af494c045299110677b21e62000957e7a72e"
     },
@@ -49,9 +46,6 @@
     },
     "bluebird/bluebird.d.ts": {
       "commit": "54f064352a3615443f7bff4198078db15e28247b"
-    },
-    "bcrypt/bcrypt.d.ts": {
-      "commit": "b937e64fc9245d299fa4ba26c6eddbeaed42a920"
     },
     "nodemailer/nodemailer.d.ts": {
       "commit": "b937e64fc9245d299fa4ba26c6eddbeaed42a920"
@@ -67,6 +61,15 @@
     },
     "node-uuid/node-uuid.d.ts": {
       "commit": "b937e64fc9245d299fa4ba26c6eddbeaed42a920"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
+    },
+    "vue/vue.d.ts": {
+      "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
+    },
+    "mongoose/mongoose.d.ts": {
+      "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
     }
   }
 }

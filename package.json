@@ -16,7 +16,7 @@
     "lodash": "latest",
     "md5": "latest",
     "moment": "latest",
-    "mongodb": "latest",
+    "mongoose": "latest",
     "mysql": "latest",
     "node-uuid": "latest",
     "nodemailer": "latest",

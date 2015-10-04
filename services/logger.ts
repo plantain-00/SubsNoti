@@ -6,25 +6,24 @@ import * as interfaces from "../interfaces/interfaces";
 
 import * as services from "../services/services";
 
-export let logs: libs.Collection;
-
-function log(url: string, request: libs.Request, next: (error: Error) => void) {
-    const data: any = {
-        url: url,
-        time: new Date()
+export function log(url: string, request: libs.Request) {
+    let data: any = {
+        time: new Date(),
+        content: {
+            url: url
+        }
     };
 
     if (!libs._.isEmpty(request.params)) {
-        data.params = request.params;
+        data.content.params = request.params;
     }
     if (!libs._.isEmpty(request.body)) {
-        data.body = request.body;
+        data.content.body = request.body;
     }
     if (!libs._.isEmpty(request.query)) {
-        data.query = request.query;
+        data.content.query = request.query;
     }
 
-    logs.insertOne(data, next);
+    let log = new services.mongo.Logs(data);
+    log.save();
 }
-
-export const logAsync = libs.Promise.promisify(log);

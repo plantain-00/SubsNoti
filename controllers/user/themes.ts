@@ -44,12 +44,8 @@ export function create(request: libs.Request, response: libs.Response) {
                 return services.db.accessInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]).then(rows=> {
                     return services.db.accessInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]).then(rows=> {
                         return services.db.endTransactionAsync(connection).then(() => {
-                            services.logger.logAsync(documentOfCreate.url, request).then(() => {
-                                services.response.sendCreatedOrModified(response, documentUrl);
-                            }, error=> {
-                                console.log(error);
-                                services.response.sendCreatedOrModified(response, documentUrl);
-                            });
+                            services.logger.log(documentOfCreate.url, request);
+                            services.response.sendCreatedOrModified(response, documentUrl);
                         });
                     });
                 });

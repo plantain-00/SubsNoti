@@ -1,5 +1,6 @@
+/// <reference path="../../typings/tsd.d.ts" />
+
 declare let Vue;
-declare let $;
 
 import * as interfaces from "../../interfaces/interfaces";
 import * as environment from "../../environment";
