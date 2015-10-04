@@ -14,7 +14,7 @@ app.use(libs.cookieParser());
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-app.use(libs.express.static(libs.path.join(__dirname, 'public')));
+app.use(libs.express.static(libs.path.join(__dirname, '../public')));
 
 import * as router from "./router";
 router.route(app);
