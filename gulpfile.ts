@@ -5,10 +5,6 @@ let del = require('del');
 
 gulp.task('clean', () => {
     del([
-        'backends/**/*.js',
-
-        'common/**/*.js',
-
         'doc/api/_book/',
         'doc/api/*.svg',
 
