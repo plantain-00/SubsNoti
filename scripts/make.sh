@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# cd
+
+# git pull
+# echo 'Starting "git pull"...'
+# git pull
+# echo 'Finished "git pull".'
+
 # install
 echo 'Starting "npm install"...'
 npm install
@@ -20,6 +27,7 @@ echo 'Finished "gulp clean".'
 
 # compile
 echo 'Starting "tsc"...'
+tsc
 tsc -p frontends
 tsc -p backends
 echo 'Finished "tsc".'

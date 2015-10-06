@@ -18,6 +18,7 @@ echo 'Finished "gulp clean".'
 
 rem compile
 echo 'Starting "tsc"...'
+call tsc
 call tsc -p frontends
 call tsc -p backends
 echo 'Finished "tsc".'
