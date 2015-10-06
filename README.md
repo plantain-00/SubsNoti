@@ -27,38 +27,23 @@
 
 # development
 
-## init
+## make
 
-+ npm install
-+ tsd install -ros
-+ tsc
-+ gulp css --gulpfile frontends/gulpfile.js
-+ gulp js --gulpfile frontends/gulpfile.js
-+ gulp rev --gulpfile frontends/gulpfile.js
-+ gulp html --gulpfile frontends/gulpfile.js
-+ dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
-+ gitbook build doc/api/
-+ gulp doc --gulpfile frontends/gulpfile.js
++ script/make.bat
+
+or
+
++ script/make.sh
+
+then all is in `publish`.
 
 ## watch
 
-### frontend
-
-+ tsc -w
-+ gulp watch
-
-### backend
-
-+ tsc -w
-+ nodemon --delay 0.5 publish/backends/app.js
-
-### doc
-
-+ dot -Tsvg doc/api/DatabaseModels.dot > doc/api/DatabaseModels.svg
-+ gitbook build doc/api/
++ script/watch.bat
 
 # deploy
 
++ git pull
 + scripts/make.sh
 + scripts/deploy.sh
 

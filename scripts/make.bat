@@ -1,59 +1,58 @@
-#!/usr/bin/env bash
-
-# install
+rem install
 echo 'Starting "npm install"...'
-npm install
+call npm install
 echo 'Finished "npm install".'
 echo 'Starting "tsd install"...'
-tsd install -ros
+call tsd install -ros
 echo 'Finished "tsd install".'
 
-# compile gulpfile.ts
+rem compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'
-tsc
+call tsc
 echo 'Finished "tsc gulpfile.ts".'
 
-# gulp task clean
+rem gulp task clean
 echo 'Starting "gulp clean"...'
-gulp clean
+call gulp clean
 echo 'Finished "gulp clean".'
 
-# compile
+rem compile
 echo 'Starting "tsc"...'
-tsc -p frontends
-tsc -p backends
+call tsc -p frontends
+call tsc -p backends
 echo 'Finished "tsc".'
 
-# test
+rem test
 echo 'Starting "test"...'
-mocha publish/backends/tests
+call mocha publish/backends/tests
 echo 'Finished "test".'
 
-# gulp tasks
+rem gulp tasks
+call set NODE_ENV=development
 echo 'Starting "css"...'
-NODE_ENV=production gulp css
+call gulp css
 echo 'Finished "css".'
 
 echo 'Starting "js"...'
-NODE_ENV=production gulp js
+call gulp js
 echo 'Finished "js".'
 
 echo 'Starting "rev"...'
-NODE_ENV=production gulp rev
+call gulp rev
 echo 'Finished "rev".'
 
 echo 'Starting "html"...'
-NODE_ENV=production gulp html
+call gulp html
 echo 'Finished "html".'
 
 echo 'Starting "doc"...'
-NODE_ENV=production gulp doc
+call gulp doc
 echo 'Finished "doc".'
 
 echo 'Starting "dot"...'
-NODE_ENV=production gulp dot
+call gulp dot
 echo 'Finished "dot".'
 
 echo 'Starting "icon".'
-NODE_ENV=production gulp icon
+call gulp icon
 echo 'Finished "icon"...'

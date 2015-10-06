@@ -35,6 +35,7 @@
     "gulp-rename": "latest",
     "gulp-rev": "latest",
     "gulp-rev-replace": "latest",
+    "gulp-shell": "^0.4.3",
     "gulp-watch": "latest",
     "webpack-stream": "latest"
   },

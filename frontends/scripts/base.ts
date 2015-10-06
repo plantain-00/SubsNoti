@@ -4,12 +4,8 @@ declare let Vue;
 
 import * as enums from "../../common/enums";
 import * as interfaces from "../../common/interfaces";
-import * as environment from "../../common/environment";
-import {config} from "../settings";
 
-if (config.environment == environment.developmentEnvironment) {
-    Vue.config.debug = true;
-}
+Vue.config.debug = true;
 
 interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse, interfaces.Response {
 

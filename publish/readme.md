@@ -1,1 +1,1 @@
-this is a directory where published files will be in.
+this is a directory where built and published files will be in.

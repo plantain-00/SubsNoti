@@ -33,16 +33,15 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>title</th>
-                                            <th>time</th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <tr v-repeat="themes">
-                                            <td>{{title}}</td>
-                                            <td>{{createTimeText}}</td>
+                                            <td>
+                                                <h4>{{title}}</h4>
+                                                <div>
+                                                    {{createTimeText}}
+                                                    •
+                                                </div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
