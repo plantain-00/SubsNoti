@@ -27,18 +27,23 @@
 
 # development
 
-## init
+## make
 
-+ script/init.bat
++ script/make.bat
+
+or
+
++ script/make.sh
+
+then all is in `publish`.
 
 ## watch
 
 + script/watch.bat
-+ script/dot.bat
-+ script/gitbook.bat
 
 # deploy
 
++ git pull
 + scripts/make.sh
 + scripts/deploy.sh
 

@@ -14,8 +14,10 @@ test:
     - tsc -p frontends
     - tsc -p backends
     - mocha publish/backends/tests
-    - gitbook build doc/api/
-    - gulp js --gulpfile frontends/gulpfile.js
-    - gulp css --gulpfile frontends/gulpfile.js
-    - gulp rev --gulpfile frontends/gulpfile.js
-    - gulp html --gulpfile frontends/gulpfile.js
+    - NODE_ENV=production gulp js
+    - NODE_ENV=production gulp css
+    - NODE_ENV=production gulp rev
+    - NODE_ENV=production gulp html
+    - NODE_ENV=production gulp doc
+    - NODE_ENV=production gulp dot
+    - NODE_ENV=production gulp icon

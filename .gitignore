@@ -38,3 +38,4 @@ frontends/build/
 public/doc/
 publish/public/
 publish/**/*.ico
+frontends/doc/api/_book/
