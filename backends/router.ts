@@ -11,6 +11,7 @@ import * as userLoggedIn from "./controllers/user/logged_in";
 import * as userJoinedOrganizations from "./controllers/user/joined/organizations";
 import * as userOrganizations from "./controllers/user/organizations";
 import * as userThemes from "./controllers/user/themes";
+import * as userThemeWatched from "./controllers/user/themes/watched";
 
 import * as tokenSent from "./controllers/token_sent";
 
@@ -22,6 +23,7 @@ export function route(app: libs.Application) {
     userJoinedOrganizations.route(app);
     userOrganizations.route(app);
     userThemes.route(app);
+    userThemeWatched.route(app);
 
     tokenSent.route(app);
 

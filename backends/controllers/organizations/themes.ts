@@ -25,21 +25,41 @@ export function get(request: libs.Request, response: libs.Response) {
             }
 
             return services.theme.getInOrganizationId(organizationId).then(themes=> {
-                let result: interfaces.GetThemesResponse = {
-                    themes: libs._.map(themes, (t: interfaces.Theme) => {
-                        return {
-                            id: t.id,
-                            title: t.title,
-                            detail: t.detail,
-                            organizationId: t.organizationId,
-                            createTime: t.createTime.getTime()
+                let themeIds = libs._.map(themes, t=> t.id);
+                return services.ownership.getByThemeIds(themeIds).then(ownerships=> {
+                    return services.watched.getByThemeIds(themeIds).then(watcheds=> {
+                        let result: interfaces.ThemesResponse = {
+                            themes: []
                         };
-                    })
-                };
 
-                services.response.sendOK(response, documentUrl, result);
-            }, error=> {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
+                        libs._.each(themes, t => {
+                            let theme = {
+                                id: t.id,
+                                title: t.title,
+                                detail: t.detail,
+                                organizationId: t.organizationId,
+                                createTime: t.createTime.getTime(),
+                                creator: t.creator,
+                                owners: [],
+                                watchers: []
+                            };
+
+                            let ownership = libs._.find(ownerships, o=> o.themeId == theme.id);
+                            if (ownership) {
+                                theme.owners = ownership.owners;
+                            }
+
+                            let watched = libs._.find(watcheds, w=> w.themeId == theme.id);
+                            if (watched) {
+                                theme.watchers = watched.watchers;
+                            }
+
+                            result.themes.push(theme);
+                        })
+
+                        services.response.sendOK(response, documentUrl, result);
+                    });
+                });
             });
         }, error=> {
             services.response.sendDBAccessError(response, error.message, documentUrl);

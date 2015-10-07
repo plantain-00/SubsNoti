@@ -39,11 +39,12 @@ export function deleteThis(request: libs.Request, response: libs.Response) {
 
     response.clearCookie(services.cookieKey.authenticationCredential);
 
-    services.response.sendOK(response, documentUrl);
+    services.response.sendDeleted(response, documentUrl);
 }
 
 export function route(app: libs.Application) {
     app[documentOfDelete.method](documentOfDelete.url, deleteThis);
+    services.response.notGet(app, documentOfDelete);
 
     app[documentOfGet.method](documentOfGet.url, get);
 }

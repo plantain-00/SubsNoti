@@ -1,8 +1,8 @@
 {
 	"ignore": [
-		"demos/**/*.*",
-		"tests/**/*.*",
-		"**/*.ts"
+		"public/*",
+		"public/tests/*",
+		"public/demos/*"
 	],
 	"verbose": true,
 	"execMap": {

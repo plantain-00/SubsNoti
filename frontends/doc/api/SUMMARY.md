@@ -10,4 +10,6 @@
 * [Create a theme](Create a theme.md)
 * [Get themes of an organization](Get themes of an organization.md)
 * [Database models](Database models.md)
-* [Error codes](Error codes.md);
+* [Error codes](Error codes.md)
+* [Watch a theme](Watch a theme.md)
+* [Unwatch a theme](Unwatch a theme.md)

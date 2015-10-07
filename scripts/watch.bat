@@ -5,5 +5,8 @@ cd ..
 
 cd backends
 start tsc -w
-start nodemon --delay 0.5 ../publish/backends/app.js
+cd ..
+
+cd publish
+start nodemon --delay 0.5 backends/app.js
 cd ..

@@ -7,7 +7,7 @@ import * as interfaces from "../../common/interfaces";
 import * as services from "../services";
 
 export function getInOrganizationId(organizationId: number): libs.Promise<interfaces.Theme[]> {
-    return services.db.accessAsync("select * from themes where OrganizationID = ? order by CreateTime desc", [organizationId]).then(rows=> {
+    return services.db.accessAsync("select themes.*,users.ID as UserID,users.Name,users.EmailHead,users.EmailTail from themes left join users on themes.CreatorID = users.ID where themes.OrganizationID = ? order by themes.CreateTime desc", [organizationId]).then(rows=> {
         return libs.Promise.resolve(libs._.map(rows, (row: any) => getFromRow(row)));
     });
 }
@@ -19,7 +19,11 @@ export function getFromRow(row: any): interfaces.Theme {
         detail: row.Detail,
         organizationId: row.OrganizationID,
         status: row.Status,
-        creatorId: row.CreatorID,
-        createTime: new Date(row.CreateTime)
+        createTime: new Date(row.CreateTime),
+        creator: {
+            id: row.UserID,
+            name: row.Name,
+            email: `${row.EmailHead}@${row.EmailTail}`
+        }
     };
 }

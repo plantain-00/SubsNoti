@@ -14,6 +14,11 @@ let documentOfCreate: interfaces.ApiDocument = {
 
 export function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
+    
+    if (services.contentType.isNotJson(request)) {
+        services.response.sendContentTypeError(response, documentUrl);
+        return;
+    }
 
     let organizationId = request.body.organizationId;
 

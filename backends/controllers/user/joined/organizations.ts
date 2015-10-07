@@ -17,7 +17,7 @@ export function get(request: libs.Request, response: libs.Response): void {
 
     services.currentUser.get(request, documentUrl).then(user=> {
 		return services.organization.getByMemberId(user.id).then(organizations=> {
-			let result: interfaces.GetOrganizationsResponse = {
+			let result: interfaces.OrganizationsResponse = {
 				organizations: libs._.map(organizations, (o: interfaces.Organization) => {
 					return {
 						id: o.id,

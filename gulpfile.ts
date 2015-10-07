@@ -52,7 +52,7 @@ gulp.task('watch', function() {
     watch(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], batch(function(events, done) {
         gulp.start('rev', done);
     }));
-    watch(['frontends/*.ejs', "frontends/build/rev-manifest.json"], batch(function(events, done) {
+    watch(['frontends/templates/*.ejs', "frontends/build/rev-manifest.json"], batch(function(events, done) {
         gulp.start('html', done);
     }));
     watch(['frontends/doc/api/*.md'], batch(function(events, done) {

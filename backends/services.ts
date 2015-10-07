@@ -42,3 +42,9 @@ export {organization};
 
 import * as theme from "./services/theme";
 export {theme};
+
+import * as ownership from "./services/ownership";
+export {ownership};
+
+import * as watched from "./services/watched";
+export {watched};
