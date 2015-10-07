@@ -54,6 +54,10 @@ export function sendOK(response: libs.Response, documentUrl: string, result?: Ob
     send(response, "", enums.ErrorCode.success, enums.StatusCode.OK, documentUrl, result);
 }
 
+export function sendDeleted(response: libs.Response, documentUrl: string, result?: Object): void {
+    send(response, "", enums.ErrorCode.success, enums.StatusCode.deleted, documentUrl, result);
+}
+
 export function sendAlreadyExistError(response: libs.Response, errorMessage: string, documentUrl: string): void {
     send(response, errorMessage, enums.ErrorCode.alreadyExistError, enums.StatusCode.invalidRequest, documentUrl);
 }

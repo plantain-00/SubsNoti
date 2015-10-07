@@ -7,7 +7,7 @@ import * as interfaces from "../../common/interfaces";
 
 Vue.config.debug = true;
 
-interface GetCurrentUserResponse extends interfaces.GetCurrentUserResponse, interfaces.Response {
+interface CurrentUserResponse extends interfaces.CurrentUserResponse, interfaces.Response {
 
 }
 
@@ -28,7 +28,7 @@ function getUrlParameter(name: string): string {
     return null;
 }
 
-function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
+function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     let willClearPreviousStatus = getUrlParameter("clear_previous_status");
 
     let loginResult = null;
@@ -40,14 +40,14 @@ function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
     }
 
     if (loginResult) {
-        let data: GetCurrentUserResponse = JSON.parse(loginResult);
+        let data: CurrentUserResponse = JSON.parse(loginResult);
         next(data);
     } else {
         $.ajax({
             url: "/api/user",
             data: {},
             cache: false,
-            success: function(data: GetCurrentUserResponse) {
+            success: function(data: CurrentUserResponse) {
                 window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
 
                 next(data);
@@ -56,7 +56,7 @@ function getCurrentUser(next: (data: GetCurrentUserResponse) => void) {
     }
 }
 
-export function authenticate(next: (error: Error, data: GetCurrentUserResponse) => void) {
+export function authenticate(next: (error: Error, data: CurrentUserResponse) => void) {
     getCurrentUser(data=> {
         if (data.isSuccess) {
             vueHead.$data.loginStatus = enums.LoginStatus.success;

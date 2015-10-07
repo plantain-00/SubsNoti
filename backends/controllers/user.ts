@@ -16,7 +16,8 @@ export function get(request: libs.Request, response: libs.Response): void {
     let documentUrl = documentOfGet.documentUrl;
 
     services.currentUser.get(request, documentUrl).then(user=> {
-        let result: interfaces.GetCurrentUserResponse = {
+        let result: interfaces.CurrentUserResponse = {
+            id: user.id,
             email: services.user.getEmail(user),
             name: user.name,
             canCreateOrganization: user.createdOrganizationIds.length < services.organization.maxNumberUserCanCreate
