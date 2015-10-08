@@ -67,7 +67,7 @@ export function getCurrent(request: libs.Request, documentUrl: string): libs.Pro
             return libs.Promise.reject(new Error("authentication credential is out of date"));
         }
 
-        return services.user.getById(userId).then(user=> {
+        return getById(userId).then(user=> {
             if (!user) {
                 return libs.Promise.reject(new Error("invalid user"));
             }

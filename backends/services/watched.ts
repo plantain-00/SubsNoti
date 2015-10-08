@@ -16,6 +16,10 @@ interface Watched {
 }
 
 export function getByThemeIds(themeIds: number[]): libs.Promise<Watched[]> {
+	if (themeIds.length === 0) {
+		return libs.Promise.resolve([]);
+	}
+
 	return services.db.accessAsync("select theme_watchers.ThemeID,users.* from theme_watchers left join users on theme_watchers.WatcherID = users.ID where theme_watchers.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
 		return libs.Promise.resolve(getFromRows(rows));
 	});

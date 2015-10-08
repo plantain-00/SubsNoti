@@ -16,6 +16,10 @@ interface Ownership {
 }
 
 export function getByThemeIds(themeIds: number[]): libs.Promise<Ownership[]> {
+	if (themeIds.length === 0) {
+		return libs.Promise.resolve([]);
+	}
+
 	return services.db.accessAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
 		return libs.Promise.resolve(getFromRows(rows));
 	});
