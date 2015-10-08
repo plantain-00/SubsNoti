@@ -6,7 +6,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate = {
     url: "/api/user/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
@@ -32,7 +32,7 @@ export function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         return services.organization.existsByName(organizationName).then(exists=> {
             if (exists) {
                 services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);

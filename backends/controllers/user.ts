@@ -6,7 +6,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-let documentOfGet: interfaces.ApiDocument = {
+let documentOfGet = {
     url: "/api/user",
     method: "get",
     documentUrl: "/doc/api/Get current user.html"
@@ -15,7 +15,7 @@ let documentOfGet: interfaces.ApiDocument = {
 export function get(request: libs.Request, response: libs.Response): void {
     let documentUrl = documentOfGet.documentUrl;
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         let result: interfaces.CurrentUserResponse = {
             id: user.id,
             email: services.user.getEmail(user),

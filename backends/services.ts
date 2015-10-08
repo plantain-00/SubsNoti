@@ -4,9 +4,6 @@ export {email};
 import * as contentType from "./services/contentType";
 export {contentType};
 
-import * as currentUser from "./services/currentUser";
-export {currentUser};
-
 import * as response from "./services/response";
 export {response};
 

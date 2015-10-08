@@ -6,7 +6,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfGet: interfaces.ApiDocument = {
+let documentOfGet = {
     url: "/api/organizations/:organization_id/themes",
     method: "get",
     documentUrl: "/doc/api/Get themes of an organization.html"
@@ -17,7 +17,7 @@ export function get(request: libs.Request, response: libs.Response) {
 
     let organizationId = request.params.organization_id;
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         return services.organization.getByMemberId(user.id).then(organizations=> {
             if (libs._.every(organizations, o => o.id != organizationId)) {
                 services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);

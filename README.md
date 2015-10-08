@@ -41,6 +41,10 @@ then all is in `publish`.
 
 + script/watch.bat
 
+or
+
++ script/watch.sh
+
 # deploy
 
 + git pull

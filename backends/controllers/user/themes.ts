@@ -6,7 +6,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate = {
     url: "/api/user/themes",
     method: "post",
     documentUrl: "/doc/api/Create a theme.html"
@@ -41,7 +41,7 @@ export function create(request: libs.Request, response: libs.Response) {
 
     let themeDetail = request.body.themeDetail;
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         return services.db.beginTransactionAsync().then(connection=> {
             return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
                 let themeId = rows.insertId;

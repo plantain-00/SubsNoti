@@ -66,7 +66,13 @@ function sendWrongHttpMethod(response: libs.Response, documentUrl: string): void
     send(response, "current http method is not right for the api", enums.ErrorCode.wrongHttpMethod, enums.StatusCode.invalidRequest, documentUrl);
 }
 
-export function notGet(app: libs.Application, api: interfaces.ApiDocument) {
+interface ApiDocument {
+    url: string;
+    method: string;
+    documentUrl?: string;
+}
+
+export function notGet(app: libs.Application, api: ApiDocument) {
     app.get(api.url, (request: libs.Request, response: libs.Response) => {
         sendWrongHttpMethod(response, api.documentUrl);
     });

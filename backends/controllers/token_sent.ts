@@ -6,7 +6,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-let documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate = {
     url: "/api/token_sent",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html"
