@@ -22,8 +22,9 @@ no
 
 ### [Response Body](./Response.html)
 
-key name | value type | description
---- | --- | ---
-email | string | exists when is success
-name | string | exists when is success
-canCreateOrganization | boolean | exists when is success
+key name | value type
+--- | ---
+id | number
+email | string
+name | string
+canCreateOrganization | boolean

@@ -20,9 +20,9 @@ no
 
 ### [Response Body](./Response.html)
 
-key name | value type | description
---- | --- | ---
-themes | [Theme](#theme)[] | exists when is success
+key name | value type
+--- | ---
+themes | [Theme](#theme)[]
 
 ### Theme
 
@@ -33,3 +33,14 @@ title | string
 detail | string
 organizationId | number
 createTime | number
+creator | [User](#user)
+owners | [User](#user)[]
+watchers | [User](#user)[]
+
+### User
+
+key name | value type
+--- | ---
+id | number
+name | string
+email | string

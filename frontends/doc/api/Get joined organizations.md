@@ -20,9 +20,9 @@ no
 
 ### [Response Body](./Response.html)
 
-key name | value type | description
---- | --- | ---
-organizations | [Organization](#organization)[] | exists when is success
+key name | value type
+--- | ---
+organizations | [Organization](#organization)[]
 
 ### Organization
 
