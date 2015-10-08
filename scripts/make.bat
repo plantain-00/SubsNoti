@@ -2,9 +2,9 @@ rem install
 echo 'Starting "npm install"...'
 call npm install
 echo 'Finished "npm install".'
-echo 'Starting "tsd install"...'
-call tsd install -ros
-echo 'Finished "tsd install".'
+echo 'Starting "tsd update"...'
+call tsd update -so
+echo 'Finished "tsd update".'
 
 rem compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'

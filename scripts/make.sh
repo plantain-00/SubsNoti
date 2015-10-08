@@ -11,9 +11,9 @@
 echo 'Starting "npm install"...'
 npm install
 echo 'Finished "npm install".'
-echo 'Starting "tsd install"...'
-tsd install -ros
-echo 'Finished "tsd install".'
+echo 'Starting "tsd update"...'
+tsd update -so
+echo 'Finished "tsd update".'
 
 # compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'
