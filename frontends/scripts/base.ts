@@ -20,8 +20,8 @@ export let localStorageNames = {
 };
 
 function getUrlParameter(name: string): string {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r = window.location.search.substr(1).match(reg);
+    var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r: RegExpMatchArray = window.location.search.substr(1).match(reg);
     if (r != null) {
         return decodeURI(r[2]);
     }
@@ -31,9 +31,9 @@ function getUrlParameter(name: string): string {
 function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     let willClearPreviousStatus = getUrlParameter("clear_previous_status");
 
-    let loginResult = null;
+    let loginResult;
 
-    if (willClearPreviousStatus == "√") {
+    if (willClearPreviousStatus === "√") {
         window.sessionStorage.removeItem(sessionStorageNames.loginResult);
     } else {
         loginResult = window.sessionStorage.getItem(sessionStorageNames.loginResult);
@@ -41,6 +41,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 
     if (loginResult) {
         let data: CurrentUserResponse = JSON.parse(loginResult);
+        
         next(data);
     } else {
         $.ajax({
@@ -56,22 +57,16 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     }
 }
 
-export function authenticate(next: (error: Error, data: CurrentUserResponse) => void) {
-    getCurrentUser(data=> {
-        if (data.isSuccess) {
-            vueHead.$data.loginStatus = enums.LoginStatus.success;
-            vueHead.$data.currentUserName = data.name;
-            vueHead.$data.canCreateOrganization = data.canCreateOrganization;
+interface VueHeadModel {
+    loginStatus: enums.LoginStatus;
+    currentUserName: string;
+    canCreateOrganization: boolean;
 
-            next(null, data);
-        } else {
-            vueHead.$data.loginStatus = enums.LoginStatus.fail;
-            next(new Error(data.errorMessage), null);
-        }
-    });
+    exit: () => void;
+    authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
 }
 
-let vueHeadModel = {
+export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
     data: {
         loginStatus: enums.LoginStatus.unknown,
@@ -80,7 +75,8 @@ let vueHeadModel = {
     },
     methods: {
         exit: function() {
-            var self = this;
+            var self: VueHeadModel = this;
+
             $.ajax({
                 type: "DELETE",
                 url: "/api/user/logged_in",
@@ -91,8 +87,22 @@ let vueHeadModel = {
                     window.sessionStorage.removeItem("loginResult");
                 }
             });
+        },
+        authenticate: function(next: (error: Error, data: CurrentUserResponse) => void) {
+            var self: VueHeadModel = this;
+
+            getCurrentUser(data=> {
+                if (data.isSuccess) {
+                    self.loginStatus = enums.LoginStatus.success;
+                    self.currentUserName = data.name;
+                    self.canCreateOrganization = data.canCreateOrganization;
+
+                    next(null, data);
+                } else {
+                    self.loginStatus = enums.LoginStatus.fail;
+                    next(new Error(data.errorMessage), null);
+                }
+            });
         }
     }
-};
-
-export let vueHead = new Vue(vueHeadModel);
+});

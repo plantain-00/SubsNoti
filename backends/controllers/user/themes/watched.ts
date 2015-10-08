@@ -6,7 +6,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-let documentOfWatch: interfaces.ApiDocument = {
+let documentOfWatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "post",
     documentUrl: "/doc/api/Watch a theme.html"
@@ -22,7 +22,7 @@ export function watch(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         return services.watched.canWatch(user.id, themeId).then(can=> {
             if (!can) {
                 services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
@@ -47,7 +47,7 @@ export function watch(request: libs.Request, response: libs.Response) {
     });
 }
 
-let documentOfUnwatch: interfaces.ApiDocument = {
+let documentOfUnwatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "delete",
     documentUrl: "/doc/api/Unwatch a theme.html"
@@ -63,7 +63,7 @@ export function unwatch(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
         return services.watched.canWatch(user.id, themeId).then(can=> {
             if (!can) {
                 services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);

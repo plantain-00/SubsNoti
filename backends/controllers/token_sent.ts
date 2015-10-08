@@ -6,7 +6,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-let documentOfCreate: interfaces.ApiDocument = {
+let documentOfCreate = {
     url: "/api/token_sent",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html"
@@ -15,7 +15,7 @@ let documentOfCreate: interfaces.ApiDocument = {
 export function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    if (services.contentType.isNotJson(request)) {
+    if (services.contentType.isInvalid(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
     }

@@ -6,7 +6,7 @@
                 Themes
             </div>
             <div class="panel-body">
-                <form class="form-horizontal" id="vue-body">
+                <form class="form-horizontal" id="vue-body" v-show="currentOrganizationId != 0">
                     <div class="form-group">
                         <div class="col-sm-12">
                             <label class="the-label {{$root.currentOrganizationId == id ? 'label-active':''}}" v-repeat="organizationsCurrentUserIn"

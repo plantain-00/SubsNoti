@@ -14,27 +14,15 @@ get
 
 no
 
-### Parameters
+### [Parameters](./Parameters.html)
 
-key name | value type | required
---- | --- | ---
-v | number | false
+### [Cookies](./Cookies.html)
 
-### Cookies
+### [Response Body](./Response.html)
 
-key name | value type | required
---- | --- | ---
-authentication_credential | string | true
-
-### Response Body
-
-key name | value type | description
---- | --- | ---
-isSuccess | boolean |
-statusCode | number |
-errorCode | [ErrorCode](./Error codes.html) |
-errorMessage | string | empty when is success
-organizations | [Organization](#organization)[] | exists when is success
+key name | value type
+--- | ---
+organizations | [Organization](#organization)[]
 
 ### Organization
 

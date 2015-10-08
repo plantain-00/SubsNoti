@@ -6,13 +6,27 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function getInOrganizationId(organizationId: number): libs.Promise<interfaces.Theme[]> {
+interface Theme {
+    id: number;
+    title: string;
+    detail: string;
+    organizationId: number;
+    status: enums.ThemeStatus;
+    createTime: Date;
+    creator: {
+        id: number,
+        name: string,
+        email: string
+    }
+}
+
+export function getInOrganizationId(organizationId: number): libs.Promise<Theme[]> {
     return services.db.accessAsync("select themes.*,users.ID as UserID,users.Name,users.EmailHead,users.EmailTail from themes left join users on themes.CreatorID = users.ID where themes.OrganizationID = ? order by themes.CreateTime desc", [organizationId]).then(rows=> {
         return libs.Promise.resolve(libs._.map(rows, (row: any) => getFromRow(row)));
     });
 }
 
-export function getFromRow(row: any): interfaces.Theme {
+export function getFromRow(row: any): Theme {
     return {
         id: row.ID,
         title: row.Title,

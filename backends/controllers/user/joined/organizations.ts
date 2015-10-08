@@ -6,7 +6,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-let documentOfGet: interfaces.ApiDocument = {
+let documentOfGet = {
     url: "/api/user/joined/organizations",
     method: "get",
     documentUrl: "/doc/api/Get joined organizations.html"
@@ -15,10 +15,10 @@ let documentOfGet: interfaces.ApiDocument = {
 export function get(request: libs.Request, response: libs.Response): void {
     let documentUrl = documentOfGet.documentUrl;
 
-    services.currentUser.get(request, documentUrl).then(user=> {
+    services.user.getCurrent(request, documentUrl).then(user=> {
 		return services.organization.getByMemberId(user.id).then(organizations=> {
-			let result: interfaces.OrganizationsResponse = {
-				organizations: libs._.map(organizations, (o: interfaces.Organization) => {
+			let result = {
+				organizations: libs._.map(organizations, o => {
 					return {
 						id: o.id,
 						name: o.name

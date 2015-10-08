@@ -16,9 +16,8 @@ get
 
 no
 
-### Parameters
+### [Parameters](./Parameters.html)
 
 key name | value type | required
 --- | --- | ---
-v | number | false
 token | string | true

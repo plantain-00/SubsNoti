@@ -23,7 +23,7 @@ function send(response: libs.Response, errorMessage: string, errorCode: enums.Er
 }
 
 export function sendContentTypeError(response: libs.Response, documentUrl: string): void {
-    send(response, "Content-Type is not application/json", enums.ErrorCode.wrongContentType, enums.StatusCode.invalidRequest, documentUrl);
+    send(response, "Content-Type is not 'application/json' or 'application/x-www-form-urlencoded'", enums.ErrorCode.wrongContentType, enums.StatusCode.invalidRequest, documentUrl);
 }
 
 export function sendParameterMissedError(response: libs.Response, documentUrl: string): void {
@@ -66,7 +66,13 @@ function sendWrongHttpMethod(response: libs.Response, documentUrl: string): void
     send(response, "current http method is not right for the api", enums.ErrorCode.wrongHttpMethod, enums.StatusCode.invalidRequest, documentUrl);
 }
 
-export function notGet(app: libs.Application, api: interfaces.ApiDocument) {
+interface ApiDocument {
+    url: string;
+    method: string;
+    documentUrl?: string;
+}
+
+export function notGet(app: libs.Application, api: ApiDocument) {
     app.get(api.url, (request: libs.Request, response: libs.Response) => {
         sendWrongHttpMethod(response, api.documentUrl);
     });
