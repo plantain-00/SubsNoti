@@ -19,7 +19,7 @@ export function get(request: libs.Request, response: libs.Response) {
 
     services.currentUser.get(request, documentUrl).then(user=> {
         return services.organization.getByMemberId(user.id).then(organizations=> {
-            if (libs._.every(organizations, (o: interfaces.Organization) => o.id != organizationId)) {
+            if (libs._.every(organizations, o => o.id != organizationId)) {
                 services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
                 return;
             }

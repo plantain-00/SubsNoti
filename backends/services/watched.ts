@@ -6,7 +6,16 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function getByThemeIds(themeIds: number[]): libs.Promise<interfaces.Watched[]> {
+interface Watched {
+	themeId: number,
+	watchers: {
+		id: number,
+		name: string,
+		email: string
+	}[]
+}
+
+export function getByThemeIds(themeIds: number[]): libs.Promise<Watched[]> {
 	return services.db.accessAsync("select theme_watchers.ThemeID,users.* from theme_watchers left join users on theme_watchers.WatcherID = users.ID where theme_watchers.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
 		return libs.Promise.resolve(getFromRows(rows));
 	});
@@ -25,8 +34,8 @@ export function canWatch(userId: number, themeId: number): libs.Promise<boolean>
 	});
 }
 
-function getFromRows(rows: any[]): interfaces.Watched[] {
-	let result: interfaces.Watched[] = [];
+function getFromRows(rows: any[]): Watched[] {
+	let result: Watched[] = [];
 
 	libs._.each(rows, row=> {
 		let themeId = row.ThemeID;

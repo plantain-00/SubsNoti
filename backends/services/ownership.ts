@@ -6,14 +6,23 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function getByThemeIds(themeIds: number[]): libs.Promise<interfaces.Ownership[]> {
+interface Ownership {
+	themeId: number,
+	owners: {
+		id: number,
+		name: string,
+		email: string
+	}[]
+}
+
+export function getByThemeIds(themeIds: number[]): libs.Promise<Ownership[]> {
 	return services.db.accessAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
 		return libs.Promise.resolve(getFromRows(rows));
 	});
 }
 
-function getFromRows(rows: any[]): interfaces.Ownership[] {
-	let result: interfaces.Ownership[] = [];
+function getFromRows(rows: any[]): Ownership[] {
+	let result: Ownership[] = [];
 
 	libs._.each(rows, row=> {
 		let themeId = row.ThemeID;
