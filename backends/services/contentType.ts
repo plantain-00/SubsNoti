@@ -6,7 +6,18 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function isNotJson(request: libs.Request): boolean {
+export function isValid(request: libs.Request): boolean {
     let contentType = request.get('Content-Type');
-    return !contentType || contentType.indexOf("application/json") == -1
+
+    if (contentType) {
+        if (contentType.indexOf("application/json") > -1) {
+            return true;
+        }
+
+        if (contentType.indexOf("application/x-www-form-urlencoded") > -1) {
+            return true;
+        }
+    }
+
+    return false;
 }

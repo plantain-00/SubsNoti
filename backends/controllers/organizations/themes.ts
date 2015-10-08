@@ -28,7 +28,7 @@ export function get(request: libs.Request, response: libs.Response) {
                 let themeIds = libs._.map(themes, t=> t.id);
                 return services.ownership.getByThemeIds(themeIds).then(ownerships=> {
                     return services.watched.getByThemeIds(themeIds).then(watcheds=> {
-                        let result: interfaces.ThemesResponse = {
+                        let result = {
                             themes: []
                         };
 

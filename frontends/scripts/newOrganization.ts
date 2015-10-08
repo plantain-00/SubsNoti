@@ -1,8 +1,19 @@
 import * as base from "./base";
 import * as interfaces from "../../common/interfaces";
 
-let vueBody;
-let vueBodyModel = {
+declare let Vue;
+
+interface VueBodyModel {
+    organizationName: string;
+    addText: string;
+    isSending: boolean;
+
+    canAdd: boolean;
+
+    add: () => void;
+}
+
+let vueBody = new Vue({
     el: "#vue-body",
     data: {
         organizationName: "",
@@ -10,39 +21,35 @@ let vueBodyModel = {
         isSending: false
     },
     computed: {
-        canAdd: function () {
-            return this.organizationName.trim() && !this.isSending;
+        canAdd: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.organizationName.trim() && !self.isSending;
         }
     },
     methods: {
-        add: function () {
-            this.isSending = true;
-            this.loginText = "is adding now...";
-            let self = this;
-            $.ajax({
-                url: "/api/user/organizations",
-                data: JSON.stringify({
-                    organizationName: this.organizationName
-                }),
-                type: "POST",
-                contentType: "application/json",
-                success: function (data:interfaces.Response) {
-                    self.isSending = false;
-                    self.loginText = "Please input organization name";
-                    if (data.isSuccess) {
-                        alert("success.");
-                    } else {
-                        alert(data.errorMessage);
-                    }
+        add: function() {
+            let self: VueBodyModel = this;
+
+            self.isSending = true;
+            self.addText = "is adding now...";
+
+            $.post("/api/user/organizations", {
+                organizationName: self.organizationName
+            }, function(data: interfaces.Response) {
+                self.isSending = false;
+                self.addText = "Please input organization name";
+                if (data.isSuccess) {
+                    alert("success.");
+                } else {
+                    alert(data.errorMessage);
                 }
             });
         }
     }
-};
+});
 
-$(document).ready(function () {
-    vueBody = new Vue(vueBodyModel);
-
-    base.authenticate((error, data)=> {
+$(document).ready(function() {
+    base.vueHead.authenticate((error, data) => {
     });
 });

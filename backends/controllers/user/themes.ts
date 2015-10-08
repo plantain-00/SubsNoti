@@ -15,7 +15,7 @@ let documentOfCreate = {
 export function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
     
-    if (services.contentType.isNotJson(request)) {
+    if (services.contentType.isValid(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
     }

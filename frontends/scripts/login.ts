@@ -1,8 +1,24 @@
 import * as base from "./base";
 import * as interfaces from "../../common/interfaces";
 
-let vueBody;
-let vueBodyModel = {
+declare let Vue;
+
+interface VueBodyModel {
+    emailHead: string;
+    emailTail: string;
+    innerName: string;
+    loginText: string;
+    isSending: boolean;
+    innerRawEmail: string;
+
+    rawEmail: string;
+    canLogin: boolean;
+    name: string;
+
+    login: () => void;
+}
+
+let vueBody = new Vue({
     el: "#vue-body",
     data: {
         emailHead: "",
@@ -14,39 +30,51 @@ let vueBodyModel = {
     },
     computed: {
         rawEmail: {
-            get: function () {
-                return this.innerRawEmail;
+            get: function(): string {
+                let self: VueBodyModel = this;
+
+                return self.innerRawEmail;
             },
-            set: function (value) {
+            set: function(value: string) {
+                let self: VueBodyModel = this;
+
                 if (/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(value)) {
                     var tmp = value.trim().toLowerCase().split("@");
-                    this.emailHead = tmp[0];
-                    this.emailTail = tmp[1];
+                    self.emailHead = tmp[0];
+                    self.emailTail = tmp[1];
                 } else {
-                    this.emailHead = "";
-                    this.emailTail = "";
+                    self.emailHead = "";
+                    self.emailTail = "";
                 }
-                this.innerRawEmail = value;
+                self.innerRawEmail = value;
             }
         },
-        canLogin: function () {
-            return this.emailHead && this.emailTail && !this.isSending;
+        canLogin: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.emailHead && self.emailTail && !self.isSending;
         },
         name: {
-            get: function () {
-                if (this.innerName) {
-                    return this.innerName;
+            get: function(): string {
+                let self: VueBodyModel = this;
+
+                if (self.innerName) {
+                    return self.innerName;
                 }
-                return this.emailHead;
+                return self.emailHead;
             },
-            set: function (value) {
-                this.innerName = value.trim();
+            set: function(value: string) {
+                let self: VueBodyModel = this;
+
+                self.innerName = value.trim();
             }
         }
     },
     methods: {
-        login: function () {
-            let lastSuccessfulEmailTime = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
+        login: function() {
+            let self: VueBodyModel = this;
+
+            let lastSuccessfulEmailTime: string = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
             if (lastSuccessfulEmailTime) {
                 let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
                 if (time < 60 * 1000) {
@@ -54,37 +82,28 @@ let vueBodyModel = {
                     return;
                 }
             }
-            this.isSending = true;
-            this.loginText = "is sending email now...";
-            let self = this;
-            $.ajax({
-                url: "/api/token_sent",
-                data: JSON.stringify({
-                    emailHead: this.emailHead,
-                    emailTail: this.emailTail,
-                    name: this.name
-                }),
-                type: "POST",
-                contentType: "application/json",
-                success: function (data:interfaces.Response) {
-                    self.isSending = false;
-                    self.loginText = "Please input email";
-                    if (data.isSuccess) {
-                        alert("success, please check your email.");
-                        window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
-                    } else {
-                        alert(data.errorMessage);
-                    }
+            self.isSending = true;
+            self.loginText = "is sending email now...";
+            $.post("/api/token_sent", {
+                emailHead: self.emailHead,
+                emailTail: self.emailTail,
+                name: self.name
+            }, function(data: interfaces.Response) {
+                self.isSending = false;
+                self.loginText = "Please input email";
+                if (data.isSuccess) {
+                    alert("success, please check your email.");
+                    window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
+                } else {
+                    alert(data.errorMessage);
                 }
             });
         }
     }
-};
+});
 
-$(document).ready(function () {
-    vueBody = new Vue(vueBodyModel);
-
-    base.authenticate((error, data)=> {
+$(document).ready(function() {
+    base.vueHead.authenticate((error, data) => {
         if (error) {
             return
         }

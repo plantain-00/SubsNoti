@@ -23,7 +23,7 @@ function send(response: libs.Response, errorMessage: string, errorCode: enums.Er
 }
 
 export function sendContentTypeError(response: libs.Response, documentUrl: string): void {
-    send(response, "Content-Type is not application/json", enums.ErrorCode.wrongContentType, enums.StatusCode.invalidRequest, documentUrl);
+    send(response, "Content-Type is not 'application/json' or 'application/x-www-form-urlencoded'", enums.ErrorCode.wrongContentType, enums.StatusCode.invalidRequest, documentUrl);
 }
 
 export function sendParameterMissedError(response: libs.Response, documentUrl: string): void {
