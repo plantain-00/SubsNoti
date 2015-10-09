@@ -8,9 +8,9 @@
 # echo 'Finished "git pull".'
 
 # install
-echo 'Starting "npm install"...'
-npm install
-echo 'Finished "npm install".'
+echo 'Starting "npm update"...'
+npm update
+echo 'Finished "npm update".'
 echo 'Starting "tsd update"...'
 tsd update -so
 echo 'Finished "tsd update".'
