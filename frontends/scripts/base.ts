@@ -41,7 +41,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 
     if (loginResult) {
         let data: CurrentUserResponse = JSON.parse(loginResult);
-        
+
         next(data);
     } else {
         $.ajax({

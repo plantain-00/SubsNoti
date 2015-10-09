@@ -17,14 +17,14 @@ interface Ownership {
 	}[]
 }
 
-export function getByThemeIds(themeIds: number[]): Promise<Ownership[]> {
+export async function getByThemeIds(themeIds: number[]): Promise<Ownership[]> {
 	if (themeIds.length === 0) {
 		return Promise.resolve([]);
 	}
 
-	return services.db.accessAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
-		return Promise.resolve(getFromRows(rows));
-	});
+	let rows = await services.db.accessAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []);
+
+	return Promise.resolve(getFromRows(rows));
 }
 
 function getFromRows(rows: any[]): Ownership[] {

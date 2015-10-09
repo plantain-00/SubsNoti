@@ -16,7 +16,7 @@ let documentOfCreate = {
 
 export function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
-    
+
     if (services.contentType.isInvalid(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
