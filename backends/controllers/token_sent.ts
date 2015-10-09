@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -41,7 +43,7 @@ export function create(request: libs.Request, response: libs.Response) {
             });
         } else {
             let salt = libs.generateUuid();
-            services.db.accessAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]).then(rows=> {
+            services.db.insertAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]).then(rows=> {
                 let id = rows.insertId;
 
                 return sendEmail(id, salt, `${emailHead}@${emailTail}`).then(() => {
@@ -59,7 +61,7 @@ export function create(request: libs.Request, response: libs.Response) {
     });
 }
 
-function sendEmail(userId: number, salt: string, email: string): libs.Promise<{}> {
+function sendEmail(userId: number, salt: string, email: string): Promise<{}> {
     return services.frequency.limit(email, 60 * 60).then(() => {
         let token = services.authenticationCredential.create(userId, salt);
         let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;

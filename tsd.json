@@ -44,9 +44,6 @@
     "q/Q.d.ts": {
       "commit": "d6c98baa7fd703e449cf37f3ec39ed3bd92cfd35"
     },
-    "bluebird/bluebird.d.ts": {
-      "commit": "d6c98baa7fd703e449cf37f3ec39ed3bd92cfd35"
-    },
     "nodemailer/nodemailer.d.ts": {
       "commit": "d6c98baa7fd703e449cf37f3ec39ed3bd92cfd35"
     },

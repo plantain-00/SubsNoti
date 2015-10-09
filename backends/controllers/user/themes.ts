@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../../libs";
 import * as settings from "../../settings";
 
@@ -14,7 +16,7 @@ let documentOfCreate = {
 
 export function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
-    
+
     if (services.contentType.isInvalid(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
@@ -43,7 +45,7 @@ export function create(request: libs.Request, response: libs.Response) {
 
     services.user.getCurrent(request, documentUrl).then(user=> {
         return services.db.beginTransactionAsync().then(connection=> {
-            return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
+            return services.db.insertInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
                 let themeId = rows.insertId;
 
                 return services.db.accessInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]).then(rows=> {

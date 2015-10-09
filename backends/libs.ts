@@ -1,5 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+'use strict';
+
 import * as express from "express";
 export {express};
 
@@ -23,9 +25,6 @@ export {nodemailer};
 
 import * as mysql from "mysql";
 export {mysql};
-
-import * as Promise from "bluebird";
-export {Promise};
 
 export let md5 = require("md5");
 

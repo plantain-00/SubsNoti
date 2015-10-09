@@ -5,9 +5,9 @@
 # tools and global npm packages
 
 + git
-+ node.js 4.0.0+ && npm && n
++ node.js 4.x && npm
 + tsd
-+ typescript 1.6+
++ typescript 1.7.x
 + gulp
 + mocha
 + mysql || mariadb

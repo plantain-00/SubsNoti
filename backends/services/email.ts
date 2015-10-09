@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -26,4 +28,10 @@ function send(to: string, subject: string, html: string, next: (error: Error) =>
     });
 }
 
-export let sendAsync = libs.Promise.promisify(send);
+export function sendAsync(to: string, subject: string, html: string): Promise<{}> {
+    return new Promise((resolve, reject) => {
+        send(to, subject, html, error => {
+            return error !== null ? reject(error) : resolve();
+        });
+    });
+};

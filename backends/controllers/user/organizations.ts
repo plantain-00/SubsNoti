@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../../libs";
 import * as settings from "../../settings";
 
@@ -46,7 +48,7 @@ export function create(request: libs.Request, response: libs.Response) {
                 }
 
                 return services.db.beginTransactionAsync().then(connection=> {
-                    return services.db.accessInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id]).then(rows=> {
+                    return services.db.insertInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id]).then(rows=> {
                         let organizationId = rows.insertId;
 
                         return services.db.accessInTransactionAsync(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true]).then(rows=> {

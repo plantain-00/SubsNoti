@@ -1,3 +1,5 @@
+'use strict';
+
 import {SettingsInterface} from "./SettingsInterface";
 import * as environment from "../common/environment";
 

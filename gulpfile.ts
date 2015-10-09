@@ -1,5 +1,7 @@
 /// <reference path="./typings/tsd.d.ts" />
 
+'use strict';
+
 import * as gulp from 'gulp';
 let del = require('del');
 let rename = require('gulp-rename');

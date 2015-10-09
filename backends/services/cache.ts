@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -8,13 +10,13 @@ import * as services from "../services";
 
 export let client: libs.RedisClient;
 
-function getString(key: string, next: (error: Error, reply: string) => void) {
-    client.get(key, (error, reply) => {
-        next(error, reply);
+export function getStringAsync(key: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        client.get(key, (error: Error, reply) => {
+            return error !== null ? reject(error) : resolve(reply);
+        });
     });
-}
-
-export let getStringAsync = libs.Promise.promisify(getString);
+};
 
 export function setString(key: string, value: string, seconds?: number) {
     client.set(key, value);
@@ -30,18 +32,18 @@ export function set(key: string, value: any, seconds?: number) {
     }
 }
 
-function get(key: string, field: string, next: (error: Error, reply: any) => void) {
-    client.hmget(key, field, (error, reply) => {
-        next(error, reply);
+export function getAsync(key: string, field: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        client.hmget(key, field, (error: Error, reply) => {
+            return error !== null ? reject(error) : resolve(reply);
+        });
+    });
+};
+
+export function ttlAsync(key: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+        client.ttl(key, (error: Error, reply) => {
+            return error !== null ? reject(error) : resolve(reply);
+        });
     });
 }
-
-export let getAsync = libs.Promise.promisify(get);
-
-function ttl(key: string, next: (error: Error, reply: number) => void) {
-    client.ttl(key, (error, reply) => {
-        next(error, reply);
-    })
-}
-
-export let ttlAsync = libs.Promise.promisify(ttl);

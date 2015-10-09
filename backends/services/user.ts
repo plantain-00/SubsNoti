@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -17,7 +19,7 @@ interface User {
     createdOrganizationIds?: number[];
 }
 
-export function getById(id: number): libs.Promise<User> {
+export function getById(id: number): Promise<User> {
     return services.db.accessAsync("select * from users where ID = ?", [id]).then(rows=> {
         if (rows.length == 0) {
             return Promise.resolve<User>(null);
@@ -27,35 +29,35 @@ export function getById(id: number): libs.Promise<User> {
     });
 }
 
-export function getByEmail(emailHead: string, emailTail: string): libs.Promise<User> {
+export function getByEmail(emailHead: string, emailTail: string): Promise<User> {
     return services.db.accessAsync("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail]).then(rows=> {
         if (rows.length == 0) {
-            return libs.Promise.resolve(null);
+            return Promise.resolve(null);
         }
 
         if (rows.length > 1) {
-            return libs.Promise.reject(new Error("the account is in wrong status now"));
+            return Promise.reject<User>(new Error("the account is in wrong status now"));
         }
 
-        return libs.Promise.resolve(getFromRow(rows[0]));
+        return Promise.resolve(getFromRow(rows[0]));
     });
 }
 
-export function getCurrent(request: libs.Request, documentUrl: string): libs.Promise<User> {
+export function getCurrent(request: libs.Request, documentUrl: string): Promise<User> {
     let authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
-        return libs.Promise.reject(new Error("no authentication credential"));
+        return Promise.reject<User>(new Error("no authentication credential"));
     }
 
     return services.cache.getStringAsync(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential)).then(reply=> {
         if (reply) {
             let userFromCache: User = JSON.parse(reply);
-            return libs.Promise.resolve(userFromCache);
+            return Promise.resolve(userFromCache);
         }
 
         let tmp = authenticationCredential.split("g");
         if (tmp.length != 3) {
-            return libs.Promise.reject(new Error("invalid authentication credential"));
+            return Promise.reject<User>(new Error("invalid authentication credential"));
         }
 
         let milliseconds = parseInt(tmp[1], 16);
@@ -64,12 +66,12 @@ export function getCurrent(request: libs.Request, documentUrl: string): libs.Pro
 
         if (now < milliseconds
             || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-            return libs.Promise.reject(new Error("authentication credential is out of date"));
+            return Promise.reject<User>(new Error("authentication credential is out of date"));
         }
 
         return getById(userId).then(user=> {
             if (!user) {
-                return libs.Promise.reject(new Error("invalid user"));
+                return Promise.reject<User>(new Error("invalid user"));
             }
 
             if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
@@ -78,10 +80,10 @@ export function getCurrent(request: libs.Request, documentUrl: string): libs.Pro
 
                     services.cache.setString(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential), JSON.stringify(user), 8 * 60 * 60);
 
-                    return libs.Promise.resolve(user);
+                    return Promise.resolve(user);
                 });
             } else {
-                return libs.Promise.reject(new Error("invalid authentication credential"));
+                return Promise.reject<User>(new Error("invalid authentication credential"));
             }
         });
     });
