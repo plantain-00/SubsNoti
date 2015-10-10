@@ -21,53 +21,49 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     try {
         let user = await services.user.getCurrent(request, documentUrl);
-        try {
-            let organizations = await services.organization.getByMemberId(user.id);
-            if (libs._.every(organizations, o => o.id != organizationId)) {
-                services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
-                return;
-            }
+        let organizations = await services.organization.getByMemberId(user.id);
+        if (libs._.every(organizations, o => o.id != organizationId)) {
+            services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
+            return;
+        }
 
-            let themes = await services.theme.getInOrganizationId(organizationId);
+        let themes = await services.theme.getInOrganizationId(organizationId);
 
-            let themeIds = libs._.map(themes, t=> t.id);
-            let ownerships = await services.ownership.getByThemeIds(themeIds);
-            let watcheds = await services.watched.getByThemeIds(themeIds);
-            let result = {
-                themes: []
+        let themeIds = libs._.map(themes, t=> t.id);
+        let ownerships = await services.ownership.getByThemeIds(themeIds);
+        let watcheds = await services.watched.getByThemeIds(themeIds);
+        let result = {
+            themes: []
+        };
+
+        libs._.each(themes, t => {
+            let theme = {
+                id: t.id,
+                title: t.title,
+                detail: t.detail,
+                organizationId: t.organizationId,
+                createTime: t.createTime.getTime(),
+                creator: t.creator,
+                owners: [],
+                watchers: []
             };
 
-            libs._.each(themes, t => {
-                let theme = {
-                    id: t.id,
-                    title: t.title,
-                    detail: t.detail,
-                    organizationId: t.organizationId,
-                    createTime: t.createTime.getTime(),
-                    creator: t.creator,
-                    owners: [],
-                    watchers: []
-                };
+            let ownership = libs._.find(ownerships, o=> o.themeId == theme.id);
+            if (ownership) {
+                theme.owners = ownership.owners;
+            }
 
-                let ownership = libs._.find(ownerships, o=> o.themeId == theme.id);
-                if (ownership) {
-                    theme.owners = ownership.owners;
-                }
+            let watched = libs._.find(watcheds, w=> w.themeId == theme.id);
+            if (watched) {
+                theme.watchers = watched.watchers;
+            }
 
-                let watched = libs._.find(watcheds, w=> w.themeId == theme.id);
-                if (watched) {
-                    theme.watchers = watched.watchers;
-                }
+            result.themes.push(theme);
+        })
 
-                result.themes.push(theme);
-            })
-
-            services.response.sendOK(response, documentUrl, result);
-        } catch (error) {
-            services.response.sendDBAccessError(response, error.message, documentUrl);
-        }
+        services.response.sendOK(response, documentUrl, result);
     } catch (error) {
-        services.response.sendUnauthorizedError(response, error.message, documentUrl);
+        services.response.sendError(response, documentUrl, error);
     }
 }
 

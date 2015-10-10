@@ -35,7 +35,7 @@ export async function getByEmail(emailHead: string, emailTail: string): Promise<
     }
 
     if (rows.length > 1) {
-        return Promise.reject<User>(new Error("the account is in wrong status now"));
+        return Promise.reject<User>(services.error.fromMessage("the account is in wrong status now", enums.ErrorCode.invalidData));
     }
 
     return Promise.resolve(getFromRow(rows[0]));
@@ -44,7 +44,7 @@ export async function getByEmail(emailHead: string, emailTail: string): Promise<
 export async function getCurrent(request: libs.Request, documentUrl: string): Promise<User> {
     let authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
-        return Promise.reject<User>(new Error("no authentication credential"));
+        return Promise.reject<User>(services.error.fromMessage("no authentication credential", enums.ErrorCode.unauthorizedError));
     }
 
     let reply = await services.cache.getStringAsync(services.cacheKeyRule.getAuthenticationCredential(authenticationCredential));
@@ -55,7 +55,7 @@ export async function getCurrent(request: libs.Request, documentUrl: string): Pr
 
     let tmp = authenticationCredential.split("g");
     if (tmp.length != 3) {
-        return Promise.reject<User>(new Error("invalid authentication credential"));
+        return Promise.reject<User>(services.error.fromMessage("invalid authentication credential", enums.ErrorCode.unauthorizedError));
     }
 
     let milliseconds = parseInt(tmp[1], 16);
@@ -64,12 +64,12 @@ export async function getCurrent(request: libs.Request, documentUrl: string): Pr
 
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-        return Promise.reject<User>(new Error("authentication credential is out of date"));
+        return Promise.reject<User>(services.error.fromMessage("authentication credential is out of date", enums.ErrorCode.unauthorizedError));
     }
 
     let user = await getById(userId);
     if (!user) {
-        return Promise.reject<User>(new Error("invalid user"));
+        return Promise.reject<User>(services.error.fromMessage("invalid user", enums.ErrorCode.unauthorizedError));
     }
 
     if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
@@ -80,7 +80,7 @@ export async function getCurrent(request: libs.Request, documentUrl: string): Pr
 
         return Promise.resolve(user);
     } else {
-        return Promise.reject<User>(new Error("invalid authentication credential"));
+        return Promise.reject<User>(services.error.fromMessage("invalid authentication credential", enums.ErrorCode.unauthorizedError));
     }
 }
 

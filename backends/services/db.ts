@@ -10,17 +10,17 @@ import * as services from "../services";
 
 let pool = libs.mysql.createPool(settings.config.db);
 
-function access(sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
+function access(sql: string, parameters: any[], next: (error: interfaces.E, rows: any) => void) {
     pool.getConnection((error, connection) => {
         if (error) {
-            next(error, null);
+            next(services.error.fromIError(error), null);
             return;
         }
 
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
                 connection.release();
-                next(error, null);
+                next(services.error.fromIError(error), null);
                 return;
             }
 
@@ -34,17 +34,17 @@ export let queryAsync = services.promise.promisify3<string, any[], any[]>(access
 
 export let insertAsync = services.promise.promisify3<string, any[], { insertId: number }>(access);
 
-function beginTransaction(next: (error: Error, connection: libs.MysqlConnection) => void): void {
+function beginTransaction(next: (error: interfaces.E, connection: libs.MysqlConnection) => void): void {
     pool.getConnection((error, connection) => {
         if (error) {
-            next(error, null);
+            next(services.error.fromIError(error), null);
             return;
         }
 
         connection.beginTransaction(error=> {
             if (error) {
                 connection.release();
-                next(error, null);
+                next(services.error.fromIError(error), null);
                 return;
             }
 
@@ -55,11 +55,11 @@ function beginTransaction(next: (error: Error, connection: libs.MysqlConnection)
 
 export let beginTransactionAsync = services.promise.promisify1<libs.MysqlConnection>(beginTransaction);
 
-function accessInTransaction(connection: libs.MysqlConnection, sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
+function accessInTransaction(connection: libs.MysqlConnection, sql: string, parameters: any[], next: (error: interfaces.E, rows: any) => void) {
     connection.query(sql, parameters, (error, rows) => {
         if (error) {
             rollback(connection, () => {
-                next(error, null);
+                next(services.error.fromIError(error), null);
             });
             return;
         }
@@ -68,7 +68,7 @@ function accessInTransaction(connection: libs.MysqlConnection, sql: string, para
     });
 }
 
-export let accessInTransactionAsync = services.promise.promisify4<libs.MysqlConnection, string, any[], any[]>(accessInTransaction);
+export let queryInTransactionAsync = services.promise.promisify4<libs.MysqlConnection, string, any[], any[]>(accessInTransaction);
 
 export let insertInTransactionAsync = services.promise.promisify4<libs.MysqlConnection, string, any[], { insertId: number }>(accessInTransaction);
 
@@ -81,11 +81,11 @@ function rollback(connection: libs.MysqlConnection, next: () => void): void {
 
 export let rollbackAsync = services.promise.promisify2<libs.MysqlConnection, void>(rollback);
 
-function endTransaction(connection: libs.MysqlConnection, next: (error: Error) => void): void {
+function endTransaction(connection: libs.MysqlConnection, next: (error: interfaces.E) => void): void {
     connection.commit(error=> {
         if (error) {
             rollback(connection, () => {
-                next(error);
+                next(services.error.fromIError(error));
             });
             return;
         }

@@ -24,6 +24,18 @@ function send(response: libs.Response, errorMessage: string, errorCode: enums.Er
     response.status(200).json(libs._.extend(baseResponse, result));
 }
 
+export function sendError(response: libs.Response, documentUrl: string, error: interfaces.E) {
+    switch (error.code) {
+        case enums.ErrorCode.dbAccessError:
+        case enums.ErrorCode.emailServiceError:
+            send(response, error.message, error.code, enums.StatusCode.internalServerError, documentUrl);
+            break;
+        case enums.ErrorCode.unauthorizedError:
+            send(response, error.message, error.code, enums.StatusCode.unauthorized, documentUrl);
+            break;
+    }
+}
+
 export function sendContentTypeError(response: libs.Response, documentUrl: string): void {
     send(response, "Content-Type is not 'application/json' or 'application/x-www-form-urlencoded'", enums.ErrorCode.wrongContentType, enums.StatusCode.invalidRequest, documentUrl);
 }
@@ -36,16 +48,8 @@ export function sendInvalidParameterError(response: libs.Response, documentUrl: 
     send(response, "parameter is invalid", enums.ErrorCode.invalidParameter, enums.StatusCode.invalidRequest, documentUrl);
 }
 
-export function sendDBAccessError(response: libs.Response, errorMessage: string, documentUrl: string): void {
-    send(response, errorMessage, enums.ErrorCode.dbAccessError, enums.StatusCode.internalServerError, documentUrl);
-}
-
 export function sendCreatedOrModified(response: libs.Response, documentUrl: string): void {
     send(response, "", enums.ErrorCode.success, enums.StatusCode.createdOrModified, documentUrl);
-}
-
-export function sendEmailServiceError(response: libs.Response, errorMessage: string, documentUrl: string): void {
-    send(response, errorMessage, enums.ErrorCode.emailServiceError, enums.StatusCode.internalServerError, documentUrl);
 }
 
 export function sendUnauthorizedError(response: libs.Response, errorMessage: string, documentUrl: string): void {

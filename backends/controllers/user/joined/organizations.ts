@@ -14,27 +14,25 @@ let documentOfGet = {
     documentUrl: "/doc/api/Get joined organizations.html"
 };
 
-export function get(request: libs.Request, response: libs.Response): void {
+export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
-    services.user.getCurrent(request, documentUrl).then(user=> {
-		return services.organization.getByMemberId(user.id).then(organizations=> {
-			let result = {
-				organizations: libs._.map(organizations, o => {
-					return {
-						id: o.id,
-						name: o.name
-					};
-				})
-			};
+    try {
+        let user = await services.user.getCurrent(request, documentUrl);
+        let organizations = await services.organization.getByMemberId(user.id);
+        let result = {
+            organizations: libs._.map(organizations, o => {
+                return {
+                    id: o.id,
+                    name: o.name
+                };
+            })
+        };
 
-			services.response.sendOK(response, documentUrl, result);
-		}).catch(error=> {
-			services.response.sendDBAccessError(response, error.message, documentUrl);
-		})
-	}, error=> {
-		services.response.sendUnauthorizedError(response, error.message, documentUrl);
-	});
+        services.response.sendOK(response, documentUrl, result);
+    } catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
 export function route(app: libs.Application) {

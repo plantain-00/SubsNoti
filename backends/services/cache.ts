@@ -17,9 +17,9 @@ export function connect() {
     });
 }
 
-function getString(key: string, next: (error: Error, reply: string) => void) {
+function getString(key: string, next: (error: interfaces.E, reply: string) => void) {
     client.get(key, (error: Error, reply) => {
-        next(error, reply);
+        next(services.error.fromError(error, enums.ErrorCode.cacheAccessError), reply);
     });
 }
 
@@ -39,17 +39,17 @@ export function set(key: string, value: any, seconds?: number) {
     }
 }
 
-function get(key: string, field: string, next: (error: Error, reply) => void) {
+function get(key: string, field: string, next: (error: interfaces.E, reply) => void) {
     client.hmget(key, field, (error: Error, reply) => {
-        next(error, reply);
+        next(services.error.fromError(error, enums.ErrorCode.cacheAccessError), reply);
     });
 }
 
 export let getAsync = services.promise.promisify3<string, string, any>(get);
 
-function ttl(key: string, next: (error: Error, reply: number) => void) {
+function ttl(key: string, next: (error: interfaces.E, reply: number) => void) {
     client.ttl(key, (error: Error, reply) => {
-        next(error, reply);
+        next(services.error.fromError(error, enums.ErrorCode.cacheAccessError), reply);
     });
 }
 
