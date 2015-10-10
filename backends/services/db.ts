@@ -10,6 +10,46 @@ import * as services from "../services";
 
 let pool = libs.mysql.createPool(settings.config.db);
 
+function promisify1<TResult>(callback: (next: (error: Error, result: TResult) => void) => void): () => Promise<TResult> {
+    return () => {
+        return new Promise((resolve, reject) => {
+            callback((error: Error, result: TResult) => {
+                return error !== null ? reject(error) : resolve(result);
+            });
+        });
+    };
+}
+
+function promisify2<T1, TResult>(callback: (t1: T1, next: (error: Error, result: TResult) => void) => void): (t1: T1) => Promise<TResult> {
+    return (t1: T1) => {
+        return new Promise((resolve, reject) => {
+            callback(t1, (error: Error, result: TResult) => {
+                return error !== null ? reject(error) : resolve(result);
+            });
+        });
+    };
+}
+
+function promisify3<T1, T2, TResult>(callback: (t1: T1, t2: T2, next: (error: Error, result: TResult) => void) => void): (t1: T1, t2: T2) => Promise<TResult> {
+    return (t1: T1, t2: T2) => {
+        return new Promise((resolve, reject) => {
+            callback(t1, t2, (error: Error, result: TResult) => {
+                return error !== null ? reject(error) : resolve(result);
+            });
+        });
+    };
+}
+
+function promisify4<T1, T2, T3, TResult>(callback: (t1: T1, t2: T2, t3: T3, next: (error: Error, result: TResult) => void) => void): (t1: T1, t2: T2, t3: T3) => Promise<TResult> {
+    return (t1: T1, t2: T2, t3: T3) => {
+        return new Promise((resolve, reject) => {
+            callback(t1, t2, t3, (error: Error, result: TResult) => {
+                return error !== null ? reject(error) : resolve(result);
+            });
+        });
+    };
+}
+
 function access(sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
     pool.getConnection((error, connection) => {
         if (error) {
@@ -30,21 +70,9 @@ function access(sql: string, parameters: any[], next: (error: Error, rows: any) 
     });
 }
 
-export function accessAsync(sql: string, parameters: any[]): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-        access(sql, parameters, (error: Error, rows) => {
-            return error !== null ? reject(error) : resolve(rows);
-        });
-    });
-};
+export let accessAsync = promisify3<string, any[], any[]>(access);
 
-export function insertAsync(sql: string, parameters: any[]): Promise<{ insertId: number }> {
-    return new Promise((resolve, reject) => {
-        access(sql, parameters, (error: Error, rows) => {
-            return error !== null ? reject(error) : resolve(rows);
-        });
-    });
-};
+export let insertAsync = promisify3<string, any[], { insertId: number }>(access);
 
 function beginTransaction(next: (error: Error, connection: libs.MysqlConnection) => void): void {
     pool.getConnection((error, connection) => {
@@ -65,13 +93,7 @@ function beginTransaction(next: (error: Error, connection: libs.MysqlConnection)
     });
 }
 
-export function beginTransactionAsync(): Promise<libs.MysqlConnection> {
-    return new Promise((resolve, reject) => {
-        beginTransaction((error: Error, connection) => {
-            return error !== null ? reject(error) : resolve(connection);
-        });
-    });
-};
+export let beginTransactionAsync = promisify1<libs.MysqlConnection>(beginTransaction);
 
 function accessInTransaction(connection: libs.MysqlConnection, sql: string, parameters: any[], next: (error: Error, rows: any) => void) {
     connection.query(sql, parameters, (error, rows) => {
@@ -86,21 +108,9 @@ function accessInTransaction(connection: libs.MysqlConnection, sql: string, para
     });
 }
 
-export function accessInTransactionAsync(connection: libs.MysqlConnection, sql: string, parameters: any[]): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-        accessInTransaction(connection, sql, parameters, (error: Error, rows) => {
-            return error !== null ? reject(error) : resolve(rows);
-        });
-    });
-};
+export let accessInTransactionAsync = promisify4<libs.MysqlConnection, string, any[], any[]>(accessInTransaction);
 
-export function insertInTransactionAsync(connection: libs.MysqlConnection, sql: string, parameters: any[]): Promise<{ insertId: number }> {
-    return new Promise((resolve, reject) => {
-        accessInTransaction(connection, sql, parameters, (error: Error, rows) => {
-            return error !== null ? reject(error) : resolve(rows);
-        });
-    });
-};
+export let insertInTransactionAsync = promisify4<libs.MysqlConnection, string, any[], { insertId: number }>(accessInTransaction);
 
 function rollback(connection: libs.MysqlConnection, next: () => void): void {
     connection.rollback(() => {
@@ -109,13 +119,7 @@ function rollback(connection: libs.MysqlConnection, next: () => void): void {
     });
 }
 
-export function rollbackAsync(connection: libs.MysqlConnection): Promise<{}> {
-    return new Promise((resolve, reject) => {
-        rollback(connection, () => {
-            return resolve();
-        });
-    });
-};
+export let rollbackAsync = promisify2<libs.MysqlConnection, void>(rollback);
 
 function endTransaction(connection: libs.MysqlConnection, next: (error: Error) => void): void {
     connection.commit(error=> {
@@ -131,10 +135,4 @@ function endTransaction(connection: libs.MysqlConnection, next: (error: Error) =
     });
 }
 
-export function endTransactionAsync(connection: libs.MysqlConnection): Promise<{}> {
-    return new Promise((resolve, reject) => {
-        endTransaction(connection, error => {
-            return error !== null ? reject(error) : resolve();
-        });
-    });
-};
+export let endTransactionAsync = promisify2<libs.MysqlConnection, void>(endTransaction);
