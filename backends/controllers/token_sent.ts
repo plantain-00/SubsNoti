@@ -61,7 +61,7 @@ export function create(request: libs.Request, response: libs.Response) {
     });
 }
 
-function sendEmail(userId: number, salt: string, email: string): Promise<{}> {
+function sendEmail(userId: number, salt: string, email: string): Promise<void> {
     return services.frequency.limit(email, 60 * 60).then(() => {
         let token = services.authenticationCredential.create(userId, salt);
         let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;

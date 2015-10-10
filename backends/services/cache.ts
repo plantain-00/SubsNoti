@@ -10,13 +10,20 @@ import * as services from "../services";
 
 export let client: libs.RedisClient;
 
-export function getStringAsync(key: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        client.get(key, (error: Error, reply) => {
-            return error !== null ? reject(error) : resolve(reply);
-        });
+export function connect() {
+    client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
+    client.on("error", error=> {
+        console.log(error);
     });
-};
+}
+
+function getString(key: string, next: (error: Error, reply: string) => void) {
+    client.get(key, (error: Error, reply) => {
+        next(error, reply);
+    });
+}
+
+export let getStringAsync = services.promise.promisify2<string, string>(getString);
 
 export function setString(key: string, value: string, seconds?: number) {
     client.set(key, value);
@@ -32,18 +39,18 @@ export function set(key: string, value: any, seconds?: number) {
     }
 }
 
-export function getAsync(key: string, field: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-        client.hmget(key, field, (error: Error, reply) => {
-            return error !== null ? reject(error) : resolve(reply);
-        });
-    });
-};
-
-export function ttlAsync(key: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-        client.ttl(key, (error: Error, reply) => {
-            return error !== null ? reject(error) : resolve(reply);
-        });
+function get(key: string, field: string, next: (error: Error, reply) => void) {
+    client.hmget(key, field, (error: Error, reply) => {
+        next(error, reply);
     });
 }
+
+export let getAsync = services.promise.promisify3<string, string, any>(get);
+
+function ttl(key: string, next: (error: Error, reply: number) => void) {
+    client.ttl(key, (error: Error, reply) => {
+        next(error, reply);
+    });
+}
+
+export let ttlAsync = services.promise.promisify2<string, number>(ttl);

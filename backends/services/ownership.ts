@@ -22,7 +22,7 @@ export async function getByThemeIds(themeIds: number[]): Promise<Ownership[]> {
 		return Promise.resolve([]);
 	}
 
-	let rows = await services.db.accessAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []);
+	let rows = await services.db.queryAsync("select theme_owners.ThemeID,users.* from theme_owners left join users on theme_owners.OwnerID = users.ID where theme_owners.ThemeID in (" + themeIds.join() + ")", []);
 
 	return Promise.resolve(getFromRows(rows));
 }

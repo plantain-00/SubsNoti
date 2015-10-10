@@ -23,7 +23,7 @@ interface Theme {
 }
 
 export async function getInOrganizationId(organizationId: number): Promise<Theme[]> {
-    let rows = await services.db.accessAsync("select themes.*,users.ID as UserID,users.Name,users.EmailHead,users.EmailTail from themes left join users on themes.CreatorID = users.ID where themes.OrganizationID = ? order by themes.CreateTime desc", [organizationId]);
+    let rows = await services.db.queryAsync("select themes.*,users.ID as UserID,users.Name,users.EmailHead,users.EmailTail from themes left join users on themes.CreatorID = users.ID where themes.OrganizationID = ? order by themes.CreateTime desc", [organizationId]);
     return Promise.resolve(libs._.map(rows, (row: any) => getFromRow(row)));
 }
 

@@ -28,10 +28,4 @@ function send(to: string, subject: string, html: string, next: (error: Error) =>
     });
 }
 
-export function sendAsync(to: string, subject: string, html: string): Promise<{}> {
-    return new Promise((resolve, reject) => {
-        send(to, subject, html, error => {
-            return error !== null ? reject(error) : resolve();
-        });
-    });
-};
+export let sendAsync = services.promise.promisify4<string, string, string, void>(send);

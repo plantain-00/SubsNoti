@@ -1,5 +1,8 @@
 'use strict';
 
+import * as promise from "./services/promise";
+export {promise};
+
 import * as email from "./services/email";
 export {email};
 

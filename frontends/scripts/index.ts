@@ -188,10 +188,13 @@ let vueBody: VueBodyModel = new Vue({
 
 $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
+        if (error) {
+            console.log(error);
+            return;
+        }
+
         vueBody.currentUserId = data.id;
-
         vueBody.getOrganizationsCurrentUserIn();
-
         setInterval(vueBody.setThemeCreateTimeText, 10000);
     });
 });

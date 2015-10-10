@@ -30,12 +30,12 @@ export function watch(request: libs.Request, response: libs.Response) {
                 services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
             }
             else {
-                return services.db.accessAsync("select * from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
+                return services.db.queryAsync("select * from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
                     if (rows.length > 0) {
                         services.response.sendCreatedOrModified(response, documentUrl);
                     }
                     else {
-                        return services.db.accessAsync("insert into theme_watchers (ThemeID,WatcherID) values(?,?)", [themeId, user.id]).then(rows=> {
+                        return services.db.queryAsync("insert into theme_watchers (ThemeID,WatcherID) values(?,?)", [themeId, user.id]).then(rows=> {
                             services.response.sendCreatedOrModified(response, documentUrl);
                         });
                     }
@@ -71,7 +71,7 @@ export function unwatch(request: libs.Request, response: libs.Response) {
                 services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
             }
             else {
-                return services.db.accessAsync("delete from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
+                return services.db.queryAsync("delete from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
                     services.response.sendDeleted(response, documentUrl);
                 });
             }

@@ -20,7 +20,7 @@ interface User {
 }
 
 export async function getById(id: number): Promise<User> {
-    let rows = await services.db.accessAsync("select * from users where ID = ?", [id]);
+    let rows = await services.db.queryAsync("select * from users where ID = ?", [id]);
     if (rows.length == 0) {
         return Promise.resolve<User>(null);
     }
@@ -29,7 +29,7 @@ export async function getById(id: number): Promise<User> {
 }
 
 export async function getByEmail(emailHead: string, emailTail: string): Promise<User> {
-    let rows = await services.db.accessAsync("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail]);
+    let rows = await services.db.queryAsync("select * from users where EmailHead = ? and EmailTail = ?", [emailHead, emailTail]);
     if (rows.length == 0) {
         return Promise.resolve(null);
     }

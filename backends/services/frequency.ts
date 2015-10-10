@@ -13,9 +13,9 @@ export async function limit(key: string, seconds: number): Promise<void> {
     let value = await services.cache.getStringAsync(frequencyKey);
 
     if (value) {
-        return services.cache.ttlAsync(frequencyKey).then(reply=> {
-            return Promise.reject(new Error(`do it later after ${reply} seconds`));
-        });
+        let reply = await services.cache.ttlAsync(frequencyKey);
+
+        return Promise.reject(new Error(`do it later after ${reply} seconds`));
     }
 
     services.cache.setString(services.cacheKeyRule.getFrequency(key), key, seconds);
