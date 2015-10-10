@@ -8,9 +8,9 @@
 # echo 'Finished "git pull".'
 
 # install
-echo 'Starting "npm install"...'
-npm install
-echo 'Finished "npm install".'
+echo 'Starting "npm update"...'
+npm update
+echo 'Finished "npm update".'
 echo 'Starting "tsd update"...'
 tsd update -so
 echo 'Finished "tsd update".'
@@ -38,30 +38,31 @@ mocha publish/backends/tests
 echo 'Finished "test".'
 
 # gulp tasks
+export NODE_ENV=development
 echo 'Starting "css"...'
-NODE_ENV=production gulp css
+gulp css
 echo 'Finished "css".'
 
 echo 'Starting "js"...'
-NODE_ENV=production gulp js
+gulp js
 echo 'Finished "js".'
 
 echo 'Starting "rev"...'
-NODE_ENV=production gulp rev
+gulp rev
 echo 'Finished "rev".'
 
 echo 'Starting "html"...'
-NODE_ENV=production gulp html
+gulp html
 echo 'Finished "html".'
 
 echo 'Starting "doc"...'
-NODE_ENV=production gulp doc
+gulp doc
 echo 'Finished "doc".'
 
 echo 'Starting "dot"...'
-NODE_ENV=production gulp dot
+gulp dot
 echo 'Finished "dot".'
 
 echo 'Starting "icon".'
-NODE_ENV=production gulp icon
+gulp icon
 echo 'Finished "icon"...'

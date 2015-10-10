@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 

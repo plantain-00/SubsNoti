@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../../libs";
 import * as settings from "../../settings";
 
@@ -12,9 +14,9 @@ let documentOfCreate = {
     documentUrl: "/doc/api/Create a theme.html"
 };
 
-export function create(request: libs.Request, response: libs.Response) {
+export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
-    
+
     if (services.contentType.isInvalid(request)) {
         services.response.sendContentTypeError(response, documentUrl);
         return;
@@ -41,26 +43,21 @@ export function create(request: libs.Request, response: libs.Response) {
 
     let themeDetail = request.body.themeDetail;
 
-    services.user.getCurrent(request, documentUrl).then(user=> {
-        return services.db.beginTransactionAsync().then(connection=> {
-            return services.db.accessInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]).then(rows=> {
-                let themeId = rows.insertId;
+    try {
+        let user = await services.user.getCurrent(request, documentUrl);
+        let connection = await services.db.beginTransactionAsync();
+        let rows = await services.db.insertInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]);
+        let themeId = rows.insertId;
 
-                return services.db.accessInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]).then(rows=> {
-                    return services.db.accessInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]).then(rows=> {
-                        return services.db.endTransactionAsync(connection).then(() => {
-                            services.logger.log(documentOfCreate.url, request);
-                            services.response.sendCreatedOrModified(response, documentUrl);
-                        });
-                    });
-                });
-            });
-        }, error=> {
-            services.response.sendDBAccessError(response, error.message, documentUrl);
-        });
-    }, error=> {
-        services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    });
+        await services.db.insertInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]);
+        await services.db.insertInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]);
+        await services.db.endTransactionAsync(connection);
+        services.logger.log(documentOfCreate.url, request);
+        services.response.sendCreatedOrModified(response, documentUrl);
+    }
+    catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
 export function route(app: libs.Application) {

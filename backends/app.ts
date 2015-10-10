@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "./libs";
 import * as settings from "./settings";
 
@@ -21,10 +23,7 @@ router.route(app);
 
 services.mongo.connect();
 
-services.cache.client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
-services.cache.client.on("error", error=> {
-    console.log(error);
-});
+services.cache.connect();
 
 app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
     console.log(`Server has started at port: ${settings.config.website.port}`);

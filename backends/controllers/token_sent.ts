@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -12,7 +14,7 @@ let documentOfCreate = {
     documentUrl: "/doc/api/Send token via email.html"
 };
 
-export function create(request: libs.Request, response: libs.Response) {
+export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
     if (services.contentType.isInvalid(request)) {
@@ -32,40 +34,32 @@ export function create(request: libs.Request, response: libs.Response) {
     emailHead = emailHead.toLowerCase();
     emailTail = emailTail.toLowerCase();
 
-    services.user.getByEmail(emailHead, emailTail).then(user=> {
+    try {
+        let user = await services.user.getByEmail(emailHead, emailTail);
         if (user) {
-            return sendEmail(user.id, user.salt, services.user.getEmail(user)).then(() => {
-                services.response.sendCreatedOrModified(response, documentUrl);
-            }, error=> {
-                services.response.sendEmailServiceError(response, error.message, documentUrl);
-            });
+            await sendEmail(user.id, user.salt, services.user.getEmail(user));
+            services.response.sendCreatedOrModified(response, documentUrl);
         } else {
             let salt = libs.generateUuid();
-            services.db.accessAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]).then(rows=> {
-                let id = rows.insertId;
-
-                return sendEmail(id, salt, `${emailHead}@${emailTail}`).then(() => {
-                    services.logger.log(documentOfCreate.url, request);
-                    services.response.sendCreatedOrModified(response, documentUrl);
-                }, error=> {
-                    services.response.sendEmailServiceError(response, error.message, documentUrl);
-                });
-            }, error=> {
-                services.response.sendDBAccessError(response, error.message, documentUrl);
-            });
+            let rows = await services.db.insertAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]);
+            let id = rows.insertId;
+            await sendEmail(id, salt, `${emailHead}@${emailTail}`);
+            services.logger.log(documentOfCreate.url, request);
+            services.response.sendCreatedOrModified(response, documentUrl);
         }
-    }, error=> {
-        services.response.sendDBAccessError(response, error.message, documentUrl);
-    });
+    }
+    catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
-function sendEmail(userId: number, salt: string, email: string): libs.Promise<{}> {
-    return services.frequency.limit(email, 60 * 60).then(() => {
-        let token = services.authenticationCredential.create(userId, salt);
-        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
+async function sendEmail(userId: number, salt: string, email: string): Promise<void> {
+    await services.frequency.limit(email, 60 * 60);
 
-        return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
-    });
+    let token = services.authenticationCredential.create(userId, salt);
+    let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
+
+    return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 }
 
 export function route(app: libs.Application) {

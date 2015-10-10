@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -7,7 +9,7 @@ import * as interfaces from "../../common/interfaces";
 import * as services from "../services";
 
 services.mongo.connect();
-services.mongo.Logs.find({}, (error, logs) => {
+services.mongo.Log.find({}, (error, logs) => {
     if (error) {
         console.log(error);
         return;

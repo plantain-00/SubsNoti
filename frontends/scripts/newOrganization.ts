@@ -51,5 +51,8 @@ let vueBody = new Vue({
 
 $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
+        if (error) {
+            console.log(error);
+        }
     });
 });

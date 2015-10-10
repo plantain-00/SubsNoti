@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -24,6 +26,6 @@ export function log(url: string, request: libs.Request) {
         data.content.query = request.query;
     }
 
-    let log = new services.mongo.Logs(data);
+    let log = new services.mongo.Log(data);
     log.save();
 }

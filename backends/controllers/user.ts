@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -12,10 +14,11 @@ let documentOfGet = {
     documentUrl: "/doc/api/Get current user.html"
 };
 
-export function get(request: libs.Request, response: libs.Response): void {
+export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
-    services.user.getCurrent(request, documentUrl).then(user=> {
+    try {
+        let user = await services.user.getCurrent(request, documentUrl);
         let result: interfaces.CurrentUserResponse = {
             id: user.id,
             email: services.user.getEmail(user),
@@ -24,9 +27,10 @@ export function get(request: libs.Request, response: libs.Response): void {
         };
 
         services.response.sendOK(response, documentUrl, result);
-    }, error=> {
-        services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    });
+    }
+    catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
 export function route(app: libs.Application) {

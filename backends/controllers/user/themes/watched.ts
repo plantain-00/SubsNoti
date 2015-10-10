@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../../../libs";
 import * as settings from "../../../settings";
 
@@ -12,7 +14,7 @@ let documentOfWatch = {
     documentUrl: "/doc/api/Watch a theme.html"
 };
 
-export function watch(request: libs.Request, response: libs.Response) {
+export async function watch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfWatch.documentUrl;
 
     let themeId = request.params.theme_id;
@@ -22,29 +24,26 @@ export function watch(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.user.getCurrent(request, documentUrl).then(user=> {
-        return services.watched.canWatch(user.id, themeId).then(can=> {
-            if (!can) {
-                services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+    try {
+        let user = await services.user.getCurrent(request, documentUrl);
+        let can = await services.watched.canWatch(user.id, themeId);
+        if (!can) {
+            services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+        }
+        else {
+            let rows = await services.db.queryAsync("select * from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]);
+            if (rows.length > 0) {
+                services.response.sendCreatedOrModified(response, documentUrl);
             }
             else {
-                return services.db.accessAsync("select * from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
-                    if (rows.length > 0) {
-                        services.response.sendCreatedOrModified(response, documentUrl);
-                    }
-                    else {
-                        return services.db.accessAsync("insert into theme_watchers (ThemeID,WatcherID) values(?,?)", [themeId, user.id]).then(rows=> {
-                            services.response.sendCreatedOrModified(response, documentUrl);
-                        });
-                    }
-                });
+                await services.db.queryAsync("insert into theme_watchers (ThemeID,WatcherID) values(?,?)", [themeId, user.id]);
+                services.response.sendCreatedOrModified(response, documentUrl);
             }
-        }, error=> {
-            services.response.sendDBAccessError(response, error.message, documentUrl);
-        })
-    }, error=> {
-        services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    });
+        }
+    }
+    catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
 let documentOfUnwatch = {
@@ -53,7 +52,7 @@ let documentOfUnwatch = {
     documentUrl: "/doc/api/Unwatch a theme.html"
 };
 
-export function unwatch(request: libs.Request, response: libs.Response) {
+export async function unwatch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUnwatch.documentUrl;
 
     let themeId = request.params.theme_id;
@@ -63,22 +62,20 @@ export function unwatch(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    services.user.getCurrent(request, documentUrl).then(user=> {
-        return services.watched.canWatch(user.id, themeId).then(can=> {
-            if (!can) {
-                services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
-            }
-            else {
-                return services.db.accessAsync("delete from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]).then(rows=> {
-                    services.response.sendDeleted(response, documentUrl);
-                });
-            }
-        }, error=> {
-            services.response.sendDBAccessError(response, error.message, documentUrl);
-        })
-    }, error=> {
-        services.response.sendUnauthorizedError(response, error.message, documentUrl);
-    });
+    try {
+        let user = await services.user.getCurrent(request, documentUrl);
+        let can = await services.watched.canWatch(user.id, themeId);
+        if (!can) {
+            services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+        }
+        else {
+            let rows = await services.db.queryAsync("delete from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]);
+            services.response.sendDeleted(response, documentUrl);
+        }
+    }
+    catch (error) {
+        services.response.sendError(response, documentUrl, error);
+    }
 }
 
 export function route(app: libs.Application) {

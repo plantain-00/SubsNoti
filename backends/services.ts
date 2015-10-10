@@ -1,3 +1,11 @@
+'use strict';
+
+import * as promise from "./services/promise";
+export {promise};
+
+import * as error from "./services/error";
+export {error};
+
 import * as email from "./services/email";
 export {email};
 

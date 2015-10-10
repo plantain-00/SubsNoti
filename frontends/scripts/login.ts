@@ -105,7 +105,8 @@ let vueBody = new Vue({
 $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
         if (error) {
-            return
+            console.log(error);
+            return;
         }
 
         alert("You are already logged in, will be redirect to home page now.");

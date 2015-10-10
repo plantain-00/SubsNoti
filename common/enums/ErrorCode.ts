@@ -7,5 +7,7 @@ export const enum ErrorCode {
     emailServiceError = 5,
     unauthorizedError = 6,
     wrongHttpMethod = 7,
-    alreadyExistError = 8
+    alreadyExistError = 8,
+    cacheAccessError = 9,
+    invalidData = 10
 }

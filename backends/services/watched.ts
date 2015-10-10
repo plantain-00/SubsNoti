@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -15,27 +17,24 @@ interface Watched {
 	}[]
 }
 
-export function getByThemeIds(themeIds: number[]): libs.Promise<Watched[]> {
+export async function getByThemeIds(themeIds: number[]): Promise<Watched[]> {
 	if (themeIds.length === 0) {
-		return libs.Promise.resolve([]);
+		return Promise.resolve([]);
 	}
 
-	return services.db.accessAsync("select theme_watchers.ThemeID,users.* from theme_watchers left join users on theme_watchers.WatcherID = users.ID where theme_watchers.ThemeID in (" + themeIds.join() + ")", []).then(rows=> {
-		return libs.Promise.resolve(getFromRows(rows));
-	});
+	let rows = await services.db.queryAsync("select theme_watchers.ThemeID,users.* from theme_watchers left join users on theme_watchers.WatcherID = users.ID where theme_watchers.ThemeID in (" + themeIds.join() + ")", []);
+	return Promise.resolve(getFromRows(rows));
 }
 
-export function canWatch(userId: number, themeId: number): libs.Promise<boolean> {
-	return services.db.accessAsync("select OrganizationID from themes where ID = ?", [themeId]).then(rows=> {
-		if (rows.length === 0) {
-			return libs.Promise.resolve<boolean>(false);
-		}
+export async function canWatch(userId: number, themeId: number): Promise<boolean> {
+	let rows = await services.db.queryAsync("select OrganizationID from themes where ID = ?", [themeId]);
+	if (rows.length === 0) {
+		return Promise.resolve<boolean>(false);
+	}
 
-		let organizationId = rows[0].OrganizationID;
-		return services.db.accessAsync("select * from organization_members where OrganizationID = ? and MemberID = ?", [organizationId, userId]).then(rows=> {
-			return libs.Promise.resolve<boolean>(rows.length > 0);
-		});
-	});
+	let organizationId = rows[0].OrganizationID;
+	rows = await services.db.queryAsync("select * from organization_members where OrganizationID = ? and MemberID = ?", [organizationId, userId]);
+	return Promise.resolve<boolean>(rows.length > 0);
 }
 
 function getFromRows(rows: any[]): Watched[] {

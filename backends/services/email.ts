@@ -1,3 +1,5 @@
+'use strict';
+
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -14,7 +16,7 @@ let transporter = libs.nodemailer.createTransport({
     }
 });
 
-function send(to: string, subject: string, html: string, next: (error: Error) => void) {
+function send(to: string, subject: string, html: string, next: (error: interfaces.E) => void) {
     let mailOptions = {
         from: settings.config.smtp.name,
         to: to,
@@ -22,8 +24,8 @@ function send(to: string, subject: string, html: string, next: (error: Error) =>
         html: html
     };
     transporter.sendMail(mailOptions, error=> {
-        next(error);
+        next(services.error.fromError(error, enums.ErrorCode.emailServiceError));
     });
 }
 
-export let sendAsync = libs.Promise.promisify(send);
+export let sendAsync = services.promise.promisify4<string, string, string, void>(send);
