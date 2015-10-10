@@ -59,8 +59,18 @@ export function connect() {
         salt: String,
         status: Number
     }));
+
+    Theme = libs.mongoose.model<ThemeDocument>('Theme', new libs.mongoose.Schema({
+        title: String,
+        detail: String,
+        status: Number,
+        organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
+        creator: { type: Schema.Types.ObjectId, ref: 'User' },
+        createTime: Date
+    }));
 }
 
 export let Log: libs.mongoose.Model<libs.mongoose.Document>;
 export let Organization: libs.mongoose.Model<OrganizationDocument>;
 export let User: libs.mongoose.Model<UserDocument>;
+export let Theme: libs.mongoose.Model<ThemeDocument>;
