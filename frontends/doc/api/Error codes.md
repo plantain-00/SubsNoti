@@ -11,3 +11,5 @@ code | description
 6 | unauthorized
 7 | wrong http method
 8 | already exist
+9 | cache access error
+10 | invalid data

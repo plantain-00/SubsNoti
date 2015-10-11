@@ -1,3 +1,6 @@
+rem clean
+call rd /q /s typings
+
 rem install
 echo 'Starting "npm update"...'
 call npm update

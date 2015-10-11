@@ -39,7 +39,8 @@ export async function create(request: libs.Request, response: libs.Response) {
         if (user) {
             await sendEmail(user.id, user.salt, services.user.getEmail(user));
             services.response.sendCreatedOrModified(response, documentUrl);
-        } else {
+        }
+        else {
             let salt = libs.generateUuid();
             let rows = await services.db.insertAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]);
             let id = rows.insertId;

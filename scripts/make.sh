@@ -7,6 +7,9 @@
 # git pull
 # echo 'Finished "git pull".'
 
+# clean
+rm -rf typings/
+
 # install
 echo 'Starting "npm update"...'
 npm update
