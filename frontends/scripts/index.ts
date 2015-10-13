@@ -4,7 +4,7 @@ import * as interfaces from "../../common/interfaces";
 declare let Vue;
 
 interface Organization {
-    id: number;
+    id: string;
     name: string;
 }
 
@@ -44,7 +44,7 @@ interface ThemesResponse extends interfaces.Response {
 
 interface VueBodyModel {
     organizationsCurrentUserIn: Organization[];
-    currentOrganizationId: number;
+    currentOrganizationId: string;
     themes: Theme[];
     newThemeTitle: string;
     newThemeDetail: string;
@@ -62,7 +62,7 @@ let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
     data: {
         organizationsCurrentUserIn: [],
-        currentOrganizationId: 0,
+        currentOrganizationId: "",
         themes: [],
         newThemeTitle: "",
         newThemeDetail: "",

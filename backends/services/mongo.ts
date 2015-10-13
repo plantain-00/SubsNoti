@@ -10,7 +10,7 @@ import * as services from "../services";
 
 import Schema = libs.mongoose.Schema;
 
-interface OrganizationDocument extends libs.mongoose.Document {
+export interface OrganizationDocument extends libs.mongoose.Document {
     name: string;
     status: enums.OrganizationStatus;
 
@@ -20,7 +20,7 @@ interface OrganizationDocument extends libs.mongoose.Document {
     themes: Array<ThemeDocument | libs.ObjectId[]>;
 }
 
-interface UserDocument extends libs.mongoose.Document {
+export interface UserDocument extends libs.mongoose.Document {
     email: string;
     name: string;
     salt: string;
@@ -34,7 +34,7 @@ interface UserDocument extends libs.mongoose.Document {
     createdThemes: Array<ThemeDocument | libs.ObjectId[]>;
 }
 
-interface ThemeDocument extends libs.mongoose.Document {
+export interface ThemeDocument extends libs.mongoose.Document {
     title: string;
     detail: string;
     status: enums.UserStatus;

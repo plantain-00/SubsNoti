@@ -18,12 +18,12 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let organizations = await services.organization.getByMemberId(user.id);
+        let userId = await services.user.authenticate(request);
+        let user = await services.mongo.User.findOne({ _id: userId }).populate('joinedOrganizations').select('joinedOrganizations').exec();
         let result = {
-            organizations: libs._.map(organizations, o => {
+            organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
                 return {
-                    id: o.id,
+                    id: o._id.toHexString(),
                     name: o.name
                 };
             })
