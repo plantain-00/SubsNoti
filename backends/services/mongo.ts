@@ -10,41 +10,41 @@ import * as services from "../services";
 
 import Schema = libs.mongoose.Schema;
 
-export interface OrganizationDocument extends libs.mongoose.Document {
+interface OrganizationDocument extends libs.mongoose.Document {
     name: string;
     status: enums.OrganizationStatus;
 
-    creator: UserDocument;
-    members: UserDocument[];
+    creator: UserDocument | libs.ObjectId;
+    members: Array<UserDocument | libs.ObjectId>;
 
-    themes: ThemeDocument[];
+    themes: Array<ThemeDocument | libs.ObjectId[]>;
 }
 
-export interface UserDocument extends libs.mongoose.Document {
+interface UserDocument extends libs.mongoose.Document {
     email: string;
     name: string;
     salt: string;
     status: enums.UserStatus;
 
-    joinedOrganizations: OrganizationDocument[];
-    createdOrganizations: OrganizationDocument[];
+    joinedOrganizations: Array<OrganizationDocument | libs.ObjectId[]>;
+    createdOrganizations: Array<OrganizationDocument | libs.ObjectId>;
 
-    ownedThemes: ThemeDocument[];
-    watchedThemes: ThemeDocument[];
-    createdThemes: ThemeDocument[];
+    ownedThemes: Array<ThemeDocument | libs.ObjectId>;
+    watchedThemes: Array<ThemeDocument | libs.ObjectId[]>;
+    createdThemes: Array<ThemeDocument | libs.ObjectId[]>;
 }
 
-export interface ThemeDocument extends libs.mongoose.Document {
+interface ThemeDocument extends libs.mongoose.Document {
     title: string;
     detail: string;
     status: enums.UserStatus;
     createTime: Date;
 
-    creator: UserDocument;
-    owners: UserDocument[];
-    watchers: UserDocument[];
+    creator: UserDocument | libs.ObjectId;
+    owners: Array<UserDocument | libs.ObjectId>;
+    watchers: Array<UserDocument | libs.ObjectId>;
 
-    organization: OrganizationDocument;
+    organization: OrganizationDocument | libs.ObjectId;
 }
 
 export function connect() {

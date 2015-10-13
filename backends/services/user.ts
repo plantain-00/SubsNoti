@@ -41,7 +41,7 @@ export async function getByEmail(emailHead: string, emailTail: string): Promise<
     return Promise.resolve(getFromRow(rows[0]));
 }
 
-export async function authenticate(request: libs.Request, documentUrl: string): Promise<libs.ObjectId> {
+export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
     let authenticationCredential = request.cookies[services.cookieKey.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.ErrorCode.unauthorizedError));
