@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function create(userId: number, salt: string): string {
+export function create(userId: string, salt: string): string {
     let milliseconds = new Date().getTime();
-    return `${libs.md5(salt + milliseconds + userId) }g${milliseconds.toString(16) }g${userId.toString(16) }`;
+    return `${libs.md5(salt + milliseconds + userId) }g${milliseconds.toString(16) }g${userId}`;
 }

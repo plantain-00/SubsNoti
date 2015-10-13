@@ -22,8 +22,7 @@ no
 
 key name | value type | required
 --- | --- | ---
-emailHead | string | true
-emailTail | string | true
+email | string | true
 name | string | false
 
 ### [Response Body](./Response.html)
