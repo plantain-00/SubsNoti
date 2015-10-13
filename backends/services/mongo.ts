@@ -11,10 +11,13 @@ import * as services from "../services";
 import Schema = libs.mongoose.Schema;
 
 export interface OrganizationDocument extends libs.mongoose.Document {
-    name: string,
-    status: enums.OrganizationStatus,
-    creator: UserDocument,
-    members: UserDocument[]
+    name: string;
+    status: enums.OrganizationStatus;
+
+    creator: UserDocument;
+    members: UserDocument[];
+
+    themes: ThemeDocument[];
 }
 
 export interface UserDocument extends libs.mongoose.Document {
@@ -22,15 +25,26 @@ export interface UserDocument extends libs.mongoose.Document {
     name: string;
     salt: string;
     status: enums.UserStatus;
+
+    joinedOrganizations: OrganizationDocument[];
+    createdOrganizations: OrganizationDocument[];
+
+    ownedThemes: ThemeDocument[];
+    watchedThemes: ThemeDocument[];
+    createdThemes: ThemeDocument[];
 }
 
 export interface ThemeDocument extends libs.mongoose.Document {
     title: string;
     detail: string;
     status: enums.UserStatus;
-    organization: OrganizationDocument;
-    creator: UserDocument;
     createTime: Date;
+
+    creator: UserDocument;
+    owners: UserDocument[];
+    watchers: UserDocument[];
+
+    organization: OrganizationDocument;
 }
 
 export function connect() {
@@ -49,24 +63,38 @@ export function connect() {
     Organization = libs.mongoose.model<OrganizationDocument>('Organization', new libs.mongoose.Schema({
         name: String,
         status: Number,
+
         creator: { type: Schema.Types.ObjectId, ref: 'User' },
-        members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+        members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+        themes: [{ type: Schema.Types.ObjectId, ref: 'Theme' }]
     }));
 
     User = libs.mongoose.model<UserDocument>('User', new libs.mongoose.Schema({
         email: String,
         name: String,
         salt: String,
-        status: Number
+        status: Number,
+
+        joinedOrganizations: [{ type: Schema.Types.ObjectId, ref: 'Organization' }],
+        createdOrganizations: [{ type: Schema.Types.ObjectId, ref: 'Organization' }],
+
+        ownedThemes: [{ type: Schema.Types.ObjectId, ref: 'Theme' }],
+        watchedThemes: [{ type: Schema.Types.ObjectId, ref: 'Theme' }],
+        createdThemes: [{ type: Schema.Types.ObjectId, ref: 'Theme' }]
     }));
 
     Theme = libs.mongoose.model<ThemeDocument>('Theme', new libs.mongoose.Schema({
         title: String,
         detail: String,
         status: Number,
-        organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
+        createTime: Date,
+
         creator: { type: Schema.Types.ObjectId, ref: 'User' },
-        createTime: Date
+        owners: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        watchers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+        organization: { type: Schema.Types.ObjectId, ref: 'Organization' }
     }));
 }
 

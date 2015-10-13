@@ -1,4 +1,4 @@
-# Get organizations
+# Get joined organizations
 
 ## Url
 
