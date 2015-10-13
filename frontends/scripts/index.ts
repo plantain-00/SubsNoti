@@ -29,7 +29,7 @@ interface Theme {
         email: string
     }[];
     watchers: {
-        id: number,
+        id: string,
         name: string,
         email: string
     }[];
@@ -48,7 +48,6 @@ interface VueBodyModel {
     themes: Theme[];
     newThemeTitle: string;
     newThemeDetail: string;
-    currentUserId: number;
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (number) => void;
@@ -67,7 +66,6 @@ let vueBody: VueBodyModel = new Vue({
         themes: [],
         newThemeTitle: "",
         newThemeDetail: "",
-        currentUserId: 0
     },
     methods: {
         getOrganizationsCurrentUserIn: function() {
@@ -102,7 +100,7 @@ let vueBody: VueBodyModel = new Vue({
                 success: (data: ThemesResponse) => {
                     if (data.isSuccess) {
                         for (let theme of data.themes) {
-                            theme.isWatching = theme.watchers.some(w=> w.id === self.currentUserId);
+                            theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
                         }
 
@@ -193,7 +191,6 @@ $(document).ready(function() {
             return;
         }
 
-        vueBody.currentUserId = data.id;
         vueBody.getOrganizationsCurrentUserIn();
         setInterval(vueBody.setThemeCreateTimeText, 10000);
     });

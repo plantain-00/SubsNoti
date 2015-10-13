@@ -59,6 +59,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 
 interface VueHeadModel {
     loginStatus: enums.LoginStatus;
+    currentUserId: string;
     currentUserName: string;
     canCreateOrganization: boolean;
 
@@ -70,6 +71,7 @@ export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
     data: {
         loginStatus: enums.LoginStatus.unknown,
+        currentUserId: "",
         currentUserName: "",
         canCreateOrganization: false
     },
@@ -94,6 +96,7 @@ export let vueHead: VueHeadModel = new Vue({
             getCurrentUser(data=> {
                 if (data.isSuccess) {
                     self.loginStatus = enums.LoginStatus.success;
+                    self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.canCreateOrganization = data.canCreateOrganization;
 

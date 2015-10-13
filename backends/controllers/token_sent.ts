@@ -56,7 +56,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 }
 
-async function sendEmail(userId: libs.mongoose.Types.ObjectId, salt: string, email: string): Promise<void> {
+async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Promise<void> {
     await services.frequency.limit(email, 60 * 60);
 
     let token = services.authenticationCredential.create(userId.toHexString(), salt);
