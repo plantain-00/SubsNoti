@@ -35,6 +35,14 @@ export let config: SettingsInterface = {
     },
     urls: {
         login: "/api/logged_in"
+    },
+    maxOrganizationNumberUserCanCreate: 3,
+    cookieKeys: {
+        authenticationCredential: "authenticationCredential"
+    },
+    cacheKeys: {
+        user: "user_",
+        frequency: "frequency_"
     }
 };
 

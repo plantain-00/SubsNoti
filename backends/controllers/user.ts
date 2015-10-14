@@ -18,13 +18,13 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).select('email name createdOrganizations').exec();
         let result: interfaces.CurrentUserResponse = {
             id: userId.toHexString(),
             email: user.email,
             name: user.name,
-            canCreateOrganization: user.createdOrganizations.length < services.organization.maxNumberUserCanCreate
+            canCreateOrganization: user.createdOrganizations.length < settings.config.maxOrganizationNumberUserCanCreate
         };
 
         services.response.sendOK(response, documentUrl, result);

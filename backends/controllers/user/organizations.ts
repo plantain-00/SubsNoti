@@ -35,7 +35,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
         let organization = await services.mongo.Organization.findOne({ name: organizationName }).exec();
         if (organization) {
             services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
@@ -43,7 +43,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         }
 
         let user = await services.mongo.User.findOne({ _id: userId }).select("createdOrganizations").exec();
-        if (user.createdOrganizations.length >= services.organization.maxNumberUserCanCreate) {
+        if (user.createdOrganizations.length >= settings.config.maxOrganizationNumberUserCanCreate) {
             services.response.sendAlreadyExistError(response, "you already created " + user.createdOrganizations.length + " organizations.", documentUrl);
             return;
         }

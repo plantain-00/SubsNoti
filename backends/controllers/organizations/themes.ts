@@ -21,7 +21,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     let organizationId = new libs.ObjectId(organizationStringId);
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
         if (!libs._.include(user.joinedOrganizations, organizationId)) {

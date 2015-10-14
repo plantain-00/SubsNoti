@@ -27,7 +27,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
     let themeId = new libs.ObjectId(themeStringId);
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
 
         let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
         if (!theme) {
@@ -72,7 +72,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     let themeId = new libs.ObjectId(themeStringId);
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
 
         let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
         if (!theme) {

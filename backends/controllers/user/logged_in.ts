@@ -22,7 +22,7 @@ export function get(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    response.cookie(services.cookieKey.authenticationCredential, authenticationCredential, {
+    response.cookie(settings.config.cookieKeys.authenticationCredential, authenticationCredential, {
         expires: libs.moment().clone().add(1, "months").toDate(),
         httpOnly: true
     });
@@ -39,7 +39,7 @@ let documentOfDelete = {
 export function deleteThis(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfDelete.documentUrl;
 
-    response.clearCookie(services.cookieKey.authenticationCredential);
+    response.clearCookie(settings.config.cookieKeys.authenticationCredential);
 
     services.response.sendDeleted(response, documentUrl);
 }

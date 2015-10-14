@@ -30,6 +30,14 @@ interface SettingsInterface {
     },
     urls: {
         login: string
+    },
+    maxOrganizationNumberUserCanCreate: number,
+    cookieKeys: {
+        authenticationCredential: string
+    },
+    cacheKeys: {
+        user: string,
+        frequency: string
     }
 }
 

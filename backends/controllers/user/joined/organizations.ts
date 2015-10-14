@@ -18,7 +18,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let userId = await services.user.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).populate('joinedOrganizations').select('joinedOrganizations').exec();
         let result = {
             organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
