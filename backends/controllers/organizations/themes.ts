@@ -17,46 +17,53 @@ let documentOfGet = {
 export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
-    let organizationId = request.params.organization_id;
+    let organizationId: string = request.params.organization_id;
+    let organizationObjectId = new libs.ObjectId(organizationId);
 
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let organizations = await services.organization.getByMemberId(user.id);
-        if (libs._.every(organizations, o => o.id != organizationId)) {
-            services.response.sendUnauthorizedError(response, "can not access the organization", documentUrl);
+        let userId = await services.user.authenticate(request);
+        let user = await services.mongo.User.findOne({ _id: userId }).exec();
+
+        if (!libs._.include(user.joinedOrganizations, organizationObjectId)) {
+            services.response.sendUnauthorizedError(response, "you can not access the organization", documentUrl);
             return;
         }
 
-        let themes = await services.theme.getInOrganizationId(organizationId);
+        let themes = await services.mongo.Theme.find({ organization: organizationObjectId }).populate("creator owners watchers").exec();
 
-        let themeIds = libs._.map(themes, t=> t.id);
-        let ownerships = await services.ownership.getByThemeIds(themeIds);
-        let watcheds = await services.watched.getByThemeIds(themeIds);
         let result = {
             themes: []
         };
 
-        libs._.each(themes, t => {
+        libs._.each(themes, (t: services.mongo.ThemeDocument) => {
+            let creator = <services.mongo.UserDocument>t.creator;
+
             let theme = {
-                id: t.id,
+                id: t._id.toHexString(),
                 title: t.title,
                 detail: t.detail,
-                organizationId: t.organizationId,
+                organizationId: organizationId,
                 createTime: t.createTime.getTime(),
-                creator: t.creator,
-                owners: [],
-                watchers: []
+                creator: {
+                    id: creator._id,
+                    name: creator.name,
+                    email: creator.email
+                },
+                owners: libs._.map(<services.mongo.UserDocument[]>t.owners, o=> {
+                    return {
+                        id: o._id,
+                        name: o.name,
+                        email: o.email
+                    }
+                }),
+                watchers: libs._.map(<services.mongo.UserDocument[]>t.watchers, w=> {
+                    return {
+                        id: w._id,
+                        name: w.name,
+                        email: w.email
+                    }
+                })
             };
-
-            let ownership = libs._.find(ownerships, o=> o.themeId == theme.id);
-            if (ownership) {
-                theme.owners = ownership.owners;
-            }
-
-            let watched = libs._.find(watcheds, w=> w.themeId == theme.id);
-            if (watched) {
-                theme.watchers = watched.watchers;
-            }
 
             result.themes.push(theme);
         })

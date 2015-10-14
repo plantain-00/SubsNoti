@@ -12,27 +12,21 @@ interface OrganizationsResponse extends interfaces.Response {
     organizations: Organization[]
 }
 
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
 interface Theme {
-    id: number;
+    id: string;
     title: string;
     detail: string;
-    organizationId: number;
+    organizationId: string;
     createTime: number;
-    creator: {
-        id: number,
-        name: string,
-        email: string
-    };
-    owners: {
-        id: number,
-        name: string,
-        email: string
-    }[];
-    watchers: {
-        id: string,
-        name: string,
-        email: string
-    }[];
+    creator: User;
+    owners: User[];
+    watchers: User[];
 
     createTimeText: string;
     isWatching: boolean;
@@ -50,12 +44,12 @@ interface VueBodyModel {
     newThemeDetail: string;
 
     getOrganizationsCurrentUserIn: () => void;
-    fetchThemes: (number) => void;
-    clickOrganization: (any) => void;
+    fetchThemes: (string) => void;
+    clickOrganization: (Organization) => void;
     createTheme: () => void;
     setThemeCreateTimeText: () => void;
-    watch: (any) => void;
-    unwatch: (any) => void;
+    watch: (Theme) => void;
+    unwatch: (Theme) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -90,7 +84,7 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        fetchThemes: function(organizationId: number) {
+        fetchThemes: function(organizationId: string) {
             let self: VueBodyModel = this;
 
             $.ajax({
@@ -112,16 +106,14 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        clickOrganization: function(item) {
+        clickOrganization: function(organization: Organization) {
             let self: VueBodyModel = this;
 
-            let organizationId = item.$data.id;
-
-            if (self.currentOrganizationId !== organizationId) {
-                self.fetchThemes(organizationId);
+            if (self.currentOrganizationId !== organization.id) {
+                self.fetchThemes(organization.id);
             }
 
-            self.currentOrganizationId = item.$data.id;
+            self.currentOrganizationId = organization.id;
         },
         createTheme: function() {
             let self: VueBodyModel = this;
@@ -147,11 +139,10 @@ let vueBody: VueBodyModel = new Vue({
                 theme.createTimeText = moment(theme.createTime).fromNow();
             }
         },
-        watch: function(item) {
+        watch: function(theme: Theme) {
             let self: VueBodyModel = this;
-            let themeId = item.$data.id;
 
-            $.post("/api/user/themes/" + themeId + "/watched", {}, (data: interfaces.Response) => {
+            $.post("/api/user/themes/" + theme.id + "/watched", {}, (data: interfaces.Response) => {
                 if (data.isSuccess) {
                     self.fetchThemes(self.currentOrganizationId);
                     alert("success");
@@ -161,12 +152,11 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        unwatch: function(item) {
+        unwatch: function(theme: Theme) {
             let self: VueBodyModel = this;
-            let themeId = item.$data.id;
 
             $.ajax({
-                url: "/api/user/themes/" + themeId + "/watched",
+                url: "/api/user/themes/" + theme.id + "/watched",
                 data: {},
                 cache: false,
                 type: "delete",
