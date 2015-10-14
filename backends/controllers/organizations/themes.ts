@@ -17,19 +17,19 @@ let documentOfGet = {
 export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
-    let organizationId: string = request.params.organization_id;
-    let organizationObjectId = new libs.ObjectId(organizationId);
+    let organizationStringId: string = request.params.organization_id;
+    let organizationId = new libs.ObjectId(organizationStringId);
 
     try {
         let userId = await services.user.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!libs._.include(user.joinedOrganizations, organizationObjectId)) {
+        if (!libs._.include(user.joinedOrganizations, organizationId)) {
             services.response.sendUnauthorizedError(response, "you can not access the organization", documentUrl);
             return;
         }
 
-        let themes = await services.mongo.Theme.find({ organization: organizationObjectId }).populate("creator owners watchers").exec();
+        let themes = await services.mongo.Theme.find({ organization: organizationId }).populate("creator owners watchers").exec();
 
         let result = {
             themes: []
@@ -42,7 +42,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 id: t._id.toHexString(),
                 title: t.title,
                 detail: t.detail,
-                organizationId: organizationId,
+                organizationId: organizationStringId,
                 createTime: t.createTime.getTime(),
                 creator: {
                     id: creator._id,

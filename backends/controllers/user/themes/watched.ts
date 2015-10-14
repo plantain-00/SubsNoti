@@ -17,29 +17,36 @@ let documentOfWatch = {
 export async function watch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfWatch.documentUrl;
 
-    let themeId = request.params.theme_id;
+    let themeStringId: string = request.params.theme_id;
 
-    if (!themeId) {
+    if (!themeStringId) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
+    let themeId = new libs.ObjectId(themeStringId);
+
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let can = await services.watched.canWatch(user.id, themeId);
-        if (!can) {
+        let userId = await services.user.authenticate(request);
+
+        let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
+        if (!theme) {
+            services.response.sendInvalidParameterError(response, documentUrl);
+            return;
+        }
+        let organization = <services.mongo.OrganizationDocument>theme.organization;
+        if (!libs._.include(organization.members, userId)) {
             services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+            return;
         }
-        else {
-            let rows = await services.db.queryAsync("select * from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]);
-            if (rows.length > 0) {
-                services.response.sendCreatedOrModified(response, documentUrl);
-            }
-            else {
-                await services.db.queryAsync("insert into theme_watchers (ThemeID,WatcherID) values(?,?)", [themeId, user.id]);
-                services.response.sendCreatedOrModified(response, documentUrl);
-            }
+
+        if (!libs._.include(theme.watchers, userId)) {
+            let user = await services.mongo.User.findOne({ _id: userId }).exec();
+            user.watchedThemes.push(themeId);
+            theme.watchers.push(userId);
         }
+
+        services.response.sendCreatedOrModified(response, documentUrl);
     }
     catch (error) {
         services.response.sendError(response, documentUrl, error);
@@ -55,23 +62,37 @@ let documentOfUnwatch = {
 export async function unwatch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUnwatch.documentUrl;
 
-    let themeId = request.params.theme_id;
+    let themeStringId: string = request.params.theme_id;
 
-    if (!themeId) {
+    if (!themeStringId) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
+    let themeId = new libs.ObjectId(themeStringId);
+
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let can = await services.watched.canWatch(user.id, themeId);
-        if (!can) {
+        let userId = await services.user.authenticate(request);
+
+        let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
+        if (!theme) {
+            services.response.sendInvalidParameterError(response, documentUrl);
+            return;
+        }
+        let organization = <services.mongo.OrganizationDocument>theme.organization;
+        if (!libs._.include(organization.members, userId)) {
             services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+            return;
         }
-        else {
-            let rows = await services.db.queryAsync("delete from theme_watchers where ThemeID = ? and WatcherID = ?", [themeId, user.id]);
-            services.response.sendDeleted(response, documentUrl);
+
+        if (libs._.include(theme.watchers, userId)) {
+            let user = await services.mongo.User.findOne({ _id: userId }).exec();
+            user.watchedThemes["pull"](themeId);
+            theme.watchers["pull"](userId);
         }
+
+        services.response.sendDeleted(response, documentUrl);
+
     }
     catch (error) {
         services.response.sendError(response, documentUrl, error);

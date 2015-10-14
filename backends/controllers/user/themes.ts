@@ -22,14 +22,14 @@ export async function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    let organizationId: string = request.body.organizationId;
+    let organizationStringId: string = request.body.organizationId;
 
-    if (!organizationId) {
+    if (!organizationStringId) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
-    let organizationObjectId = new libs.ObjectId(organizationId);
+    let organizationId = new libs.ObjectId(organizationStringId);
 
     let themeTitle = request.body.themeTitle;
     if (!themeTitle) {
@@ -48,13 +48,13 @@ export async function create(request: libs.Request, response: libs.Response) {
     try {
         let userId = await services.user.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
-        if (!libs._.include(user.joinedOrganizations, organizationObjectId)) {
+        if (!libs._.include(user.joinedOrganizations, organizationId)) {
             services.response.sendUnauthorizedError(response, "your are creating a theme for an organization that you are not in", documentUrl);
             return;
         }
 
 
-        let organization = await services.mongo.Organization.findOne({ _id: organizationObjectId }).exec();
+        let organization = await services.mongo.Organization.findOne({ _id: organizationId }).exec();
 
         let theme = await services.mongo.Theme.create({
             title: themeTitle,
@@ -64,7 +64,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             creator: userId,
             owners: [userId],
             watchers: [userId],
-            organization: organizationObjectId
+            organization: organizationId
         });
         user.createdThemes.push(theme._id);
         user.ownedThemes.push(theme._id);
