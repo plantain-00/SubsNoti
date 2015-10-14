@@ -38,7 +38,7 @@ export let config: SettingsInterface = {
     },
     maxOrganizationNumberUserCanCreate: 3,
     cookieKeys: {
-        authenticationCredential: "authenticationCredential"
+        authenticationCredential: "authentication_credential"
     },
     cacheKeys: {
         user: "user_",

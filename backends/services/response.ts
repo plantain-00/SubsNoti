@@ -33,6 +33,8 @@ export function sendError(response: libs.Response, documentUrl: string, error: i
         case enums.ErrorCode.unauthorizedError:
             send(response, error.message, error.code, enums.StatusCode.unauthorized, documentUrl);
             break;
+        default:
+            send(response, error.message + error.stack, enums.ErrorCode.unknown, enums.StatusCode.internalServerError, documentUrl);
     }
 }
 

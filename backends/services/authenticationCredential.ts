@@ -45,7 +45,7 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
     }
 
     if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
-        services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, JSON.stringify(user), 8 * 60 * 60);
+        services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return Promise.resolve(id);
     } else {

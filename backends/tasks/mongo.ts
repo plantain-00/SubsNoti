@@ -18,3 +18,12 @@ services.mongo.User.find({}, (error, users) => {
 
     console.log(users);
 });
+
+services.mongo.Organization.find({}, (error, organizations) => {
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    console.log(organizations);
+});

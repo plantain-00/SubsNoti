@@ -9,5 +9,6 @@ export const enum ErrorCode {
     wrongHttpMethod = 7,
     alreadyExistError = 8,
     cacheAccessError = 9,
-    invalidData = 10
+    invalidData = 10,
+    unknown = 11
 }
