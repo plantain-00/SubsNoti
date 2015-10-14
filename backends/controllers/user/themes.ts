@@ -22,7 +22,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    let organizationId = request.body.organizationId;
+    let organizationId: string = request.body.organizationId;
 
     if (!organizationId) {
         services.response.sendParameterMissedError(response, documentUrl);
@@ -44,14 +44,32 @@ export async function create(request: libs.Request, response: libs.Response) {
     let themeDetail = request.body.themeDetail;
 
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let connection = await services.db.beginTransactionAsync();
-        let rows = await services.db.insertInTransactionAsync(connection, "insert into themes (Title,Detail,OrganizationID,Status,CreatorID,CreateTime) values (?,?,?,?,?,now())", [themeTitle, themeDetail, organizationId, enums.ThemeStatus.normal, user.id]);
-        let themeId = rows.insertId;
+        let userId = await services.user.authenticate(request);
+        let user = await services.mongo.User.findOne({ _id: userId }).exec();
+        if (-1 === libs._.findIndex(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationId)) {
+            services.response.sendUnauthorizedError(response, "your are creating a theme for an organization that you are not in", documentUrl);
+            return;
+        }
 
-        await services.db.insertInTransactionAsync(connection, "insert into theme_owners (ThemeID,OwnerID) values (?,?)", [themeId, user.id]);
-        await services.db.insertInTransactionAsync(connection, "insert into theme_watchers (ThemeID,WatcherID) values (?,?)", [themeId, user.id]);
-        await services.db.endTransactionAsync(connection);
+        let organizationObjectId = new libs.ObjectId(organizationId);
+        let organization = await services.mongo.Organization.findOne({ _id: organizationObjectId }).exec();
+
+        let theme = await services.mongo.Theme.create({
+            title: themeTitle,
+            detail: themeDetail,
+            status: enums.UserStatus.normal,
+            createTime: new Date(),
+            creator: userId,
+            owners: [userId],
+            watchers: [userId],
+            organization: organizationObjectId
+        });
+        user.createdThemes.push(theme._id);
+        user.ownedThemes.push(theme._id);
+        user.watchedThemes.push(theme._id);
+        organization.themes.push(theme._id);
+        user.save();
+
         services.logger.log(documentOfCreate.url, request);
         services.response.sendCreatedOrModified(response, documentUrl);
     }

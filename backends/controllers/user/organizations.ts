@@ -56,6 +56,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         });
 
         user.createdOrganizations.push(organization._id);
+        user.joinedOrganizations.push(organization._id);
         user.save();
 
         services.logger.log(documentOfCreate.url, request);

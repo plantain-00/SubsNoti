@@ -17,7 +17,7 @@ export interface OrganizationDocument extends libs.mongoose.Document {
     creator: UserDocument | libs.ObjectId;
     members: Array<UserDocument | libs.ObjectId>;
 
-    themes: Array<ThemeDocument | libs.ObjectId[]>;
+    themes: Array<ThemeDocument | libs.ObjectId>;
 }
 
 export interface UserDocument extends libs.mongoose.Document {
@@ -26,12 +26,12 @@ export interface UserDocument extends libs.mongoose.Document {
     salt: string;
     status: enums.UserStatus;
 
-    joinedOrganizations: Array<OrganizationDocument | libs.ObjectId[]>;
+    joinedOrganizations: Array<OrganizationDocument | libs.ObjectId>;
     createdOrganizations: Array<OrganizationDocument | libs.ObjectId>;
 
     ownedThemes: Array<ThemeDocument | libs.ObjectId>;
-    watchedThemes: Array<ThemeDocument | libs.ObjectId[]>;
-    createdThemes: Array<ThemeDocument | libs.ObjectId[]>;
+    watchedThemes: Array<ThemeDocument | libs.ObjectId>;
+    createdThemes: Array<ThemeDocument | libs.ObjectId>;
 }
 
 export interface ThemeDocument extends libs.mongoose.Document {
