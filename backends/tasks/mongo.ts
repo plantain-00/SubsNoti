@@ -10,6 +10,10 @@ import * as services from "../services";
 
 services.mongo.connect();
 
+//services.mongo.Organization.remove({}).exec();
+//services.mongo.Theme.remove({}).exec();
+//services.mongo.User.remove({}).exec();
+
 services.mongo.User.find({}, (error, users) => {
     if (error) {
         console.log(error);
@@ -26,4 +30,13 @@ services.mongo.Organization.find({}, (error, organizations) => {
     }
 
     console.log(organizations);
+});
+
+services.mongo.Theme.find({}, (error, themes) => {
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    console.log(themes);
 });

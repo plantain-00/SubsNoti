@@ -24,7 +24,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!libs._.include(user.joinedOrganizations, organizationId)) {
+        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationStringId)) {
             services.response.sendUnauthorizedError(response, "you can not access the organization", documentUrl);
             return;
         }

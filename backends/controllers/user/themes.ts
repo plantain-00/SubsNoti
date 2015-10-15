@@ -48,7 +48,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     try {
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
-        if (!libs._.include(user.joinedOrganizations, organizationId)) {
+        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => organizationStringId)) {
             services.response.sendUnauthorizedError(response, "your are creating a theme for an organization that you are not in", documentUrl);
             return;
         }
@@ -71,6 +71,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         user.watchedThemes.push(theme._id);
         organization.themes.push(theme._id);
         user.save();
+        organization.save();
 
         services.logger.log(documentOfCreate.url, request);
         services.response.sendCreatedOrModified(response, documentUrl);

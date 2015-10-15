@@ -35,15 +35,17 @@ export async function watch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.include(organization.members, userId)) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
             services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
             return;
         }
 
-        if (!libs._.include(theme.watchers, userId)) {
+        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes.push(themeId);
             theme.watchers.push(userId);
+            user.save();
+            theme.save();
         }
 
         services.response.sendCreatedOrModified(response, documentUrl);
@@ -80,15 +82,17 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.include(organization.members, userId)) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
             services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
             return;
         }
 
-        if (libs._.include(theme.watchers, userId)) {
+        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes["pull"](themeId);
             theme.watchers["pull"](userId);
+            user.save();
+            theme.save();
         }
 
         services.response.sendDeleted(response, documentUrl);
