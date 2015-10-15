@@ -1,5 +1,5 @@
 export interface CurrentUserResponse {
-    id: number;
+    id: string;
     email: string;
     name: string;
     canCreateOrganization: boolean;

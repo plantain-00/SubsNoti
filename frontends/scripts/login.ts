@@ -85,8 +85,7 @@ let vueBody = new Vue({
             self.isSending = true;
             self.loginText = "is sending email now...";
             $.post("/api/token_sent", {
-                emailHead: self.emailHead,
-                emailTail: self.emailTail,
+                email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name
             }, function(data: interfaces.Response) {
                 self.isSending = false;

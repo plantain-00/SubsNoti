@@ -24,7 +24,7 @@ no
 
 key name | value type
 --- | ---
-id | number
+id | string
 email | string
 name | string
 canCreateOrganization | boolean

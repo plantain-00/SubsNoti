@@ -8,10 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export function getAuthenticationCredential(authenticationCredential: string): string {
-    return "user_" + authenticationCredential;
-}
-
-export function getFrequency(key: string): string {
-    return "frequency_" + key;
-}
+let salt = libs.generateUuid();
+console.log(salt);
+let credential = services.authenticationCredential.create('123', salt);
+console.log(credential);

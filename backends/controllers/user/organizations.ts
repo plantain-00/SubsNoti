@@ -35,25 +35,30 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     try {
-        let user = await services.user.getCurrent(request, documentUrl);
-        let exists = await services.organization.existsByName(organizationName);
-        if (exists) {
+        let userId = await services.authenticationCredential.authenticate(request);
+        let organization = await services.mongo.Organization.findOne({ name: organizationName }).exec();
+        if (organization) {
             services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
             return;
         }
 
-        let organizationIds = await services.organization.getByCreatorId(user.id);
-        if (organizationIds.length >= services.organization.maxNumberUserCanCreate) {
-            services.response.sendAlreadyExistError(response, "you already created " + organizationIds.length + " organizations.", documentUrl);
+        let user = await services.mongo.User.findOne({ _id: userId }).select("createdOrganizations joinedOrganizations").exec();
+        if (user.createdOrganizations.length >= settings.config.maxOrganizationNumberUserCanCreate) {
+            services.response.sendAlreadyExistError(response, "you already created " + user.createdOrganizations.length + " organizations.", documentUrl);
             return;
         }
 
-        let connection = await services.db.beginTransactionAsync();
-        let rows = await services.db.insertInTransactionAsync(connection, "insert into organizations (Name,Status,CreatorID) values (?,?,?)", [organizationName, enums.OrganizationStatus.normal, user.id]);
-        let organizationId = rows.insertId;
+        organization = await services.mongo.Organization.create({
+            name: organizationName,
+            status: enums.OrganizationStatus.normal,
+            creator: userId,
+            members: [userId]
+        });
 
-        await services.db.insertInTransactionAsync(connection, "insert into organization_members (OrganizationID,MemberID,IsAdministratorOf) values (?,?,?)", [organizationId, user.id, true]);
-        await services.db.endTransactionAsync(connection);
+        user.createdOrganizations.push(organization._id);
+        user.joinedOrganizations.push(organization._id);
+        user.save();
+
         services.logger.log(documentOfCreate.url, request);
         services.response.sendCreatedOrModified(response, documentUrl);
     }

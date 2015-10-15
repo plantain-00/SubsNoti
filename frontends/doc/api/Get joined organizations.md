@@ -1,4 +1,4 @@
-# Get organizations
+# Get joined organizations
 
 ## Url
 
@@ -28,5 +28,5 @@ organizations | [Organization](#organization)[]
 
 key name | value type
 --- | ---
-id | number
+id | string
 name | string

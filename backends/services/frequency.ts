@@ -9,7 +9,7 @@ import * as interfaces from "../../common/interfaces";
 import * as services from "../services";
 
 export async function limit(key: string, seconds: number): Promise<void> {
-    let frequencyKey = services.cacheKeyRule.getFrequency(key);
+    let frequencyKey = settings.config.cacheKeys.frequency + key;
     let value = await services.cache.getStringAsync(frequencyKey);
 
     if (value) {
@@ -18,6 +18,6 @@ export async function limit(key: string, seconds: number): Promise<void> {
         return Promise.reject(new Error(`do it later after ${reply} seconds`));
     }
 
-    services.cache.setString(services.cacheKeyRule.getFrequency(key), key, seconds);
+    services.cache.setString(settings.config.cacheKeys.frequency + key, key, seconds);
     return Promise.resolve();
 }

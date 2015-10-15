@@ -28,10 +28,10 @@ themes | [Theme](#theme)[]
 
 key name | value type
 --- | ---
-id | number
+id | string
 title | string
 detail | string
-organizationId | number
+organizationId | string
 createTime | number
 creator | [User](#user)
 owners | [User](#user)[]
@@ -41,6 +41,6 @@ watchers | [User](#user)[]
 
 key name | value type
 --- | ---
-id | number
+id | string
 name | string
 email | string

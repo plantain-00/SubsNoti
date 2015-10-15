@@ -45,6 +45,9 @@ export {fs};
 import * as mongoose from 'mongoose';
 export {mongoose};
 
+import ObjectId = mongoose.Types.ObjectId
+export {ObjectId};
+
 import Request = express.Request;
 export {Request};
 

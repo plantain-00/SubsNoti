@@ -8,9 +8,9 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-describe('create', ()=> {
+describe('create', () => {
     it('should work', () => {
         let salt = libs.generateUuid();
-        services.authenticationCredential.create(123, salt);
+        services.authenticationCredential.create('123', salt);
     });
 });

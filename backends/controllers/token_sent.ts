@@ -22,28 +22,31 @@ export async function create(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    let emailHead: string = request.body.emailHead;
-    let emailTail: string = request.body.emailTail;
+    let email: string = request.body.email;
     let name = request.body.name;
 
-    if (!emailHead || !emailTail) {
+    if (!email) {
         services.response.sendParameterMissedError(response, documentUrl);
         return;
     }
 
-    emailHead = emailHead.toLowerCase();
-    emailTail = emailTail.toLowerCase();
+    email = email.toLowerCase();
 
     try {
-        let user = await services.user.getByEmail(emailHead, emailTail);
+        let user = await services.mongo.User.findOne({ email: email }).exec();
         if (user) {
-            await sendEmail(user.id, user.salt, services.user.getEmail(user));
+            await sendEmail(user._id, user.salt, email);
             services.response.sendCreatedOrModified(response, documentUrl);
-        } else {
+        }
+        else {
             let salt = libs.generateUuid();
-            let rows = await services.db.insertAsync("insert into users (EmailHead,EmailTail,Name,Salt,Status) values(?,?,?,?,?)", [emailHead, emailTail, name, salt, enums.UserStatus.normal]);
-            let id = rows.insertId;
-            await sendEmail(id, salt, `${emailHead}@${emailTail}`);
+            user = await services.mongo.User.create({
+                email: email,
+                name: name,
+                salt: salt,
+                status: enums.UserStatus.normal
+            });
+            await sendEmail(user._id, salt, email);
             services.logger.log(documentOfCreate.url, request);
             services.response.sendCreatedOrModified(response, documentUrl);
         }
@@ -53,10 +56,10 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 }
 
-async function sendEmail(userId: number, salt: string, email: string): Promise<void> {
+async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Promise<void> {
     await services.frequency.limit(email, 60 * 60);
 
-    let token = services.authenticationCredential.create(userId, salt);
+    let token = services.authenticationCredential.create(userId.toHexString(), salt);
     let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
     return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
