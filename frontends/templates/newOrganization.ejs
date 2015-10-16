@@ -15,10 +15,13 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary" disabled v-show="!canAdd">{{addText}}
-                            </button>
-                            <button type="button" class="btn btn-primary" v-show="canAdd" v-on="click:add();">
+                            <button type="button" class="btn btn-primary"
+                                v-show="canAdd"
+                                @click="add()">
                                 Add
+                            </button>
+                            <button type="button" class="btn btn-primary" disabled
+                                v-else>{{addText}}
                             </button>
                         </div>
                     </div>
