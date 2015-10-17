@@ -8,7 +8,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bluebird": "latest",
     "body-parser": "latest",
     "compression": "latest",
     "cookie-parser": "latest",

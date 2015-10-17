@@ -16,14 +16,15 @@ export let sessionStorageNames = {
 };
 
 export let localStorageNames = {
-    lastSuccessfulEmailTime: "lastSuccessfulEmailTime"
+    lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
+    lastOrganizationId: "lastOrganizationId"
 };
 
 function getUrlParameter(name: string): string {
     var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r: RegExpMatchArray = window.location.search.substr(1).match(reg);
-    if (r != null) {
-        return decodeURI(r[2]);
+    var array: RegExpMatchArray = window.location.search.substr(1).match(reg);
+    if (array && array.length >= 3) {
+        return decodeURI(array[2]);
     }
     return null;
 }

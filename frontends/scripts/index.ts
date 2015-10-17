@@ -73,7 +73,13 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         self.organizationsCurrentUserIn = data.organizations;
                         if (data.organizations.length > 0) {
-                            self.currentOrganizationId = data.organizations[0].id;
+                            let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                            if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
+                                self.currentOrganizationId = lastOrganizationId;
+                            }
+                            else {
+                                self.currentOrganizationId = data.organizations[0].id;
+                            }
 
                             self.fetchThemes(data.organizations[0].id);
                         }
@@ -114,6 +120,8 @@ let vueBody: VueBodyModel = new Vue({
             }
 
             self.currentOrganizationId = organization.id;
+
+            window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
         },
         createTheme: function() {
             let self: VueBodyModel = this;
