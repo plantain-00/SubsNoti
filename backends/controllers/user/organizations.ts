@@ -8,7 +8,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfCreate = {
+export let documentOfCreate = {
     url: "/api/user/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
@@ -17,20 +17,15 @@ let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    if (services.contentType.isInvalid(request)) {
-        services.response.sendContentTypeError(response, documentUrl);
-        return;
-    }
-
-    let organizationName = request.body.organizationName;
+    let organizationName: string = request.body.organizationName;
     if (!organizationName) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
         return;
     }
 
     organizationName = organizationName.trim();
     if (!organizationName) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
         return;
     }
 
@@ -38,13 +33,13 @@ export async function create(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
         let organization = await services.mongo.Organization.findOne({ name: organizationName }).exec();
         if (organization) {
-            services.response.sendAlreadyExistError(response, "the organization name already exists.", documentUrl);
+            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", enums.StatusCode.invalidRequest), documentUrl);
             return;
         }
 
         let user = await services.mongo.User.findOne({ _id: userId }).select("createdOrganizations joinedOrganizations").exec();
         if (user.createdOrganizations.length >= settings.config.maxOrganizationNumberUserCanCreate) {
-            services.response.sendAlreadyExistError(response, "you already created " + user.createdOrganizations.length + " organizations.", documentUrl);
+            services.response.sendError(response, services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", enums.StatusCode.invalidRequest), documentUrl);
             return;
         }
 
@@ -60,14 +55,9 @@ export async function create(request: libs.Request, response: libs.Response) {
         user.save();
 
         services.logger.log(documentOfCreate.url, request);
-        services.response.sendCreatedOrModified(response, documentUrl);
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
     }
     catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
-}
-
-export function route(app: libs.Application) {
-    app[documentOfCreate.method](documentOfCreate.url, create);
-    services.response.notGet(app, documentOfCreate);
 }

@@ -20,14 +20,25 @@ import * as tokenSent from "./controllers/token_sent";
 import * as organizationsThemes from "./controllers/organizations/themes";
 
 export function route(app: libs.Application) {
-    user.route(app);
-    userLoggedIn.route(app);
-    userJoinedOrganizations.route(app);
-    userOrganizations.route(app);
-    userThemes.route(app);
-    userThemeWatched.route(app);
+    function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
+        app[document.method](document.url, handler);
+    }
 
-    tokenSent.route(app);
+    bind(user.documentOfGet, user.get);
 
-    organizationsThemes.route(app);
+    bind(userLoggedIn.documentOfGet, userLoggedIn.get);
+    bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);
+
+    bind(userJoinedOrganizations.documentOfGet, userJoinedOrganizations.get);
+
+    bind(userOrganizations.documentOfCreate, userOrganizations.create);
+
+    bind(userThemes.documentOfCreate, userThemes.create);
+
+    bind(userThemeWatched.documentOfWatch, userThemeWatched.watch);
+    bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch);
+
+    bind(tokenSent.documentOfCreate, tokenSent.create);
+
+    bind(organizationsThemes.documentOfGet, organizationsThemes.get);
 }

@@ -13,14 +13,14 @@ let pool = libs.mysql.createPool(settings.config.db);
 function access(sql: string, parameters: any[], next: (error: interfaces.E, rows: any) => void) {
     pool.getConnection((error, connection) => {
         if (error) {
-            next(services.error.fromIError(error), null);
+            next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
             return;
         }
 
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
                 connection.release();
-                next(services.error.fromIError(error), null);
+                next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
                 return;
             }
 
@@ -37,14 +37,14 @@ export let insertAsync = services.promise.promisify3<string, any[], { insertId: 
 function beginTransaction(next: (error: interfaces.E, connection: libs.MysqlConnection) => void): void {
     pool.getConnection((error, connection) => {
         if (error) {
-            next(services.error.fromIError(error), null);
+            next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
             return;
         }
 
         connection.beginTransaction(error=> {
             if (error) {
                 connection.release();
-                next(services.error.fromIError(error), null);
+                next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
                 return;
             }
 
@@ -59,7 +59,7 @@ function accessInTransaction(connection: libs.MysqlConnection, sql: string, para
     connection.query(sql, parameters, (error, rows) => {
         if (error) {
             rollback(connection, () => {
-                next(services.error.fromIError(error), null);
+                next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
             });
             return;
         }
@@ -85,7 +85,7 @@ function endTransaction(connection: libs.MysqlConnection, next: (error: interfac
     connection.commit(error=> {
         if (error) {
             rollback(connection, () => {
-                next(services.error.fromIError(error));
+                next(services.error.fromError(error, enums.StatusCode.internalServerError));
             });
             return;
         }

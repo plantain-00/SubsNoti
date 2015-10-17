@@ -24,7 +24,7 @@ function send(to: string, subject: string, html: string, next: (error: interface
         html: html
     };
     transporter.sendMail(mailOptions, error=> {
-        next(services.error.fromError(error, enums.ErrorCode.emailServiceError));
+        next(services.error.fromError(error, enums.StatusCode.internalServerError));
     });
 }
 

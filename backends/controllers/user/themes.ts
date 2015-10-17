@@ -8,7 +8,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfCreate = {
+export let documentOfCreate = {
     url: "/api/user/themes",
     method: "post",
     documentUrl: "/doc/api/Create a theme.html"
@@ -17,15 +17,10 @@ let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    if (services.contentType.isInvalid(request)) {
-        services.response.sendContentTypeError(response, documentUrl);
-        return;
-    }
-
     let organizationStringId: string = request.body.organizationId;
 
     if (!organizationStringId) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationId"), documentUrl);
         return;
     }
 
@@ -33,13 +28,13 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     let themeTitle = request.body.themeTitle;
     if (!themeTitle) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"), documentUrl);
         return;
     }
 
     themeTitle = themeTitle.trim();
     if (!themeTitle) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"), documentUrl);
         return;
     }
 
@@ -49,7 +44,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
         if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => organizationStringId)) {
-            services.response.sendUnauthorizedError(response, "your are creating a theme for an organization that you are not in", documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
@@ -74,14 +69,9 @@ export async function create(request: libs.Request, response: libs.Response) {
         organization.save();
 
         services.logger.log(documentOfCreate.url, request);
-        services.response.sendCreatedOrModified(response, documentUrl);
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
     }
     catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
-}
-
-export function route(app: libs.Application) {
-    app[documentOfCreate.method](documentOfCreate.url, create);
-    services.response.notGet(app, documentOfCreate);
 }

@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-let documentOfCreate = {
+export let documentOfCreate = {
     url: "/api/token_sent",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html"
@@ -17,16 +17,11 @@ let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    if (services.contentType.isInvalid(request)) {
-        services.response.sendContentTypeError(response, documentUrl);
-        return;
-    }
-
     let email: string = request.body.email;
     let name = request.body.name;
 
     if (!email) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("email"), documentUrl);
         return;
     }
 
@@ -36,7 +31,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let user = await services.mongo.User.findOne({ email: email }).exec();
         if (user) {
             await sendEmail(user._id, user.salt, email);
-            services.response.sendCreatedOrModified(response, documentUrl);
+            services.response.sendSuccess(response, enums.StatusCode.OK);
         }
         else {
             let salt = libs.generateUuid();
@@ -48,11 +43,11 @@ export async function create(request: libs.Request, response: libs.Response) {
             });
             await sendEmail(user._id, salt, email);
             services.logger.log(documentOfCreate.url, request);
-            services.response.sendCreatedOrModified(response, documentUrl);
+            services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
         }
     }
     catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
 }
 
@@ -63,9 +58,4 @@ async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Pr
     let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
     return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
-}
-
-export function route(app: libs.Application) {
-    app[documentOfCreate.method](documentOfCreate.url, create);
-    services.response.notGet(app, documentOfCreate);
 }

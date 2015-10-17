@@ -5,7 +5,6 @@
 	* [Parameters](Parameters.md)
 	* [Response](Response.md)
 	* [Cookies](Cookies.md)
-	* [Error codes](Error codes.md)
 * [Authentication](Authentication.md)
 	* [Send token via email](Send token via email.md)
 	* [Log in](Log in.md)
