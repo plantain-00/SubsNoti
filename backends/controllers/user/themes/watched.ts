@@ -8,7 +8,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-let documentOfWatch = {
+export let documentOfWatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "post",
     documentUrl: "/doc/api/Watch a theme.html"
@@ -20,23 +20,23 @@ export async function watch(request: libs.Request, response: libs.Response) {
     let themeStringId: string = request.params.theme_id;
 
     if (!themeStringId) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
         return;
     }
 
-    let themeId = new libs.ObjectId(themeStringId);
-
     try {
+        let themeId = new libs.ObjectId(themeStringId);
+
         let userId = await services.authenticationCredential.authenticate(request);
 
         let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
         if (!theme) {
-            services.response.sendInvalidParameterError(response, documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
-            services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
@@ -48,14 +48,14 @@ export async function watch(request: libs.Request, response: libs.Response) {
             theme.save();
         }
 
-        services.response.sendCreatedOrModified(response, documentUrl);
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
     }
     catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
 }
 
-let documentOfUnwatch = {
+export let documentOfUnwatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "delete",
     documentUrl: "/doc/api/Unwatch a theme.html"
@@ -67,23 +67,23 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     let themeStringId: string = request.params.theme_id;
 
     if (!themeStringId) {
-        services.response.sendParameterMissedError(response, documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
         return;
     }
 
-    let themeId = new libs.ObjectId(themeStringId);
-
     try {
+        let themeId = new libs.ObjectId(themeStringId);
+
         let userId = await services.authenticationCredential.authenticate(request);
 
         let theme = await services.mongo.Theme.findOne({ _id: themeId }).populate("organization").exec();
         if (!theme) {
-            services.response.sendInvalidParameterError(response, documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
-            services.response.sendUnauthorizedError(response, "you are not in the organization where the theme belong to", documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
@@ -95,18 +95,10 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             theme.save();
         }
 
-        services.response.sendDeleted(response, documentUrl);
+        services.response.sendSuccess(response, enums.StatusCode.deleted);
 
     }
     catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
-}
-
-export function route(app: libs.Application) {
-    app[documentOfUnwatch.method](documentOfUnwatch.url, unwatch);
-    services.response.notGet(app, documentOfUnwatch);
-
-    app[documentOfWatch.method](documentOfWatch.url, watch);
-    services.response.notGet(app, documentOfWatch);
 }

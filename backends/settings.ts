@@ -3,6 +3,8 @@
 import {SettingsInterface} from "./SettingsInterface";
 import * as environment from "../common/environment";
 
+export {environment};
+
 export let config: SettingsInterface = {
     environment: environment.developmentEnvironment,
     db: {

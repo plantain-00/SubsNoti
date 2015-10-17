@@ -9,9 +9,6 @@ export {error};
 import * as email from "./services/email";
 export {email};
 
-import * as contentType from "./services/contentType";
-export {contentType};
-
 import * as response from "./services/response";
 export {response};
 

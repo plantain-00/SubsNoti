@@ -8,7 +8,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-let documentOfGet = {
+export let documentOfGet = {
     url: "/api/user/joined/organizations",
     method: "get",
     documentUrl: "/doc/api/Get joined organizations.html"
@@ -29,12 +29,8 @@ export async function get(request: libs.Request, response: libs.Response) {
             })
         };
 
-        services.response.sendOK(response, documentUrl, result);
+        services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
-}
-
-export function route(app: libs.Application) {
-    app[documentOfGet.method](documentOfGet.url, get);
 }

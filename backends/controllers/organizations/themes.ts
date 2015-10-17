@@ -8,7 +8,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-let documentOfGet = {
+export let documentOfGet = {
     url: "/api/organizations/:organization_id/themes",
     method: "get",
     documentUrl: "/doc/api/Get themes of an organization.html"
@@ -17,15 +17,15 @@ let documentOfGet = {
 export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
-    let organizationStringId: string = request.params.organization_id;
-    let organizationId = new libs.ObjectId(organizationStringId);
-
     try {
+        let organizationStringId: string = request.params.organization_id;
+        let organizationId = new libs.ObjectId(organizationStringId);
+
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
         if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationStringId)) {
-            services.response.sendUnauthorizedError(response, "you can not access the organization", documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
@@ -68,12 +68,8 @@ export async function get(request: libs.Request, response: libs.Response) {
             result.themes.push(theme);
         })
 
-        services.response.sendOK(response, documentUrl, result);
+        services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {
-        services.response.sendError(response, documentUrl, error);
+        services.response.sendError(response, error, documentUrl);
     }
-}
-
-export function route(app: libs.Application) {
-    app[documentOfGet.method](documentOfGet.url, get);
 }

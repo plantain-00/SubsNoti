@@ -16,7 +16,7 @@ export function create(userId: string, salt: string): string {
 export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
     let authenticationCredential = request.cookies[settings.config.cookieKeys.authenticationCredential];
     if (!authenticationCredential || typeof authenticationCredential != "string") {
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.ErrorCode.unauthorizedError));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.StatusCode.unauthorized));
     }
 
     let reply = await services.cache.getStringAsync(settings.config.cacheKeys.user + authenticationCredential);
@@ -26,7 +26,7 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
 
     let tmp = authenticationCredential.split("g");
     if (tmp.length != 3) {
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.ErrorCode.unauthorizedError));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
     }
 
     let milliseconds = parseInt(tmp[1], 16);
@@ -36,12 +36,12 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
 
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", enums.ErrorCode.unauthorizedError));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", enums.StatusCode.unauthorized));
     }
 
     let user = await services.mongo.User.findOne({ _id: id }).exec();
     if (!user) {
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", enums.ErrorCode.unauthorizedError));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", enums.StatusCode.unauthorized));
     }
 
     if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
@@ -49,6 +49,6 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
 
         return Promise.resolve(id);
     } else {
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.ErrorCode.unauthorizedError));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
     }
 }
