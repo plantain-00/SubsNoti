@@ -6,11 +6,12 @@
                 Themes
             </div>
             <div class="panel-body">
-                <form class="form-horizontal" id="vue-body" v-show="currentOrganizationId !== ''">
+                <form class="form-horizontal" id="vue-body" v-show="currentOrganizationId !== ''" style="display: none;">
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <label class="the-label {{$root.currentOrganizationId === id ? 'label-active':''}}" v-repeat="organizationsCurrentUserIn"
-                            v-on="click:clickOrganization(this);">{{name}}</label>
+                            <label class="the-label {{$root.currentOrganizationId === organization.id ? 'label-active':''}}"
+                            v-for="organization in organizationsCurrentUserIn"
+                            @click="clickOrganization(organization)">{{organization.name}}</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -27,26 +28,30 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-10 col-sm-offset-2">
-                            <button type="button" class="btn btn-primary" v-on="click:createTheme()">create</button>
+                            <button type="button" class="btn btn-primary" @click="createTheme()">create</button>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
                             <table class="table">
                                 <tbody>
-                                    <tr v-repeat="themes">
+                                    <tr v-for="theme in themes">
                                         <td>
-                                            <h5>{{title}}</h5>
-                                            <div>{{detail}}</div>
+                                            <h5>{{theme.title}}</h5>
+                                            <div>{{theme.detail}}</div>
                                             <div>
-                                                created by {{creator.name}} {{createTimeText}}
+                                                created by {{theme.creator.name}} {{theme.createTimeText}}
                                                 •
-                                                {{owners.length}}
+                                                {{theme.owners.length}}
                                                 •
-                                                {{watchers.length}}
+                                                {{theme.watchers.length}}
                                                 •
-                                                <button type="button" class="btn btn-xs btn-primary" v-show="!isWatching" v-on="click:watch(this)">watch</button>
-                                                <button type="button" class="btn btn-xs btn-primary" v-show="isWatching" v-on="click:unwatch(this)">unwatch</button>
+                                                <button type="button" class="btn btn-xs btn-primary"
+                                                    v-show="theme.isWatching"
+                                                    @click="unwatch(theme)">unwatch</button>
+                                                <button type="button" class="btn btn-xs btn-primary"
+                                                    v-else
+                                                    @click="watch(theme)">watch</button>
                                             </div>
                                         </td>
                                     </tr>

@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap<%- dotMin %>.css">
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme<%- dotMin %>.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap<%- dotMin %>.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme<%- dotMin %>.css">
     <link rel="stylesheet" href="./styles/base<%- dotMin %>.css">
 </head>
 
@@ -33,17 +33,18 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="javascript:void(0)" v-show="loginStatus != 1">
+                        <a href="javascript:void(0)"
+                            v-show="loginStatus !== 1">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;
-                            <span v-show="loginStatus == 0">Login now...</span>
-                            <span v-show="loginStatus == 2" style="display: none;">{{currentUserName}}</span>
+                            <span v-show="loginStatus === 0">Login now...</span>
+                            <span v-else style="display: none;">{{currentUserName}}</span>
                         </a>
-                        <a href="./login.html" v-show="loginStatus == 1" style="display: none;">
+                        <a href="./login.html" v-else style="display: none;">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;Login
                         </a>
                     </li>
                     <li v-show="loginStatus == 2">
-                        <a href="javascript:void(0)" v-on="click:exit();">Exit</a>
+                        <a href="javascript:void(0)" @click="exit()">Exit</a>
                     </li>
                 </ul>
             </div>

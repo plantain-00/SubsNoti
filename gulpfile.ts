@@ -148,7 +148,7 @@ function bundleAndUglifyHtml(name: string) {
     if (isDevelopment) {
         gulp.src('frontends/templates/' + name + '.ejs')
             .pipe(ejs({
-                dotMin: isDevelopment ? '' : '.min'
+                dotMin: ''
             }))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
@@ -158,7 +158,7 @@ function bundleAndUglifyHtml(name: string) {
     } else {
         gulp.src('frontends/templates/' + name + '.ejs')
             .pipe(ejs({
-                dotMin: isDevelopment ? '' : '.min'
+                dotMin: '.min'
             }))
             .pipe(minifyHtml(minifyHtmlConfig))
             .pipe(rename(name + ".html"))
