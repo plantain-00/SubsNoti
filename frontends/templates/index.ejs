@@ -34,7 +34,7 @@
                                                 •
                                                 {{theme.owners.length}}
                                                 •
-                                                {{theme.watchers.length}}
+                                                <button type="button" class="clip" data-clipboard-text="{{theme.watchersEmails}}">copy {{theme.watchers.length}} watchers' email</button>
                                                 <div :style='{ display: theme.isHovering ? "inline" : "none" }'>
                                                     •
                                                     <button type="button" class="btn btn-xs btn-primary"

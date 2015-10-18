@@ -33,6 +33,7 @@ interface Theme {
     createTimeText: string;
     isWatching: boolean;
     isHovering: boolean;
+    watchersEmails: string;
 }
 
 interface ThemesResponse extends interfaces.Response {
@@ -60,6 +61,7 @@ interface VueBodyModel {
     unwatch: (Theme) => void;
     close: (Theme) => void;
     reopen: (Theme) => void;
+    getEmails: (users: User[]) => string;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -110,6 +112,9 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
+        getEmails: function(users: User[]) {
+            return _.reduce(users, (r, w) => r + w.email + ';', '');
+        },
         fetchThemes: function(page: number) {
             let self: VueBodyModel = this;
 
@@ -128,6 +133,7 @@ let vueBody: VueBodyModel = new Vue({
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
                             theme.isHovering = false;
+                            theme.watchersEmails = self.getEmails(theme.watchers);
                         }
                         if (page === 1) {
                             self.themes = data.themes;
@@ -184,6 +190,7 @@ let vueBody: VueBodyModel = new Vue({
                         email: base.vueHead.currentUserEmail
                     });
                     theme.isWatching = true;
+                    theme.watchersEmails += base.vueHead.currentUserEmail + ';';
                     alert("success");
                 }
                 else {
@@ -192,6 +199,8 @@ let vueBody: VueBodyModel = new Vue({
             });
         },
         unwatch: function(theme: Theme) {
+            let self = this;
+
             $.ajax({
                 url: "/api/user/themes/" + theme.id + "/watched",
                 data: {},
@@ -201,7 +210,8 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         let index = _.findIndex(theme.watchers, w=> w.id === base.vueHead.currentUserId);
                         if (~index) {
-                            theme.watchers.splice(index, 1)
+                            theme.watchers.splice(index, 1);
+                            theme.watchersEmails = self.getEmails(theme.watchers);
                         }
                         theme.isWatching = false;
                         alert("success");
@@ -259,7 +269,15 @@ let vueBody: VueBodyModel = new Vue({
     }
 });
 
+declare let Clipboard;
+
 $(document).ready(function() {
+    let clipboard = new Clipboard('.clip');
+
+    clipboard.on('success', function(e) {
+        alert('emails copied.');
+    });
+
     base.vueHead.authenticate((error, data) => {
         if (error) {
             console.log(error);
