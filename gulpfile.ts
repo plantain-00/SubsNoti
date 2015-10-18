@@ -99,6 +99,9 @@ gulp.task('rev', () => {
         .pipe(gulp.dest("publish/public/"))
         .pipe(rev.manifest())
         .pipe(gulp.dest("frontends/build/"));
+
+    gulp.src("frontends/build/scripts/*.map", { base: 'frontends/build/' })
+        .pipe(gulp.dest("publish/public/"));
 });
 
 gulp.task('html', () => {
@@ -135,9 +138,12 @@ function bundleAndUglifyJs(name: string) {
             .pipe(webpack({
                 plugins: [
                     new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
-                ]
+                ],
+                devtool: 'source-map',
+                output: {
+                    filename: name + '.min.js',
+                }
             }))
-            .pipe(rename(name + ".min.js"))
             .pipe(gulp.dest('frontends/build/scripts/'));
     }
 }

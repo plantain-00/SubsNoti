@@ -1,3 +1,5 @@
+call set NODE_ENV=development
+
 rem clean
 call rd /q /s typings
 
@@ -32,7 +34,6 @@ call mocha publish/backends/tests
 echo 'Finished "test".'
 
 rem gulp tasks
-call set NODE_ENV=development
 echo 'Starting "css"...'
 call gulp css
 echo 'Finished "css".'
