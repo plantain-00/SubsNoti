@@ -54,7 +54,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let theme = await services.mongo.Theme.create({
             title: themeTitle,
             detail: themeDetail,
-            status: enums.UserStatus.normal,
+            status: enums.ThemeStatus.open,
             createTime: new Date(),
             creator: userId,
             owners: [userId],

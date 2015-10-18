@@ -19,4 +19,6 @@
 	* [Get themes of an organization](Get themes of an organization.md)
 	* [Watch a theme](Watch a theme.md)
 	* [Unwatch a theme](Unwatch a theme.md)
+	* [Update a theme](Update a theme.md)
+	* [Theme status](Theme status.md)
 * [Database models](Database models.md)

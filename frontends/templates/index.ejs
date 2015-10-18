@@ -52,6 +52,10 @@
                                                 <button type="button" class="btn btn-xs btn-primary"
                                                     v-else
                                                     @click="watch(theme)">watch</button>
+                                                <span v-show="theme.status === 0">•</span>
+                                                <button type="button" class="btn btn-xs btn-default"
+                                                    v-show="theme.status === 0"
+                                                    @click="close(theme)">close</button>
                                             </div>
                                         </td>
                                     </tr>

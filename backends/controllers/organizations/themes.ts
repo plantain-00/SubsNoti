@@ -55,6 +55,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 detail: t.detail,
                 organizationId: organizationStringId,
                 createTime: t.createTime.getTime(),
+                status: t.status,
                 creator: {
                     id: creator._id,
                     name: creator.name,

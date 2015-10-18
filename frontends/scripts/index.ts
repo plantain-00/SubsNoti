@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as enums from "../../common/enums";
 import * as interfaces from "../../common/interfaces";
 
 declare let Vue;
@@ -24,6 +25,7 @@ interface Theme {
     detail: string;
     organizationId: string;
     createTime: number;
+    status: enums.ThemeStatus;
     creator: User;
     owners: User[];
     watchers: User[];
@@ -55,6 +57,7 @@ interface VueBodyModel {
     setThemeCreateTimeText: () => void;
     watch: (Theme) => void;
     unwatch: (Theme) => void;
+    close: (Theme) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -202,6 +205,25 @@ let vueBody: VueBodyModel = new Vue({
 
             self.currentPage++;
             self.fetchThemes(self.currentPage);
+        },
+        close: function(theme: Theme) {
+            $.ajax({
+                url: "/api/themes/" + theme.id,
+                data: {
+                    status: enums.ThemeStatus.closed
+                },
+                cache: false,
+                type: "put",
+                success: (data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        theme.status = enums.ThemeStatus.closed;
+                        alert("success");
+                    }
+                    else {
+                        alert(data.errorMessage);
+                    }
+                }
+            });
         }
     }
 });
