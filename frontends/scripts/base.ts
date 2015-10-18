@@ -64,6 +64,7 @@ interface VueHeadModel {
     loginStatus: enums.LoginStatus;
     currentUserId: string;
     currentUserName: string;
+    currentUserEmail: string;
     canCreateOrganization: boolean;
 
     exit: () => void;
@@ -76,6 +77,7 @@ export let vueHead: VueHeadModel = new Vue({
         loginStatus: enums.LoginStatus.unknown,
         currentUserId: "",
         currentUserName: "",
+        currentUserEmail: "",
         canCreateOrganization: false
     },
     methods: {
@@ -89,6 +91,7 @@ export let vueHead: VueHeadModel = new Vue({
                 success: function() {
                     self.loginStatus = enums.LoginStatus.fail;
                     self.currentUserName = "";
+                    self.currentUserEmail = "";
                     window.sessionStorage.removeItem("loginResult");
                 }
             });
@@ -101,6 +104,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.loginStatus = enums.LoginStatus.success;
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
+                    self.currentUserEmail = data.email;
                     self.canCreateOrganization = data.canCreateOrganization;
 
                     next(null, data);

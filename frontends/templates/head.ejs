@@ -37,7 +37,7 @@
                             v-show="loginStatus !== 1">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;
                             <span v-show="loginStatus === 0">Login now...</span>
-                            <span v-else style="display: none;">{{currentUserName}}</span>
+                            <span v-else style="display: none;">{{currentUserName}}({{currentUserEmail}})</span>
                         </a>
                         <a href="./login.html" v-else style="display: none;">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;Login

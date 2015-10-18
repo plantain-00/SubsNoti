@@ -32,6 +32,7 @@ interface Theme {
 
     createTimeText: string;
     isWatching: boolean;
+    isHovering: boolean;
 }
 
 interface ThemesResponse extends interfaces.Response {
@@ -126,6 +127,7 @@ let vueBody: VueBodyModel = new Vue({
                         for (let theme of data.themes) {
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
+                            theme.isHovering = false;
                         }
                         if (page === 1) {
                             self.themes = data.themes;
@@ -176,6 +178,11 @@ let vueBody: VueBodyModel = new Vue({
         watch: function(theme: Theme) {
             $.post("/api/user/themes/" + theme.id + "/watched", {}, (data: interfaces.Response) => {
                 if (data.isSuccess) {
+                    theme.watchers.push({
+                        id: base.vueHead.currentUserId,
+                        name: base.vueHead.currentUserName,
+                        email: base.vueHead.currentUserEmail
+                    });
                     theme.isWatching = true;
                     alert("success");
                 }
@@ -192,6 +199,10 @@ let vueBody: VueBodyModel = new Vue({
                 type: "delete",
                 success: (data: interfaces.Response) => {
                     if (data.isSuccess) {
+                        let index = _.findIndex(theme.watchers, w=> w.id === base.vueHead.currentUserId);
+                        if (~index) {
+                            theme.watchers.splice(index, 1)
+                        }
                         theme.isWatching = false;
                         alert("success");
                     }
