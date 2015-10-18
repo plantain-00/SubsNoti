@@ -58,6 +58,7 @@ interface VueBodyModel {
     watch: (Theme) => void;
     unwatch: (Theme) => void;
     close: (Theme) => void;
+    reopen: (Theme) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -217,6 +218,25 @@ let vueBody: VueBodyModel = new Vue({
                 success: (data: interfaces.Response) => {
                     if (data.isSuccess) {
                         theme.status = enums.ThemeStatus.closed;
+                        alert("success");
+                    }
+                    else {
+                        alert(data.errorMessage);
+                    }
+                }
+            });
+        },
+        reopen: function(theme: Theme) {
+            $.ajax({
+                url: "/api/themes/" + theme.id,
+                data: {
+                    status: enums.ThemeStatus.open
+                },
+                cache: false,
+                type: "put",
+                success: (data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        theme.status = enums.ThemeStatus.open;
                         alert("success");
                     }
                     else {
