@@ -45,7 +45,8 @@ export let config: SettingsInterface = {
     cacheKeys: {
         user: "user_",
         frequency: "frequency_"
-    }
+    },
+    defaultItemLimit: 10
 };
 
 try {

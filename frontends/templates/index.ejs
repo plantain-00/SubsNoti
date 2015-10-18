@@ -58,6 +58,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div>
+                            <button type='button' class='btn btn-primary'
+                                @click="showMoreThemes()"
+                                v-show="nextThemeCount > 0" style="display: none">show {{nextThemeCount}} more themes(total {{totalCount}})</button>
+                        </div>
                     </div>
                 </form>
             </div>

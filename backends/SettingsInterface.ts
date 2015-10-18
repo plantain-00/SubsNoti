@@ -38,7 +38,8 @@ interface SettingsInterface {
     cacheKeys: {
         user: string,
         frequency: string
-    }
+    },
+    defaultItemLimit: number
 }
 
 export {SettingsInterface};

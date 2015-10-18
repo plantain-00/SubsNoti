@@ -16,6 +16,11 @@ no
 
 ### [Parameters](./Parameters.html)
 
+key name | value type | required | default value
+--- | --- | --- | ---
+page | number | false | 1
+limit | number | false | 10
+
 ### [Cookies](./Cookies.html)
 
 ### [Response Body](./Response.html)
@@ -23,6 +28,7 @@ no
 key name | value type
 --- | ---
 themes | [Theme](#theme)[]
+totalCount | number
 
 ### Theme
 

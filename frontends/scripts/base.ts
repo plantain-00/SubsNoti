@@ -20,6 +20,8 @@ export let localStorageNames = {
     lastOrganizationId: "lastOrganizationId"
 };
 
+export let itemLimit = 2;
+
 function getUrlParameter(name: string): string {
     var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var array: RegExpMatchArray = window.location.search.substr(1).match(reg);

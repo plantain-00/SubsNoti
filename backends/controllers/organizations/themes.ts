@@ -20,6 +20,14 @@ export async function get(request: libs.Request, response: libs.Response) {
     try {
         let organizationStringId: string = request.params.organization_id;
         let organizationId = new libs.ObjectId(organizationStringId);
+        let page = request.query.page;
+        if (!page) {
+            page = 1;
+        }
+        let limit = request.query.limit;
+        if (!limit) {
+            limit = settings.config.defaultItemLimit;
+        }
 
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
@@ -29,10 +37,13 @@ export async function get(request: libs.Request, response: libs.Response) {
             return;
         }
 
-        let themes = await services.mongo.Theme.find({ organization: organizationId }).populate("creator owners watchers").exec();
+        let themes = await services.mongo.Theme.find({ organization: organizationId }).skip((page - 1) * limit).limit(limit).sort({ createTime: -1 }).populate("creator owners watchers").exec();
+
+        let totalCount = await services.mongo.Theme.count({ organization: organizationId }).exec();
 
         let result = {
-            themes: []
+            themes: [],
+            totalCount: totalCount
         };
 
         libs._.each(themes, (t: services.mongo.ThemeDocument) => {
@@ -66,7 +77,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             };
 
             result.themes.push(theme);
-        })
+        });
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {

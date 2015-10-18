@@ -34,6 +34,7 @@ interface Theme {
 
 interface ThemesResponse extends interfaces.Response {
     themes: Theme[];
+    totalCount: number;
 }
 
 interface VueBodyModel {
@@ -42,9 +43,13 @@ interface VueBodyModel {
     themes: Theme[];
     newThemeTitle: string;
     newThemeDetail: string;
+    currentPage: number;
+    totalCount: number;
+
+    nextThemeCount: number;
 
     getOrganizationsCurrentUserIn: () => void;
-    fetchThemes: (string) => void;
+    fetchThemes: (page: number) => void;
     clickOrganization: (Organization) => void;
     createTheme: () => void;
     setThemeCreateTimeText: () => void;
@@ -60,6 +65,16 @@ let vueBody: VueBodyModel = new Vue({
         themes: [],
         newThemeTitle: "",
         newThemeDetail: "",
+        currentPage: 1,
+        totalCount: 0
+    },
+    computed: {
+        nextThemeCount: function() {
+            let self: VueBodyModel = this;
+
+            let count = self.totalCount - base.itemLimit * self.currentPage;
+            return count > base.itemLimit ? base.itemLimit : count;
+        }
     },
     methods: {
         getOrganizationsCurrentUserIn: function() {
@@ -81,7 +96,7 @@ let vueBody: VueBodyModel = new Vue({
                                 self.currentOrganizationId = data.organizations[0].id;
                             }
 
-                            self.fetchThemes(data.organizations[0].id);
+                            self.fetchThemes(1);
                         }
                     }
                     else {
@@ -90,12 +105,17 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        fetchThemes: function(organizationId: string) {
+        fetchThemes: function(page: number) {
             let self: VueBodyModel = this;
 
+            self.currentPage = page;
+
             $.ajax({
-                url: "/api/organizations/" + organizationId + "/themes",
-                data: {},
+                url: "/api/organizations/" + self.currentOrganizationId + "/themes",
+                data: {
+                    page: page,
+                    limit: base.itemLimit
+                },
                 cache: false,
                 success: (data: ThemesResponse) => {
                     if (data.isSuccess) {
@@ -103,8 +123,13 @@ let vueBody: VueBodyModel = new Vue({
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
                         }
-
-                        self.themes = data.themes;
+                        if (page === 1) {
+                            self.themes = data.themes;
+                        }
+                        else {
+                            self.themes = self.themes.concat(data.themes);
+                        }
+                        self.totalCount = data.totalCount;
                     }
                     else {
                         alert(data.errorMessage);
@@ -115,11 +140,8 @@ let vueBody: VueBodyModel = new Vue({
         clickOrganization: function(organization: Organization) {
             let self: VueBodyModel = this;
 
-            if (self.currentOrganizationId !== organization.id) {
-                self.fetchThemes(organization.id);
-            }
-
             self.currentOrganizationId = organization.id;
+            self.fetchThemes(1);
 
             window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
         },
@@ -132,7 +154,7 @@ let vueBody: VueBodyModel = new Vue({
                 organizationId: self.currentOrganizationId
             }, (data: interfaces.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(self.currentOrganizationId);
+                    self.fetchThemes(1);
                     alert("success");
                 }
                 else {
@@ -148,11 +170,9 @@ let vueBody: VueBodyModel = new Vue({
             }
         },
         watch: function(theme: Theme) {
-            let self: VueBodyModel = this;
-
             $.post("/api/user/themes/" + theme.id + "/watched", {}, (data: interfaces.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(self.currentOrganizationId);
+                    theme.isWatching = true;
                     alert("success");
                 }
                 else {
@@ -161,8 +181,6 @@ let vueBody: VueBodyModel = new Vue({
             });
         },
         unwatch: function(theme: Theme) {
-            let self: VueBodyModel = this;
-
             $.ajax({
                 url: "/api/user/themes/" + theme.id + "/watched",
                 data: {},
@@ -170,7 +188,7 @@ let vueBody: VueBodyModel = new Vue({
                 type: "delete",
                 success: (data: interfaces.Response) => {
                     if (data.isSuccess) {
-                        self.fetchThemes(self.currentOrganizationId);
+                        theme.isWatching = false;
                         alert("success");
                     }
                     else {
@@ -178,6 +196,12 @@ let vueBody: VueBodyModel = new Vue({
                     }
                 }
             });
+        },
+        showMoreThemes: function() {
+            let self: VueBodyModel = this;
+
+            self.currentPage++;
+            self.fetchThemes(self.currentPage);
         }
     }
 });
