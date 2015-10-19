@@ -30,7 +30,8 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationId.toHexString())) {
+        if (!organizationId.equals(services.seed.publicOrganizationId)
+            && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }

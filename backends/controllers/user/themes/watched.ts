@@ -35,12 +35,12 @@ export async function watch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
-        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
+        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes.push(themeId);
             theme.watchers.push(userId);
@@ -80,12 +80,12 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
-        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
+        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes["pull"](themeId);
             theme.watchers["pull"](userId);
