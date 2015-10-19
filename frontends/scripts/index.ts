@@ -51,6 +51,7 @@ interface VueBodyModel {
     totalCount: number;
 
     nextThemeCount: number;
+    canCreate: boolean;
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number) => void;
@@ -81,6 +82,11 @@ let vueBody: VueBodyModel = new Vue({
 
             let count = self.totalCount - base.itemLimit * self.currentPage;
             return count > base.itemLimit ? base.itemLimit : count;
+        },
+        canCreate: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.newThemeTitle.trim() && base.vueHead.requestCount === 0;
         }
     },
     methods: {
@@ -182,6 +188,8 @@ let vueBody: VueBodyModel = new Vue({
             }
         },
         watch: function(theme: Theme) {
+            let self: VueBodyModel = this;
+
             $.post("/api/user/themes/" + theme.id + "/watched", {}, (data: interfaces.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
@@ -199,7 +207,7 @@ let vueBody: VueBodyModel = new Vue({
             });
         },
         unwatch: function(theme: Theme) {
-            let self = this;
+            let self: VueBodyModel = this;
 
             $.ajax({
                 url: "/api/user/themes/" + theme.id + "/watched",

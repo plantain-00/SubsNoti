@@ -20,7 +20,7 @@ export let localStorageNames = {
     lastOrganizationId: "lastOrganizationId"
 };
 
-export let itemLimit = 2;
+export let itemLimit = 10;
 
 function getUrlParameter(name: string): string {
     var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -66,6 +66,7 @@ interface VueHeadModel {
     currentUserName: string;
     currentUserEmail: string;
     canCreateOrganization: boolean;
+    requestCount: number;
 
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
@@ -78,7 +79,8 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
-        canCreateOrganization: false
+        canCreateOrganization: false,
+        requestCount: 0
     },
     methods: {
         exit: function() {
@@ -115,4 +117,10 @@ export let vueHead: VueHeadModel = new Vue({
             });
         }
     }
+});
+
+$(document).ajaxSend(() => {
+    vueHead.requestCount++;
+}).ajaxComplete(() => {
+    vueHead.requestCount--;
 });

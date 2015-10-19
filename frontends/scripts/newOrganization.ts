@@ -5,8 +5,6 @@ declare let Vue;
 
 interface VueBodyModel {
     organizationName: string;
-    addText: string;
-    isSending: boolean;
 
     canAdd: boolean;
 
@@ -16,29 +14,22 @@ interface VueBodyModel {
 let vueBody = new Vue({
     el: "#vue-body",
     data: {
-        organizationName: "",
-        addText: "Please input organization name",
-        isSending: false
+        organizationName: ""
     },
     computed: {
         canAdd: function(): boolean {
             let self: VueBodyModel = this;
 
-            return self.organizationName.trim() && !self.isSending;
+            return self.organizationName.trim() && base.vueHead.requestCount === 0;
         }
     },
     methods: {
         add: function() {
             let self: VueBodyModel = this;
 
-            self.isSending = true;
-            self.addText = "is adding now...";
-
             $.post("/api/user/organizations", {
                 organizationName: self.organizationName
             }, function(data: interfaces.Response) {
-                self.isSending = false;
-                self.addText = "Please input organization name";
                 if (data.isSuccess) {
                     alert("success.");
                 } else {

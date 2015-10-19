@@ -8,7 +8,6 @@ interface VueBodyModel {
     emailTail: string;
     innerName: string;
     loginText: string;
-    isSending: boolean;
     innerRawEmail: string;
 
     rawEmail: string;
@@ -25,7 +24,6 @@ let vueBody = new Vue({
         emailTail: "",
         innerName: "",
         loginText: "Please input email",
-        isSending: false,
         innerRawEmail: ""
     },
     computed: {
@@ -52,7 +50,7 @@ let vueBody = new Vue({
         canLogin: function(): boolean {
             let self: VueBodyModel = this;
 
-            return self.emailHead && self.emailTail && !self.isSending;
+            return self.emailHead && self.emailTail && base.vueHead.requestCount === 0;
         },
         name: {
             get: function(): string {
@@ -82,13 +80,11 @@ let vueBody = new Vue({
                     return;
                 }
             }
-            self.isSending = true;
             self.loginText = "is sending email now...";
             $.post("/api/token_sent", {
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name
             }, function(data: interfaces.Response) {
-                self.isSending = false;
                 self.loginText = "Please input email";
                 if (data.isSuccess) {
                     alert("success, please check your email.");
