@@ -8,7 +8,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bluebird": "latest",
     "body-parser": "latest",
     "compression": "latest",
     "cookie-parser": "latest",
@@ -20,7 +19,8 @@
     "mysql": "latest",
     "node-uuid": "latest",
     "nodemailer": "latest",
-    "redis": "latest"
+    "redis": "latest",
+    "validator": "latest"
   },
   "devDependencies": {
     "autoprefixer": "latest",
@@ -43,6 +43,6 @@
     "node": ">=4.1.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node publish/backends/app.js"
   }
 }

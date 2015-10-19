@@ -54,3 +54,13 @@ or
 # tests
 
 mocha publish/backends/tests
+
+# demo
+
+## development
+
+http://115.29.42.125:8888/
+
+## production
+
+http://115.29.42.125/

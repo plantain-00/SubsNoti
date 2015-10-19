@@ -1,3 +1,4 @@
 export const enum ThemeStatus {
-    normal
+    open,
+    closed
 }

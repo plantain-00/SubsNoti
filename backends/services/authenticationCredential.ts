@@ -14,8 +14,8 @@ export function create(userId: string, salt: string): string {
 }
 
 export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
-    let authenticationCredential = request.cookies[settings.config.cookieKeys.authenticationCredential];
-    if (!authenticationCredential || typeof authenticationCredential != "string") {
+    let authenticationCredential = libs.validator.trim(request.cookies[settings.config.cookieKeys.authenticationCredential]);
+    if (!authenticationCredential) {
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.StatusCode.unauthorized));
     }
 

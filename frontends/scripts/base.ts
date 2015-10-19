@@ -16,14 +16,17 @@ export let sessionStorageNames = {
 };
 
 export let localStorageNames = {
-    lastSuccessfulEmailTime: "lastSuccessfulEmailTime"
+    lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
+    lastOrganizationId: "lastOrganizationId"
 };
+
+export let itemLimit = 10;
 
 function getUrlParameter(name: string): string {
     var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r: RegExpMatchArray = window.location.search.substr(1).match(reg);
-    if (r != null) {
-        return decodeURI(r[2]);
+    var array: RegExpMatchArray = window.location.search.substr(1).match(reg);
+    if (array && array.length >= 3) {
+        return decodeURI(array[2]);
     }
     return null;
 }
@@ -61,7 +64,9 @@ interface VueHeadModel {
     loginStatus: enums.LoginStatus;
     currentUserId: string;
     currentUserName: string;
+    currentUserEmail: string;
     canCreateOrganization: boolean;
+    requestCount: number;
 
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
@@ -73,7 +78,9 @@ export let vueHead: VueHeadModel = new Vue({
         loginStatus: enums.LoginStatus.unknown,
         currentUserId: "",
         currentUserName: "",
-        canCreateOrganization: false
+        currentUserEmail: "",
+        canCreateOrganization: false,
+        requestCount: 0
     },
     methods: {
         exit: function() {
@@ -86,6 +93,7 @@ export let vueHead: VueHeadModel = new Vue({
                 success: function() {
                     self.loginStatus = enums.LoginStatus.fail;
                     self.currentUserName = "";
+                    self.currentUserEmail = "";
                     window.sessionStorage.removeItem("loginResult");
                 }
             });
@@ -98,6 +106,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.loginStatus = enums.LoginStatus.success;
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
+                    self.currentUserEmail = data.email;
                     self.canCreateOrganization = data.canCreateOrganization;
 
                     next(null, data);
@@ -108,4 +117,10 @@ export let vueHead: VueHeadModel = new Vue({
             });
         }
     }
+});
+
+$(document).ajaxSend(() => {
+    vueHead.requestCount++;
+}).ajaxComplete(() => {
+    vueHead.requestCount--;
 });

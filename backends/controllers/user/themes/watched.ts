@@ -19,8 +19,8 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
     let themeStringId: string = request.params.theme_id;
 
-    if (!themeStringId) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
+    if (!libs.validator.isMongoId(themeStringId)) {
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
         return;
     }
 
@@ -35,12 +35,12 @@ export async function watch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
-        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
+        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes.push(themeId);
             theme.watchers.push(userId);
@@ -64,15 +64,13 @@ export let documentOfUnwatch = {
 export async function unwatch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUnwatch.documentUrl;
 
-    let themeStringId: string = request.params.theme_id;
-
-    if (!themeStringId) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
-        return;
-    }
-
     try {
-        let themeId = new libs.ObjectId(themeStringId);
+        if (!libs.validator.isMongoId(request.params.theme_id)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            return;
+        }
+
+        let themeId = new libs.ObjectId(request.params.theme_id);
 
         let userId = await services.authenticationCredential.authenticate(request);
 
@@ -82,12 +80,12 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.toHexString() === userId.toHexString())) {
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
-        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.toHexString() === userId.toHexString())) {
+        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
             let user = await services.mongo.User.findOne({ _id: userId }).exec();
             user.watchedThemes["pull"](themeId);
             theme.watchers["pull"](userId);

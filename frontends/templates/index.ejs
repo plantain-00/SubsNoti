@@ -15,6 +15,61 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <tbody>
+                                    <tr v-for="theme in themes"
+                                        @mouseover="theme.isHovering = true"
+                                        @mouseout="theme.isHovering = false">
+                                        <td>
+                                            <h5>
+                                                {{theme.title}}
+                                                <span class="label label-success"
+                                                    v-show="theme.status === 0">open</span>
+                                                <span class="label label-danger" v-else>closed</span>
+                                            </h5>
+                                            <div>{{theme.detail}}</div>
+                                            <div>
+                                                created by {{theme.creator.name}} {{theme.createTimeText}}
+                                                •
+                                                {{theme.owners.length}}
+                                                <div :style='{ display: theme.isHovering ? "inline" : "none" }'>
+                                                    •
+                                                    <button type="button" class="clip btn btn-xs btn-primary" data-clipboard-text="{{theme.watchersEmails}}"
+                                                        v-show="theme.watchers.length > 0">
+                                                        copy {{theme.watchers.length}} watchers' email
+                                                    </button>
+                                                    <span v-else>
+                                                        no watchers
+                                                    </span>
+                                                    •
+                                                    <button type="button" class="btn btn-xs btn-primary"
+                                                        v-show="theme.isWatching"
+                                                        @click="unwatch(theme)">unwatch</button>
+                                                    <button type="button" class="btn btn-xs btn-primary"
+                                                        v-else
+                                                        @click="watch(theme)">watch</button>
+                                                    •
+                                                    <button type="button" class="btn btn-xs btn-danger"
+                                                        v-show="theme.status === 0"
+                                                        @click="close(theme)">close</button>
+                                                    <button type="button" class="btn btn-xs btn-success"
+                                                        v-else
+                                                        @click="reopen(theme)">reopen</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <button type='button' class='btn btn-primary' style="display: none;"
+                                @click="showMoreThemes()"
+                                v-show="nextThemeCount > 0">show {{nextThemeCount}} more {{nextThemeCount > 1 ? "themes" : "theme"}}(total {{totalCount}})</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">title</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="newThemeTitle">
@@ -28,35 +83,11 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-10 col-sm-offset-2">
-                            <button type="button" class="btn btn-primary" @click="createTheme()">create</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <table class="table">
-                                <tbody>
-                                    <tr v-for="theme in themes">
-                                        <td>
-                                            <h5>{{theme.title}}</h5>
-                                            <div>{{theme.detail}}</div>
-                                            <div>
-                                                created by {{theme.creator.name}} {{theme.createTimeText}}
-                                                •
-                                                {{theme.owners.length}}
-                                                •
-                                                {{theme.watchers.length}}
-                                                •
-                                                <button type="button" class="btn btn-xs btn-primary"
-                                                    v-show="theme.isWatching"
-                                                    @click="unwatch(theme)">unwatch</button>
-                                                <button type="button" class="btn btn-xs btn-primary"
-                                                    v-else
-                                                    @click="watch(theme)">watch</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <button type="button" class="btn btn-primary"
+                                v-show="canCreate"
+                                @click="createTheme()">Create</button>
+                            <button type="button" class="btn btn-primary" disabled
+                                v-else>Please input title</button>
                         </div>
                     </div>
                 </form>

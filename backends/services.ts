@@ -29,3 +29,6 @@ export {authenticationCredential};
 
 import * as mongo from "./services/mongo";
 export {mongo};
+
+import * as seed from "./services/seed";
+export {seed};

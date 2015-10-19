@@ -18,21 +18,31 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let organizationStringId: string = request.params.organization_id;
-        let organizationId = new libs.ObjectId(organizationStringId);
+        if (!libs.validator.isMongoId(request.params.organization_id)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"), documentUrl);
+            return;
+        }
+
+        let organizationId = new libs.ObjectId(request.params.organization_id);
+        let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
+        let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
 
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationStringId)) {
+        if (!organizationId.equals(services.seed.publicOrganizationId)
+            && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
 
-        let themes = await services.mongo.Theme.find({ organization: organizationId }).populate("creator owners watchers").exec();
+        let themes = await services.mongo.Theme.find({ organization: organizationId }).skip((page - 1) * limit).limit(limit).sort({ createTime: -1 }).populate("creator owners watchers").exec();
+
+        let totalCount = await services.mongo.Theme.count({ organization: organizationId }).exec();
 
         let result = {
-            themes: []
+            themes: [],
+            totalCount: totalCount
         };
 
         libs._.each(themes, (t: services.mongo.ThemeDocument) => {
@@ -42,8 +52,9 @@ export async function get(request: libs.Request, response: libs.Response) {
                 id: t._id.toHexString(),
                 title: t.title,
                 detail: t.detail,
-                organizationId: organizationStringId,
+                organizationId: organizationId.toHexString(),
                 createTime: t.createTime.getTime(),
+                status: t.status,
                 creator: {
                     id: creator._id,
                     name: creator.name,
@@ -66,7 +77,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             };
 
             result.themes.push(theme);
-        })
+        });
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {

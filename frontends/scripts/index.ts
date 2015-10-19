@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as enums from "../../common/enums";
 import * as interfaces from "../../common/interfaces";
 
 declare let Vue;
@@ -24,16 +25,20 @@ interface Theme {
     detail: string;
     organizationId: string;
     createTime: number;
+    status: enums.ThemeStatus;
     creator: User;
     owners: User[];
     watchers: User[];
 
     createTimeText: string;
     isWatching: boolean;
+    isHovering: boolean;
+    watchersEmails: string;
 }
 
 interface ThemesResponse extends interfaces.Response {
     themes: Theme[];
+    totalCount: number;
 }
 
 interface VueBodyModel {
@@ -42,14 +47,22 @@ interface VueBodyModel {
     themes: Theme[];
     newThemeTitle: string;
     newThemeDetail: string;
+    currentPage: number;
+    totalCount: number;
+
+    nextThemeCount: number;
+    canCreate: boolean;
 
     getOrganizationsCurrentUserIn: () => void;
-    fetchThemes: (string) => void;
+    fetchThemes: (page: number) => void;
     clickOrganization: (Organization) => void;
     createTheme: () => void;
     setThemeCreateTimeText: () => void;
     watch: (Theme) => void;
     unwatch: (Theme) => void;
+    close: (Theme) => void;
+    reopen: (Theme) => void;
+    getEmails: (users: User[]) => string;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -60,6 +73,21 @@ let vueBody: VueBodyModel = new Vue({
         themes: [],
         newThemeTitle: "",
         newThemeDetail: "",
+        currentPage: 1,
+        totalCount: 0
+    },
+    computed: {
+        nextThemeCount: function() {
+            let self: VueBodyModel = this;
+
+            let count = self.totalCount - base.itemLimit * self.currentPage;
+            return count > base.itemLimit ? base.itemLimit : count;
+        },
+        canCreate: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.newThemeTitle.trim() && base.vueHead.requestCount === 0;
+        }
     },
     methods: {
         getOrganizationsCurrentUserIn: function() {
@@ -73,9 +101,15 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         self.organizationsCurrentUserIn = data.organizations;
                         if (data.organizations.length > 0) {
-                            self.currentOrganizationId = data.organizations[0].id;
+                            let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                            if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
+                                self.currentOrganizationId = lastOrganizationId;
+                            }
+                            else {
+                                self.currentOrganizationId = data.organizations[0].id;
+                            }
 
-                            self.fetchThemes(data.organizations[0].id);
+                            self.fetchThemes(1);
                         }
                     }
                     else {
@@ -84,21 +118,36 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        fetchThemes: function(organizationId: string) {
+        getEmails: function(users: User[]) {
+            return _.reduce(users, (r, w) => r + w.email + ';', '');
+        },
+        fetchThemes: function(page: number) {
             let self: VueBodyModel = this;
 
+            self.currentPage = page;
+
             $.ajax({
-                url: "/api/organizations/" + organizationId + "/themes",
-                data: {},
+                url: "/api/organizations/" + self.currentOrganizationId + "/themes",
+                data: {
+                    page: page,
+                    limit: base.itemLimit
+                },
                 cache: false,
                 success: (data: ThemesResponse) => {
                     if (data.isSuccess) {
                         for (let theme of data.themes) {
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
+                            theme.isHovering = false;
+                            theme.watchersEmails = self.getEmails(theme.watchers);
                         }
-
-                        self.themes = data.themes;
+                        if (page === 1) {
+                            self.themes = data.themes;
+                        }
+                        else {
+                            self.themes = self.themes.concat(data.themes);
+                        }
+                        self.totalCount = data.totalCount;
                     }
                     else {
                         alert(data.errorMessage);
@@ -109,11 +158,10 @@ let vueBody: VueBodyModel = new Vue({
         clickOrganization: function(organization: Organization) {
             let self: VueBodyModel = this;
 
-            if (self.currentOrganizationId !== organization.id) {
-                self.fetchThemes(organization.id);
-            }
-
             self.currentOrganizationId = organization.id;
+            self.fetchThemes(1);
+
+            window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
         },
         createTheme: function() {
             let self: VueBodyModel = this;
@@ -124,7 +172,7 @@ let vueBody: VueBodyModel = new Vue({
                 organizationId: self.currentOrganizationId
             }, (data: interfaces.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(self.currentOrganizationId);
+                    self.fetchThemes(1);
                     alert("success");
                 }
                 else {
@@ -144,7 +192,13 @@ let vueBody: VueBodyModel = new Vue({
 
             $.post("/api/user/themes/" + theme.id + "/watched", {}, (data: interfaces.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(self.currentOrganizationId);
+                    theme.watchers.push({
+                        id: base.vueHead.currentUserId,
+                        name: base.vueHead.currentUserName,
+                        email: base.vueHead.currentUserEmail
+                    });
+                    theme.isWatching = true;
+                    theme.watchersEmails += base.vueHead.currentUserEmail + ';';
                     alert("success");
                 }
                 else {
@@ -162,7 +216,56 @@ let vueBody: VueBodyModel = new Vue({
                 type: "delete",
                 success: (data: interfaces.Response) => {
                     if (data.isSuccess) {
-                        self.fetchThemes(self.currentOrganizationId);
+                        let index = _.findIndex(theme.watchers, w=> w.id === base.vueHead.currentUserId);
+                        if (~index) {
+                            theme.watchers.splice(index, 1);
+                            theme.watchersEmails = self.getEmails(theme.watchers);
+                        }
+                        theme.isWatching = false;
+                        alert("success");
+                    }
+                    else {
+                        alert(data.errorMessage);
+                    }
+                }
+            });
+        },
+        showMoreThemes: function() {
+            let self: VueBodyModel = this;
+
+            self.currentPage++;
+            self.fetchThemes(self.currentPage);
+        },
+        close: function(theme: Theme) {
+            $.ajax({
+                url: "/api/themes/" + theme.id,
+                data: {
+                    status: enums.ThemeStatus.closed
+                },
+                cache: false,
+                type: "put",
+                success: (data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        theme.status = enums.ThemeStatus.closed;
+                        alert("success");
+                    }
+                    else {
+                        alert(data.errorMessage);
+                    }
+                }
+            });
+        },
+        reopen: function(theme: Theme) {
+            $.ajax({
+                url: "/api/themes/" + theme.id,
+                data: {
+                    status: enums.ThemeStatus.open
+                },
+                cache: false,
+                type: "put",
+                success: (data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        theme.status = enums.ThemeStatus.open;
                         alert("success");
                     }
                     else {
@@ -174,7 +277,15 @@ let vueBody: VueBodyModel = new Vue({
     }
 });
 
+declare let Clipboard;
+
 $(document).ready(function() {
+    let clipboard = new Clipboard('.clip');
+
+    clipboard.on('success', function(e) {
+        alert('emails copied.');
+    });
+
     base.vueHead.authenticate((error, data) => {
         if (error) {
             console.log(error);

@@ -6,4 +6,5 @@ export interface Response {
     errorMessage?: string;
     stack?: string;
     documentUrl?: string;
+    actualErrorMessage?: string;
 }

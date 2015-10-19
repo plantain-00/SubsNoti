@@ -29,6 +29,11 @@ export async function get(request: libs.Request, response: libs.Response) {
             })
         };
 
+        result.organizations.push({
+            id: services.seed.publicOrganizationId.toHexString(),
+            name: services.seed.publicOrganizationName
+        });
+
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {
         services.response.sendError(response, error, documentUrl);

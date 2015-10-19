@@ -42,10 +42,13 @@ export {redis};
 import * as fs from 'fs';
 export {fs};
 
+import * as validator from 'validator';
+export {validator};
+
 import * as mongoose from 'mongoose';
 export {mongoose};
 
-import ObjectId = mongoose.Types.ObjectId
+import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
 import Request = express.Request;

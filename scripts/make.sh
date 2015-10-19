@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # cd
+export NODE_ENV=development
 
 # git pull
 # echo 'Starting "git pull"...'
@@ -41,7 +42,6 @@ mocha publish/backends/tests
 echo 'Finished "test".'
 
 # gulp tasks
-export NODE_ENV=development
 echo 'Starting "css"...'
 gulp css
 echo 'Finished "css".'

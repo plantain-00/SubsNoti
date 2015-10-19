@@ -19,6 +19,8 @@ import * as tokenSent from "./controllers/token_sent";
 
 import * as organizationsThemes from "./controllers/organizations/themes";
 
+import * as themes from "./controllers/themes";
+
 export function route(app: libs.Application) {
     function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
@@ -41,4 +43,6 @@ export function route(app: libs.Application) {
     bind(tokenSent.documentOfCreate, tokenSent.create);
 
     bind(organizationsThemes.documentOfGet, organizationsThemes.get);
+
+    bind(themes.documentOfUpdate, themes.update);
 }

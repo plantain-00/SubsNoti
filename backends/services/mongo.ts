@@ -37,7 +37,7 @@ export interface UserDocument extends libs.mongoose.Document {
 export interface ThemeDocument extends libs.mongoose.Document {
     title: string;
     detail: string;
-    status: enums.UserStatus;
+    status: enums.ThemeStatus;
     createTime: Date;
 
     creator: UserDocument | libs.ObjectId;
