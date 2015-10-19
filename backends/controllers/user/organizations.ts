@@ -17,19 +17,13 @@ export let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    let organizationName: string = request.body.organizationName;
-    if (!organizationName) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
-        return;
-    }
-
-    organizationName = organizationName.trim();
-    if (!organizationName) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
-        return;
-    }
-
     try {
+        let organizationName = libs.validator.trim(request.body.organizationName);
+        if (organizationName === '') {
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
+            return;
+        }
+
         let userId = await services.authenticationCredential.authenticate(request);
         let organization = await services.mongo.Organization.findOne({ name: organizationName }).exec();
         if (organization) {

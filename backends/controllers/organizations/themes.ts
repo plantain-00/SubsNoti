@@ -18,21 +18,19 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let organizationStringId: string = request.params.organization_id;
-        let organizationId = new libs.ObjectId(organizationStringId);
-        let page = request.query.page;
-        if (!page) {
-            page = 1;
+        if (!libs.validator.isMongoId(request.params.organization_id)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"), documentUrl);
+            return;
         }
-        let limit = request.query.limit;
-        if (!limit) {
-            limit = settings.config.defaultItemLimit;
-        }
+
+        let organizationId = new libs.ObjectId(request.params.organization_id);
+        let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
+        let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
 
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationStringId)) {
+        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationId.toHexString())) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
@@ -53,7 +51,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 id: t._id.toHexString(),
                 title: t.title,
                 detail: t.detail,
-                organizationId: organizationStringId,
+                organizationId: organizationId.toHexString(),
                 createTime: t.createTime.getTime(),
                 status: t.status,
                 creator: {

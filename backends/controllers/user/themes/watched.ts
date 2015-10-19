@@ -19,8 +19,8 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
     let themeStringId: string = request.params.theme_id;
 
-    if (!themeStringId) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
+    if (!libs.validator.isMongoId(themeStringId)) {
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
         return;
     }
 
@@ -64,15 +64,13 @@ export let documentOfUnwatch = {
 export async function unwatch(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUnwatch.documentUrl;
 
-    let themeStringId: string = request.params.theme_id;
-
-    if (!themeStringId) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
-        return;
-    }
-
     try {
-        let themeId = new libs.ObjectId(themeStringId);
+        if (!libs.validator.isMongoId(request.params.theme_id)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            return;
+        }
+
+        let themeId = new libs.ObjectId(request.params.theme_id);
 
         let userId = await services.authenticationCredential.authenticate(request);
 

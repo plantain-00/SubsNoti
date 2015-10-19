@@ -18,18 +18,20 @@ export async function update(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUpdate.documentUrl;
 
     try {
-        let id: string = request.params.theme_id;
-
-        let title: string = request.body.title;
-        let detail: string = request.body.detail;
-        let status: enums.ThemeStatus = request.body.status;
-
-        if (!id) {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("theme_id"), documentUrl);
+        if (!libs.validator.isMongoId(request.params.theme_id)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
             return;
         }
 
-        let objectId = new libs.ObjectId(id);
+        let title = libs.validator.trim(request.body.title);
+        let detail = libs.validator.trim(request.body.detail);
+        let themeStatus: enums.ThemeStatus;
+
+        if (libs.validator.isIn(request.body.status, [enums.ThemeStatus.open, enums.ThemeStatus.closed])) {
+            themeStatus = libs.validator.toInt(request.body.status);
+        }
+
+        let objectId = new libs.ObjectId(request.params.theme_id);
 
         let userId = await services.authenticationCredential.authenticate(request);
         let theme = await services.mongo.Theme.findOne({ _id: objectId }).select('title detail status').exec();
@@ -46,8 +48,8 @@ export async function update(request: libs.Request, response: libs.Response) {
             theme.detail = detail;
         }
 
-        if (status) {
-            theme.status = status;
+        if (themeStatus) {
+            theme.status = themeStatus;
         }
 
         theme.save();

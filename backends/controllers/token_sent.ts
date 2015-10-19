@@ -17,15 +17,13 @@ export let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    let email: string = request.body.email;
-    let name = request.body.name;
-
-    if (!email) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("email"), documentUrl);
+    if (!libs.validator.isEmail(request.body.email)) {
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"), documentUrl);
         return;
     }
 
-    email = email.toLowerCase();
+    let email = libs.validator.trim(request.body.email).toLowerCase();
+    let name = libs.validator.trim(request.body.name);
 
     try {
         let user = await services.mongo.User.findOne({ email: email }).exec();

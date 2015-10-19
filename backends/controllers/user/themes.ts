@@ -17,33 +17,25 @@ export let documentOfCreate = {
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
-    let organizationStringId: string = request.body.organizationId;
-
-    if (!organizationStringId) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationId"), documentUrl);
+    if (!libs.validator.isMongoId(request.body.organizationId)) {
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organizationId"), documentUrl);
         return;
     }
 
-    let organizationId = new libs.ObjectId(organizationStringId);
+    let organizationId = new libs.ObjectId(request.body.organizationId);
 
-    let themeTitle = request.body.themeTitle;
-    if (!themeTitle) {
+    let themeTitle = libs.validator.trim(request.body.themeTitle);
+    if (themeTitle === '') {
         services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"), documentUrl);
         return;
     }
 
-    themeTitle = themeTitle.trim();
-    if (!themeTitle) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"), documentUrl);
-        return;
-    }
-
-    let themeDetail = request.body.themeDetail;
+    let themeDetail = libs.validator.trim(request.body.themeDetail);
 
     try {
         let userId = await services.authenticationCredential.authenticate(request);
         let user = await services.mongo.User.findOne({ _id: userId }).exec();
-        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => organizationStringId)) {
+        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.toHexString() === organizationId.toHexString())) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
