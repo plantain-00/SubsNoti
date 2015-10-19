@@ -11,15 +11,13 @@ import * as services from "./services";
 import * as user from "./controllers/user";
 import * as userLoggedIn from "./controllers/user/logged_in";
 import * as userJoinedOrganizations from "./controllers/user/joined/organizations";
+import * as userCreatedOrganizations from "./controllers/user/created/organizations";
 import * as userThemeWatched from "./controllers/user/themes/watched";
-
 import * as tokenSent from "./controllers/token_sent";
-
 import * as organizationsThemes from "./controllers/organizations/themes";
-
 import * as themes from "./controllers/themes";
-
 import * as organizations from "./controllers/organizations";
+import * as organizationsUsersJoined from "./controllers/organizations/users/joined";
 
 export function route(app: libs.Application) {
     function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
@@ -33,6 +31,8 @@ export function route(app: libs.Application) {
 
     bind(userJoinedOrganizations.documentOfGet, userJoinedOrganizations.get);
 
+    bind(userCreatedOrganizations.documentOfGet, userCreatedOrganizations.get);
+
     bind(organizations.documentOfCreate, organizations.create);
 
     bind(userThemeWatched.documentOfWatch, userThemeWatched.watch);
@@ -44,4 +44,6 @@ export function route(app: libs.Application) {
 
     bind(themes.documentOfCreate, themes.create);
     bind(themes.documentOfUpdate, themes.update);
+
+    bind(organizationsUsersJoined.documentOfInvite, organizationsUsersJoined.invite);
 }

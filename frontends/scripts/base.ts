@@ -31,6 +31,10 @@ function getUrlParameter(name: string): string {
     return null;
 }
 
+export function isEmail(s: string): boolean {
+    return /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(s);
+}
+
 function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     let willClearPreviousStatus = getUrlParameter("clear_previous_status");
 

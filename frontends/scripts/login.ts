@@ -7,7 +7,6 @@ interface VueBodyModel {
     emailHead: string;
     emailTail: string;
     innerName: string;
-    loginText: string;
     innerRawEmail: string;
 
     rawEmail: string;
@@ -17,13 +16,12 @@ interface VueBodyModel {
     login: () => void;
 }
 
-let vueBody = new Vue({
+let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
     data: {
         emailHead: "",
         emailTail: "",
         innerName: "",
-        loginText: "Please input email",
         innerRawEmail: ""
     },
     computed: {
@@ -36,7 +34,7 @@ let vueBody = new Vue({
             set: function(value: string) {
                 let self: VueBodyModel = this;
 
-                if (/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(value)) {
+                if (base.isEmail(value)) {
                     var tmp = value.trim().toLowerCase().split("@");
                     self.emailHead = tmp[0];
                     self.emailTail = tmp[1];
@@ -80,12 +78,11 @@ let vueBody = new Vue({
                     return;
                 }
             }
-            self.loginText = "is sending email now...";
+
             $.post("/api/token_sent", {
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name
             }, function(data: interfaces.Response) {
-                self.loginText = "Please input email";
                 if (data.isSuccess) {
                     alert("success, please check your email.");
                     window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());

@@ -14,6 +14,8 @@
 * [Organization](Organization.md)
 	* [Create an organization](Create an organization.md)
 	* [Get joined organizations](Get joined organizations.md)
+	* [Get created organizations](Get created organizations.md)
+	* [Invite an user](Invite an user.md)
 * [Theme](Theme.md)
 	* [Create a theme](Create a theme.md)
 	* [Get themes of an organization](Get themes of an organization.md)

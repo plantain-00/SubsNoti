@@ -26,7 +26,9 @@ export async function create(request: libs.Request, response: libs.Response) {
     let name = libs.validator.trim(request.body.name);
 
     try {
-        let user = await services.mongo.User.findOne({ email: email }).exec();
+        let user = await services.mongo.User.findOne({ email: email })
+            .select("_id salt email")
+            .exec();
         if (user) {
             await sendEmail(user._id, user.salt, email);
             services.response.sendSuccess(response, enums.StatusCode.OK);

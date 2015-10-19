@@ -12,7 +12,9 @@ export let publicOrganizationId: libs.ObjectId;
 export let publicOrganizationName = "public";
 
 export async function init() {
-	let organization = await services.mongo.Organization.findOne({ name: publicOrganizationName }).select("_id").exec();
+	let organization = await services.mongo.Organization.findOne({ name: publicOrganizationName })
+		.select("_id")
+		.exec();
 	if (organization) {
 		publicOrganizationId = organization._id;
 	}

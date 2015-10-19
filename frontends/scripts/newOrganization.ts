@@ -11,7 +11,7 @@ interface VueBodyModel {
     add: () => void;
 }
 
-let vueBody = new Vue({
+let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
     data: {
         organizationName: ""
