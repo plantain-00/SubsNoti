@@ -19,6 +19,7 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.StatusCode.unauthorized));
     }
 
+    // may be it is already in cache.
     let reply = await services.cache.getStringAsync(settings.config.cacheKeys.user + authenticationCredential);
     if (reply) {
         return Promise.resolve(new libs.ObjectId(reply));
@@ -34,16 +35,21 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
     let id = new libs.ObjectId(userId);
     let now = new Date().getTime();
 
+    // should not expire.
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", enums.StatusCode.unauthorized));
     }
 
-    let user = await services.mongo.User.findOne({ _id: id }).exec();
+    // should be a valid user.
+    let user = await services.mongo.User.findOne({ _id: id })
+        .select("salt")
+        .exec();
     if (!user) {
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", enums.StatusCode.unauthorized));
     }
 
+    // should be verified.
     if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
         services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 

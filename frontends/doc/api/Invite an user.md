@@ -1,8 +1,8 @@
-# Create an organization
+# Invite an user
 
 ## Url
 
-/api/organizations
+/api/organizations/:organization_id/users/:user_email/joined
 
 ## Method
 
@@ -17,11 +17,5 @@ no
 ### [Parameters](./Parameters.html)
 
 ### [Cookies](./Cookies.html)
-
-### Request Body
-
-key name | value type | required
---- | --- | ---
-organizationName | string | true
 
 ### [Response Body](./Response.html)

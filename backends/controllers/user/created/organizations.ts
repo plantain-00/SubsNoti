@@ -9,9 +9,9 @@ import * as interfaces from "../../../../common/interfaces";
 import * as services from "../../../services";
 
 export let documentOfGet = {
-    url: "/api/user/joined/organizations",
+    url: "/api/user/created/organizations",
     method: "get",
-    documentUrl: "/doc/api/Get joined organizations.html"
+    documentUrl: "/doc/api/Get created organizations.html"
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
@@ -22,23 +22,17 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .populate('joinedOrganizations')
-            .select('joinedOrganizations')
+            .populate('createdOrganizations')
+            .select('createdOrganizations')
             .exec();
         let result = {
-            organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
+            organizations: libs._.map(user.createdOrganizations, (o: services.mongo.OrganizationDocument) => {
                 return {
                     id: o._id.toHexString(),
                     name: o.name
                 };
             })
         };
-
-        // public organization is also available.
-        result.organizations.push({
-            id: services.seed.publicOrganizationId.toHexString(),
-            name: services.seed.publicOrganizationName
-        });
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
     } catch (error) {

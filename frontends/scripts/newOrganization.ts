@@ -11,7 +11,7 @@ interface VueBodyModel {
     add: () => void;
 }
 
-let vueBody = new Vue({
+let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
     data: {
         organizationName: ""
@@ -27,7 +27,7 @@ let vueBody = new Vue({
         add: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/organizations", {
+            $.post("/api/organizations", {
                 organizationName: self.organizationName
             }, function(data: interfaces.Response) {
                 if (data.isSuccess) {

@@ -18,8 +18,12 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
+        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
-        let user = await services.mongo.User.findOne({ _id: userId }).select('email name createdOrganizations').exec();
+
+        let user = await services.mongo.User.findOne({ _id: userId })
+            .select('email name createdOrganizations')
+            .exec();
         let result: interfaces.CurrentUserResponse = {
             id: userId.toHexString(),
             email: user.email,

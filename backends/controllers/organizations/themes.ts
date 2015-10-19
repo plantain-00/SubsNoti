@@ -27,18 +27,30 @@ export async function get(request: libs.Request, response: libs.Response) {
         let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
         let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
 
+        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
-        let user = await services.mongo.User.findOne({ _id: userId }).exec();
 
-        if (!organizationId.equals(services.seed.publicOrganizationId)
-            && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
-            return;
+        // the organization should be public organization, or current user should join in it.
+        if (!organizationId.equals(services.seed.publicOrganizationId)) {
+            let user = await services.mongo.User.findOne({ _id: userId })
+                .select("joinedOrganizations")
+                .exec();
+
+            if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
+                services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+                return;
+            }
         }
 
-        let themes = await services.mongo.Theme.find({ organization: organizationId }).skip((page - 1) * limit).limit(limit).sort({ createTime: -1 }).populate("creator owners watchers").exec();
+        let themes = await services.mongo.Theme.find({ organization: organizationId })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .sort({ createTime: -1 })
+            .populate("creator owners watchers")
+            .exec();
 
-        let totalCount = await services.mongo.Theme.count({ organization: organizationId }).exec();
+        let totalCount = await services.mongo.Theme.count({ organization: organizationId })
+            .exec();
 
         let result = {
             themes: [],
