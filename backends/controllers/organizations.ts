@@ -1,15 +1,15 @@
 'use strict';
 
-import * as libs from "../../libs";
-import * as settings from "../../settings";
+import * as libs from "../libs";
+import * as settings from "../settings";
 
-import * as enums from "../../../common/enums";
-import * as interfaces from "../../../common/interfaces";
+import * as enums from "../../common/enums";
+import * as interfaces from "../../common/interfaces";
 
-import * as services from "../../services";
+import * as services from "../services";
 
 export let documentOfCreate = {
-    url: "/api/user/organizations",
+    url: "/api/organizations",
     method: "post",
     documentUrl: "/doc/api/Create an organization.html"
 };

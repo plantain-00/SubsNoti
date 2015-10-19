@@ -166,7 +166,7 @@ let vueBody: VueBodyModel = new Vue({
         createTheme: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/themes", {
+            $.post("/api/themes", {
                 themeTitle: self.newThemeTitle,
                 themeDetail: self.newThemeDetail,
                 organizationId: self.currentOrganizationId

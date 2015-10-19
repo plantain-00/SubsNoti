@@ -35,7 +35,8 @@ export async function watch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
+        if (!organization._id.equals(services.seed.publicOrganizationId)
+            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }
@@ -80,7 +81,8 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             return;
         }
         let organization = <services.mongo.OrganizationDocument>theme.organization;
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
+        if (!organization._id.equals(services.seed.publicOrganizationId)
+            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
             services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
             return;
         }

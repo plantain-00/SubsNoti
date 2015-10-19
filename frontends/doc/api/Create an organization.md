@@ -2,7 +2,7 @@
 
 ## Url
 
-/api/user/organizations
+/api/organizations
 
 ## Method
 
