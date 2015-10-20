@@ -31,6 +31,7 @@ let vueBody: VueBodyModel = new Vue({
                 organizationName: self.organizationName
             }, function(data: interfaces.Response) {
                 if (data.isSuccess) {
+                    base.vueHead.createdOrganizationCount++;
                     alert("success.");
                 } else {
                     alert(data.errorMessage);
