@@ -17,7 +17,9 @@ export let sessionStorageNames = {
 
 export let localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
-    lastOrganizationId: "lastOrganizationId"
+    lastOrganizationId: "lastOrganizationId",
+    lastLoginEmail: "lastLoginEmail",
+    lastLoginName: "lastLoginName"
 };
 
 export let itemLimit = 10;
@@ -122,6 +124,9 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
                     self.createdOrganizationCount = data.createdOrganizationCount;
+                    
+                    window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
+                    window.localStorage.setItem(localStorageNames.lastLoginName, data.name);
 
                     next(null, data);
                 } else {
