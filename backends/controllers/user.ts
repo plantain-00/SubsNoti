@@ -28,7 +28,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             id: userId.toHexString(),
             email: user.email,
             name: user.name,
-            canCreateOrganization: user.createdOrganizations.length < settings.config.maxOrganizationNumberUserCanCreate
+            createdOrganizationCount: user.createdOrganizations.length
         };
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);

@@ -17,10 +17,13 @@ export let sessionStorageNames = {
 
 export let localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
-    lastOrganizationId: "lastOrganizationId"
+    lastOrganizationId: "lastOrganizationId",
+    lastLoginEmail: "lastLoginEmail",
+    lastLoginName: "lastLoginName"
 };
 
 export let itemLimit = 10;
+export let maxOrganizationNumberUserCanCreate = 3;
 
 function getUrlParameter(name: string): string {
     var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -69,8 +72,10 @@ interface VueHeadModel {
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
-    canCreateOrganization: boolean;
+    createdOrganizationCount: number;
     requestCount: number;
+
+    canCreateOrganization: boolean;
 
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
@@ -83,12 +88,19 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
-        canCreateOrganization: false,
+        createdOrganizationCount: maxOrganizationNumberUserCanCreate,
         requestCount: 0
+    },
+    computed: {
+        canCreateOrganization: function() {
+            let self: VueHeadModel = this;
+
+            return self.createdOrganizationCount < maxOrganizationNumberUserCanCreate;
+        }
     },
     methods: {
         exit: function() {
-            var self: VueHeadModel = this;
+            let self: VueHeadModel = this;
 
             $.ajax({
                 type: "DELETE",
@@ -103,7 +115,7 @@ export let vueHead: VueHeadModel = new Vue({
             });
         },
         authenticate: function(next: (error: Error, data: CurrentUserResponse) => void) {
-            var self: VueHeadModel = this;
+            let self: VueHeadModel = this;
 
             getCurrentUser(data=> {
                 if (data.isSuccess) {
@@ -111,7 +123,10 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
-                    self.canCreateOrganization = data.canCreateOrganization;
+                    self.createdOrganizationCount = data.createdOrganizationCount;
+                    
+                    window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
+                    window.localStorage.setItem(localStorageNames.lastLoginName, data.name);
 
                     next(null, data);
                 } else {

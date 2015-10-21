@@ -10,7 +10,7 @@
 + typescript 1.7.x
 + gulp
 + mocha
-+ mysql || mariadb
++ mysql || mariadb(optional)
 + mongodb
 + redis
 + gitbook-cli
@@ -29,31 +29,31 @@
 
 ## make
 
-+ script/make.bat
++ `script/make.bat`
 
 or
 
-+ script/make.sh
++ `script/make.sh`
 
 then all is in `publish`.
 
 ## watch
 
-+ script/watch.bat
++ `script/watch.bat`
 
 or
 
-+ script/watch.sh
++ `script/watch.sh`
 
 # deploy
 
-+ git pull
-+ scripts/make.sh
-+ scripts/deploy.sh
++ `git pull`
++ `scripts/make.sh`
++ `scripts/deploy.sh`
 
 # tests
 
-mocha publish/backends/tests
+`mocha publish/backends/tests`
 
 # demo
 

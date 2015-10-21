@@ -98,6 +98,9 @@ $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
         if (error) {
             console.log(error);
+
+            vueBody.rawEmail = window.localStorage.getItem(base.localStorageNames.lastLoginEmail);
+            vueBody.name = window.localStorage.getItem(base.localStorageNames.lastLoginName);
             return;
         }
 

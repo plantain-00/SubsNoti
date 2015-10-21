@@ -94,10 +94,10 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let title = libs.validator.trim(request.body.title);
         let detail = libs.validator.trim(request.body.detail);
-        let themeStatus: enums.ThemeStatus;
+        let status: enums.ThemeStatus;
 
         if (libs.validator.isIn(request.body.status, [enums.ThemeStatus.open, enums.ThemeStatus.closed])) {
-            themeStatus = libs.validator.toInt(request.body.status);
+            status = libs.validator.toInt(request.body.status);
         }
 
         let id = new libs.ObjectId(request.params.theme_id);
@@ -122,8 +122,8 @@ export async function update(request: libs.Request, response: libs.Response) {
             theme.detail = detail;
         }
 
-        if (themeStatus) {
-            theme.status = themeStatus;
+        if (status) {
+            theme.status = status;
         }
 
         theme.save();
