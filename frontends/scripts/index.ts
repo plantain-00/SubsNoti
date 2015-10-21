@@ -34,6 +34,7 @@ interface Theme {
     isWatching: boolean;
     isHovering: boolean;
     watchersEmails: string;
+    isOwner: boolean;
 }
 
 interface ThemesResponse extends interfaces.Response {
@@ -49,9 +50,13 @@ interface VueBodyModel {
     newThemeDetail: string;
     currentPage: number;
     totalCount: number;
+    themeIdInEditing: string;
+    titleInEditing: string;
+    detailInEditing: string;
 
     nextThemeCount: number;
     canCreate: boolean;
+    canSave: boolean;
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number) => void;
@@ -63,6 +68,9 @@ interface VueBodyModel {
     close: (Theme) => void;
     reopen: (Theme) => void;
     getEmails: (users: User[]) => string;
+    edit: (Theme) => void;
+    cancel: (Theme) => void;
+    save: (Theme) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -74,7 +82,10 @@ let vueBody: VueBodyModel = new Vue({
         newThemeTitle: "",
         newThemeDetail: "",
         currentPage: 1,
-        totalCount: 0
+        totalCount: 0,
+        themeIdInEditing: null,
+        titleInEditing: "",
+        detailInEditing: ""
     },
     computed: {
         nextThemeCount: function() {
@@ -87,6 +98,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             return self.newThemeTitle.trim() && base.vueHead.requestCount === 0;
+        },
+        canSave: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.titleInEditing.trim() && base.vueHead.requestCount === 0;
         }
     },
     methods: {
@@ -137,6 +153,7 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         for (let theme of data.themes) {
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
+                            theme.isOwner = theme.owners.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
@@ -267,6 +284,45 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         theme.status = enums.ThemeStatus.open;
                         alert("success");
+                    }
+                    else {
+                        alert(data.errorMessage);
+                    }
+                }
+            });
+        },
+        edit: function(theme: Theme) {
+            let self: VueBodyModel = this;
+
+            self.themeIdInEditing = theme.id;
+            self.titleInEditing = theme.title;
+            self.detailInEditing = theme.detail;
+        },
+        cancel: function(theme: Theme) {
+            let self: VueBodyModel = this;
+
+            self.themeIdInEditing = null;
+            self.titleInEditing = "";
+            self.detailInEditing = "";
+        },
+        save: function(theme: Theme) {
+            let self: VueBodyModel = this;
+
+            $.ajax({
+                url: "/api/themes/" + theme.id,
+                data: {
+                    title: self.titleInEditing,
+                    detail: self.detailInEditing
+                },
+                cache: false,
+                type: "put",
+                success: (data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        theme.title = self.titleInEditing;
+                        theme.detail = self.detailInEditing;
+                        alert("success");
+
+                        self.cancel(theme);
                     }
                     else {
                         alert(data.errorMessage);
