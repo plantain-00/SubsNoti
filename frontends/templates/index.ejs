@@ -54,22 +54,26 @@
                                                     •
                                                     <button type="button" class="btn btn-xs btn-primary"
                                                         v-show="theme.isWatching"
-                                                        @click="unwatch(theme)">unwatch</button>
+                                                        @click="unwatch(theme)">
+                                                        unwatch
+                                                    </button>
                                                     <button type="button" class="btn btn-xs btn-primary"
                                                         v-else
-                                                        @click="watch(theme)">watch</button>
-                                                    •
-                                                    <button type="button" class="btn btn-xs btn-danger"
-                                                        v-show="theme.status === 0"
-                                                        @click="close(theme)">
-                                                        close
-                                                    </button>
-                                                    <button type="button" class="btn btn-xs btn-success"
-                                                        v-else
-                                                        @click="reopen(theme)">
-                                                        reopen
+                                                        @click="watch(theme)">
+                                                        watch
                                                     </button>
                                                     <div :style='{ display: theme.isOwner ? "inline" : "none" }'>
+                                                        •
+                                                        <button type="button" class="btn btn-xs btn-danger"
+                                                            v-show="theme.status === 0"
+                                                            @click="close(theme)">
+                                                            close
+                                                        </button>
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            v-else
+                                                            @click="reopen(theme)">
+                                                            reopen
+                                                        </button>
                                                         <div :style='{ display: themeIdInEditing === null ? "inline" : "none" }'>
                                                             •
                                                             <button type="button" class="btn btn-xs btn-primary"

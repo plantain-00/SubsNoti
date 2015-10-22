@@ -149,7 +149,7 @@ function bundleAndUglifyJs(name: string) {
 }
 
 function bundleAndUglifyHtml(name: string) {
-    var manifest = gulp.src("frontends/build/rev-manifest.json");
+    let manifest = gulp.src("frontends/build/rev-manifest.json");
 
     if (isDevelopment) {
         gulp.src('frontends/templates/' + name + '.ejs')
