@@ -53,6 +53,7 @@ interface VueBodyModel {
     themeIdInEditing: string;
     titleInEditing: string;
     detailInEditing: string;
+    q: string;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -85,7 +86,8 @@ let vueBody: VueBodyModel = new Vue({
         totalCount: 0,
         themeIdInEditing: null,
         titleInEditing: "",
-        detailInEditing: ""
+        detailInEditing: "",
+        q: ""
     },
     computed: {
         nextThemeCount: function() {
@@ -146,7 +148,8 @@ let vueBody: VueBodyModel = new Vue({
                 url: "/api/organizations/" + self.currentOrganizationId + "/themes",
                 data: {
                     page: page,
-                    limit: base.itemLimit
+                    limit: base.itemLimit,
+                    q: self.q
                 },
                 cache: false,
                 success: (data: ThemesResponse) => {

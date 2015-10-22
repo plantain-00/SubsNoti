@@ -20,6 +20,7 @@ key name | value type | required | default value
 --- | --- | --- | ---
 page | number | false | 1
 limit | number | false | 10
+q | string | false | ''
 
 ### [Cookies](./Cookies.html)
 

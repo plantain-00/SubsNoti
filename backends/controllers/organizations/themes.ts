@@ -26,6 +26,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let organizationId = new libs.ObjectId(request.params.organization_id);
         let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
         let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
+        let q = libs.validator.trim(request.query.q);
 
         // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
@@ -42,8 +43,15 @@ export async function get(request: libs.Request, response: libs.Response) {
             }
         }
 
-        let themes = await services.mongo.Theme.find({ organization: organizationId })
-            .skip((page - 1) * limit)
+        let query = services.mongo.Theme.find({
+            organization: organizationId
+        });
+
+        if (q) {
+            query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
+        }
+        
+        let themes = await query.skip((page - 1) * limit)
             .limit(limit)
             .sort({ createTime: -1 })
             .populate("creator owners watchers")
