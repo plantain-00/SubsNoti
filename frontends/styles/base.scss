@@ -1,5 +1,5 @@
-@border-and-word-color: #d44137;
-@background-color: white;
+$border-and-word-color: #d44137;
+$background-color: white;
 
 *{
     font-family: "Lucida Grande", Lucida Sans Unicode, Hiragino Sans GB, WenQuanYi Micro Hei, Verdana, Aril, sans-serif;
@@ -7,7 +7,7 @@
 }
 
 .the-label {
-    border: @border-and-word-color 1px solid;
+    border: $border-and-word-color 1px solid;
     border-radius: 5px;
 
     padding: 5px 10px;
@@ -15,8 +15,8 @@
 
     display: inline-block;
 
-    background-color: @background-color;
-    color: @border-and-word-color;
+    background-color: $background-color;
+    color: $border-and-word-color;
 
     cursor: pointer;
 
@@ -24,10 +24,10 @@
 }
 
 .the-label:hover {
-    box-shadow: 0 0 10px @border-and-word-color;
+    box-shadow: 0 0 10px $border-and-word-color;
 }
 
 .label-active {
-    background-color: @border-and-word-color;
-    color: @background-color;
+    background-color: $border-and-word-color;
+    color: $background-color;
 }

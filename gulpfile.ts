@@ -9,7 +9,6 @@ let ejs = require("gulp-ejs");
 let webpack = require('webpack-stream');
 let minifyHtml = require('gulp-minify-html');
 let rev = require('gulp-rev');
-let less = require('gulp-less');
 let path = require('path');
 let minifyCSS = require('gulp-minify-css');
 let autoprefixer = require('autoprefixer');
@@ -17,7 +16,8 @@ let postcss = require('gulp-postcss');
 let watch = require('gulp-watch');
 let batch = require('gulp-batch');
 let revReplace = require('gulp-rev-replace');
-let shell = require('gulp-shell')
+let shell = require('gulp-shell');
+let sass = require('gulp-sass');
 
 import * as environment from './common/environment';
 
@@ -45,7 +45,7 @@ let minifyHtmlConfig = {
 let isDevelopment = process.env.NODE_ENV !== environment.productionEnvironment;
 
 gulp.task('watch', function() {
-    watch('frontends/styles/*.less', batch(function(events, done) {
+    watch('frontends/styles/*.scss', batch(function(events, done) {
         gulp.start('css', done);
     }));
     watch("frontends/scripts/*.js", batch(function(events, done) {
@@ -112,14 +112,14 @@ gulp.task('html', () => {
 
 function uglifyCss(name: string) {
     if (isDevelopment) {
-        gulp.src('frontends/styles/' + name + '.less')
-            .pipe(less())
+        gulp.src('frontends/styles/' + name + '.scss')
+            .pipe(sass())
             .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
             .pipe(rename(name + ".css"))
             .pipe(gulp.dest('frontends/build/styles/'));
     } else {
-        gulp.src('frontends/styles/' + name + '.less')
-            .pipe(less())
+        gulp.src('frontends/styles/' + name + '.scss')
+            .pipe(sass())
             .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
             .pipe(minifyCSS())
             .pipe(rename(name + ".min.css"))

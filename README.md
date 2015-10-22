@@ -5,12 +5,12 @@
 # tools and global npm packages
 
 + git
-+ node.js 4.x && npm
++ node.js 4.x(for ES6 support)
 + tsd
-+ typescript 1.7.x
++ typescript 1.7+(for ES6 and ES7 async function support)
 + gulp
 + mocha
-+ mysql || mariadb(optional)
++ mysql(optional)
 + mongodb
 + redis
 + gitbook-cli
