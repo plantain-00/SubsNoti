@@ -94,7 +94,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let title = libs.validator.trim(request.body.title);
         let detail = libs.validator.trim(request.body.detail);
-        let status: enums.ThemeStatus;
+        let status: enums.ThemeStatus = null;
 
         if (libs.validator.isIn(request.body.status, [enums.ThemeStatus.open, enums.ThemeStatus.closed])) {
             status = libs.validator.toInt(request.body.status);
@@ -128,7 +128,7 @@ export async function update(request: libs.Request, response: libs.Response) {
             theme.detail = detail;
         }
 
-        if (status) {
+        if (status !== null) {
             theme.status = status;
         }
 
