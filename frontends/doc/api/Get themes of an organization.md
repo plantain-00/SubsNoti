@@ -21,6 +21,8 @@ key name | value type | required | default value
 page | number | false | 1
 limit | number | false | 10
 q | string | false | ''
+isOpen | boolean | false | true
+isClosed | boolean | false | false
 
 ### [Cookies](./Cookies.html)
 

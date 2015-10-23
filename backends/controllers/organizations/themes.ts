@@ -27,6 +27,8 @@ export async function get(request: libs.Request, response: libs.Response) {
         let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
         let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
         let q = libs.validator.trim(request.query.q);
+        let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
+        let isClosed = libs.validator.trim(request.query.isClosed) === "true";
 
         // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
@@ -47,10 +49,17 @@ export async function get(request: libs.Request, response: libs.Response) {
             organization: organizationId
         });
 
+        if (isOpen && !isClosed) {
+            query = query.where("status").equals(enums.ThemeStatus.open);
+        }
+        else if (!isOpen && isClosed) {
+            query = query.where("status").equals(enums.ThemeStatus.closed);
+        }
+
         if (q) {
             query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
-        
+
         let themes = await query.skip((page - 1) * limit)
             .limit(limit)
             .sort({ createTime: -1 })
