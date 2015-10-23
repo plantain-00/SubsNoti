@@ -34,6 +34,7 @@ interface Theme {
     isWatching: boolean;
     isHovering: boolean;
     watchersEmails: string;
+    ownersEmails: string;
     isOwner: boolean;
 }
 
@@ -168,6 +169,7 @@ let vueBody: VueBodyModel = new Vue({
                             theme.createTimeText = moment(theme.createTime).fromNow();
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
+                            theme.ownersEmails = self.getEmails(theme.owners);
                         }
                         if (page === 1) {
                             self.themes = data.themes;

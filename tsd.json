@@ -6,73 +6,73 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "serve-static/serve-static.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "mime/mime.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "express/express.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "gulp/gulp.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "mysql/mysql.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "moment/moment.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "moment/moment-node.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "lodash/lodash.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "redis/redis.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "mocha/mocha.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "orchestrator/orchestrator.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "q/Q.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "nodemailer/nodemailer.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "nodemailer-smtp-transport/nodemailer-smtp-transport.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "nodemailer-direct-transport/nodemailer-direct-transport.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "nodemailer/nodemailer-types.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "node-uuid/node-uuid.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "jquery/jquery.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "mongoose/mongoose.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "node-uuid/node-uuid-cjs.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "node-uuid/node-uuid-base.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     },
     "validator/validator.d.ts": {
-      "commit": "68548c2daab053869f323d475419c693478bbb73"
+      "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
     }
   }
 }
