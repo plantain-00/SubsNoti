@@ -48,16 +48,22 @@ export async function get(request: libs.Request, response: libs.Response) {
         let query = services.mongo.Theme.find({
             organization: organizationId
         });
+        let countQuery = services.mongo.Theme.find({
+            organization: organizationId
+        });
 
         if (isOpen && !isClosed) {
             query = query.where("status").equals(enums.ThemeStatus.open);
+            countQuery = countQuery.where("status").equals(enums.ThemeStatus.open);
         }
         else if (!isOpen && isClosed) {
             query = query.where("status").equals(enums.ThemeStatus.closed);
+            countQuery = countQuery.where("status").equals(enums.ThemeStatus.closed);
         }
 
         if (q) {
             query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
+            countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
 
         let themes = await query.skip((page - 1) * limit)
@@ -66,7 +72,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .populate("creator owners watchers")
             .exec();
 
-        let totalCount = await services.mongo.Theme.count({ organization: organizationId })
+        let totalCount = await countQuery.count()
             .exec();
 
         let result = {
