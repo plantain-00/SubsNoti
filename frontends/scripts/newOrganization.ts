@@ -27,14 +27,14 @@ let vueBody: VueBodyModel = new Vue({
         add: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations", {
+            $.post("/api/organizations?v=0.0.1", {
                 organizationName: self.organizationName
             }, function(data: interfaces.Response) {
                 if (data.isSuccess) {
                     base.vueHead.createdOrganizationCount++;
-                    alert("success.");
+                    base.vueHead.showAlert(true, "success");
                 } else {
-                    alert(data.errorMessage);
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         }

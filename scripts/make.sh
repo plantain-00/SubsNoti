@@ -5,6 +5,7 @@ export NODE_ENV=development
 
 # git pull
 # echo 'Starting "git pull"...'
+# git reset --hard
 # git pull
 # echo 'Finished "git pull".'
 

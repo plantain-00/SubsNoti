@@ -52,4 +52,9 @@
                 </ul>
             </div>
         </div>
+        <div class="alert alert-{{alertIsSuccess ? 'success' : 'danger'}}" role="alert"
+            v-show="showAlertMessage"
+            style="position: fixed; top: 60px; left: 20px; right: 20px;">
+            {{alertMessage}}
+        </div>
     </header>

@@ -43,7 +43,9 @@ let vueBody: VueBodyModel = new Vue({
 
             $.ajax({
                 url: "/api/user/created/organizations",
-                data: {},
+                data: {
+                    v: "0.0.1"
+                },
                 cache: false,
                 success: (data: OrganizationsResponse) => {
                     if (data.isSuccess) {
@@ -59,7 +61,7 @@ let vueBody: VueBodyModel = new Vue({
                         }
                     }
                     else {
-                        alert(data.errorMessage);
+                        base.vueHead.showAlert(false, data.errorMessage);
                     }
                 }
             });
@@ -67,11 +69,11 @@ let vueBody: VueBodyModel = new Vue({
         invite: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined", {}, function(data: interfaces.Response) {
+            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}, function(data: interfaces.Response) {
                 if (data.isSuccess) {
-                    alert("success.");
+                    base.vueHead.showAlert(true, "success");
                 } else {
-                    alert(data.errorMessage);
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
