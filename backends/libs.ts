@@ -48,6 +48,9 @@ export {validator};
 import * as mongoose from 'mongoose';
 export {mongoose};
 
+import * as semver from 'semver';
+export {semver};
+
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 

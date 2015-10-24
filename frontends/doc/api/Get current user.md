@@ -10,7 +10,7 @@ the authentication credential should be stored in a cookie named 'authentication
 
 get
 
-## version 1
+## version x
 
 ### Expiration Date
 

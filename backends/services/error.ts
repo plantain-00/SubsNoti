@@ -36,3 +36,7 @@ export function fromParameterIsInvalidMessage(parameter: string): interfaces.E {
 export function fromOrganizationIsPrivateMessage(): interfaces.E {
     return fromError(new Error(`the organization is private and only available to its members.`), enums.StatusCode.unauthorized);
 }
+
+export function fromThemeIsNotYoursMessage(): interfaces.E {
+    return fromError(new Error(`the theme is not owned by you.`), enums.StatusCode.unauthorized);
+}

@@ -11,11 +11,11 @@ interface CurrentUserResponse extends interfaces.CurrentUserResponse, interfaces
 
 }
 
-export let sessionStorageNames = {
+export const sessionStorageNames = {
     loginResult: "loginResult"
 };
 
-export let localStorageNames = {
+export const localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
     lastOrganizationId: "lastOrganizationId",
     lastLoginEmail: "lastLoginEmail",
@@ -26,8 +26,8 @@ export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 
 function getUrlParameter(name: string): string {
-    var reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var array: RegExpMatchArray = window.location.search.substr(1).match(reg);
+    let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    let array: RegExpMatchArray = window.location.search.substr(1).match(reg);
     if (array && array.length >= 3) {
         return decodeURI(array[2]);
     }

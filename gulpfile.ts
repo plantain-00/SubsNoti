@@ -21,6 +21,8 @@ let sass = require('gulp-sass');
 
 import * as environment from './common/environment';
 
+let pjson = require('./package.json');
+
 gulp.task('clean', () => {
     del([
         'backends/**/*.js',
@@ -70,6 +72,8 @@ gulp.task('dot', shell.task([
 ]));
 
 gulp.task('gitbook', shell.task('gitbook build frontends/doc/api'));
+
+gulp.task('run', shell.task('node publish/backends/app.js'));
 
 gulp.task('doc', ['gitbook'], () => {
     gulp.src("frontends/doc/api/_book/**")
@@ -149,12 +153,14 @@ function bundleAndUglifyJs(name: string) {
 }
 
 function bundleAndUglifyHtml(name: string) {
-    var manifest = gulp.src("frontends/build/rev-manifest.json");
+    let manifest = gulp.src("frontends/build/rev-manifest.json");
 
     if (isDevelopment) {
         gulp.src('frontends/templates/' + name + '.ejs')
             .pipe(ejs({
-                dotMin: ''
+                dotMin: '',
+                version: pjson.version,
+                environment: 'dev'
             }))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
@@ -164,7 +170,9 @@ function bundleAndUglifyHtml(name: string) {
     } else {
         gulp.src('frontends/templates/' + name + '.ejs')
             .pipe(ejs({
-                dotMin: '.min'
+                dotMin: '.min',
+                version: pjson.version,
+                environment: ''
             }))
             .pipe(minifyHtml(minifyHtmlConfig))
             .pipe(rename(name + ".html"))

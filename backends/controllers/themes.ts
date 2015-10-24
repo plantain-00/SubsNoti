@@ -94,7 +94,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let title = libs.validator.trim(request.body.title);
         let detail = libs.validator.trim(request.body.detail);
-        let status: enums.ThemeStatus;
+        let status: enums.ThemeStatus = null;
 
         if (libs.validator.isIn(request.body.status, [enums.ThemeStatus.open, enums.ThemeStatus.closed])) {
             status = libs.validator.toInt(request.body.status);
@@ -107,10 +107,16 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: id })
-            .select('title detail status')
+            .select('title detail status owners')
             .exec();
         if (!theme) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            return;
+        }
+        
+        // current user should be one of the theme's owners.
+        if (!libs._.find(theme.owners, (o: libs.ObjectId) => o.equals(userId))) {
+            services.response.sendError(response, services.error.fromThemeIsNotYoursMessage(), documentUrl);
             return;
         }
 
@@ -122,7 +128,7 @@ export async function update(request: libs.Request, response: libs.Response) {
             theme.detail = detail;
         }
 
-        if (status) {
+        if (status !== null) {
             theme.status = status;
         }
 

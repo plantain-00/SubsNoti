@@ -34,6 +34,7 @@ interface Theme {
     isWatching: boolean;
     isHovering: boolean;
     watchersEmails: string;
+    ownersEmails: string;
     isOwner: boolean;
 }
 
@@ -53,6 +54,9 @@ interface VueBodyModel {
     themeIdInEditing: string;
     titleInEditing: string;
     detailInEditing: string;
+    q: string;
+    isOpen: boolean;
+    isClosed: boolean;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -71,6 +75,8 @@ interface VueBodyModel {
     edit: (Theme) => void;
     cancel: (Theme) => void;
     save: (Theme) => void;
+    clickOpen: () => void;
+    clickClosed: () => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -85,7 +91,10 @@ let vueBody: VueBodyModel = new Vue({
         totalCount: 0,
         themeIdInEditing: null,
         titleInEditing: "",
-        detailInEditing: ""
+        detailInEditing: "",
+        q: "",
+        isOpen: true,
+        isClosed: false
     },
     computed: {
         nextThemeCount: function() {
@@ -146,7 +155,10 @@ let vueBody: VueBodyModel = new Vue({
                 url: "/api/organizations/" + self.currentOrganizationId + "/themes",
                 data: {
                     page: page,
-                    limit: base.itemLimit
+                    limit: base.itemLimit,
+                    q: self.q,
+                    isOpen: self.isOpen,
+                    isClosed: self.isClosed
                 },
                 cache: false,
                 success: (data: ThemesResponse) => {
@@ -157,6 +169,7 @@ let vueBody: VueBodyModel = new Vue({
                             theme.createTimeText = moment(theme.createTime).fromNow();
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
+                            theme.ownersEmails = self.getEmails(theme.owners);
                         }
                         if (page === 1) {
                             self.themes = data.themes;
@@ -329,6 +342,16 @@ let vueBody: VueBodyModel = new Vue({
                     }
                 }
             });
+        },
+        clickOpen: function() {
+            let self: VueBodyModel = this;
+
+            self.isOpen = !self.isOpen;
+        },
+        clickClosed: function() {
+            let self: VueBodyModel = this;
+
+            self.isClosed = !self.isClosed;
         }
     }
 });

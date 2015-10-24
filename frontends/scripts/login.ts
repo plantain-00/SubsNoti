@@ -35,7 +35,7 @@ let vueBody: VueBodyModel = new Vue({
                 let self: VueBodyModel = this;
 
                 if (base.isEmail(value)) {
-                    var tmp = value.trim().toLowerCase().split("@");
+                    let tmp = value.trim().toLowerCase().split("@");
                     self.emailHead = tmp[0];
                     self.emailTail = tmp[1];
                 } else {
