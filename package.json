@@ -20,6 +20,7 @@
     "node-uuid": "latest",
     "nodemailer": "latest",
     "redis": "latest",
+    "semver": "latest",
     "validator": "latest"
   },
   "devDependencies": {
@@ -40,7 +41,7 @@
     "webpack-stream": "latest"
   },
   "engines": {
-    "node": ">=4.1.0"
+    "node": "4.x"
   },
   "scripts": {
     "start": "node publish/backends/app.js"

@@ -10,7 +10,7 @@ will delete authentication credential from cookie.
 
 delete
 
-## version 1
+## version x
 
 ### Expiration Date
 
