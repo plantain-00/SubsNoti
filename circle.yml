@@ -2,13 +2,16 @@ machine:
   node:
     version: 4.1.0
 
-test:
+dependencies:
   pre:
     - sudo apt-get update
     - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
     - npm install typescript@next -g
     - npm install tsd -g
     - npm install gitbook-cli -g
+
+test:
+  pre:
     - tsd update -so
 
   override:
