@@ -3,4 +3,5 @@ export interface CurrentUserResponse {
     email: string;
     name: string;
     createdOrganizationCount: number;
+    joinedOrganizationCount: number;
 }
