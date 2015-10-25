@@ -60,19 +60,19 @@
                                                     v-else v-model="detailInEditing"></textarea>
                                             </div>
                                             <div style="height: 22px;">
-                                                <button type="button" class="clip btn btn-xs btn-link" data-clipboard-text="{{theme.creator.email}}">
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.creator.email">
                                                     {{theme.creator.name}}
                                                 </button>
                                                 •
                                                 {{theme.createTimeText}}
                                                 •
-                                                <button type="button" class="clip btn btn-xs btn-link" data-clipboard-text="{{theme.ownersEmails}}"
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.ownersEmails"
                                                     v-show="theme.owners.length > 0">
                                                     {{theme.owners.length}} {{theme.owners.length > 1 ? "owners" : "owner"}}
                                                 </button>
                                                 <span v-else>no owner</span>
                                                 •
-                                                <button type="button" class="clip btn btn-xs btn-link" data-clipboard-text="{{theme.watchersEmails}}"
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.watchersEmails"
                                                     v-show="theme.watchers.length > 0">
                                                     {{theme.watchers.length}} {{theme.watchers.length > 1 ? "watchers" : "watcher"}}
                                                 </button>

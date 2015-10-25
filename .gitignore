@@ -36,7 +36,8 @@ secret.ts
 doc/api/_book/
 frontends/build/
 public/doc/
-publish/public/
 publish/**/*.ico
 frontends/doc/api/_book/
 .vscode/
+publish/public/doc/
+publish/public/avatars/*.png

@@ -41,6 +41,7 @@ export async function create(request: libs.Request, response: libs.Response) {
                 salt: salt,
                 status: enums.UserStatus.normal
             });
+            await services.avatar.createIfNotExistsAsync(user._id.toHexString());
             await sendEmail(user._id, salt, email);
             services.logger.log(documentOfCreate.url, request);
             services.response.sendSuccess(response, enums.StatusCode.createdOrModified);

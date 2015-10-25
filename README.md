@@ -16,6 +16,7 @@
 + gitbook-cli
 + graphviz
 + node-gyp build environment
++ node-canvas environment
 
 ## server only
 

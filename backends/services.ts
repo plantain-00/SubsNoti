@@ -32,3 +32,6 @@ export {mongo};
 
 import * as seed from "./services/seed";
 export {seed};
+
+import * as avatar from "./services/avatar";
+export {avatar};

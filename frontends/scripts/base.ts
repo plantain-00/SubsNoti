@@ -81,6 +81,7 @@ interface VueHeadModel {
     alertMessage: string;
 
     canCreateOrganization: boolean;
+    avatarUrl: string;
 
     showAlert: (boolean, string) => void;
     exit: () => void;
@@ -105,6 +106,11 @@ export let vueHead: VueHeadModel = new Vue({
             let self: VueHeadModel = this;
 
             return self.createdOrganizationCount < maxOrganizationNumberUserCanCreate;
+        },
+        avatarUrl: function() {
+            let self: VueHeadModel = this;
+
+            return `/avatars/${self.currentUserId}.png`
         }
     },
     methods: {

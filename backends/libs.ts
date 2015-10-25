@@ -11,6 +11,9 @@ export let bodyParser = require('body-parser');
 
 export let compression = require("compression");
 
+export let Canvas = require("canvas");
+export let Image = Canvas.Image;
+
 import * as path from "path";
 export {path};
 

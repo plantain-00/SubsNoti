@@ -1,0 +1,1 @@
+this is a directory where avatar files will be in.
