@@ -8,13 +8,18 @@ interface VueBodyModel {
     emailTail: string;
     innerName: string;
     innerRawEmail: string;
+    captchaUrl: string;
+    code: string;
 
     rawEmail: string;
     canLogin: boolean;
     name: string;
 
     login: () => void;
+    refreshCaptcha: () => void;
 }
+
+let guid = base.guid();
 
 let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
@@ -22,7 +27,9 @@ let vueBody: VueBodyModel = new Vue({
         emailHead: "",
         emailTail: "",
         innerName: "",
-        innerRawEmail: ""
+        innerRawEmail: "",
+        captchaUrl: "",
+        code: ""
     },
     computed: {
         rawEmail: {
@@ -48,7 +55,7 @@ let vueBody: VueBodyModel = new Vue({
         canLogin: function(): boolean {
             let self: VueBodyModel = this;
 
-            return self.emailHead && self.emailTail && base.vueHead.requestCount === 0;
+            return self.emailHead && self.emailTail && self.code && base.vueHead.requestCount === 0;
         },
         name: {
             get: function(): string {
@@ -79,13 +86,27 @@ let vueBody: VueBodyModel = new Vue({
                 }
             }
 
-            $.post("/api/token_sent?v=0.0.1", {
+            $.post("/api/token_sent?v=0.3", {
                 email: `${self.emailHead}@${self.emailTail}`,
-                name: self.name
+                name: self.name,
+                guid: guid,
+                code: self.code
             }, function(data: interfaces.Response) {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
                     window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
+                } else {
+                    base.vueHead.showAlert(false, data.errorMessage);
+                    self.refreshCaptcha();
+                }
+            });
+        },
+        refreshCaptcha: function() {
+            $.post("/api/captchas?v=0.3", {
+                id: guid
+            }, function(data: CaptchaResponse) {
+                if (data.isSuccess) {
+                    vueBody.captchaUrl = data.url;
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
@@ -94,6 +115,10 @@ let vueBody: VueBodyModel = new Vue({
     }
 });
 
+interface CaptchaResponse extends interfaces.Response {
+    url: string;
+}
+
 $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
         if (error) {
@@ -101,6 +126,8 @@ $(document).ready(function() {
 
             vueBody.rawEmail = window.localStorage.getItem(base.localStorageNames.lastLoginEmail);
             vueBody.name = window.localStorage.getItem(base.localStorageNames.lastLoginName);
+
+            vueBody.refreshCaptcha();
             return;
         }
 

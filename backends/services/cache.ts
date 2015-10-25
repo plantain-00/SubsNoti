@@ -54,3 +54,15 @@ function ttl(key: string, next: (error: interfaces.E, reply: number) => void) {
 }
 
 export let ttlAsync = services.promise.promisify2<string, number>(ttl);
+
+export function deleteKeyAsync(key: string): Promise<void> {
+    return deleteKeysAsync([key]);
+}
+
+export function deleteKeysAsync(keys: string[]): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        client.del(keys, () => {
+            return resolve();
+        });
+    });
+}

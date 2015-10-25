@@ -26,6 +26,18 @@ export async function create(request: libs.Request, response: libs.Response) {
     let name = libs.validator.trim(request.body.name);
 
     try {
+        if (libs.semver.satisfies(request["v"], ">=0.3") || libs.moment().isAfter(libs.moment("2015-11-01", "YYYY-MM-DD"))) {
+            let code = libs.validator.trim(request.body.code);
+            let guid = libs.validator.trim(request.body.guid);
+            if (code === '' || guid === '') {
+                services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
+                return;
+            }
+
+            await services.captcha.validate(guid, code);
+        }
+
+
         let user = await services.mongo.User.findOne({ email: email })
             .select("_id salt email")
             .exec();
@@ -53,7 +65,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 }
 
 async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Promise<void> {
-    await services.frequency.limit(email, 60 * 60);
+    await services.frequency.limitEmail(email, 60 * 60);
 
     let token = services.authenticationCredential.create(userId.toHexString(), salt);
     let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
