@@ -28,3 +28,4 @@ id | string
 email | string
 name | string
 createdOrganizationCount | number
+joinedOrganizationCount | number

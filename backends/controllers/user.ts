@@ -22,13 +22,14 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select('email name createdOrganizations')
+            .select('email name createdOrganizations joinedOrganizations')
             .exec();
         let result: interfaces.CurrentUserResponse = {
             id: userId.toHexString(),
             email: user.email,
             name: user.name,
-            createdOrganizationCount: user.createdOrganizations.length
+            createdOrganizationCount: user.createdOrganizations.length,
+            joinedOrganizationCount: user.joinedOrganizations.length
         };
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);

@@ -19,20 +19,29 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     try {
         // identify current user.
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = await services.authenticationCredential.authenticate(request, true);
 
-        let user = await services.mongo.User.findOne({ _id: userId })
-            .populate('joinedOrganizations')
-            .select('joinedOrganizations')
-            .exec();
-        let result = {
-            organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
-                return {
-                    id: o._id.toHexString(),
-                    name: o.name
-                };
-            })
-        };
+        let result;
+
+        if (userId) {
+            let user = await services.mongo.User.findOne({ _id: userId })
+                .populate('joinedOrganizations')
+                .select('joinedOrganizations')
+                .exec();
+            result = {
+                organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
+                    return {
+                        id: o._id.toHexString(),
+                        name: o.name
+                    };
+                })
+            };
+        }
+        else {
+            result = {
+                organizations: []
+            };
+        }
 
         // public organization is also available.
         result.organizations.push({

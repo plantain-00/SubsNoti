@@ -75,6 +75,7 @@ interface VueHeadModel {
     currentUserName: string;
     currentUserEmail: string;
     createdOrganizationCount: number;
+    joinedOrganizationCount: number;
     requestCount: number;
     alertIsSuccess: boolean;
     showAlertMessage: boolean;
@@ -82,11 +83,14 @@ interface VueHeadModel {
 
     canCreateOrganization: boolean;
     avatarUrl: string;
+    canInvite: boolean;
 
     showAlert: (boolean, string) => void;
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
 }
+
+let timeoutId: NodeJS.Timer;
 
 export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
@@ -96,6 +100,7 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserName: "",
         currentUserEmail: "",
         createdOrganizationCount: maxOrganizationNumberUserCanCreate,
+        joinedOrganizationCount: 0,
         requestCount: 0,
         alertIsSuccess: true,
         showAlertMessage: false,
@@ -111,6 +116,11 @@ export let vueHead: VueHeadModel = new Vue({
             let self: VueHeadModel = this;
 
             return `/avatars/${self.currentUserId}.png`
+        },
+        canInvite: function() {
+            let self: VueHeadModel = this;
+
+            return self.joinedOrganizationCount > 0;
         }
     },
     methods: {
@@ -121,8 +131,13 @@ export let vueHead: VueHeadModel = new Vue({
             self.alertMessage = message;
             self.showAlertMessage = true;
 
-            setTimeout(() => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+
+            timeoutId = setTimeout(() => {
                 self.showAlertMessage = false;
+                timeoutId = null;
             }, 3000);
         },
         exit: function() {
@@ -137,6 +152,8 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = "";
                     self.currentUserEmail = "";
                     window.sessionStorage.removeItem("loginResult");
+                    self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
+                    self.joinedOrganizationCount = 0;
                 }
             });
         },
@@ -150,6 +167,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
                     self.createdOrganizationCount = data.createdOrganizationCount;
+                    self.joinedOrganizationCount = data.joinedOrganizationCount;
 
                     window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
                     window.localStorage.setItem(localStorageNames.lastLoginName, data.name);

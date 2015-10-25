@@ -30,11 +30,11 @@ export async function get(request: libs.Request, response: libs.Response) {
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";
 
-        // identify current user.
-        let userId = await services.authenticationCredential.authenticate(request);
-
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
+            // identify current user.
+            let userId = await services.authenticationCredential.authenticate(request);
+
             let user = await services.mongo.User.findOne({ _id: userId })
                 .select("joinedOrganizations")
                 .exec();

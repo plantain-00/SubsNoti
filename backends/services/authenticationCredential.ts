@@ -13,9 +13,12 @@ export function create(userId: string, salt: string): string {
     return `${libs.md5(salt + milliseconds + userId) }g${milliseconds.toString(16) }g${userId}`;
 }
 
-export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
+export async function authenticate(request: libs.Request, noReject?: boolean): Promise<libs.ObjectId> {
     let authenticationCredential = libs.validator.trim(request.cookies[settings.config.cookieKeys.authenticationCredential]);
     if (!authenticationCredential) {
+        if (noReject) {
+            return Promise.resolve(null);
+        }
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.StatusCode.unauthorized));
     }
 
@@ -27,6 +30,9 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
 
     let tmp = authenticationCredential.split("g");
     if (tmp.length != 3) {
+        if (noReject) {
+            return Promise.resolve(null);
+        }
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
     }
 
@@ -38,6 +44,9 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
     // should not expire.
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
+        if (noReject) {
+            return Promise.resolve(null);
+        }
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", enums.StatusCode.unauthorized));
     }
 
@@ -46,6 +55,9 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
         .select("salt")
         .exec();
     if (!user) {
+        if (noReject) {
+            return Promise.resolve(null);
+        }
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", enums.StatusCode.unauthorized));
     }
 
@@ -55,6 +67,9 @@ export async function authenticate(request: libs.Request): Promise<libs.ObjectId
 
         return Promise.resolve(id);
     } else {
+        if (noReject) {
+            return Promise.resolve(null);
+        }
         return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
     }
 }

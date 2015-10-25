@@ -371,7 +371,6 @@ $(document).ready(function() {
     base.vueHead.authenticate((error, data) => {
         if (error) {
             console.log(error);
-            return;
         }
 
         vueBody.getOrganizationsCurrentUserIn();
