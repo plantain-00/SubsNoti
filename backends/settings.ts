@@ -44,7 +44,9 @@ export let config: SettingsInterface = {
     },
     cacheKeys: {
         user: "user_",
-        frequency: "frequency_"
+        emailFrequency: "email_frequency_",
+        userCaptcha: "user_captcha_",
+        userCaptchaFrequency: "user_captcha_frequency_"
     },
     defaultItemLimit: 10
 };

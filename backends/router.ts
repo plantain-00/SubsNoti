@@ -18,11 +18,24 @@ import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
 import * as organizations from "./controllers/organizations";
 import * as organizationsUsersJoined from "./controllers/organizations/users/joined";
+import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
     function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
     }
+
+    app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
+        let v = libs.validator.trim(request.query.v);
+
+        if (v === "") {
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("v"), "/doc/api/Parameters.html");
+            return;
+        }
+
+        request["v"] = v;
+        next();
+    });
 
     bind(user.documentOfGet, user.get);
 
@@ -46,4 +59,6 @@ export function route(app: libs.Application) {
     bind(themes.documentOfUpdate, themes.update);
 
     bind(organizationsUsersJoined.documentOfInvite, organizationsUsersJoined.invite);
+
+    bind(captcha.documentOfCreate, captcha.create);
 }

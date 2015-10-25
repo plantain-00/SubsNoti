@@ -1,14 +1,14 @@
-# Create a theme
+# Create a captcha
 
 ## Url
 
-/api/themes
+/api/captchas
 
 ## Method
 
 post
 
-## version >=0.0.1
+## version >=0.3
 
 ### Expiration Date
 
@@ -22,8 +22,10 @@ no
 
 key name | value type | required
 --- | --- | ---
-themeTitle | string | true
-themeDetail | string | false
-organizationId | number | true
+id | string | true
 
 ### [Response Body](./Response.html)
+
+key name | value type
+--- | ---
+url | string

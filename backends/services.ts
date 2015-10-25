@@ -35,3 +35,6 @@ export {seed};
 
 import * as avatar from "./services/avatar";
 export {avatar};
+
+import * as captcha from "./services/captcha";
+export {captcha};

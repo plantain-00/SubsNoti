@@ -37,7 +37,9 @@ interface SettingsInterface {
     },
     cacheKeys: {
         user: string,
-        frequency: string
+        emailFrequency: string,
+        userCaptcha: string,
+        userCaptchaFrequency: string
     },
     defaultItemLimit: number
 }
