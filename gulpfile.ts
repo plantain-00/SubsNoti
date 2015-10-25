@@ -33,7 +33,12 @@ gulp.task('clean', () => {
         'frontends/build/',
         'frontends/scripts/*.js',
 
-        'publish/public/',
+        'publish/public/doc/',
+        'publish/public/scripts/',
+        'publish/public/styles',
+        'publish/public/*.html',
+        'publish/public/*.ico',
+        
         'publish/backends/',
         'publish/common/'
     ]);

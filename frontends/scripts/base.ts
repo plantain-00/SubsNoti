@@ -56,7 +56,9 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     } else {
         $.ajax({
             url: "/api/user",
-            data: {},
+            data: {
+                v: "0.0.1"
+            },
             cache: false,
             success: function(data: CurrentUserResponse) {
                 window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
@@ -74,9 +76,14 @@ interface VueHeadModel {
     currentUserEmail: string;
     createdOrganizationCount: number;
     requestCount: number;
+    alertIsSuccess: boolean;
+    showAlertMessage: boolean;
+    alertMessage: string;
 
     canCreateOrganization: boolean;
+    avatarUrl: string;
 
+    showAlert: (boolean, string) => void;
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
 }
@@ -89,22 +96,41 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserName: "",
         currentUserEmail: "",
         createdOrganizationCount: maxOrganizationNumberUserCanCreate,
-        requestCount: 0
+        requestCount: 0,
+        alertIsSuccess: true,
+        showAlertMessage: false,
+        alertMessage: ""
     },
     computed: {
         canCreateOrganization: function() {
             let self: VueHeadModel = this;
 
             return self.createdOrganizationCount < maxOrganizationNumberUserCanCreate;
+        },
+        avatarUrl: function() {
+            let self: VueHeadModel = this;
+
+            return `/avatars/${self.currentUserId}.png`
         }
     },
     methods: {
+        showAlert: function(isSuccess: boolean, message: string) {
+            let self: VueHeadModel = this;
+
+            self.alertIsSuccess = isSuccess;
+            self.alertMessage = message;
+            self.showAlertMessage = true;
+
+            setTimeout(() => {
+                self.showAlertMessage = false;
+            }, 3000);
+        },
         exit: function() {
             let self: VueHeadModel = this;
 
             $.ajax({
                 type: "DELETE",
-                url: "/api/user/logged_in",
+                url: "/api/user/logged_in?v=0.0.1",
                 cache: false,
                 success: function() {
                     self.loginStatus = enums.LoginStatus.fail;
@@ -124,7 +150,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
                     self.createdOrganizationCount = data.createdOrganizationCount;
-                    
+
                     window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
                     window.localStorage.setItem(localStorageNames.lastLoginName, data.name);
 

@@ -25,7 +25,9 @@ services.mongo.connect();
 
 services.cache.connect();
 
-services.seed.init();
+(async() => {
+    await services.seed.init();
+})();
 
 app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
     console.log(`Server has started at port: ${settings.config.website.port}`);

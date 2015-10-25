@@ -60,64 +60,61 @@
                                                     v-else v-model="detailInEditing"></textarea>
                                             </div>
                                             <div style="height: 22px;">
-                                                <div :style='{ display: theme.isHovering ? "none" : "inline" }'>
-                                                    {{theme.createTimeText}} created by {{theme.creator.name}}
-                                                    •
-                                                    {{theme.owners.length}}
-                                                    •
-                                                    {{theme.watchers.length}}
-                                                </div>
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.creator.email">
+                                                    {{theme.creator.name}}
+                                                </button>
+                                                •
+                                                {{theme.createTimeText}}
+                                                •
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.ownersEmails"
+                                                    v-show="theme.owners.length > 0">
+                                                    {{theme.owners.length}} {{theme.owners.length > 1 ? "owners" : "owner"}}
+                                                </button>
+                                                <span v-else>no owner</span>
+                                                •
+                                                <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.watchersEmails"
+                                                    v-show="theme.watchers.length > 0">
+                                                    {{theme.watchers.length}} {{theme.watchers.length > 1 ? "watchers" : "watcher"}}
+                                                </button>
+                                                <span v-else>no watcher</span>
                                                 <div :style='{ display: theme.isHovering ? "inline" : "none" }'>
-                                                    {{theme.createTimeText}} created by {{theme.creator.email}}
                                                     •
-                                                    <button type="button" class="clip btn btn-xs btn-primary" data-clipboard-text="{{theme.ownersEmails}}"
-                                                        v-show="theme.owners.length > 0">
-                                                        copy {{theme.owners.length}} {{theme.owners.length > 1 ? "owners'" : "owner's"}} emails
-                                                    </button>
-                                                    <span v-else>no owner</span>
-                                                    •
-                                                    <button type="button" class="clip btn btn-xs btn-primary" data-clipboard-text="{{theme.watchersEmails}}"
-                                                        v-show="theme.watchers.length > 0">
-                                                        copy {{theme.watchers.length}} {{theme.watchers.length > 1 ? "watchers'" : "watcher's"}} emails
-                                                    </button>
-                                                    <span v-else>no watcher</span>
-                                                    •
-                                                    <button type="button" class="btn btn-xs btn-primary"
+                                                    <button type="button" class="btn btn-xs btn-link"
                                                         v-show="theme.isWatching"
                                                         @click="unwatch(theme)">
                                                         unwatch
                                                     </button>
-                                                    <button type="button" class="btn btn-xs btn-primary"
+                                                    <button type="button" class="btn btn-xs btn-link"
                                                         v-else
                                                         @click="watch(theme)">
                                                         watch
                                                     </button>
                                                     <div :style='{ display: theme.isOwner ? "inline" : "none" }'>
                                                         •
-                                                        <button type="button" class="btn btn-xs btn-danger"
+                                                        <button type="button" class="btn btn-xs btn-link"
                                                             v-show="theme.status === 0"
                                                             @click="close(theme)">
                                                             close
                                                         </button>
-                                                        <button type="button" class="btn btn-xs btn-success"
+                                                        <button type="button" class="btn btn-xs btn-link"
                                                             v-else
                                                             @click="reopen(theme)">
                                                             reopen
                                                         </button>
                                                         <div :style='{ display: themeIdInEditing === null ? "inline" : "none" }'>
                                                             •
-                                                            <button type="button" class="btn btn-xs btn-primary"
+                                                            <button type="button" class="btn btn-xs btn-link"
                                                                 @click="edit(theme)">
                                                                 edit
                                                             </button>
                                                         </div>
                                                         <div :style='{ display: themeIdInEditing !== null && themeIdInEditing === theme.id ? "inline" : "none" }'>
-                                                            <button type="button" class="btn btn-xs btn-primary"
+                                                            <button type="button" class="btn btn-xs btn-link"
                                                                 v-show="canSave && (titleInEditing !== theme.title || detailInEditing !== theme.detail)"
                                                                 @click="save(theme)">
                                                                 save
                                                             </button>
-                                                            <button type="button" class="btn btn-xs btn-default"
+                                                            <button type="button" class="btn btn-xs btn-link"
                                                                 v-show="themeIdInEditing !== null"
                                                                 @click="cancel(theme)">
                                                                 cancel

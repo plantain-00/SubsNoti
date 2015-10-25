@@ -74,20 +74,20 @@ let vueBody: VueBodyModel = new Vue({
             if (lastSuccessfulEmailTime) {
                 let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
                 if (time < 60 * 1000) {
-                    alert("please do it after " + (60 - time / 1000) + " seconds");
+                    base.vueHead.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                     return;
                 }
             }
 
-            $.post("/api/token_sent", {
+            $.post("/api/token_sent?v=0.0.1", {
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name
             }, function(data: interfaces.Response) {
                 if (data.isSuccess) {
-                    alert("success, please check your email.");
+                    base.vueHead.showAlert(true, "success, please check your email.");
                     window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
                 } else {
-                    alert(data.errorMessage);
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         }
