@@ -11,9 +11,6 @@ dependencies:
     - npm install gitbook-cli -g
 
 test:
-  pre:
-    - tsd update -so
-
   override:
     - tsc
     - tsc -p frontends

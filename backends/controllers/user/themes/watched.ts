@@ -54,6 +54,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
             user.watchedThemes.push(themeId);
             theme.watchers.push(userId);
+            theme.updateTime = new Date();
 
             user.save();
             theme.save();
@@ -110,8 +111,9 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
                 .select("watchedThemes")
                 .exec();
 
-            user.watchedThemes["pull"](themeId);
-            theme.watchers["pull"](userId);
+            (<services.mongo.MongooseArray<libs.ObjectId>>user.watchedThemes).pull(themeId);
+            (<services.mongo.MongooseArray<libs.ObjectId>>theme.watchers).pull(userId);
+            theme.updateTime = new Date();
 
             user.save();
             theme.save();

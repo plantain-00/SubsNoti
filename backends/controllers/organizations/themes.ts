@@ -89,6 +89,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 detail: t.detail,
                 organizationId: organizationId.toHexString(),
                 createTime: t.createTime.getTime(),
+                updateTime: t.updateTime ? t.updateTime.getTime() : undefined,
                 status: t.status,
                 creator: {
                     id: creator._id,

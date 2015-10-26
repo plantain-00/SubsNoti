@@ -64,7 +64,11 @@
                                                     {{theme.creator.name}}
                                                 </button>
                                                 •
-                                                {{theme.createTimeText}}
+                                                created {{theme.createTimeText}}
+                                                <div :style='{ display: theme.updateTime ? "inline" : "none" }'>
+                                                    •
+                                                    updated {{theme.updateTimeText}}
+                                                </div>
                                                 •
                                                 <button type="button" class="clip btn btn-xs btn-link" :data-clipboard-text="theme.ownersEmails"
                                                     v-show="theme.owners.length > 0">
