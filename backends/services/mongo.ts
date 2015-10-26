@@ -10,6 +10,10 @@ import * as services from "../services";
 
 import Schema = libs.mongoose.Schema;
 
+export interface MongooseArray<T> extends Array<T> {
+    pull: (T) => void;
+}
+
 export interface OrganizationDocument extends libs.mongoose.Document {
     name: string;
     status: enums.OrganizationStatus;
