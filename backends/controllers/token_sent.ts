@@ -68,7 +68,7 @@ async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Pr
     await services.frequency.limitEmail(email, 60 * 60);
 
     let token = services.authenticationCredential.create(userId.toHexString(), salt);
-    let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
+    let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}&v=0.01`;
 
     return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 }

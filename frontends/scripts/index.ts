@@ -25,12 +25,14 @@ interface Theme {
     detail: string;
     organizationId: string;
     createTime: number;
+    updateTime?: number;
     status: enums.ThemeStatus;
     creator: User;
     owners: User[];
     watchers: User[];
 
     createTimeText: string;
+    updateTimeText?: string;
     isWatching: boolean;
     isHovering: boolean;
     watchersEmails: string;
@@ -66,7 +68,7 @@ interface VueBodyModel {
     fetchThemes: (page: number) => void;
     clickOrganization: (Organization) => void;
     createTheme: () => void;
-    setThemeCreateTimeText: () => void;
+    setThemeTimeText: () => void;
     watch: (Theme) => void;
     unwatch: (Theme) => void;
     close: (Theme) => void;
@@ -161,7 +163,7 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.0.1"
+                    v: "0.4.0"
                 },
                 cache: false,
                 success: (data: ThemesResponse) => {
@@ -170,6 +172,13 @@ let vueBody: VueBodyModel = new Vue({
                             theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
                             theme.isOwner = theme.owners.some(w=> w.id === base.vueHead.currentUserId);
                             theme.createTimeText = moment(theme.createTime).fromNow();
+                            if (theme.updateTime) {
+                                theme.updateTimeText = moment(theme.updateTime).fromNow();
+                            }
+                            else {
+                                theme.updateTime = null;
+                                theme.updateTimeText = null;
+                            }
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
                             theme.ownersEmails = self.getEmails(theme.owners);
@@ -213,11 +222,14 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        setThemeCreateTimeText: function() {
+        setThemeTimeText: function() {
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
                 theme.createTimeText = moment(theme.createTime).fromNow();
+                if (theme.updateTime) {
+                    theme.updateTimeText = moment(theme.updateTime).fromNow();
+                }
             }
         },
         watch: function(theme: Theme) {
@@ -232,6 +244,8 @@ let vueBody: VueBodyModel = new Vue({
                     });
                     theme.isWatching = true;
                     theme.watchersEmails += base.vueHead.currentUserEmail + ';';
+                    theme.updateTime = new Date().getTime();
+                    theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 }
                 else {
@@ -255,6 +269,8 @@ let vueBody: VueBodyModel = new Vue({
                             theme.watchersEmails = self.getEmails(theme.watchers);
                         }
                         theme.isWatching = false;
+                        theme.updateTime = new Date().getTime();
+                        theme.updateTimeText = moment(theme.updateTime).fromNow();
                         base.vueHead.showAlert(true, "success");
                     }
                     else {
@@ -374,6 +390,6 @@ $(document).ready(function() {
         }
 
         vueBody.getOrganizationsCurrentUserIn();
-        setInterval(vueBody.setThemeCreateTimeText, 10000);
+        setInterval(vueBody.setThemeTimeText, 10000);
     });
 });

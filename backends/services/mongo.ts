@@ -43,6 +43,7 @@ export interface ThemeDocument extends libs.mongoose.Document {
     detail: string;
     status: enums.ThemeStatus;
     createTime: Date;
+    updateTime: Date;
 
     creator: UserDocument | libs.ObjectId;
     owners: Array<UserDocument | libs.ObjectId>;
@@ -93,6 +94,7 @@ export function connect() {
         detail: String,
         status: Number,
         createTime: Date,
+        updateTime: Date,
 
         creator: { type: Schema.Types.ObjectId, ref: 'User' },
         owners: [{ type: Schema.Types.ObjectId, ref: 'User' }],

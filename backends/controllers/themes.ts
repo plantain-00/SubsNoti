@@ -55,6 +55,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             detail: themeDetail,
             status: enums.ThemeStatus.open,
             createTime: new Date(),
+            updateTime: new Date(),
             creator: userId,
             owners: [userId],
             watchers: [userId],

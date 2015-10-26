@@ -42,6 +42,7 @@ title | string
 detail | string
 organizationId | string
 createTime | number
+updateTime | number?
 status | [ThemeStatus](./Theme status.html)
 creator | [User](#user)
 owners | [User](#user)[]
