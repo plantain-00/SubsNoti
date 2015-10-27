@@ -24,7 +24,6 @@ export async function create(request: libs.Request, response: libs.Response) {
             return;
         }
 
-        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
 
         // the name should not be used by other organizations.

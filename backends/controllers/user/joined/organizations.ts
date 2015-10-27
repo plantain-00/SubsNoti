@@ -18,7 +18,6 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request, true);
 
         let result;

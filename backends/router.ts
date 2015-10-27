@@ -33,6 +33,11 @@ export function route(app: libs.Application) {
             return;
         }
 
+        if (!libs.semver.valid(v)) {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("v"), "/doc/api/Parameters.html");
+            return;
+        }
+
         request["v"] = v;
         next();
     });

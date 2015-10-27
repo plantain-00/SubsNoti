@@ -25,7 +25,6 @@ export async function watch(request: libs.Request, response: libs.Response) {
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
 
         // the theme should be available.
@@ -84,7 +83,6 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
 
         // the theme should be available.

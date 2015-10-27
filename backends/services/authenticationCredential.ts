@@ -13,6 +13,10 @@ export function create(userId: string, salt: string): string {
     return `${libs.md5(salt + milliseconds + userId) }g${milliseconds.toString(16) }g${userId}`;
 }
 
+/**
+ * identify current user.
+ * if set noReject = true, return null if fails.
+ */
 export async function authenticate(request: libs.Request, noReject?: boolean): Promise<libs.ObjectId> {
     let authenticationCredential = libs.validator.trim(request.cookies[settings.config.cookieKeys.authenticationCredential]);
     if (!authenticationCredential) {

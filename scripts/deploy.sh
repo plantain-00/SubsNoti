@@ -19,5 +19,5 @@ echo 'Finished "rsync".'
 
 # restart
 echo 'Starting "restart"...'
-FOREVER_ROOT=$WEBSITE_ROOT forever restart -l $WEBSITE_ROOT/forever.log $WEBSITE_ROOT/backends/app.js
+pm2 restart all
 echo 'Finished "restart".'

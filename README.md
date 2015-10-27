@@ -19,7 +19,7 @@
 
 ## server only
 
-+ forever
++ pm2
 
 ## development only
 

@@ -61,6 +61,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             countQuery = countQuery.where("status").equals(enums.ThemeStatus.closed);
         }
 
+        // filtered by `title` or `detail`.
         if (q) {
             query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
