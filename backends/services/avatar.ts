@@ -56,4 +56,7 @@ function create(seed: string, filePath: string, next: (error: Error) => void) {
 	});
 }
 
+/**
+ * if exists, do nothing, otherwise create one and save it.
+ */
 export let createIfNotExistsAsync = services.promise.promisify2<string, void>(createIfNotExists);

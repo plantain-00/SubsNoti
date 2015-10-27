@@ -31,7 +31,6 @@ export async function invite(request: libs.Request, response: libs.Response) {
         let organizationId = new libs.ObjectId(request.params.organization_id);
         let email = libs.validator.trim(request.params.user_email).toLowerCase();
 
-        // identify current user.
         let userId = await services.authenticationCredential.authenticate(request);
 
         // the organization should be available.

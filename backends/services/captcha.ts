@@ -8,6 +8,9 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services"
 
+/**
+ * create a code, store it in cache, create an iamge, return an base64 url of it.
+ */
 export async function create(id: string): Promise<string> {
 	await services.frequency.limitCaptcha(id, 1);
 
@@ -30,6 +33,9 @@ export async function create(id: string): Promise<string> {
 	return Promise.resolve(canvas.toDataURL());
 }
 
+/**
+ * validate the code matched the one from the cache.
+ */
 export async function validate(id: string, code: string): Promise<void> {
 	let key = settings.config.cacheKeys.userCaptcha + id;
 	let targetCode = await services.cache.getStringAsync(key);

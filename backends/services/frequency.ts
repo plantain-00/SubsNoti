@@ -8,10 +8,16 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
+/**
+ * make sure operation of `send email` does not reach the limit.
+ */
 export async function limitEmail(key: string, seconds: number): Promise<void> {
     return limit(key, seconds, settings.config.cacheKeys.emailFrequency);
 }
 
+/**
+ * make sure operation of `get captcha` does not reach the limit.
+ */
 export async function limitCaptcha(key: string, seconds: number): Promise<void> {
     return limit(key, seconds, settings.config.cacheKeys.userCaptchaFrequency);
 }

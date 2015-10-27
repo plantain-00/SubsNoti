@@ -26,6 +26,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     let name = libs.validator.trim(request.body.name);
 
     try {
+        // validate captcha code if v>=0.3 or after 2015-11-01.
         if (libs.semver.satisfies(request["v"], ">=0.3") || libs.moment().isAfter(libs.moment("2015-11-01", "YYYY-MM-DD"))) {
             let code = libs.validator.trim(request.body.code);
             let guid = libs.validator.trim(request.body.guid);
@@ -37,15 +38,11 @@ export async function create(request: libs.Request, response: libs.Response) {
             await services.captcha.validate(guid, code);
         }
 
-
+        // find out if the email is someone's. if no, create an account.
         let user = await services.mongo.User.findOne({ email: email })
             .select("_id salt email")
             .exec();
-        if (user) {
-            await sendEmail(user._id, user.salt, email);
-            services.response.sendSuccess(response, enums.StatusCode.OK);
-        }
-        else {
+        if (!user) {
             let salt = libs.generateUuid();
             user = await services.mongo.User.create({
                 email: email,
@@ -54,21 +51,20 @@ export async function create(request: libs.Request, response: libs.Response) {
                 status: enums.UserStatus.normal
             });
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
-            await sendEmail(user._id, salt, email);
+
             services.logger.log(documentOfCreate.url, request);
-            services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
         }
+
+        await services.frequency.limitEmail(email, 60 * 60);
+
+        let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
+        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}&v=0.01`;
+
+        await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
+
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
     }
     catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
-}
-
-async function sendEmail(userId: libs.ObjectId, salt: string, email: string): Promise<void> {
-    await services.frequency.limitEmail(email, 60 * 60);
-
-    let token = services.authenticationCredential.create(userId.toHexString(), salt);
-    let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}&v=0.01`;
-
-    return services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 }

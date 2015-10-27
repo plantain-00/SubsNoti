@@ -37,8 +37,6 @@ export let documentOfDelete = {
 };
 
 export function deleteThis(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfDelete.documentUrl;
-
     response.clearCookie(settings.config.cookieKeys.authenticationCredential);
 
     services.response.sendSuccess(response, enums.StatusCode.deleted);

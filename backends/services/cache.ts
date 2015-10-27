@@ -32,7 +32,7 @@ export function setString(key: string, value: string, seconds?: number) {
     }
 }
 
-export function set(key: string, value: any, seconds?: number) {
+function set(key: string, value: any, seconds?: number) {
     client.hmset(key, value);
     if (seconds) {
         client.expire(key, seconds);
@@ -45,7 +45,7 @@ function get(key: string, field: string, next: (error: interfaces.E, reply) => v
     });
 }
 
-export let getAsync = services.promise.promisify3<string, string, any>(get);
+let getAsync = services.promise.promisify3<string, string, any>(get);
 
 function ttl(key: string, next: (error: interfaces.E, reply: number) => void) {
     client.ttl(key, (error: Error, reply) => {
@@ -53,6 +53,9 @@ function ttl(key: string, next: (error: interfaces.E, reply: number) => void) {
     });
 }
 
+/**
+ * query the remain time of a cache.
+ */
 export let ttlAsync = services.promise.promisify2<string, number>(ttl);
 
 export function deleteKeyAsync(key: string): Promise<void> {
