@@ -41,7 +41,12 @@ interface SettingsInterface {
         userCaptcha: string,
         userCaptchaFrequency: string
     },
-    defaultItemLimit: number
+    defaultItemLimit: number,
+    imageServer: {
+        port: number,
+        innerHostName: string,
+        outerHostName: string
+    }
 }
 
 export {SettingsInterface};

@@ -48,7 +48,12 @@ export let config: SettingsInterface = {
         userCaptcha: "user_captcha_",
         userCaptchaFrequency: "user_captcha_frequency_"
     },
-    defaultItemLimit: 10
+    defaultItemLimit: 10,
+    imageServer: {
+        port: 7777,
+        innerHostName: "0.0.0.0",
+        outerHostName: "localhost"
+    }
 };
 
 try {
