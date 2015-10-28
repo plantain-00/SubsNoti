@@ -57,8 +57,9 @@ export {semver};
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
-import Request = express.Request;
-export {Request};
+export interface Request extends express.Request {
+    v: string;
+}
 
 import Response = express.Response;
 export {Response};

@@ -27,7 +27,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     try {
         // validate captcha code if v>=0.3 or after 2015-11-01.
-        if (libs.semver.satisfies(request["v"], ">=0.3") || libs.moment().isAfter(libs.moment("2015-11-01", "YYYY-MM-DD"))) {
+        if (libs.semver.satisfies(request.v, ">=0.3") || libs.moment().isAfter(libs.moment("2015-11-01", "YYYY-MM-DD"))) {
             let code = libs.validator.trim(request.body.code);
             let guid = libs.validator.trim(request.body.guid);
             if (code === '' || guid === '') {
