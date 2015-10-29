@@ -54,6 +54,9 @@ export {mongoose};
 import * as semver from 'semver';
 export {semver};
 
+import * as multer from 'multer';
+export {multer};
+
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 

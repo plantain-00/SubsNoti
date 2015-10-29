@@ -22,3 +22,4 @@
 /// <reference path="semver/semver.d.ts" />
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="validator/validator.d.ts" />
+/// <reference path="multer/multer.d.ts" />
