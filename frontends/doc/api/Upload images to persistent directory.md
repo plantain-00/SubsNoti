@@ -1,8 +1,8 @@
-# Upload images to temperary directory
+# Upload images to persistent directory
 
 ## Url
 
-/api/temperary/images
+/api/persistent/images
 
 ## Method
 
@@ -15,8 +15,6 @@ post
 no
 
 ### [Parameters](./Parameters.html)
-
-### [Cookies](./Cookies.html)
 
 ### Request Body
 

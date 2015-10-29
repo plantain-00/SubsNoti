@@ -26,4 +26,6 @@
 	* [Theme status](Theme status.md)
 * [Image](Image.md)
     * [Upload images to temperary directory](Upload images to temperary directory.md)
+    * [Upload images to normal directory](Upload images to normal directory.md)
+    * [Move image from temperary directory to persistent directory](Move image from temperary directory to persistent directory.md)
 * [Database models](Database models.md)
