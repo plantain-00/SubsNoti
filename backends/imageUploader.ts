@@ -13,8 +13,6 @@ app.settings.env = settings.config.environment;
 
 app.use(libs.compression());
 
-app.use(libs.express.static(libs.path.join(__dirname, '../images')));
-
 let documentOfUploadPersistentImages = {
   url: "/api/persistent/images",
   method: "post",
