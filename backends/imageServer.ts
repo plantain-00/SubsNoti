@@ -37,7 +37,11 @@ let storage = libs.multer.diskStorage({
       next(null, 'publish/images/');
     }
     else if (request.path === documentOfUploadTemperaryImages.url) {
-      next(null, 'publish/images/tmp/');
+      services.authenticationCredential.authenticate(request).then(userId=> {
+        next(null, 'publish/images/tmp/');
+      }, error=> {
+        next(error);
+      });
     }
     else {
       next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
@@ -73,10 +77,17 @@ app.post(documentOfUploadPersistentImages.url, upload.any(), (request: libs.Requ
   });
 });
 
-app.post(documentOfUploadTemperaryImages.url, upload.any(), (request: libs.Request, response: libs.Response) => {
-  services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-    urls: libs._.map(request['files'], (f: any) => '/tmp/' + f.filename)
-  })
+app.post(documentOfUploadTemperaryImages.url, upload.any(), async(request: libs.Request, response: libs.Response) => {
+  try {
+    let userId = await services.authenticationCredential.authenticate(request);
+
+    services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
+      urls: libs._.map(request['files'], (f: any) => '/tmp/' + f.filename)
+    })
+  }
+  catch (error) {
+    services.response.sendError(response, error, documentOfUploadTemperaryImages.documentUrl);
+  }
 });
 
 app.listen(settings.config.imageServer.port, settings.config.imageServer.innerHostName, () => {
