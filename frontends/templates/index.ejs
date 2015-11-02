@@ -113,16 +113,20 @@
                                                             </button>
                                                         </div>
                                                         <div :style='{ display: themeIdInEditing !== null && themeIdInEditing === theme.id ? "inline" : "none" }'>
-                                                            <button type="button" class="btn btn-xs btn-link"
-                                                                v-show="canSave && (titleInEditing !== theme.title || detailInEditing !== theme.detail)"
-                                                                @click="save(theme)">
-                                                                save
-                                                            </button>
-                                                            <button type="button" class="btn btn-xs btn-link"
-                                                                v-show="themeIdInEditing !== null"
-                                                                @click="cancel(theme)">
-                                                                cancel
-                                                            </button>
+                                                            <div :style='{ display: canSave && (titleInEditing !== theme.title || detailInEditing !== theme.detail) ? "inline" : "none" }'>
+                                                                •
+                                                                <button type="button" class="btn btn-xs btn-link"
+                                                                    @click="save(theme)">
+                                                                    save
+                                                                </button>
+                                                            </div>
+                                                            <div :style='{ display: themeIdInEditing !== null ? "inline" : "none" }'>
+                                                                •
+                                                                <button type="button" class="btn btn-xs btn-link"
+                                                                    @click="cancel(theme)">
+                                                                    cancel
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

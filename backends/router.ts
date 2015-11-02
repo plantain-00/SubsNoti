@@ -38,7 +38,7 @@ export function route(app: libs.Application) {
             return;
         }
 
-        request["v"] = v;
+        request.v = v;
         next();
     });
 

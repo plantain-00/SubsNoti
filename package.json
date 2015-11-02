@@ -1,6 +1,6 @@
 {
   "name": "SubsNoti",
-  "version": "0.4.3",
+  "version": "0.6.3",
   "description": "a subscription and notification website",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "latest",
+    "canvas": "latest",
     "compression": "latest",
     "cookie-parser": "latest",
     "express": "latest",
@@ -16,13 +17,14 @@
     "md5": "latest",
     "moment": "latest",
     "mongoose": "latest",
+    "multer": "latest",
     "mysql": "latest",
     "node-uuid": "latest",
     "nodemailer": "latest",
     "redis": "latest",
+    "request": "latest",
     "semver": "latest",
-    "validator": "latest",
-    "canvas": "latest"
+    "validator": "latest"
   },
   "devDependencies": {
     "autoprefixer": "latest",
