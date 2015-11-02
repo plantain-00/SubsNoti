@@ -46,7 +46,8 @@ interface SettingsInterface {
         port: number,
         innerHostName: string,
         outerHostName: string
-    }
+    },
+    ipWhiteList: string[]
 }
 
 export {SettingsInterface};

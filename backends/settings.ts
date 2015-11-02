@@ -53,7 +53,10 @@ export let config: SettingsInterface = {
         port: 7777,
         innerHostName: "0.0.0.0",
         outerHostName: "localhost"
-    }
+    },
+    ipWhiteList: [
+        '127.0.0.1'
+    ]
 };
 
 try {

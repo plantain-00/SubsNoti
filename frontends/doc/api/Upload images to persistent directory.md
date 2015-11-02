@@ -20,6 +20,8 @@ no
 
 array of files
 
+fieldname is ultimate file name.
+
 ### [Response Body](./Response.html)
 
 key name | value type
