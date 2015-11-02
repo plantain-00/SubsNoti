@@ -30,5 +30,5 @@ services.cache.connect();
 })();
 
 app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
-    console.log(`Server has started at port: ${settings.config.website.port}`);
+    console.log(`Server is listening: ${settings.config.website.innerHostName}:${settings.config.website.port}`);
 });

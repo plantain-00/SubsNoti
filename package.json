@@ -1,6 +1,6 @@
 {
   "name": "SubsNoti",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "a subscription and notification website",
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "node-uuid": "latest",
     "nodemailer": "latest",
     "redis": "latest",
+    "request": "latest",
     "semver": "latest",
     "validator": "latest"
   },

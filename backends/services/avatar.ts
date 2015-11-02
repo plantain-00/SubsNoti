@@ -10,18 +10,20 @@ import * as services from "../services"
 
 function createIfNotExists(id: string, next: (error: Error) => void) {
 	let seed: string = libs.md5(id);
-	let filePath = libs.path.join(__dirname, "../../public/avatars/" + id + ".png");
-	libs.fs.stat(filePath, (error, stats) => {
-		if (error) {
-			create(seed, filePath, next);
-		}
-		else {
+	let fileName = `avatar-${id}.png`;
+	libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
+		if (!error) {
+			console.log('exists:' + fileName);
 			next(null);
 		}
-	});
+		else {
+			console.log('creating:' + fileName);
+			create(seed, fileName, next);
+		}
+	})
 }
 
-function create(seed: string, filePath: string, next: (error: Error) => void) {
+function create(seed: string, fileName: string, next: (error: Error) => void) {
 	let red = seed.substr(0, 2);
 	let blue = seed.substr(2, 2);
 	let green = seed.substr(4, 2);
@@ -49,10 +51,38 @@ function create(seed: string, filePath: string, next: (error: Error) => void) {
 	canvas.toBuffer(function(error, buf) {
 		if (error) {
 			next(error);
+			return;
 		}
-		else {
-			libs.fs.writeFile(filePath, buf, next);
+
+		let formData = {
+
+		};
+		formData[fileName] = {
+			value: buf,
+			options: {
+				filename: fileName,
+				contentType: 'image/png'
+			}
 		}
+
+		libs.request.post({
+			url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images`,
+			formData: formData
+		}, (error, httpResponse, body) => {
+			if (error) {
+				next(error);
+				return;
+			}
+
+			let response: interfaces.Response = JSON.parse(body);
+
+			if (response.isSuccess) {
+				next(null);
+				return;
+			}
+
+			next(new Error(response.errorMessage));
+		});
 	});
 }
 

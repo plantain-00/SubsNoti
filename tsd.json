@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "62eedc3121a5e28c50473d2e4a9cefbcb9c3957f"
+      "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
     },
     "serve-static/serve-static.d.ts": {
       "commit": "62eedc3121a5e28c50473d2e4a9cefbcb9c3957f"
@@ -76,6 +76,12 @@
     },
     "semver/semver.d.ts": {
       "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
+    },
+    "request/request.d.ts": {
+      "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
+    },
+    "form-data/form-data.d.ts": {
+      "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
     }
   }
 }

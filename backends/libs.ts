@@ -56,11 +56,15 @@ export {semver};
 
 export let multer = require('multer');
 
+import * as request from 'request';
+export {request};
+
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
 export interface Request extends express.Request {
     v: string;
+    files: any[];
 }
 
 import Response = express.Response;

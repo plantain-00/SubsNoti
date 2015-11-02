@@ -47,7 +47,12 @@ interface SettingsInterface {
         innerHostName: string,
         outerHostName: string
     },
-    ipWhiteList: string[]
+    ipWhiteList: string[],
+    imageUploader: {
+        port: number,
+        innerHostName: string,
+        outerHostName: string
+    }
 }
 
 export {SettingsInterface};

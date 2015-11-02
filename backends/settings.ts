@@ -56,7 +56,12 @@ export let config: SettingsInterface = {
     },
     ipWhiteList: [
         '127.0.0.1'
-    ]
+    ],
+    imageUploader: {
+        port: 9999,
+        innerHostName: "0.0.0.0",
+        outerHostName: "localhost"
+    }
 };
 
 try {

@@ -11,7 +11,6 @@ services.mongo.connect();
 	try {
 		let users = await services.mongo.User.find({}).exec();
 		for (let user of users) {
-			console.log(user.email + " in " + users.length);
 			await services.avatar.createIfNotExistsAsync(user._id.toHexString());
 		}
 	}
