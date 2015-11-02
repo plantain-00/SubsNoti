@@ -26,17 +26,14 @@ export async function create(request: libs.Request, response: libs.Response) {
     let name = libs.validator.trim(request.body.name);
 
     try {
-        // validate captcha code if v>=0.3 or after 2015-11-01.
-        if (libs.semver.satisfies(request.v, ">=0.3") || libs.moment().isAfter(libs.moment("2015-11-01", "YYYY-MM-DD"))) {
-            let code = libs.validator.trim(request.body.code);
-            let guid = libs.validator.trim(request.body.guid);
-            if (code === '' || guid === '') {
-                services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
-                return;
-            }
-
-            await services.captcha.validate(guid, code);
+        let code = libs.validator.trim(request.body.code);
+        let guid = libs.validator.trim(request.body.guid);
+        if (code === '' || guid === '') {
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
+            return;
         }
+
+        await services.captcha.validate(guid, code);
 
         // find out if the email is someone's. if no, create an account.
         let user = await services.mongo.User.findOne({ email: email })
