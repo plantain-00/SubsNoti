@@ -10,9 +10,9 @@ export NODE_ENV=development
 # echo 'Finished "git pull".'
 
 # install
-echo 'Starting "npm update"...'
-npm update
-echo 'Finished "npm update".'
+echo 'Starting "npm install"...'
+npm install
+echo 'Finished "npm install".'
 
 # compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'

@@ -1,9 +1,9 @@
 call set NODE_ENV=development
 
 rem install
-echo 'Starting "npm update"...'
-call npm update
-echo 'Finished "npm update".'
+echo 'Starting "npm install"...'
+call npm install
+echo 'Finished "npm install".'
 
 rem compile gulpfile.ts
 echo 'Starting "tsc gulpfile.ts"...'

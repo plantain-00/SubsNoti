@@ -12,7 +12,7 @@ function createIfNotExists(id: string, next: (error: Error) => void) {
 	let seed: string = libs.md5(id);
 	let fileName = `avatar-${id}.png`;
 	libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
-		if (!error) {
+		if (!error && response.statusCode !== 200) {
 			console.log('exists:' + fileName);
 			next(null);
 		}
