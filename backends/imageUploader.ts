@@ -32,11 +32,11 @@ let storage = libs.multer.diskStorage({
         next(services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden));
         return;
       }
-      next(null, 'publish/images/');
+      next(null, 'images/');
     }
     else if (request.path === documentOfUploadTemperaryImages.url) {
       services.authenticationCredential.authenticate(request).then(userId=> {
-        next(null, 'publish/images/tmp/');
+        next(null, 'images/tmp/');
       }, error=> {
         next(error);
       });

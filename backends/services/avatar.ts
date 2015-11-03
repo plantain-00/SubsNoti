@@ -21,7 +21,7 @@ function createIfNotExists(id: string, next: (error: Error) => void) {
 			next(null);
 		}
 		else {
-			console.log('statusCOde:' + response.statusCode);
+			console.log('statusCode:' + response.statusCode);
 			console.log('creating:' + fileName);
 			create(seed, fileName, next);
 		}
