@@ -29,10 +29,28 @@
                                 @click="clickClosed()">
                                 closed
                             </label>
-                            <button type="button" class="btn btn-primary""
-                                @click="fetchThemes(1)">
-                                search
-                            </button>
+                            <span class="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" @click="fetchThemes(1)"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="newThemeTitle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">detail</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" v-model="newThemeDetail"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <button type="button" class="btn btn-primary"
+                                v-show="canCreate"
+                                @click="createTheme()">Create</button>
+                            <button type="button" class="btn btn-primary" disabled
+                                v-else>Please input title</button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -136,31 +154,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div>
-                            <button type='button' class='btn btn-primary' style="display: none;"
+                        <div class="col-sm-12">
+                            <button type='button' class='btn btn-primary btn-lg col-sm-12' style="display: none;"
                                 @click="showMoreThemes()"
-                                v-show="nextThemeCount > 0">show {{nextThemeCount}} more {{nextThemeCount > 1 ? "themes" : "theme"}}(total {{totalCount}})</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">title</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="newThemeTitle">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">detail</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" v-model="newThemeDetail"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-10 col-sm-offset-2">
-                            <button type="button" class="btn btn-primary"
-                                v-show="canCreate"
-                                @click="createTheme()">Create</button>
-                            <button type="button" class="btn btn-primary" disabled
-                                v-else>Please input title</button>
+                                v-show="canShowMoreThemes">
+                                show {{nextThemeCount}} more {{nextThemeCount > 1 ? "themes" : "theme"}}(total {{totalCount}})
+                            </button>
                         </div>
                     </div>
                 </form>

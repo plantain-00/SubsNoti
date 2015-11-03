@@ -8,6 +8,7 @@
     <title>v<%- version%> <%- environment%></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap<%- dotMin %>.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme<%- dotMin %>.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome<%- dotMin %>.css">
     <link rel="stylesheet" href="./styles/base<%- dotMin %>.css">
 </head>
 
@@ -24,6 +25,9 @@
             </div>
             <div class="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <a href="./index.html">Themes</a>
+                    </li>
                     <li>
                         <a href="./doc/api/index.html">API</a>
                     </li>
@@ -48,7 +52,9 @@
                         </a>
                     </li>
                     <li v-show="loginStatus == 2">
-                        <a href="javascript:void(0)" @click="exit()">Exit</a>
+                        <a href="javascript:void(0)" @click="exit()">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -57,5 +63,9 @@
             v-show="showAlertMessage"
             style="position: fixed; top: 60px; left: 20px; right: 20px;">
             {{alertMessage}}
+        </div>
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; text-align: center; z-index: 1; display: none;"
+            v-show="requestCount > 0">
+            <i class="fa fa-spinner fa-pulse fa-5x" style="margin-top: 200px;"></i>
         </div>
     </header>
