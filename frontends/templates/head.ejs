@@ -25,6 +25,9 @@
             <div class="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
+                        <a href="./index.html">Themes</a>
+                    </li>
+                    <li>
                         <a href="./doc/api/index.html">API</a>
                     </li>
                     <li v-show="canCreateOrganization" style="display: none;">
@@ -48,7 +51,9 @@
                         </a>
                     </li>
                     <li v-show="loginStatus == 2">
-                        <a href="javascript:void(0)" @click="exit()">Exit</a>
+                        <a href="javascript:void(0)" @click="exit()">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                        </a>
                     </li>
                 </ul>
             </div>
