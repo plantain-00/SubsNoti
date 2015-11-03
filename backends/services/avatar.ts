@@ -12,11 +12,16 @@ function createIfNotExists(id: string, next: (error: Error) => void) {
 	let seed: string = libs.md5(id);
 	let fileName = `avatar-${id}.png`;
 	libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
-		if (!error && response.statusCode !== 200) {
+		if (error) {
+			console.log('error:' + error);
+			next(null);
+		}
+		if (response.statusCode == 200) {
 			console.log('exists:' + fileName);
 			next(null);
 		}
 		else {
+			console.log('statusCOde:' + response.statusCode);
 			console.log('creating:' + fileName);
 			create(seed, fileName, next);
 		}
