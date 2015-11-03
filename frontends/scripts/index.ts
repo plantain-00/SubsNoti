@@ -63,6 +63,7 @@ interface VueBodyModel {
     nextThemeCount: number;
     canCreate: boolean;
     canSave: boolean;
+    canShowMoreThemes: boolean;
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number) => void;
@@ -79,6 +80,7 @@ interface VueBodyModel {
     save: (Theme) => void;
     clickOpen: () => void;
     clickClosed: () => void;
+    showMoreThemes: () => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -114,6 +116,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             return self.titleInEditing.trim() && base.vueHead.requestCount === 0;
+        },
+        canShowMoreThemes: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return self.nextThemeCount > 0 && base.vueHead.requestCount === 0;
         }
     },
     methods: {
@@ -391,5 +398,14 @@ $(document).ready(function() {
 
         vueBody.getOrganizationsCurrentUserIn();
         setInterval(vueBody.setThemeTimeText, 10000);
+
+        let w = $(window);
+        let d = $(document);
+        w.scroll(function() {
+            if (w.scrollTop() >= d.height() - w.height()
+                && vueBody.canShowMoreThemes) {
+                vueBody.showMoreThemes();
+            }
+        });
     });
 });
