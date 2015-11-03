@@ -16,5 +16,5 @@ app.use(libs.compression());
 app.use(libs.express.static(libs.path.join(__dirname, '../images')));
 
 app.listen(settings.config.imageServer.port, settings.config.imageServer.innerHostName, () => {
-  console.log(`Image server is listening: ${settings.config.imageServer.innerHostName}:${settings.config.imageServer.port}`);
+    console.log(`Image server is listening: ${settings.config.imageServer.innerHostName}:${settings.config.imageServer.port}`);
 });

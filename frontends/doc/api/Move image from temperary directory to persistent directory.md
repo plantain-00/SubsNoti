@@ -21,5 +21,6 @@ no
 key name | value type
 --- | ---
 name | string
+newName | string
 
 ### [Response Body](./Response.html)
