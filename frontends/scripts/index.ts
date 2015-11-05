@@ -62,6 +62,7 @@ interface VueBodyModel {
 
     nextThemeCount: number;
     canCreate: boolean;
+    canShowCreate: boolean;
     canSave: boolean;
     canShowMoreThemes: boolean;
 
@@ -111,6 +112,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             return self.newThemeTitle.trim() && base.vueHead.requestCount === 0;
+        },
+        canShowCreate: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return base.vueHead.loginStatus === enums.LoginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;

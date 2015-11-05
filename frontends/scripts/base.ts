@@ -160,6 +160,7 @@ export let vueHead: VueHeadModel = new Vue({
                 cache: false,
                 success: function() {
                     self.loginStatus = enums.LoginStatus.fail;
+                    self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
                     window.sessionStorage.removeItem("loginResult");
