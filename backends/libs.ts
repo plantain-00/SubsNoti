@@ -62,6 +62,8 @@ export {request};
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
+export let cors = require('cors');
+
 export interface Request extends express.Request {
     v: string;
     files: any[];

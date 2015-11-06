@@ -13,6 +13,8 @@ app.settings.env = settings.config.environment;
 
 app.use(libs.compression());
 
+app.use(libs.cors());
+
 let documentOfUploadPersistentImages = {
     url: "/api/persistent/images",
     method: "post",
@@ -35,11 +37,12 @@ let storage = libs.multer.diskStorage({
             next(null, 'images/');
         }
         else if (request.path === documentOfUploadTemperaryImages.url) {
-            services.authenticationCredential.authenticate(request).then(userId=> {
-                next(null, 'images/tmp/');
-            }, error=> {
-                next(error);
-            });
+            next(null, 'images/tmp/');
+            // services.authenticationCredential.authenticate(request).then(userId=> {
+            //     next(null, 'images/tmp/');
+            // }, error=> {
+            //     next(error);
+            // });
         }
         else {
             next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
@@ -76,7 +79,7 @@ app.post(documentOfUploadPersistentImages.url, upload.any(), (request: libs.Requ
     }
 
     services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-        urls: libs._.map(request.files, (f: any) => `${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${f.filename}`)
+        names: libs._.map(request.files, (f: any) => f.filename)
     });
 });
 
@@ -87,10 +90,10 @@ app.post(documentOfUploadTemperaryImages.url, upload.any(), async(request: libs.
             return;
         }
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        //let userId = await services.authenticationCredential.authenticate(request);
 
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-            urls: libs._.map(request.files, (f: any) => `${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/tmp/${f.filename}`)
+            names: libs._.map(request.files, (f: any) => f.filename)
         })
     }
     catch (error) {

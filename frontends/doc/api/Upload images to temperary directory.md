@@ -26,4 +26,4 @@ array of files
 
 key name | value type
 --- | ---
-urls | string[]
+names | string[]

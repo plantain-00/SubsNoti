@@ -25,6 +25,7 @@ export const localStorageNames = {
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 export let imageServerUrl = 'http://115.29.42.125:7777';
+export let imageUploaderUrl = 'http://127.0.0.1:9999';
 
 function getUrlParameter(name: string): string {
     let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -96,7 +97,7 @@ interface VueHeadModel {
     avatarUrl: string;
     canInvite: boolean;
 
-    showAlert: (boolean, string) => void;
+    showAlert: (isSuccess: boolean, message: string) => void;
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
 }
