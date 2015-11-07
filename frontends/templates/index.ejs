@@ -63,6 +63,9 @@
                                     <tr v-for="theme in themes"
                                         @mouseover="theme.isHovering = true"
                                         @mouseout="theme.isHovering = false">
+                                        <td style="width: 70px">
+                                            <img :src="theme.creator.avatar" height="50">
+                                        </td>
                                         <td>
                                             <h5>
                                                 <span v-show="themeIdInEditing !== theme.id">

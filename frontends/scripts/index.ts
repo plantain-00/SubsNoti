@@ -17,6 +17,7 @@ interface User {
     id: string;
     name: string;
     email: string;
+    avatar: string;
 }
 
 interface Theme {
@@ -198,6 +199,15 @@ let vueBody: VueBodyModel = new Vue({
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
                             theme.ownersEmails = self.getEmails(theme.owners);
+                            theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
+
+                            for (let watcher of theme.watchers) {
+                                watcher.avatar = base.getFullUrl(watcher.avatar);
+                            }
+
+                            for (let owner of theme.owners) {
+                                owner.avatar = base.getFullUrl(owner.avatar);
+                            }
                         }
                         if (page === 1) {
                             self.themes = data.themes;
@@ -257,7 +267,8 @@ let vueBody: VueBodyModel = new Vue({
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
                         name: base.vueHead.currentUserName,
-                        email: base.vueHead.currentUserEmail
+                        email: base.vueHead.currentUserEmail,
+                        avatar: base.vueHead.currentAvatar
                     });
                     theme.isWatching = true;
                     theme.watchersEmails += base.vueHead.currentUserEmail + ';';

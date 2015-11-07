@@ -30,7 +30,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             name: user.name,
             createdOrganizationCount: user.createdOrganizations.length,
             joinedOrganizationCount: user.joinedOrganizations.length,
-            avatar: user.avatar ? user.avatar : settings.config.avatar + id + '.png'
+            avatar: user.avatar || services.avatar.getDefaultName(id)
         };
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);

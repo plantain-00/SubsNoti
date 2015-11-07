@@ -84,6 +84,8 @@ export async function get(request: libs.Request, response: libs.Response) {
         libs._.each(themes, (t: services.mongo.ThemeDocument) => {
             let creator = <services.mongo.UserDocument>t.creator;
 
+            let creatorId = creator._id.toHexString();
+
             let theme = {
                 id: t._id.toHexString(),
                 title: t.title,
@@ -93,22 +95,27 @@ export async function get(request: libs.Request, response: libs.Response) {
                 updateTime: t.updateTime ? t.updateTime.getTime() : undefined,
                 status: t.status,
                 creator: {
-                    id: creator._id,
+                    id: creatorId,
                     name: creator.name,
-                    email: creator.email
+                    email: creator.email,
+                    avatar: creator.avatar || services.avatar.getDefaultName(creatorId)
                 },
                 owners: libs._.map(<services.mongo.UserDocument[]>t.owners, o=> {
+                    let id = o._id.toHexString();
                     return {
-                        id: o._id,
+                        id: id,
                         name: o.name,
-                        email: o.email
+                        email: o.email,
+                        avatar: o.avatar || services.avatar.getDefaultName(id)
                     }
                 }),
                 watchers: libs._.map(<services.mongo.UserDocument[]>t.watchers, w=> {
+                    let id = w._id.toHexString();
                     return {
-                        id: w._id,
+                        id: id,
                         name: w.name,
-                        email: w.email
+                        email: w.email,
+                        avatar: w.avatar || services.avatar.getDefaultName(id)
                     }
                 })
             };
