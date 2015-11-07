@@ -10,7 +10,7 @@ import * as services from "../services"
 
 function createIfNotExists(id: string, next: (error: Error) => void) {
 	let seed: string = libs.md5(id);
-	let fileName = settings.config.avatar + id + '.png';
+	let fileName = getDefaultName(id);
 	libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
 		if (error) {
 			console.log('error:' + error);
@@ -95,3 +95,7 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
  * if exists, do nothing, otherwise create one and save it.
  */
 export let createIfNotExistsAsync = services.promise.promisify2<string, void>(createIfNotExists);
+
+export function getDefaultName(id: string): string {
+	return settings.config.avatar + id + '.png';
+}

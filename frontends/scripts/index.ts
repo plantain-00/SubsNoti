@@ -17,6 +17,7 @@ interface User {
     id: string;
     name: string;
     email: string;
+    avatar: string;
 }
 
 interface Theme {
@@ -59,6 +60,7 @@ interface VueBodyModel {
     q: string;
     isOpen: boolean;
     isClosed: boolean;
+    showCreate: boolean;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -82,6 +84,7 @@ interface VueBodyModel {
     clickOpen: () => void;
     clickClosed: () => void;
     showMoreThemes: () => void;
+    clickShowCreate: () => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -99,7 +102,8 @@ let vueBody: VueBodyModel = new Vue({
         detailInEditing: "",
         q: "",
         isOpen: true,
-        isClosed: false
+        isClosed: false,
+        showCreate: false
     },
     computed: {
         nextThemeCount: function() {
@@ -195,6 +199,15 @@ let vueBody: VueBodyModel = new Vue({
                             theme.isHovering = false;
                             theme.watchersEmails = self.getEmails(theme.watchers);
                             theme.ownersEmails = self.getEmails(theme.owners);
+                            theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
+
+                            for (let watcher of theme.watchers) {
+                                watcher.avatar = base.getFullUrl(watcher.avatar);
+                            }
+
+                            for (let owner of theme.owners) {
+                                owner.avatar = base.getFullUrl(owner.avatar);
+                            }
                         }
                         if (page === 1) {
                             self.themes = data.themes;
@@ -229,6 +242,7 @@ let vueBody: VueBodyModel = new Vue({
                 if (data.isSuccess) {
                     self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
+                    self.showCreate = false;
                 }
                 else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -253,7 +267,8 @@ let vueBody: VueBodyModel = new Vue({
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
                         name: base.vueHead.currentUserName,
-                        email: base.vueHead.currentUserEmail
+                        email: base.vueHead.currentUserEmail,
+                        avatar: base.vueHead.currentAvatar
                     });
                     theme.isWatching = true;
                     theme.watchersEmails += base.vueHead.currentUserEmail + ';';
@@ -384,6 +399,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             self.isClosed = !self.isClosed;
+        },
+        clickShowCreate: function() {
+            let self: VueBodyModel = this;
+
+            self.showCreate = !self.showCreate;
         }
     }
 });

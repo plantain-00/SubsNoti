@@ -27,6 +27,10 @@ export let maxOrganizationNumberUserCanCreate = 3;
 export let imageServerUrl = 'http://115.29.42.125:7777';
 export let imageUploaderUrl = 'http://115.29.42.125:9999';
 
+export function getFullUrl(avatar: string): string {
+    return `${imageServerUrl}/${avatar}`;
+}
+
 function getUrlParameter(name: string): string {
     let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     let array: RegExpMatchArray = window.location.search.substr(1).match(reg);
@@ -129,7 +133,7 @@ export let vueHead: VueHeadModel = new Vue({
         avatarUrl: function() {
             let self: VueHeadModel = this;
 
-            return `${imageServerUrl}/${self.currentAvatar}`;
+            return getFullUrl(self.currentAvatar);
         },
         canInvite: function() {
             let self: VueHeadModel = this;

@@ -55,3 +55,4 @@ key name | value type
 id | string
 name | string
 email | string
+avatar | string
