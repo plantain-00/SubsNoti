@@ -61,7 +61,8 @@ export let config: SettingsInterface = {
         port: 9999,
         innerHostName: "0.0.0.0",
         outerHostName: "localhost"
-    }
+    },
+    avatar: 'avatar-'
 };
 
 try {

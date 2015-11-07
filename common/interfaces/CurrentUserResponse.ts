@@ -4,4 +4,5 @@ export interface CurrentUserResponse {
     name: string;
     createdOrganizationCount: number;
     joinedOrganizationCount: number;
+    avatar: string;
 }

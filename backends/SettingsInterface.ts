@@ -52,7 +52,8 @@ interface SettingsInterface {
         port: number,
         innerHostName: string,
         outerHostName: string
-    }
+    },
+    avatar: string
 }
 
 export {SettingsInterface};

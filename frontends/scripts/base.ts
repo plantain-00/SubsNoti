@@ -86,6 +86,7 @@ interface VueHeadModel {
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
+    currentAvatar: string;
     createdOrganizationCount: number;
     joinedOrganizationCount: number;
     requestCount: number;
@@ -111,6 +112,7 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
+        currentAvatar: "",
         createdOrganizationCount: maxOrganizationNumberUserCanCreate,
         joinedOrganizationCount: 0,
         requestCount: 0,
@@ -127,7 +129,7 @@ export let vueHead: VueHeadModel = new Vue({
         avatarUrl: function() {
             let self: VueHeadModel = this;
 
-            return `${imageServerUrl}/avatar-${self.currentUserId}.png`
+            return `${imageServerUrl}/${self.currentAvatar}`;
         },
         canInvite: function() {
             let self: VueHeadModel = this;
@@ -164,6 +166,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
+                    self.currentAvatar = "";
                     window.sessionStorage.removeItem("loginResult");
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
@@ -179,6 +182,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
+                    self.currentAvatar = data.avatar;
                     self.createdOrganizationCount = data.createdOrganizationCount;
                     self.joinedOrganizationCount = data.joinedOrganizationCount;
 

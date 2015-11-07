@@ -21,14 +21,16 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select('email name createdOrganizations joinedOrganizations')
+            .select('email name createdOrganizations joinedOrganizations avatar')
             .exec();
+        let id = userId.toHexString();
         let result: interfaces.CurrentUserResponse = {
-            id: userId.toHexString(),
+            id: id,
             email: user.email,
             name: user.name,
             createdOrganizationCount: user.createdOrganizations.length,
-            joinedOrganizationCount: user.joinedOrganizations.length
+            joinedOrganizationCount: user.joinedOrganizations.length,
+            avatar: user.avatar ? user.avatar : settings.config.avatar + id + '.png'
         };
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
@@ -54,7 +56,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select('name')
+            .select('name avatar')
             .exec();
 
         // if name changes, then change it.
@@ -65,17 +67,22 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         // if change avatar, then move image.
         if (avatarFileName) {
+            let newName = settings.config.avatar + userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
+
             libs.request.post({
                 url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/images/persistent`,
                 form: {
                     name: avatarFileName,
-                    newName: 'avatar-' + userId.toHexString() + libs.path.extname(avatarFileName)
+                    newName: newName
                 }
             }, (error, httpResponse, body) => {
                 if (error) {
                     services.response.sendError(response, services.error.fromError(error, enums.StatusCode.internalServerError), documentUrl);
                     return;
                 }
+
+                user.avatar = newName;
+                user.save();
 
                 response.status(httpResponse.statusCode).json(JSON.parse(body));
             });
