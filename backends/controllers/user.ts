@@ -87,6 +87,9 @@ export async function update(request: libs.Request, response: libs.Response) {
                 response.status(httpResponse.statusCode).json(JSON.parse(body));
             });
         }
+        else {
+            services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+        }
     }
     catch (error) {
         services.response.sendError(response, error, documentUrl);
