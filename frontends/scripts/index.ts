@@ -59,6 +59,7 @@ interface VueBodyModel {
     q: string;
     isOpen: boolean;
     isClosed: boolean;
+    showCreate: boolean;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -82,6 +83,7 @@ interface VueBodyModel {
     clickOpen: () => void;
     clickClosed: () => void;
     showMoreThemes: () => void;
+    clickShowCreate: () => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -99,7 +101,8 @@ let vueBody: VueBodyModel = new Vue({
         detailInEditing: "",
         q: "",
         isOpen: true,
-        isClosed: false
+        isClosed: false,
+        showCreate: false
     },
     computed: {
         nextThemeCount: function() {
@@ -229,6 +232,7 @@ let vueBody: VueBodyModel = new Vue({
                 if (data.isSuccess) {
                     self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
+                    self.showCreate = false;
                 }
                 else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -384,6 +388,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             self.isClosed = !self.isClosed;
+        },
+        clickShowCreate: function() {
+            let self: VueBodyModel = this;
+
+            self.showCreate = !self.showCreate;
         }
     }
 });

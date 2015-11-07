@@ -69,23 +69,16 @@ export async function update(request: libs.Request, response: libs.Response) {
         if (avatarFileName) {
             let newName = settings.config.avatar + userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
 
-            libs.request.post({
-                url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/images/persistent`,
-                form: {
-                    name: avatarFileName,
-                    newName: newName
-                }
-            }, (error, httpResponse, body) => {
-                if (error) {
-                    services.response.sendError(response, services.error.fromError(error, enums.StatusCode.internalServerError), documentUrl);
-                    return;
-                }
-
-                user.avatar = newName;
-                user.save();
-
-                response.status(httpResponse.statusCode).json(JSON.parse(body));
+            let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/images/persistent`, {
+                name: avatarFileName,
+                newName: newName
             });
+
+            // save new avatar name.
+            user.avatar = newName;
+            user.save();
+
+            response.status(json.response.statusCode).json(json.json);
         }
         else {
             services.response.sendSuccess(response, enums.StatusCode.createdOrModified);

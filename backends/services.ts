@@ -38,3 +38,6 @@ export {avatar};
 
 import * as captcha from "./services/captcha";
 export {captcha};
+
+import * as request from "./services/request";
+export {request};
