@@ -25,6 +25,7 @@ export const localStorageNames = {
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 export let imageServerUrl = 'http://115.29.42.125:7777';
+export let imageUploaderUrl = 'http://115.29.42.125:9999';
 
 function getUrlParameter(name: string): string {
     let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -85,6 +86,7 @@ interface VueHeadModel {
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
+    currentAvatar: string;
     createdOrganizationCount: number;
     joinedOrganizationCount: number;
     requestCount: number;
@@ -96,7 +98,7 @@ interface VueHeadModel {
     avatarUrl: string;
     canInvite: boolean;
 
-    showAlert: (boolean, string) => void;
+    showAlert: (isSuccess: boolean, message: string) => void;
     exit: () => void;
     authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
 }
@@ -110,6 +112,7 @@ export let vueHead: VueHeadModel = new Vue({
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
+        currentAvatar: "",
         createdOrganizationCount: maxOrganizationNumberUserCanCreate,
         joinedOrganizationCount: 0,
         requestCount: 0,
@@ -126,7 +129,7 @@ export let vueHead: VueHeadModel = new Vue({
         avatarUrl: function() {
             let self: VueHeadModel = this;
 
-            return `${imageServerUrl}/avatar-${self.currentUserId}.png`
+            return `${imageServerUrl}/${self.currentAvatar}`;
         },
         canInvite: function() {
             let self: VueHeadModel = this;
@@ -160,8 +163,10 @@ export let vueHead: VueHeadModel = new Vue({
                 cache: false,
                 success: function() {
                     self.loginStatus = enums.LoginStatus.fail;
+                    self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
+                    self.currentAvatar = "";
                     window.sessionStorage.removeItem("loginResult");
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
@@ -177,6 +182,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
+                    self.currentAvatar = data.avatar;
                     self.createdOrganizationCount = data.createdOrganizationCount;
                     self.joinedOrganizationCount = data.joinedOrganizationCount;
 

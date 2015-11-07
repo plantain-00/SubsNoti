@@ -29,6 +29,7 @@ export interface UserDocument extends libs.mongoose.Document {
     name: string;
     salt: string;
     status: enums.UserStatus;
+    avatar: string;
 
     joinedOrganizations: Array<OrganizationDocument | libs.ObjectId>;
     createdOrganizations: Array<OrganizationDocument | libs.ObjectId>;
@@ -80,6 +81,7 @@ export function connect() {
         name: String,
         salt: String,
         status: Number,
+        avatar: String,
 
         joinedOrganizations: [{ type: Schema.Types.ObjectId, ref: 'Organization' }],
         createdOrganizations: [{ type: Schema.Types.ObjectId, ref: 'Organization' }],

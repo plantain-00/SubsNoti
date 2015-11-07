@@ -10,7 +10,7 @@ import * as services from "../services"
 
 function createIfNotExists(id: string, next: (error: Error) => void) {
 	let seed: string = libs.md5(id);
-	let fileName = `avatar-${id}.png`;
+	let fileName = settings.config.avatar + id + '.png';
 	libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
 		if (error) {
 			console.log('error:' + error);

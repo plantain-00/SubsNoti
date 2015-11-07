@@ -62,22 +62,23 @@ interface VueBodyModel {
 
     nextThemeCount: number;
     canCreate: boolean;
+    canShowCreate: boolean;
     canSave: boolean;
     canShowMoreThemes: boolean;
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number) => void;
-    clickOrganization: (Organization) => void;
+    clickOrganization: (organization: Organization) => void;
     createTheme: () => void;
     setThemeTimeText: () => void;
-    watch: (Theme) => void;
-    unwatch: (Theme) => void;
-    close: (Theme) => void;
-    reopen: (Theme) => void;
+    watch: (theme: Theme) => void;
+    unwatch: (theme: Theme) => void;
+    close: (theme: Theme) => void;
+    reopen: (theme: Theme) => void;
     getEmails: (users: User[]) => string;
-    edit: (Theme) => void;
-    cancel: (Theme) => void;
-    save: (Theme) => void;
+    edit: (theme: Theme) => void;
+    cancel: (theme: Theme) => void;
+    save: (theme: Theme) => void;
     clickOpen: () => void;
     clickClosed: () => void;
     showMoreThemes: () => void;
@@ -111,6 +112,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             return self.newThemeTitle.trim() && base.vueHead.requestCount === 0;
+        },
+        canShowCreate: function(): boolean {
+            let self: VueBodyModel = this;
+
+            return base.vueHead.loginStatus === enums.LoginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;

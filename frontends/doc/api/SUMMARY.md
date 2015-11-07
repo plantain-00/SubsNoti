@@ -12,6 +12,7 @@
 	* [Create a captcha](Create a captcha.md)
 * [User](User.md)
     * [Get current user](Get current user.md)
+    * [Update current user](Update current user.md)
 * [Organization](Organization.md)
 	* [Create an organization](Create an organization.md)
 	* [Get joined organizations](Get joined organizations.md)

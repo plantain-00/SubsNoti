@@ -26,4 +26,4 @@ fieldname is ultimate file name.
 
 key name | value type
 --- | ---
-urls | string[]
+names | string[]

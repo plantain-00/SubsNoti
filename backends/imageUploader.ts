@@ -13,6 +13,11 @@ app.settings.env = settings.config.environment;
 
 app.use(libs.compression());
 
+app.use(libs.bodyParser.json());
+app.use(libs.bodyParser.urlencoded({ extended: true }));
+
+app.use(libs.cors());
+
 let documentOfUploadPersistentImages = {
     url: "/api/persistent/images",
     method: "post",
@@ -35,11 +40,12 @@ let storage = libs.multer.diskStorage({
             next(null, 'images/');
         }
         else if (request.path === documentOfUploadTemperaryImages.url) {
-            services.authenticationCredential.authenticate(request).then(userId=> {
-                next(null, 'images/tmp/');
-            }, error=> {
-                next(error);
-            });
+            next(null, 'images/tmp/');
+            // services.authenticationCredential.authenticate(request).then(userId=> {
+            //     next(null, 'images/tmp/');
+            // }, error=> {
+            //     next(error);
+            // });
         }
         else {
             next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
@@ -76,7 +82,7 @@ app.post(documentOfUploadPersistentImages.url, upload.any(), (request: libs.Requ
     }
 
     services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-        urls: libs._.map(request.files, (f: any) => `${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${f.filename}`)
+        names: libs._.map(request.files, (f: any) => f.filename)
     });
 });
 
@@ -87,10 +93,10 @@ app.post(documentOfUploadTemperaryImages.url, upload.any(), async(request: libs.
             return;
         }
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        //let userId = await services.authenticationCredential.authenticate(request);
 
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-            urls: libs._.map(request.files, (f: any) => `${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/tmp/${f.filename}`)
+            names: libs._.map(request.files, (f: any) => f.filename)
         })
     }
     catch (error) {
@@ -106,13 +112,13 @@ let documentOfMoveImage = {
 
 app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Response) => {
     let name = libs.validator.trim(request.body.name);
-    let newName= libs.validator.trim(request.body.newName);
+    let newName = libs.validator.trim(request.body.newName);
 
     if (!name) {
         services.response.sendError(response, services.error.fromParameterIsMissedMessage('name'), documentOfMoveImage.documentUrl);
         return;
     }
-    
+
     if (!newName) {
         services.response.sendError(response, services.error.fromParameterIsMissedMessage('newName'), documentOfMoveImage.documentUrl);
         return;
@@ -122,8 +128,15 @@ app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Respons
         services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
         return;
     }
-    
-    services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+
+    libs.fs.rename(libs.path.join(__dirname, `../images/tmp/${name}`), libs.path.join(__dirname, `../images/${newName}`), error=> {
+        if (error) {
+            services.response.sendError(response, services.error.fromMessage(error.message, enums.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
+            return;
+        }
+
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+    });
 });
 
 app.listen(settings.config.imageUploader.port, settings.config.imageUploader.innerHostName, () => {
