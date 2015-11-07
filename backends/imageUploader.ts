@@ -13,6 +13,9 @@ app.settings.env = settings.config.environment;
 
 app.use(libs.compression());
 
+app.use(libs.bodyParser.json());
+app.use(libs.bodyParser.urlencoded({ extended: true }));
+
 app.use(libs.cors());
 
 let documentOfUploadPersistentImages = {
@@ -109,13 +112,13 @@ let documentOfMoveImage = {
 
 app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Response) => {
     let name = libs.validator.trim(request.body.name);
-    let newName= libs.validator.trim(request.body.newName);
+    let newName = libs.validator.trim(request.body.newName);
 
     if (!name) {
         services.response.sendError(response, services.error.fromParameterIsMissedMessage('name'), documentOfMoveImage.documentUrl);
         return;
     }
-    
+
     if (!newName) {
         services.response.sendError(response, services.error.fromParameterIsMissedMessage('newName'), documentOfMoveImage.documentUrl);
         return;
@@ -125,8 +128,15 @@ app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Respons
         services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
         return;
     }
-    
-    services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+
+    libs.fs.rename(libs.path.join(__dirname, `../images/tmp/${name}`), libs.path.join(__dirname, `../images/${newName}`), error=> {
+        if (error) {
+            services.response.sendError(response, services.error.fromMessage(error.message, enums.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
+            return;
+        }
+
+        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+    });
 });
 
 app.listen(settings.config.imageUploader.port, settings.config.imageUploader.innerHostName, () => {

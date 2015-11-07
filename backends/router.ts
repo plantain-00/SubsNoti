@@ -43,6 +43,7 @@ export function route(app: libs.Application) {
     });
 
     bind(user.documentOfGet, user.get);
+    bind(user.documentOfUpdate, user.update);
 
     bind(userLoggedIn.documentOfGet, userLoggedIn.get);
     bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);

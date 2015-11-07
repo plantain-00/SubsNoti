@@ -1,6 +1,6 @@
 {
   "name": "SubsNoti",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "a subscription and notification website",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "canvas": "latest",
     "compression": "latest",
     "cookie-parser": "latest",
-    "cors": "^2.7.1",
+    "cors": "latest",
     "express": "latest",
     "lodash": "latest",
     "md5": "latest",
