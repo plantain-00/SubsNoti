@@ -13,10 +13,16 @@ app.settings.env = settings.config.environment;
 
 app.use(libs.compression());
 
+app.use(libs.cookieParser());
+
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-app.use(libs.cors());
+app.use(libs.cors({
+    methods: 'GET,PUT,POST',
+    credentials: true,
+    origin: `http://${settings.config.website.outerHostName}:${settings.config.website.port}`
+}));
 
 let documentOfUploadPersistentImages = {
     url: "/api/persistent/images",
@@ -33,19 +39,10 @@ let documentOfUploadTemperaryImages = {
 let storage = libs.multer.diskStorage({
     destination: function(request: libs.Request, file, next) {
         if (request.path === documentOfUploadPersistentImages.url) {
-            if (!libs._.find(settings.config.ipWhiteList, i=> i === request.ip)) {
-                next(services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden));
-                return;
-            }
             next(null, 'images/');
         }
         else if (request.path === documentOfUploadTemperaryImages.url) {
             next(null, 'images/tmp/');
-            // services.authenticationCredential.authenticate(request).then(userId=> {
-            //     next(null, 'images/tmp/');
-            // }, error=> {
-            //     next(error);
-            // });
         }
         else {
             next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
@@ -53,10 +50,6 @@ let storage = libs.multer.diskStorage({
     },
     filename: function(request: libs.Request, file, next) {
         if (request.path === documentOfUploadPersistentImages.url) {
-            if (!libs._.find(settings.config.ipWhiteList, i=> i === request.ip)) {
-                next(services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden));
-                return;
-            }
             next(null, file.fieldname);
         }
         else if (request.path === documentOfUploadTemperaryImages.url) {
@@ -68,39 +61,47 @@ let storage = libs.multer.diskStorage({
     }
 })
 
-let upload = libs.multer({ storage: storage })
+let upload = libs.multer({ storage: storage }).any();
 
-app.post(documentOfUploadPersistentImages.url, upload.any(), (request: libs.Request, response: libs.Response) => {
-    if (request.files.length === 0) {
-        services.response.sendError(response, services.error.fromMessage('no file.', enums.StatusCode.invalidRequest), documentOfUploadPersistentImages.documentUrl);
-        return;
-    }
+app.post(documentOfUploadPersistentImages.url, (request: libs.Request, response: libs.Response) => {
+    let documentUrl = documentOfUploadPersistentImages.documentUrl;
 
     if (!libs._.find(settings.config.ipWhiteList, i=> i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
+        services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentUrl);
         return;
     }
 
-    services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
-        names: libs._.map(request.files, (f: any) => f.filename)
-    });
-});
-
-app.post(documentOfUploadTemperaryImages.url, upload.any(), async(request: libs.Request, response: libs.Response) => {
-    try {
-        if (request.files.length === 0) {
-            services.response.sendError(response, services.error.fromMessage('no file.', enums.StatusCode.invalidRequest), documentOfUploadPersistentImages.documentUrl);
+    upload(request, response, error=> {
+        if (error) {
+            services.response.sendError(response, services.error.fromError(error, enums.StatusCode.invalidRequest), documentUrl);
             return;
         }
 
-        //let userId = await services.authenticationCredential.authenticate(request);
-
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
             names: libs._.map(request.files, (f: any) => f.filename)
-        })
+        });
+    });
+});
+
+app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, response: libs.Response) => {
+    let documentUrl = documentOfUploadPersistentImages.documentUrl;
+
+    try {
+        let userId = await services.authenticationCredential.authenticate(request);
+
+        upload(request, response, error=> {
+            if (error) {
+                services.response.sendError(response, services.error.fromError(error, enums.StatusCode.invalidRequest), documentUrl);
+                return;
+            }
+
+            services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
+                names: libs._.map(request.files, (f: any) => f.filename)
+            });
+        });
     }
     catch (error) {
-        services.response.sendError(response, error, documentOfUploadTemperaryImages.documentUrl);
+        services.response.sendError(response, error, documentUrl);
     }
 });
 

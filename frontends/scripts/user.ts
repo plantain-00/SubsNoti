@@ -43,7 +43,10 @@ let vueBody: VueBodyModel = new Vue({
                     processData: false,
                     contentType: false,
                     type: 'POST',
-                    success: function(data: UploadResponse) {
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: (data: UploadResponse) => {
                         if (data.isSuccess) {
                             let name = data.names[0];
 
