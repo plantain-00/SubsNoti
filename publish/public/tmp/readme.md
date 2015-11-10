@@ -1,1 +1,0 @@
-this is a directory where temperary images will be in.
