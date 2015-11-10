@@ -24,6 +24,8 @@ app.use(libs.cors({
     origin: `http://${settings.config.website.outerHostName}:${settings.config.website.port}`
 }));
 
+services.cache.connect();
+
 let documentOfUploadPersistentImages = {
     url: "/api/persistent/images",
     method: "post",
@@ -84,7 +86,7 @@ app.post(documentOfUploadPersistentImages.url, (request: libs.Request, response:
 });
 
 app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, response: libs.Response) => {
-    let documentUrl = documentOfUploadPersistentImages.documentUrl;
+    let documentUrl = documentOfUploadTemperaryImages.documentUrl;
 
     try {
         let userId = await services.authenticationCredential.authenticate(request);
