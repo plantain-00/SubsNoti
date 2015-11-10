@@ -53,7 +53,12 @@ interface SettingsInterface {
         innerHostName: string,
         outerHostName: string
     },
-    avatar: string
+    avatar: string,
+    cors: {
+        methods: string | string[],
+        credentials: boolean,
+        origin: Array<string | RegExp>
+    }
 }
 
 export {SettingsInterface};
