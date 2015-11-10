@@ -99,7 +99,6 @@ interface VueHeadModel {
     alertMessage: string;
 
     canCreateOrganization: boolean;
-    avatarUrl: string;
     canInvite: boolean;
 
     showAlert: (isSuccess: boolean, message: string) => void;
@@ -129,11 +128,6 @@ export let vueHead: VueHeadModel = new Vue({
             let self: VueHeadModel = this;
 
             return self.createdOrganizationCount < maxOrganizationNumberUserCanCreate;
-        },
-        avatarUrl: function() {
-            let self: VueHeadModel = this;
-
-            return getFullUrl(self.currentAvatar);
         },
         canInvite: function() {
             let self: VueHeadModel = this;
@@ -186,7 +180,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
-                    self.currentAvatar = data.avatar;
+                    self.currentAvatar = getFullUrl(data.avatar);
                     self.createdOrganizationCount = data.createdOrganizationCount;
                     self.joinedOrganizationCount = data.joinedOrganizationCount;
 
