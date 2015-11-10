@@ -45,16 +45,15 @@ let vueBody: VueBodyModel = new Vue({
                     type: 'POST',
                     xhrFields: {
                         withCredentials: true
-                    },
-                    success: (data: UploadResponse) => {
-                        if (data.isSuccess) {
-                            let name = data.names[0];
+                    }
+                }).then((data: UploadResponse) => {
+                    if (data.isSuccess) {
+                        let name = data.names[0];
 
-                            self.update(name);
-                        }
-                        else {
-                            base.vueHead.showAlert(false, data.errorMessage);
-                        }
+                        self.update(name);
+                    }
+                    else {
+                        base.vueHead.showAlert(false, data.errorMessage);
                     }
                 });
             }
@@ -73,24 +72,23 @@ let vueBody: VueBodyModel = new Vue({
                         avatarFileName: avatarFileName
                     },
                     cache: false,
-                    type: "put",
-                    success: (data: interfaces.Response) => {
-                        if (data.isSuccess) {
-                            window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
+                    type: "put"
+                }).then((data: interfaces.Response) => {
+                    if (data.isSuccess) {
+                        window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
 
-                            base.vueHead.authenticate((error, data) => {
-                                if (error) {
-                                    console.log(error);
-                                }
-                                else {
-                                    vueBody.name = base.vueHead.currentUserName;
-                                }
-                            });
-                            base.vueHead.showAlert(true, "success");
-                        }
-                        else {
-                            base.vueHead.showAlert(false, data.errorMessage);
-                        }
+                        base.vueHead.authenticate((error, data) => {
+                            if (error) {
+                                console.log(error);
+                            }
+                            else {
+                                vueBody.name = base.vueHead.currentUserName;
+                            }
+                        });
+                        base.vueHead.showAlert(true, "success");
+                    }
+                    else {
+                        base.vueHead.showAlert(false, data.errorMessage);
                     }
                 });
             }

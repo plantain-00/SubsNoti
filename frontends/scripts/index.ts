@@ -142,25 +142,24 @@ let vueBody: VueBodyModel = new Vue({
                 data: {
                     v: "0.0.1"
                 },
-                cache: false,
-                success: (data: OrganizationsResponse) => {
-                    if (data.isSuccess) {
-                        self.organizationsCurrentUserIn = data.organizations;
-                        if (data.organizations.length > 0) {
-                            let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
-                            if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
-                                self.currentOrganizationId = lastOrganizationId;
-                            }
-                            else {
-                                self.currentOrganizationId = data.organizations[0].id;
-                            }
-
-                            self.fetchThemes(1);
+                cache: false
+            }).then((data: OrganizationsResponse) => {
+                if (data.isSuccess) {
+                    self.organizationsCurrentUserIn = data.organizations;
+                    if (data.organizations.length > 0) {
+                        let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                        if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
+                            self.currentOrganizationId = lastOrganizationId;
                         }
+                        else {
+                            self.currentOrganizationId = data.organizations[0].id;
+                        }
+
+                        self.fetchThemes(1);
                     }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -182,44 +181,43 @@ let vueBody: VueBodyModel = new Vue({
                     isClosed: self.isClosed,
                     v: "0.4.0"
                 },
-                cache: false,
-                success: (data: ThemesResponse) => {
-                    if (data.isSuccess) {
-                        for (let theme of data.themes) {
-                            theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
-                            theme.isOwner = theme.owners.some(w=> w.id === base.vueHead.currentUserId);
-                            theme.createTimeText = moment(theme.createTime).fromNow();
-                            if (theme.updateTime) {
-                                theme.updateTimeText = moment(theme.updateTime).fromNow();
-                            }
-                            else {
-                                theme.updateTime = null;
-                                theme.updateTimeText = null;
-                            }
-                            theme.isHovering = false;
-                            theme.watchersEmails = self.getEmails(theme.watchers);
-                            theme.ownersEmails = self.getEmails(theme.owners);
-                            theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
-
-                            for (let watcher of theme.watchers) {
-                                watcher.avatar = base.getFullUrl(watcher.avatar);
-                            }
-
-                            for (let owner of theme.owners) {
-                                owner.avatar = base.getFullUrl(owner.avatar);
-                            }
-                        }
-                        if (page === 1) {
-                            self.themes = data.themes;
+                cache: false
+            }).then((data: ThemesResponse) => {
+                if (data.isSuccess) {
+                    for (let theme of data.themes) {
+                        theme.isWatching = theme.watchers.some(w=> w.id === base.vueHead.currentUserId);
+                        theme.isOwner = theme.owners.some(w=> w.id === base.vueHead.currentUserId);
+                        theme.createTimeText = moment(theme.createTime).fromNow();
+                        if (theme.updateTime) {
+                            theme.updateTimeText = moment(theme.updateTime).fromNow();
                         }
                         else {
-                            self.themes = self.themes.concat(data.themes);
+                            theme.updateTime = null;
+                            theme.updateTimeText = null;
                         }
-                        self.totalCount = data.totalCount;
+                        theme.isHovering = false;
+                        theme.watchersEmails = self.getEmails(theme.watchers);
+                        theme.ownersEmails = self.getEmails(theme.owners);
+                        theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
+
+                        for (let watcher of theme.watchers) {
+                            watcher.avatar = base.getFullUrl(watcher.avatar);
+                        }
+
+                        for (let owner of theme.owners) {
+                            owner.avatar = base.getFullUrl(owner.avatar);
+                        }
+                    }
+                    if (page === 1) {
+                        self.themes = data.themes;
                     }
                     else {
-                        base.vueHead.showAlert(false, data.errorMessage);
+                        self.themes = self.themes.concat(data.themes);
                     }
+                    self.totalCount = data.totalCount;
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -238,7 +236,7 @@ let vueBody: VueBodyModel = new Vue({
                 themeTitle: self.newThemeTitle,
                 themeDetail: self.newThemeDetail,
                 organizationId: self.currentOrganizationId
-            }, (data: interfaces.Response) => {
+            }).then((data: interfaces.Response) => {
                 if (data.isSuccess) {
                     self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
@@ -262,7 +260,7 @@ let vueBody: VueBodyModel = new Vue({
         watch: function(theme: Theme) {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}, (data: interfaces.Response) => {
+            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}).then((data: interfaces.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
@@ -288,22 +286,21 @@ let vueBody: VueBodyModel = new Vue({
                 url: "/api/user/themes/" + theme.id + "/watched?v=0.0.1",
                 data: {},
                 cache: false,
-                type: "delete",
-                success: (data: interfaces.Response) => {
-                    if (data.isSuccess) {
-                        let index = _.findIndex(theme.watchers, w=> w.id === base.vueHead.currentUserId);
-                        if (~index) {
-                            theme.watchers.splice(index, 1);
-                            theme.watchersEmails = self.getEmails(theme.watchers);
-                        }
-                        theme.isWatching = false;
-                        theme.updateTime = new Date().getTime();
-                        theme.updateTimeText = moment(theme.updateTime).fromNow();
-                        base.vueHead.showAlert(true, "success");
+                type: "delete"
+            }).then((data: interfaces.Response) => {
+                if (data.isSuccess) {
+                    let index = _.findIndex(theme.watchers, w=> w.id === base.vueHead.currentUserId);
+                    if (~index) {
+                        theme.watchers.splice(index, 1);
+                        theme.watchersEmails = self.getEmails(theme.watchers);
                     }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                    theme.isWatching = false;
+                    theme.updateTime = new Date().getTime();
+                    theme.updateTimeText = moment(theme.updateTime).fromNow();
+                    base.vueHead.showAlert(true, "success");
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -320,15 +317,14 @@ let vueBody: VueBodyModel = new Vue({
                     status: enums.ThemeStatus.closed
                 },
                 cache: false,
-                type: "put",
-                success: (data: interfaces.Response) => {
-                    if (data.isSuccess) {
-                        theme.status = enums.ThemeStatus.closed;
-                        base.vueHead.showAlert(true, "success");
-                    }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                type: "put"
+            }).then((data: interfaces.Response) => {
+                if (data.isSuccess) {
+                    theme.status = enums.ThemeStatus.closed;
+                    base.vueHead.showAlert(true, "success");
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -339,15 +335,14 @@ let vueBody: VueBodyModel = new Vue({
                     status: enums.ThemeStatus.open
                 },
                 cache: false,
-                type: "put",
-                success: (data: interfaces.Response) => {
-                    if (data.isSuccess) {
-                        theme.status = enums.ThemeStatus.open;
-                        base.vueHead.showAlert(true, "success");
-                    }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                type: "put"
+            }).then((data: interfaces.Response) => {
+                if (data.isSuccess) {
+                    theme.status = enums.ThemeStatus.open;
+                    base.vueHead.showAlert(true, "success");
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -375,18 +370,17 @@ let vueBody: VueBodyModel = new Vue({
                     detail: self.detailInEditing
                 },
                 cache: false,
-                type: "put",
-                success: (data: interfaces.Response) => {
-                    if (data.isSuccess) {
-                        theme.title = self.titleInEditing;
-                        theme.detail = self.detailInEditing;
-                        base.vueHead.showAlert(true, "success");
+                type: "put"
+            }).then((data: interfaces.Response) => {
+                if (data.isSuccess) {
+                    theme.title = self.titleInEditing;
+                    theme.detail = self.detailInEditing;
+                    base.vueHead.showAlert(true, "success");
 
-                        self.cancel(theme);
-                    }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                    self.cancel(theme);
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },

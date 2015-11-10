@@ -91,7 +91,7 @@ let vueBody: VueBodyModel = new Vue({
                 name: self.name,
                 guid: guid,
                 code: self.code
-            }, function(data: interfaces.Response) {
+            }).then((data: interfaces.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
                     window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
@@ -104,7 +104,7 @@ let vueBody: VueBodyModel = new Vue({
         refreshCaptcha: function() {
             $.post("/api/captchas?v=0.3.0", {
                 id: guid
-            }, function(data: CaptchaResponse) {
+            }).then((data: CaptchaResponse) => {
                 if (data.isSuccess) {
                     vueBody.captchaUrl = data.url;
                 } else {
