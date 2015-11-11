@@ -37,6 +37,5 @@ frontends/build/
 public/doc/
 publish/**/*.ico
 frontends/doc/api/_book/
-.vscode/
 publish/public/doc/
 publish/public/avatars/*.png
