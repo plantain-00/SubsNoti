@@ -46,30 +46,29 @@ let vueBody: VueBodyModel = new Vue({
                 data: {
                     v: "0.0.1"
                 },
-                cache: false,
-                success: (data: OrganizationsResponse) => {
-                    if (data.isSuccess) {
-                        self.organizationsCurrentUserCreated = data.organizations;
-                        if (data.organizations.length > 0) {
-                            let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
-                            if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
-                                self.currentOrganizationId = lastOrganizationId;
-                            }
-                            else {
-                                self.currentOrganizationId = data.organizations[0].id;
-                            }
+                cache: false
+            }).then((data: OrganizationsResponse) => {
+                if (data.isSuccess) {
+                    self.organizationsCurrentUserCreated = data.organizations;
+                    if (data.organizations.length > 0) {
+                        let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                        if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
+                            self.currentOrganizationId = lastOrganizationId;
+                        }
+                        else {
+                            self.currentOrganizationId = data.organizations[0].id;
                         }
                     }
-                    else {
-                        base.vueHead.showAlert(false, data.errorMessage);
-                    }
+                }
+                else {
+                    base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
         },
         invite: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}, function(data: interfaces.Response) {
+            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}).then((data: interfaces.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");
                 } else {

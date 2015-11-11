@@ -18,11 +18,7 @@ app.use(libs.cookieParser());
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-app.use(libs.cors({
-    methods: 'GET,PUT,POST',
-    credentials: true,
-    origin: `http://${settings.config.website.outerHostName}:${settings.config.website.port}`
-}));
+app.use(libs.cors(settings.config.cors));
 
 services.cache.connect();
 

@@ -62,7 +62,14 @@ export let config: SettingsInterface = {
         innerHostName: "0.0.0.0",
         outerHostName: "localhost"
     },
-    avatar: 'avatar-'
+    avatar: 'avatar-',
+    cors: {
+        methods: 'GET,PUT,POST',
+        credentials: true,
+        origin: [
+            'http://localhost:8888'
+        ]
+    }
 };
 
 try {

@@ -75,12 +75,11 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
             data: {
                 v: "0.0.1"
             },
-            cache: false,
-            success: function(data: CurrentUserResponse) {
-                window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
+            cache: false
+        }).then((data: CurrentUserResponse) => {
+            window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
 
-                next(data);
-            }
+            next(data);
         });
     }
 }
@@ -158,8 +157,9 @@ export let vueHead: VueHeadModel = new Vue({
             $.ajax({
                 type: "DELETE",
                 url: "/api/user/logged_in?v=0.0.1",
-                cache: false,
-                success: function() {
+                cache: false
+            }).then((data: CurrentUserResponse) => {
+                if (data.isSuccess) {
                     self.loginStatus = enums.LoginStatus.fail;
                     self.currentUserId = "";
                     self.currentUserName = "";
@@ -168,6 +168,9 @@ export let vueHead: VueHeadModel = new Vue({
                     window.sessionStorage.removeItem("loginResult");
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
+                }
+                else {
+                    self.showAlert(false, data.errorMessage);
                 }
             });
         },
@@ -201,4 +204,6 @@ $(document).ajaxSend(() => {
     vueHead.requestCount++;
 }).ajaxComplete(() => {
     vueHead.requestCount--;
+}).ajaxError(() => {
+    vueHead.showAlert(false, 'something happens unexpectedly, see console to get more details.');
 });

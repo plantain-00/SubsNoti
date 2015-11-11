@@ -38,7 +38,7 @@ gulp.task('clean', () => {
         'publish/public/styles',
         'publish/public/*.html',
         'publish/public/*.ico',
-        
+
         'publish/backends/',
         'publish/common/'
     ]);
