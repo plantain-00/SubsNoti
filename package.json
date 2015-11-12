@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "0.8.1",
+    "version": "0.8.2",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -46,14 +46,5 @@
     },
     "engines": {
         "node": "4.x"
-    },
-    "scripts": {
-        "start": "cd publish && node backends/app.js",
-        "imageServer": "cd publish && node backends/imageServer.js",
-        "imageUploader": "cd publish && node backends/imageUploader.js",
-        "tsc": "tsc --pretty",
-        "backends": "tsc -p backends --pretty",
-        "frontends": "tsc -p frontends --pretty",
-        "tests": "mocha publish/backends/tests"
     }
 }

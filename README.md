@@ -51,10 +51,6 @@ or
 + `scripts/make.sh`
 + `scripts/deploy.sh`
 
-# tests
-
-`npm tests`
-
 # demo
 
 ## development

@@ -6,9 +6,9 @@ call npm install
 echo 'Finished "npm install".'
 
 rem compile gulpfile.ts
-echo 'Starting "npm tsc"...'
-call npm tsc
-echo 'Finished "npm tsc".'
+echo 'Starting "tsc gulpfile.ts"...'
+call tsc
+echo 'Finished "tsc gulpfile.ts".'
 
 rem gulp task clean
 echo 'Starting "gulp clean"...'
@@ -17,14 +17,14 @@ echo 'Finished "gulp clean".'
 
 rem compile
 echo 'Starting "tsc"...'
-call npm tsc
-call npm frontends
-call npm backends
+call tsc
+call tsc -p frontends
+call tsc -p backends
 echo 'Finished "tsc".'
 
 rem test
 echo 'Starting "test"...'
-call npm tests
+call mocha publish/backends/tests
 echo 'Finished "test".'
 
 rem gulp tasks

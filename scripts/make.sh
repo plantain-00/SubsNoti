@@ -15,9 +15,9 @@ npm install
 echo 'Finished "npm install".'
 
 # compile gulpfile.ts
-echo 'Starting "npm tsc"...'
-npm tsc
-echo 'Finished "npm tsc".'
+echo 'Starting "tsc gulpfile.ts"...'
+tsc
+echo 'Finished "tsc gulpfile.ts".'
 
 # gulp task clean
 echo 'Starting "gulp clean"...'
@@ -26,14 +26,14 @@ echo 'Finished "gulp clean".'
 
 # compile
 echo 'Starting "tsc"...'
-npm tsc
-npm frontends
-npm backends
+tsc
+tsc -p frontends
+tsc -p backends
 echo 'Finished "tsc".'
 
 # test
 echo 'Starting "test"...'
-npm tests
+mocha publish/backends/tests
 echo 'Finished "test".'
 
 # gulp tasks
