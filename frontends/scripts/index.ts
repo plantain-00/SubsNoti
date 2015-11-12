@@ -61,6 +61,7 @@ interface VueBodyModel {
     isOpen: boolean;
     isClosed: boolean;
     showCreate: boolean;
+    order: enums.ThemeOrder;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -85,6 +86,7 @@ interface VueBodyModel {
     clickClosed: () => void;
     showMoreThemes: () => void;
     clickShowCreate: () => void;
+    clickOrder: () => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -103,7 +105,8 @@ let vueBody: VueBodyModel = new Vue({
         q: "",
         isOpen: true,
         isClosed: false,
-        showCreate: false
+        showCreate: false,
+        order: enums.ThemeOrder.newest
     },
     computed: {
         nextThemeCount: function() {
@@ -179,7 +182,8 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.4.0"
+                    v: "0.4.0",
+                    order: self.order
                 },
                 cache: false
             }).then((data: ThemesResponse) => {
@@ -398,6 +402,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             self.showCreate = !self.showCreate;
+        },
+        clickOrder: function(order: enums.ThemeOrder) {
+            let self: VueBodyModel = this;
+
+            self.order = order;
         }
     }
 });

@@ -29,6 +29,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let q = libs.validator.trim(request.query.q);
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";
+        let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : enums.ThemeOrder.newest;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
@@ -67,9 +68,11 @@ export async function get(request: libs.Request, response: libs.Response) {
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
 
+        let sort = order === enums.ThemeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+
         let themes = await query.skip((page - 1) * limit)
             .limit(limit)
-            .sort({ createTime: -1 })
+            .sort(sort)
             .populate("creator owners watchers")
             .exec();
 

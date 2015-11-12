@@ -31,11 +31,11 @@
                             </label>
                             order by
                             <label class="the-label {{order !== 1 ? 'label-active':''}}"
-                                @click="clickOrderByNewest()">
+                                @click="clickOrder(0)">
                                 newest
                             </label>
                             <label class="the-label {{order === 1 ? 'label-active':''}}"
-                                @click="clickOrderByRecentlyUpdated()">
+                                @click="clickOrder(1)">
                                 recent updated
                             </label>
                             <span class="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" @click="fetchThemes(1)"></span>
