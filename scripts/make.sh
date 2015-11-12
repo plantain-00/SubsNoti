@@ -24,6 +24,11 @@ echo 'Starting "gulp clean"...'
 gulp clean
 echo 'Finished "gulp clean".'
 
+# compile gulpfile.ts
+echo 'Starting "tsc gulpfile.ts"...'
+tsc
+echo 'Finished "tsc gulpfile.ts".'
+
 ## gulp task make
 echo 'Starting "gulp make"...'
 gulp make
