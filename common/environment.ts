@@ -1,2 +1,2 @@
-export const developmentEnvironment = 'development';
-export const productionEnvironment = 'production';
+export const developmentEnvironment = "development";
+export const productionEnvironment = "production";

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -61,8 +61,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         services.logger.log(documentOfCreate.url, request);
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }

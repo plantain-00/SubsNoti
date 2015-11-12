@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../../libs";
 import * as settings from "../../settings";
@@ -11,10 +11,10 @@ import * as services from "../../services";
 export let documentOfGet = {
     url: "/api/organizations/:organization_id/themes",
     method: "get",
-    documentUrl: "/doc/api/Get themes of an organization.html"
+    documentUrl: "/doc/api/Get themes of an organization.html",
 };
 
-export async function get(request: libs.Request, response: libs.Response) {
+export async function get(request: libs.Request, response: libs.Response): Promise<void> {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
@@ -56,8 +56,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         if (isOpen && !isClosed) {
             query = query.where("status").equals(enums.ThemeStatus.open);
             countQuery = countQuery.where("status").equals(enums.ThemeStatus.open);
-        }
-        else if (!isOpen && isClosed) {
+        } else if (!isOpen && isClosed) {
             query = query.where("status").equals(enums.ThemeStatus.closed);
             countQuery = countQuery.where("status").equals(enums.ThemeStatus.closed);
         }
@@ -81,7 +80,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         let result = {
             themes: [],
-            totalCount: totalCount
+            totalCount: totalCount,
         };
 
         libs._.each(themes, (t: services.mongo.ThemeDocument) => {
@@ -101,26 +100,26 @@ export async function get(request: libs.Request, response: libs.Response) {
                     id: creatorId,
                     name: creator.name,
                     email: creator.email,
-                    avatar: creator.avatar || services.avatar.getDefaultName(creatorId)
+                    avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
                 },
-                owners: libs._.map(<services.mongo.UserDocument[]>t.owners, o=> {
+                owners: libs._.map(<services.mongo.UserDocument[]>t.owners, o => {
                     let id = o._id.toHexString();
                     return {
                         id: id,
                         name: o.name,
                         email: o.email,
-                        avatar: o.avatar || services.avatar.getDefaultName(id)
-                    }
+                        avatar: o.avatar || services.avatar.getDefaultName(id),
+                    };
                 }),
-                watchers: libs._.map(<services.mongo.UserDocument[]>t.watchers, w=> {
+                watchers: libs._.map(<services.mongo.UserDocument[]>t.watchers, w => {
                     let id = w._id.toHexString();
                     return {
                         id: id,
                         name: w.name,
                         email: w.email,
-                        avatar: w.avatar || services.avatar.getDefaultName(id)
-                    }
-                })
+                        avatar: w.avatar || services.avatar.getDefaultName(id),
+                    };
+                }),
             };
 
             result.themes.push(theme);
