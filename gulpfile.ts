@@ -80,9 +80,11 @@ gulp.task("gitbook", shell.task("gitbook build frontends/doc/api"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
-gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
+gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
 
 gulp.task("tslint", shell.task("tslint common/**/*.ts && tslint backends/**/*.ts && tslint frontends/scripts/**/*.ts && tslint gulpfile.ts"));
+
+gulp.task("scss-lint", shell.task("scss-lint frontends/styles/*.scss"));
 
 gulp.task("doc", ["gitbook"], () => {
     console.log("Starting 'doc'...");

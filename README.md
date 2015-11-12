@@ -17,6 +17,7 @@
 + node-gyp build environment
 + node-canvas environment
 + tslint
++ scss-lint
 
 ## server only
 
