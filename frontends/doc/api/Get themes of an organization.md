@@ -8,7 +8,7 @@
 
 get
 
-## version >=0.0.1
+## version >=0.8.0
 
 ### Expiration Date
 
@@ -23,6 +23,7 @@ limit | number | false | 10
 q | string | false | ''
 isOpen | boolean | false | true
 isClosed | boolean | false | false
+order | [ThemeOrder](./Theme order.html) | false | 0
 
 ### [Cookies](./Cookies.html)
 

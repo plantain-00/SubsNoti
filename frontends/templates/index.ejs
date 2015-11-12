@@ -29,6 +29,15 @@
                                 @click="clickClosed()">
                                 closed
                             </label>
+                            order by
+                            <label class="the-label {{order !== 1 ? 'label-active':''}}"
+                                @click="clickOrderByNewest()">
+                                newest
+                            </label>
+                            <label class="the-label {{order === 1 ? 'label-active':''}}"
+                                @click="clickOrderByRecentlyUpdated()">
+                                recent updated
+                            </label>
                             <span class="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" @click="fetchThemes(1)"></span>
                             <span class="glyphicon glyphicon-{{showCreate ? 'minus' : 'plus'}} btn btn-primary" aria-hidden="true"
                                 v-show="canShowCreate"
