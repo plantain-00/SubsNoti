@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "0.7.14",
+    "version": "0.8.3",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -46,10 +46,5 @@
     },
     "engines": {
         "node": "4.x"
-    },
-    "scripts": {
-        "start": "node publish/backends/app.js",
-        "imageServer": "node publish/backends/imageServer.js",
-        "imageUploader": "node publish/backends/imageUploader.js"
     }
 }

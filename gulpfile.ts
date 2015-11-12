@@ -80,29 +80,40 @@ gulp.task('gitbook', shell.task('gitbook build frontends/doc/api'));
 
 gulp.task('run', shell.task('node publish/backends/app.js'));
 
+gulp.task('make', shell.task('tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon'));
+
 gulp.task('doc', ['gitbook'], () => {
+    console.log('Starting "doc"...');
     gulp.src("frontends/doc/api/_book/**")
         .pipe(gulp.dest("publish/public/doc/api/"));
+    console.log('Finished "doc".');
 });
 
 gulp.task('icon', () => {
+    console.log('Starting "icon".');
     gulp.src("frontends/favicon.ico")
         .pipe(gulp.dest("publish/public/"));
+    console.log('Finished "icon"...');
 });
 
 gulp.task('css', () => {
+    console.log('Starting "css"...');
     for (let file of ["base"]) {
         uglifyCss(file);
     }
+    console.log('Finished "css".');
 });
 
 gulp.task('js', () => {
+    console.log('Starting "js"...');
     for (let file of ['index', 'login', 'newOrganization', 'invite', 'user']) {
         bundleAndUglifyJs(file);
     }
+    console.log('Finished "js".');
 });
 
 gulp.task('rev', () => {
+    console.log('Starting "rev"...');
     gulp.src(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], { base: 'frontends/build/' })
         .pipe(rev())
         .pipe(gulp.dest("publish/public/"))
@@ -111,12 +122,15 @@ gulp.task('rev', () => {
 
     gulp.src("frontends/build/scripts/*.map", { base: 'frontends/build/' })
         .pipe(gulp.dest("publish/public/"));
+    console.log('Finished "rev".');
 });
 
 gulp.task('html', () => {
+    console.log('Starting "html"...');
     for (let file of ['index', 'login', 'newOrganization', 'invite', 'user']) {
         bundleAndUglifyHtml(file);
     }
+    console.log('Finished "html".');
 });
 
 function uglifyCss(name: string) {

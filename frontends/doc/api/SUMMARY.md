@@ -25,6 +25,7 @@
 	* [Unwatch a theme](Unwatch a theme.md)
 	* [Update a theme](Update a theme.md)
 	* [Theme status](Theme status.md)
+	* [Theme order](Theme order.md)
 * [Image](Image.md)
     * [Upload images to temperary directory](Upload images to temperary directory.md)
     * [Upload images to persistent directory](Upload images to persistent directory.md)

@@ -1,10 +1,10 @@
 cd frontends
-tsc -w &
+tsc -w --pretty &
 gulp watch &
 cd ..
 
 cd backends
-tsc -w &
+tsc -w --pretty &
 cd ..
 
 cd publish
