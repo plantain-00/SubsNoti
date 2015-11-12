@@ -6,7 +6,7 @@
 + git
 + node.js 4.x(for ES6 support)
 + tsd
-+ typescript >=1.7(for ES6 and ES7 async function support)
++ typescript >=1.8(for ES6 and ES7 async function support)
 + gulp
 + mocha
 + mysql(optional)
@@ -53,7 +53,7 @@ or
 
 # tests
 
-`mocha publish/backends/tests`
+`npm tests`
 
 # demo
 

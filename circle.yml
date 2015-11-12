@@ -12,10 +12,10 @@ dependencies:
 
 test:
   override:
-    - tsc
-    - tsc -p frontends
-    - tsc -p backends
-    - mocha publish/backends/tests
+    - npm tsc
+    - npm frontends
+    - npm backends
+    - npm tests
     - NODE_ENV=production gulp js
     - NODE_ENV=production gulp css
     - NODE_ENV=production gulp rev
