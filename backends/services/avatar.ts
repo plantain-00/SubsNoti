@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -6,26 +6,25 @@ import * as settings from "../settings";
 import * as enums from "../../common/enums";
 import * as interfaces from "../../common/interfaces";
 
-import * as services from "../services"
+import * as services from "../services";
 
 function createIfNotExists(id: string, next: (error: Error) => void) {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
     libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
         if (error) {
-            console.log('error:' + error);
+            console.log("error:" + error);
             next(null);
         }
-        if (response.statusCode == 200) {
-            console.log('exists:' + fileName);
+        if (response.statusCode === 200) {
+            console.log("exists:" + fileName);
             next(null);
-        }
-        else {
-            console.log('statusCode:' + response.statusCode);
-            console.log('creating:' + fileName);
+        } else {
+            console.log("statusCode:" + response.statusCode);
+            console.log("creating:" + fileName);
             create(seed, fileName, next);
         }
-    })
+    });
 }
 
 function create(seed: string, fileName: string, next: (error: Error) => void) {
@@ -37,7 +36,7 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
     let points = parseInt(seed.substr(6, 4), 16);
 
     let canvas = new libs.Canvas(420, 420);
-    let context: CanvasRenderingContext2D = canvas.getContext('2d');
+    let context: CanvasRenderingContext2D = canvas.getContext("2d");
     context.fillStyle = "#F0F0F0";
     context.fillRect(0, 0, 420, 420);
 
@@ -66,13 +65,13 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
             value: buf,
             options: {
                 filename: fileName,
-                contentType: 'image/png'
-            }
-        }
+                contentType: "image/png",
+            },
+        };
 
         libs.request.post({
             url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images`,
-            formData: formData
+            formData: formData,
         }, (error, httpResponse, body) => {
             if (error) {
                 next(error);
@@ -97,5 +96,5 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
 export let createIfNotExistsAsync = services.promise.promisify2<string, void>(createIfNotExists);
 
 export function getDefaultName(id: string): string {
-    return settings.config.avatar + id + '.png';
+    return settings.config.avatar + id + ".png";
 }

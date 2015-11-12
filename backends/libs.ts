@@ -1,13 +1,13 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-'use strict';
+"use strict";
 
 import * as express from "express";
 export {express};
 
-export let cookieParser = require('cookie-parser');
+export let cookieParser = require("cookie-parser");
 
-export let bodyParser = require('body-parser');
+export let bodyParser = require("body-parser");
 
 export let compression = require("compression");
 
@@ -42,27 +42,27 @@ export {_};
 import * as redis from "redis";
 export {redis};
 
-import * as fs from 'fs';
+import * as fs from "fs";
 export {fs};
 
-import * as validator from 'validator';
+import * as validator from "validator";
 export {validator};
 
-import * as mongoose from 'mongoose';
+import * as mongoose from "mongoose";
 export {mongoose};
 
-import * as semver from 'semver';
+import * as semver from "semver";
 export {semver};
 
-export let multer = require('multer');
+export let multer = require("multer");
 
-import * as request from 'request';
+import * as request from "request";
 export {request};
 
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
-export let cors = require('cors');
+export let cors = require("cors");
 
 export interface Request extends express.Request {
     v: string;

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -41,7 +41,7 @@ function beginTransaction(next: (error: interfaces.E, connection: libs.MysqlConn
             return;
         }
 
-        connection.beginTransaction(error=> {
+        connection.beginTransaction(error => {
             if (error) {
                 connection.release();
                 next(services.error.fromError(error, enums.StatusCode.internalServerError), null);
@@ -82,7 +82,7 @@ function rollback(connection: libs.MysqlConnection, next: () => void): void {
 export let rollbackAsync = services.promise.promisify2<libs.MysqlConnection, void>(rollback);
 
 function endTransaction(connection: libs.MysqlConnection, next: (error: interfaces.E) => void): void {
-    connection.commit(error=> {
+    connection.commit(error => {
         if (error) {
             rollback(connection, () => {
                 next(services.error.fromError(error, enums.StatusCode.internalServerError));

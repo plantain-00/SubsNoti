@@ -11,7 +11,7 @@ import * as services from "../services";
 export let documentOfCreate = {
     url: "/api/organizations",
     method: "post",
-    documentUrl: "/doc/api/Create an organization.html"
+    documentUrl: "/doc/api/Create an organization.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
@@ -19,7 +19,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     try {
         let organizationName = libs.validator.trim(request.body.organizationName);
-        if (organizationName === '') {
+        if (organizationName === "") {
             services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
             return;
         }
@@ -51,7 +51,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             name: organizationName,
             status: enums.OrganizationStatus.normal,
             creator: userId,
-            members: [userId]
+            members: [userId],
         });
 
         user.createdOrganizations.push(organization._id);

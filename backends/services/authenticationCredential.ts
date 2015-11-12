@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -33,7 +33,7 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
     }
 
     let tmp = authenticationCredential.split("g");
-    if (tmp.length != 3) {
+    if (tmp.length !== 3) {
         if (noReject) {
             return Promise.resolve(null);
         }
@@ -66,7 +66,7 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
     }
 
     // should be verified.
-    if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
+    if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
         services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return Promise.resolve(id);

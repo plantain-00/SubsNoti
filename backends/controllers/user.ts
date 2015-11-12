@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -11,7 +11,7 @@ import * as services from "../services";
 export let documentOfGet = {
     url: "/api/user",
     method: "get",
-    documentUrl: "/doc/api/Get current user.html"
+    documentUrl: "/doc/api/Get current user.html",
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
@@ -21,7 +21,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select('email name createdOrganizations joinedOrganizations avatar')
+            .select("email name createdOrganizations joinedOrganizations avatar")
             .exec();
         let id = userId.toHexString();
         let result: interfaces.CurrentUserResponse = {
@@ -30,12 +30,11 @@ export async function get(request: libs.Request, response: libs.Response) {
             name: user.name,
             createdOrganizationCount: user.createdOrganizations.length,
             joinedOrganizationCount: user.joinedOrganizations.length,
-            avatar: user.avatar || services.avatar.getDefaultName(id)
+            avatar: user.avatar || services.avatar.getDefaultName(id),
         };
 
         services.response.sendSuccess(response, enums.StatusCode.OK, result);
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }
@@ -43,7 +42,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 export let documentOfUpdate = {
     url: "/api/user",
     method: "put",
-    documentUrl: "/doc/api/Update current user.html"
+    documentUrl: "/doc/api/Update current user.html",
 };
 
 export async function update(request: libs.Request, response: libs.Response) {
@@ -56,7 +55,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         let userId = await services.authenticationCredential.authenticate(request);
 
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select('name avatar')
+            .select("name avatar")
             .exec();
 
         // if name changes, then change it.
@@ -71,7 +70,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
             let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/images/persistent`, {
                 name: avatarFileName,
-                newName: newName
+                newName: newName,
             });
 
             // save new avatar name.
@@ -79,12 +78,10 @@ export async function update(request: libs.Request, response: libs.Response) {
             user.save();
 
             response.status(json.response.statusCode).json(json.json);
-        }
-        else {
+        } else {
             services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
         }
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }

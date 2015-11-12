@@ -9,7 +9,7 @@ interface Organization {
 }
 
 interface OrganizationsResponse extends interfaces.Response {
-    organizations: Organization[]
+    organizations: Organization[];
 }
 
 interface VueBodyModel {
@@ -28,14 +28,14 @@ let vueBody: VueBodyModel = new Vue({
     data: {
         email: "",
         organizationsCurrentUserCreated: [],
-        currentOrganizationId: ""
+        currentOrganizationId: "",
     },
     computed: {
         canInvite: function(): boolean {
             let self: VueBodyModel = this;
 
             return base.isEmail(self.email.trim()) && base.vueHead.requestCount === 0;
-        }
+        },
     },
     methods: {
         getOrganizationsCurrentUserCreated: function() {
@@ -46,21 +46,19 @@ let vueBody: VueBodyModel = new Vue({
                 data: {
                     v: "0.0.1"
                 },
-                cache: false
+                cache: false,
             }).then((data: OrganizationsResponse) => {
                 if (data.isSuccess) {
                     self.organizationsCurrentUserCreated = data.organizations;
                     if (data.organizations.length > 0) {
                         let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
-                        if (lastOrganizationId && ~_.findIndex(data.organizations, o=> o.id === lastOrganizationId)) {
+                        if (lastOrganizationId && ~_.findIndex(data.organizations, o => o.id === lastOrganizationId)) {
                             self.currentOrganizationId = lastOrganizationId;
-                        }
-                        else {
+                        } else {
                             self.currentOrganizationId = data.organizations[0].id;
                         }
                     }
-                }
-                else {
+                } else {
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
@@ -82,8 +80,8 @@ let vueBody: VueBodyModel = new Vue({
             self.currentOrganizationId = organization.id;
 
             window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
-        }
-    }
+        },
+    },
 });
 
 $(document).ready(function() {

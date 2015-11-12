@@ -14,7 +14,7 @@ export let documentOfGet = {
     documentUrl: "/doc/api/Get themes of an organization.html",
 };
 
-export async function get(request: libs.Request, response: libs.Response): Promise<void> {
+export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {

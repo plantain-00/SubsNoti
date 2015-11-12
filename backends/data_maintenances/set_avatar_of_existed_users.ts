@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -13,8 +13,7 @@ services.mongo.connect();
         for (let user of users) {
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
         }
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
     }
 })();

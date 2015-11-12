@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -15,7 +15,7 @@ export function sendSuccess(response: libs.Response, statusCode: enums.StatusCod
 
     let baseResponse: interfaces.Response = {
         isSuccess: true,
-        statusCode: statusCode
+        statusCode: statusCode,
     };
 
     response.status(200).json(libs._.extend(baseResponse, result));
@@ -28,7 +28,7 @@ export function sendError(response: libs.Response, error: interfaces.E, document
         isSuccess: false,
         statusCode: isE ? error.statusCode : enums.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: documentUrl
+        documentUrl: documentUrl,
     };
 
     if (!isE) {

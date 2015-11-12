@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -11,7 +11,7 @@ import * as services from "../services";
 export let documentOfCreate = {
     url: "/api/token_sent",
     method: "post",
-    documentUrl: "/doc/api/Send token via email.html"
+    documentUrl: "/doc/api/Send token via email.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
@@ -28,7 +28,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     try {
         let code = libs.validator.trim(request.body.code);
         let guid = libs.validator.trim(request.body.guid);
-        if (code === '' || guid === '') {
+        if (code === "" || guid === "") {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
             return;
         }
@@ -45,7 +45,7 @@ export async function create(request: libs.Request, response: libs.Response) {
                 email: email,
                 name: name,
                 salt: salt,
-                status: enums.UserStatus.normal
+                status: enums.UserStatus.normal,
             });
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
 
@@ -60,8 +60,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }

@@ -25,7 +25,7 @@
         "label-position": true,
         "label-undefined": true,
         "max-line-length": [
-            true,
+            false,
             140
         ],
         "member-access": true,
@@ -37,7 +37,7 @@
         ],
         "no-any": false,
         "no-arg": true,
-        "no-bitwise": true,
+        "no-bitwise": false,
         "no-conditional-assignment": true,
         "no-consecutive-blank-lines": false,
         "no-console": [
@@ -57,9 +57,9 @@
         "no-eval": true,
         "no-inferrable-types": false,
         "no-internal-module": true,
-        "no-require-imports": true,
+        "no-require-imports": false,
         "no-shadowed-variable": true,
-        "no-string-literal": true,
+        "no-string-literal": false,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": true,
         "no-unreachable": true,
@@ -67,7 +67,7 @@
         "no-unused-variable": false,
         "no-use-before-declare": true,
         "no-var-keyword": true,
-        "no-var-requires": true,
+        "no-var-requires": false,
         "object-literal-sort-keys": false,
         "one-line": [
             true,
@@ -97,8 +97,6 @@
         ],
         "typedef": [
             true,
-            "call-signature",
-            "parameter",
             "property-declaration",
             "member-variable-declaration"
         ],
@@ -118,7 +116,6 @@
         ],
         "variable-name": [
             true,
-            "check-format",
             "allow-leading-underscore",
             "ban-keywords"
         ],

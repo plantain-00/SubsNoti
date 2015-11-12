@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -17,13 +17,12 @@ export async function init() {
         .exec();
     if (organization) {
         publicOrganizationId = organization._id;
-    }
-    else {
+    } else {
         organization = await services.mongo.Organization.create({
             name: publicOrganizationName,
             status: enums.OrganizationStatus.normal,
 
-            themes: []
+            themes: [],
         });
 
         publicOrganizationId = organization._id;

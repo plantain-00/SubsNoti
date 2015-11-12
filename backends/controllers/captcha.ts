@@ -14,7 +14,7 @@ export let documentOfCreate = {
     documentUrl: "/doc/api/Create an captcha.html",
 };
 
-export async function create(request: libs.Request, response: libs.Response): Promise<void> {
+export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 
     try {

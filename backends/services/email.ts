@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -12,8 +12,8 @@ let transporter = libs.nodemailer.createTransport({
     host: settings.config.smtp.host,
     auth: {
         user: settings.config.smtp.name,
-        pass: settings.config.smtp.password
-    }
+        pass: settings.config.smtp.password,
+    },
 });
 
 function send(to: string, subject: string, html: string, next: (error: interfaces.E) => void) {
@@ -21,9 +21,9 @@ function send(to: string, subject: string, html: string, next: (error: interface
         from: settings.config.smtp.name,
         to: to,
         subject: subject,
-        html: html
+        html: html,
     };
-    transporter.sendMail(mailOptions, error=> {
+    transporter.sendMail(mailOptions, error => {
         next(services.error.fromError(error, enums.StatusCode.internalServerError));
     });
 }

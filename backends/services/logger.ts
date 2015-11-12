@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -13,7 +13,7 @@ export function log(url: string, request: libs.Request) {
         time: new Date(),
         content: {
             url: url
-        }
+        },
     };
 
     if (!libs._.isEmpty(request.params)) {

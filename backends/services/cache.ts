@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -12,7 +12,7 @@ export let client: libs.RedisClient;
 
 export function connect() {
     client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
-    client.on("error", error=> {
+    client.on("error", error => {
         console.log(error);
     });
 }

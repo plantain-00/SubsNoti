@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -6,7 +6,7 @@ import * as settings from "../settings";
 import * as enums from "../../common/enums";
 import * as interfaces from "../../common/interfaces";
 
-import * as services from "../services"
+import * as services from "../services";
 
 /**
  * create a code, store it in cache, create an iamge, return an base64 url of it.
@@ -23,7 +23,7 @@ export async function create(id: string): Promise<string> {
     let height = 45;
 
     let canvas = new libs.Canvas(width, 50);
-    let context: CanvasRenderingContext2D = canvas.getContext('2d');
+    let context: CanvasRenderingContext2D = canvas.getContext("2d");
     context.fillStyle = "#F0F0F0";
     context.fillRect(0, 0, width, 50);
     context.fillStyle = "#000";

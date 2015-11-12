@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../../../libs";
 import * as settings from "../../../settings";
@@ -11,7 +11,7 @@ import * as services from "../../../services";
 export let documentOfWatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "post",
-    documentUrl: "/doc/api/Watch a theme.html"
+    documentUrl: "/doc/api/Watch a theme.html",
 };
 
 export async function watch(request: libs.Request, response: libs.Response) {
@@ -36,7 +36,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
             return;
         }
-        
+
         // current user should be the member of the organization that the theme in, or the organization is public.
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
@@ -60,8 +60,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
         }
 
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }
@@ -69,7 +68,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 export let documentOfUnwatch = {
     url: "/api/user/themes/:theme_id/watched",
     method: "delete",
-    documentUrl: "/doc/api/Unwatch a theme.html"
+    documentUrl: "/doc/api/Unwatch a theme.html",
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {
@@ -94,7 +93,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
             return;
         }
-        
+
         // current user should be the member of the organization that the theme in, or the organization is public.
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
@@ -119,8 +118,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, enums.StatusCode.deleted);
 
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }

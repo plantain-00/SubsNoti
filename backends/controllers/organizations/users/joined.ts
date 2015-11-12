@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../../../libs";
 import * as settings from "../../../settings";
@@ -11,7 +11,7 @@ import * as services from "../../../services";
 export let documentOfInvite = {
     url: "/api/organizations/:organization_id/users/:user_email/joined",
     method: "post",
-    documentUrl: "/doc/api/Invite an user.html"
+    documentUrl: "/doc/api/Invite an user.html",
 };
 
 export async function invite(request: libs.Request, response: libs.Response) {
@@ -67,8 +67,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
         }
 
         services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }

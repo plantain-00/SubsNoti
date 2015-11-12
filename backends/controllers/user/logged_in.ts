@@ -14,7 +14,7 @@ export let documentOfGet = {
     documentUrl: "/doc/api/Log in.html",
 };
 
-export function get(request: libs.Request, response: libs.Response): Promise<void> {
+export function get(request: libs.Request, response: libs.Response) {
     let authenticationCredential = request.query.authentication_credential;
 
     if (!authenticationCredential) {

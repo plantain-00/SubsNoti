@@ -29,7 +29,7 @@ let vueBody: VueBodyModel = new Vue({
         innerName: "",
         innerRawEmail: "",
         captchaUrl: "",
-        code: ""
+        code: "",
     },
     computed: {
         rawEmail: {
@@ -50,7 +50,7 @@ let vueBody: VueBodyModel = new Vue({
                     self.emailTail = "";
                 }
                 self.innerRawEmail = value;
-            }
+            },
         },
         canLogin: function(): boolean {
             let self: VueBodyModel = this;
@@ -70,8 +70,8 @@ let vueBody: VueBodyModel = new Vue({
                 let self: VueBodyModel = this;
 
                 self.innerName = value.trim();
-            }
-        }
+            },
+        },
     },
     methods: {
         login: function() {
@@ -79,7 +79,7 @@ let vueBody: VueBodyModel = new Vue({
 
             let lastSuccessfulEmailTime: string = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
             if (lastSuccessfulEmailTime) {
-                let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime);
+                let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
                 if (time < 60 * 1000) {
                     base.vueHead.showAlert(false, "please do it after " + (60 - time / 1000) + " seconds");
                     return;
@@ -90,7 +90,7 @@ let vueBody: VueBodyModel = new Vue({
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name,
                 guid: guid,
-                code: self.code
+                code: self.code,
             }).then((data: interfaces.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
@@ -111,8 +111,8 @@ let vueBody: VueBodyModel = new Vue({
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
-        }
-    }
+        },
+    },
 });
 
 interface CaptchaResponse extends interfaces.Response {

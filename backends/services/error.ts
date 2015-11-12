@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -14,8 +14,8 @@ export function fromError(error: Error, statusCode: enums.StatusCode): interface
             statusCode: statusCode,
             name: error.name,
             message: error.message,
-            stack: error.stack
-        }
+            stack: error.stack,
+        };
     }
 
     return null;

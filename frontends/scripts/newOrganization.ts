@@ -21,7 +21,7 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             return self.organizationName.trim() && base.vueHead.requestCount === 0;
-        }
+        },
     },
     methods: {
         add: function() {
@@ -37,8 +37,8 @@ let vueBody: VueBodyModel = new Vue({
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
-        }
-    }
+        },
+    },
 });
 
 $(document).ready(function() {
