@@ -8,7 +8,7 @@ import * as interfaces from "../../../common/interfaces";
 
 import * as services from "../../services";
 
-export let documentOfGet = {
+export let documentOfGet: libs.Document = {
     url: settings.config.urls.login,
     method: "get",
     documentUrl: "/doc/api/Log in.html",
@@ -30,7 +30,7 @@ export function get(request: libs.Request, response: libs.Response) {
     response.redirect("/index.html?clear_previous_status=√");
 }
 
-export let documentOfDelete = {
+export let documentOfDelete: libs.Document = {
     url: "/api/user/logged_in",
     method: "delete",
     documentUrl: "/doc/api/Log out.html",

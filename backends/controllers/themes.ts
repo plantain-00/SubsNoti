@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export let documentOfCreate = {
+export let documentOfCreate: libs.Document = {
     url: "/api/themes",
     method: "post",
     documentUrl: "/doc/api/Create a theme.html",
@@ -76,7 +76,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 }
 
-export let documentOfUpdate = {
+export let documentOfUpdate: libs.Document = {
     url: "/api/themes/:theme_id",
     method: "put",
     documentUrl: "/doc/api/Update a theme.html",

@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export let documentOfCreate = {
+export let documentOfCreate: libs.Document = {
     url: "/api/token_sent",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html",

@@ -8,7 +8,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-export let documentOfInvite = {
+export let documentOfInvite: libs.Document = {
     url: "/api/organizations/:organization_id/users/:user_email/joined",
     method: "post",
     documentUrl: "/doc/api/Invite an user.html",

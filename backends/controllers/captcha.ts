@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export let documentOfCreate = {
+export let documentOfCreate: libs.Document = {
     url: "/api/captchas",
     method: "post",
     documentUrl: "/doc/api/Create an captcha.html",

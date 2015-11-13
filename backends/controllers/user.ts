@@ -8,7 +8,7 @@ import * as interfaces from "../../common/interfaces";
 
 import * as services from "../services";
 
-export let documentOfGet = {
+export let documentOfGet: libs.Document = {
     url: "/api/user",
     method: "get",
     documentUrl: "/doc/api/Get current user.html",
@@ -39,7 +39,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     }
 }
 
-export let documentOfUpdate = {
+export let documentOfUpdate: libs.Document = {
     url: "/api/user",
     method: "put",
     documentUrl: "/doc/api/Update current user.html",

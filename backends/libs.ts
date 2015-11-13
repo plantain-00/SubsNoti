@@ -69,6 +69,12 @@ export interface Request extends express.Request {
     files: any[];
 }
 
+export interface Document{
+    url: string;
+    method: "get" | "post" | "put" | "delete";
+    documentUrl: string;
+}
+
 import Response = express.Response;
 export {Response};
 

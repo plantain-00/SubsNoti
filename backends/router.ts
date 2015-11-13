@@ -21,7 +21,7 @@ import * as organizationsUsersJoined from "./controllers/organizations/users/joi
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
-    function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
+    function bind(document: libs.Document, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
     }
 

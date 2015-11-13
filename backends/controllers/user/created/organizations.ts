@@ -8,7 +8,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-export let documentOfGet = {
+export let documentOfGet: libs.Document = {
     url: "/api/user/created/organizations",
     method: "get",
     documentUrl: "/doc/api/Get created organizations.html",

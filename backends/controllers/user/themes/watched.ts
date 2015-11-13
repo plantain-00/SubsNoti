@@ -8,7 +8,7 @@ import * as interfaces from "../../../../common/interfaces";
 
 import * as services from "../../../services";
 
-export let documentOfWatch = {
+export let documentOfWatch: libs.Document = {
     url: "/api/user/themes/:theme_id/watched",
     method: "post",
     documentUrl: "/doc/api/Watch a theme.html",
@@ -65,7 +65,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
     }
 }
 
-export let documentOfUnwatch = {
+export let documentOfUnwatch: libs.Document = {
     url: "/api/user/themes/:theme_id/watched",
     method: "delete",
     documentUrl: "/doc/api/Unwatch a theme.html",
