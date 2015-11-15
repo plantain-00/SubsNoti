@@ -22,16 +22,23 @@ export const enum StatusCode {
     internalServerError = 500
 }
 
-export type ThemeOrder = "newest" | "recently updated";
+export type ThemeOrderType = "newest" | "recently updated";
 
 export const themeOrder = {
-    newest: <ThemeOrder>"newest",
-    recentlyUpdated: <ThemeOrder>"recently updated",
+    newest: <ThemeOrderType>"newest",
+    recentlyUpdated: <ThemeOrderType>"recently updated",
 }
 
 export const enum ThemeStatus {
     open,
     closed
+}
+
+export type ThemeStatusType = "open" | "closed";
+
+export const themeStatus = {
+    open: <ThemeStatusType>"open",
+    closed: <ThemeStatusType>"closed",
 }
 
 export const enum UserStatus {

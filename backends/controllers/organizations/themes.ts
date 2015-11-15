@@ -65,7 +65,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         }
         
         let sort;
-        if (libs.semver.satisfies(request.v, ">=0.10.0")) {
+        if (libs.semver.satisfies(request.v, ">=0.10.0") || libs.moment().isAfter(libs.moment("2015-11-22"))) {
             let order = libs.validator.trim(request.query.order);
             sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
         } else {
@@ -99,7 +99,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 organizationId: organizationId.toHexString(),
                 createTime: t.createTime.getTime(),
                 updateTime: t.updateTime ? t.updateTime.getTime() : undefined,
-                status: t.status,
+                status: libs.semver.satisfies(request.v, ">=0.10.1") || libs.moment().isAfter(libs.moment("2015-11-22")) ? (t.status === types.ThemeStatus.open ? types.themeStatus.open : types.themeStatus.closed) : t.status,
                 creator: {
                     id: creatorId,
                     name: creator.name,

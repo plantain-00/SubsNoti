@@ -8,10 +8,10 @@ no
 
 ### values
 
-value
----
-newest
-recently updated
+value | description
+--- | ---
+newest |
+recently updated |
 
 ## version >=0.8.0
 

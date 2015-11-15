@@ -26,7 +26,7 @@ interface Theme {
     organizationId: string;
     createTime: number;
     updateTime?: number;
-    status: types.ThemeStatus;
+    status: types.ThemeStatusType;
     creator: User;
     owners: User[];
     watchers: User[];
@@ -60,7 +60,7 @@ interface VueBodyModel {
     isOpen: boolean;
     isClosed: boolean;
     showCreate: boolean;
-    order: types.ThemeOrder;
+    order: types.ThemeOrderType;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -85,7 +85,7 @@ interface VueBodyModel {
     clickClosed: () => void;
     showMoreThemes: () => void;
     clickShowCreate: () => void;
-    clickOrder: () => void;
+    clickOrder: (order: types.ThemeOrderType) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -179,7 +179,7 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.10.0",
+                    v: "0.10.1",
                     order: self.order,
                 },
                 cache: false,
@@ -315,7 +315,7 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.ThemeStatus.closed;
+                    theme.status = types.themeStatus.closed;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -332,7 +332,7 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.ThemeStatus.open;
+                    theme.status = types.themeStatus.open;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -391,7 +391,7 @@ let vueBody: VueBodyModel = new Vue({
 
             self.showCreate = !self.showCreate;
         },
-        clickOrder: function(order: types.ThemeOrder) {
+        clickOrder: function(order: types.ThemeOrderType) {
             let self: VueBodyModel = this;
 
             self.order = order;

@@ -80,7 +80,7 @@
                                                 <span v-show="themeIdInEditing !== theme.id">
                                                     {{theme.title}}
                                                     <span class="label label-success"
-                                                        v-show="theme.status === 0">open</span>
+                                                        v-show="theme.status === 'open'">open</span>
                                                     <span class="label label-danger" v-else>closed</span>
                                                 </span>
                                                 <input class="form-control"
@@ -129,7 +129,7 @@
                                                     <div :style='{ display: theme.isOwner ? "inline" : "none" }'>
                                                         •
                                                         <button type="button" class="btn btn-xs btn-link"
-                                                            v-show="theme.status === 0"
+                                                            v-show="theme.status === 'open'"
                                                             @click="close(theme)">
                                                             close
                                                         </button>
