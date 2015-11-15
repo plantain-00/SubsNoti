@@ -73,7 +73,7 @@
                                         @mouseover="theme.isHovering = true"
                                         @mouseout="theme.isHovering = false">
                                         <td style="width: 70px">
-                                            <img :src="theme.creator.avatar" height="50">
+                                            <img :src="theme.creator.avatar" height="50" width="50">
                                         </td>
                                         <td>
                                             <h5>
@@ -174,6 +174,10 @@
                                 @click="showMoreThemes()"
                                 v-show="canShowMoreThemes">
                                 show {{nextThemeCount}} more {{nextThemeCount > 1 ? "themes" : "theme"}}(total {{totalCount}})
+                            </button>
+                            <button type='button' class='btn btn-primary btn-lg col-sm-12' style="display: none;" disabled="disabled"
+                                v-else>
+                                total {{totalCount}}
                             </button>
                         </div>
                     </div>

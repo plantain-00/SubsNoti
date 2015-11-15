@@ -23,7 +23,7 @@ limit | number | false | 10
 q | string | false | ''
 isOpen | boolean | false | true
 isClosed | boolean | false | false
-order | [ThemeOrder](./Theme order.html) | false | 0
+order | [ThemeOrder](./Theme order.html) | false | "newest"
 
 ### [Cookies](./Cookies.html)
 
@@ -42,8 +42,8 @@ id | string
 title | string
 detail | string
 organizationId | string
-createTime | Date
-updateTime | Date?
+createTime | ISO 8601 time string
+updateTime | ISO 8601 time string?
 status | [ThemeStatus](./Theme status.html)
 creator | [User](#user)
 owners | [User](#user)[]
