@@ -405,8 +405,8 @@ declare let Clipboard;
 $(document).ready(function() {
     let clipboard = new Clipboard(".clip");
 
-    clipboard.on("success", function(e) {
-        base.vueHead.showAlert(true, "emails copied.");
+    clipboard.on("success", e => {
+        base.vueHead.showAlert(true, "emails copied:" + e.text);
     });
 
     base.vueHead.authenticate((error, data) => {

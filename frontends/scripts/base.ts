@@ -172,7 +172,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = "";
                     self.currentUserEmail = "";
                     self.currentAvatar = "";
-                    window.sessionStorage.removeItem("loginResult");
+                    window.sessionStorage.removeItem(sessionStorageNames.loginResult);
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
                 } else {
