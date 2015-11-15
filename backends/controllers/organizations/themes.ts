@@ -27,7 +27,6 @@ export async function get(request: libs.Request, response: libs.Response) {
         let q = libs.validator.trim(request.query.q);
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";
-        let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : types.ThemeOrder.newest;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
@@ -65,7 +64,14 @@ export async function get(request: libs.Request, response: libs.Response) {
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
 
-        let sort = order === types.ThemeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+        let sort;
+        if (libs.semver.satisfies(request.v, ">=0.10.0") || libs.moment().isAfter(libs.moment("2015-11-22"))) {
+            let order = libs.validator.trim(request.query.order);
+            sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+        } else {
+            let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : 0;
+            sort = order === 1 ? { updateTime: -1 } : { createTime: -1 };
+        }
 
         let themes = await query.skip((page - 1) * limit)
             .limit(limit)
@@ -91,9 +97,9 @@ export async function get(request: libs.Request, response: libs.Response) {
                 title: t.title,
                 detail: t.detail,
                 organizationId: organizationId.toHexString(),
-                createTime: t.createTime.getTime(),
-                updateTime: t.updateTime ? t.updateTime.getTime() : undefined,
-                status: t.status,
+                createTime: libs.semver.satisfies(request.v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22")) ? t.createTime.toISOString() : t.createTime.getTime(),
+                updateTime: t.updateTime ? (libs.semver.satisfies(request.v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22"))? t.updateTime.toISOString() : t.updateTime.getTime()) : undefined,
+                status: libs.semver.satisfies(request.v, ">=0.10.1") || libs.moment().isAfter(libs.moment("2015-11-22")) ? (t.status === types.ThemeStatus.open ? types.themeStatus.open : types.themeStatus.closed) : t.status,
                 creator: {
                     id: creatorId,
                     name: creator.name,

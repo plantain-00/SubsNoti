@@ -8,7 +8,7 @@ import * as services from "./services";
 
 let app: libs.Application = libs.express();
 
-app.settings.env = settings.config.environment;
+app.settings.env = settings.config.currentEnvironment;
 
 app.use(libs.compression());
 

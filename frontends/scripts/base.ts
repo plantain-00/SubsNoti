@@ -10,6 +10,14 @@ interface CurrentUserResponse extends types.CurrentUserResponse, types.Response 
 
 }
 
+type LoginStatus = "unknown" | "fail" | "success";
+
+export const loginStatus = {
+    unknown: <LoginStatus>"unknown",
+    fail: <LoginStatus>"fail",
+    success: <LoginStatus>"success",
+}
+
 export const sessionStorageNames = {
     loginResult: "loginResult"
 };
@@ -84,7 +92,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 }
 
 interface VueHeadModel {
-    loginStatus: types.LoginStatus;
+    loginStatus: LoginStatus;
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
@@ -109,7 +117,7 @@ let timeoutId: NodeJS.Timer;
 export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
     data: {
-        loginStatus: types.LoginStatus.unknown,
+        loginStatus: loginStatus.unknown,
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
@@ -159,7 +167,7 @@ export let vueHead: VueHeadModel = new Vue({
                 cache: false,
             }).then((data: CurrentUserResponse) => {
                 if (data.isSuccess) {
-                    self.loginStatus = types.LoginStatus.fail;
+                    self.loginStatus = loginStatus.fail;
                     self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
@@ -177,7 +185,7 @@ export let vueHead: VueHeadModel = new Vue({
 
             getCurrentUser(data => {
                 if (data.isSuccess) {
-                    self.loginStatus = types.LoginStatus.success;
+                    self.loginStatus = loginStatus.success;
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
@@ -190,7 +198,7 @@ export let vueHead: VueHeadModel = new Vue({
 
                     next(null, data);
                 } else {
-                    self.loginStatus = types.LoginStatus.fail;
+                    self.loginStatus = loginStatus.fail;
                     next(new Error(data.errorMessage), null);
                 }
             });

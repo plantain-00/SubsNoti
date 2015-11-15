@@ -30,13 +30,13 @@
                                 closed
                             </label>
                             order by
-                            <label class="the-label {{order !== 1 ? 'label-active':''}}"
-                                @click="clickOrder(0)">
+                            <label class="the-label {{order === 'newest' ? 'label-active':''}}"
+                                @click="clickOrder('newest')">
                                 newest
                             </label>
-                            <label class="the-label {{order === 1 ? 'label-active':''}}"
-                                @click="clickOrder(1)">
-                                recent updated
+                            <label class="the-label {{order === 'recently updated' ? 'label-active':''}}"
+                                @click="clickOrder('recently updated')">
+                                recently updated
                             </label>
                             <span class="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" @click="fetchThemes(1)"></span>
                             <span class="glyphicon glyphicon-{{showCreate ? 'minus' : 'plus'}} btn btn-primary" aria-hidden="true"
@@ -80,7 +80,7 @@
                                                 <span v-show="themeIdInEditing !== theme.id">
                                                     {{theme.title}}
                                                     <span class="label label-success"
-                                                        v-show="theme.status === 0">open</span>
+                                                        v-show="theme.status === 'open'">open</span>
                                                     <span class="label label-danger" v-else>closed</span>
                                                 </span>
                                                 <input class="form-control"
@@ -98,7 +98,7 @@
                                                 </button>
                                                 •
                                                 created {{theme.createTimeText}}
-                                                <div :style='{ display: theme.updateTime ? "inline" : "none" }'>
+                                                <div :style='{ display: theme.updateTimeText ? "inline" : "none" }'>
                                                     •
                                                     updated {{theme.updateTimeText}}
                                                 </div>
@@ -129,7 +129,7 @@
                                                     <div :style='{ display: theme.isOwner ? "inline" : "none" }'>
                                                         •
                                                         <button type="button" class="btn btn-xs btn-link"
-                                                            v-show="theme.status === 0"
+                                                            v-show="theme.status === 'open'"
                                                             @click="close(theme)">
                                                             close
                                                         </button>

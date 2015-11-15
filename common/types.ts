@@ -2,12 +2,6 @@
  * enum, interface, class, type. do not rely on other thing.
  */
 
-export const enum LoginStatus {
-    unknown = 0,
-    fail = 1,
-    success = 2
-}
-
 export const enum OrganizationStatus {
     normal
 }
@@ -28,14 +22,23 @@ export const enum StatusCode {
     internalServerError = 500
 }
 
-export const enum ThemeOrder {
-    newest,
-    recentlyUpdated
+export type ThemeOrderType = "newest" | "recently updated";
+
+export const themeOrder = {
+    newest: <ThemeOrderType>"newest",
+    recentlyUpdated: <ThemeOrderType>"recently updated",
 }
 
 export const enum ThemeStatus {
     open,
     closed
+}
+
+export type ThemeStatusType = "open" | "closed";
+
+export const themeStatus = {
+    open: <ThemeStatusType>"open",
+    closed: <ThemeStatusType>"closed",
 }
 
 export const enum UserStatus {
@@ -70,14 +73,15 @@ export interface Document {
     documentUrl: string;
 }
 
-export type environment = "development" | "production";
+type Environment = "development" | "production";
+
+export const environment = {
+    development: <Environment>"development",
+    production: <Environment>"production",
+}
 
 export interface SettingsInterface {
-    currentEnvironment: environment;
-    environment: {
-        development: environment;
-        production: environment;
-    };
+    currentEnvironment: Environment;
     db: {
         host: string,
         user: string,

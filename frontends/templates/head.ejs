@@ -41,12 +41,12 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="javascript:void(0)"
-                            v-show="loginStatus === 0">
+                            v-show="loginStatus === 'unknown'">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;
                             <span>Login now...</span>
                         </a>
                         <a href="./user.html"
-                            v-if="loginStatus === 2">
+                            v-if="loginStatus === 'success'">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;
                             <span>{{currentUserName}}</span>
                             <span class="glyphicon glyphicon-envelope" style="top:2px"></span> &nbsp;
@@ -54,12 +54,12 @@
                             <img :src="currentAvatar" style="height: 20px; width:20px;">
                         </a>
                         <a href="./login.html"
-                            v-show="loginStatus === 1"
+                            v-show="loginStatus === 'fail'"
                             style="display: none;">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;Login
                         </a>
                     </li>
-                    <li v-show="loginStatus == 2">
+                    <li v-show="loginStatus == 'success'">
                         <a href="javascript:void(0)" @click="exit()">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                         </a>

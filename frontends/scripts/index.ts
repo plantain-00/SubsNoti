@@ -24,9 +24,9 @@ interface Theme {
     title: string;
     detail: string;
     organizationId: string;
-    createTime: number;
-    updateTime?: number;
-    status: types.ThemeStatus;
+    createTime: string;
+    updateTime?: string;
+    status: types.ThemeStatusType;
     creator: User;
     owners: User[];
     watchers: User[];
@@ -60,7 +60,7 @@ interface VueBodyModel {
     isOpen: boolean;
     isClosed: boolean;
     showCreate: boolean;
-    order: types.ThemeOrder;
+    order: types.ThemeOrderType;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -85,7 +85,7 @@ interface VueBodyModel {
     clickClosed: () => void;
     showMoreThemes: () => void;
     clickShowCreate: () => void;
-    clickOrder: () => void;
+    clickOrder: (order: types.ThemeOrderType) => void;
 }
 
 let vueBody: VueBodyModel = new Vue({
@@ -105,7 +105,7 @@ let vueBody: VueBodyModel = new Vue({
         isOpen: true,
         isClosed: false,
         showCreate: false,
-        order: types.ThemeOrder.newest,
+        order: types.themeOrder.newest,
     },
     computed: {
         nextThemeCount: function() {
@@ -122,7 +122,7 @@ let vueBody: VueBodyModel = new Vue({
         canShowCreate: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.vueHead.loginStatus === types.LoginStatus.success;
+            return base.vueHead.loginStatus === base.loginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;
@@ -179,7 +179,7 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.4.0",
+                    v: "0.10.2",
                     order: self.order,
                 },
                 cache: false,
@@ -188,12 +188,11 @@ let vueBody: VueBodyModel = new Vue({
                     for (let theme of data.themes) {
                         theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
                         theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
-                        theme.createTimeText = moment(theme.createTime).fromNow();
+                        theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
                         if (theme.updateTime) {
-                            theme.updateTimeText = moment(theme.updateTime).fromNow();
+                            theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
                         } else {
-                            theme.updateTime = null;
-                            theme.updateTimeText = null;
+                            theme.updateTimeText = theme.createTimeText;
                         }
                         theme.isHovering = false;
                         theme.watchersEmails = self.getEmails(theme.watchers);
@@ -248,9 +247,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
-                theme.createTimeText = moment(theme.createTime).fromNow();
+                theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
                 if (theme.updateTime) {
-                    theme.updateTimeText = moment(theme.updateTime).fromNow();
+                    theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
+                } else {
+                    theme.updateTimeText = theme.createTimeText;
                 }
             }
         },
@@ -267,7 +268,7 @@ let vueBody: VueBodyModel = new Vue({
                     });
                     theme.isWatching = true;
                     theme.watchersEmails += base.vueHead.currentUserEmail + ";";
-                    theme.updateTime = new Date().getTime();
+                    theme.updateTime = moment().toISOString();
                     theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
@@ -291,7 +292,7 @@ let vueBody: VueBodyModel = new Vue({
                         theme.watchersEmails = self.getEmails(theme.watchers);
                     }
                     theme.isWatching = false;
-                    theme.updateTime = new Date().getTime();
+                    theme.updateTime = moment().toISOString();
                     theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
@@ -315,7 +316,7 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.ThemeStatus.closed;
+                    theme.status = types.themeStatus.closed;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -332,7 +333,7 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.ThemeStatus.open;
+                    theme.status = types.themeStatus.open;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -391,7 +392,7 @@ let vueBody: VueBodyModel = new Vue({
 
             self.showCreate = !self.showCreate;
         },
-        clickOrder: function(order: types.ThemeOrder) {
+        clickOrder: function(order: types.ThemeOrderType) {
             let self: VueBodyModel = this;
 
             self.order = order;

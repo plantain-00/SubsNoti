@@ -47,7 +47,9 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let isDevelopment = process.env.NODE_ENV !== "production";
+import * as types from "./common/types";
+
+let isDevelopment = process.env.NODE_ENV !== types.environment.development;
 
 gulp.task("watch", function() {
     watch("frontends/styles/*.scss", batch(function(events, done) {

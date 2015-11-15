@@ -3,11 +3,7 @@
 import * as types from "../common/types";
 
 export let config: types.SettingsInterface = {
-    environment: {
-        development: <types.environment>"development",
-        production: <types.environment>"production"
-    },
-    currentEnvironment: <types.environment>"development",
+    currentEnvironment: types.environment.development,
     db: {
         host: "",
         user: "",
