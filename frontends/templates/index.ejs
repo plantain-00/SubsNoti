@@ -30,13 +30,13 @@
                                 closed
                             </label>
                             order by
-                            <label class="the-label {{order !== 1 ? 'label-active':''}}"
-                                @click="clickOrder(0)">
+                            <label class="the-label {{order === 'newest' ? 'label-active':''}}"
+                                @click="clickOrder('newest')">
                                 newest
                             </label>
-                            <label class="the-label {{order === 1 ? 'label-active':''}}"
-                                @click="clickOrder(1)">
-                                recent updated
+                            <label class="the-label {{order === 'recently updated' ? 'label-active':''}}"
+                                @click="clickOrder('recently updated')">
+                                recently updated
                             </label>
                             <span class="glyphicon glyphicon-search btn btn-primary" aria-hidden="true" @click="fetchThemes(1)"></span>
                             <span class="glyphicon glyphicon-{{showCreate ? 'minus' : 'plus'}} btn btn-primary" aria-hidden="true"

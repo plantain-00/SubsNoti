@@ -105,7 +105,7 @@ let vueBody: VueBodyModel = new Vue({
         isOpen: true,
         isClosed: false,
         showCreate: false,
-        order: types.ThemeOrder.newest,
+        order: types.themeOrder.newest,
     },
     computed: {
         nextThemeCount: function() {
@@ -122,7 +122,7 @@ let vueBody: VueBodyModel = new Vue({
         canShowCreate: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.vueHead.loginStatus === types.LoginStatus.success;
+            return base.vueHead.loginStatus === base.loginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;
@@ -179,7 +179,7 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.4.0",
+                    v: "0.10.0",
                     order: self.order,
                 },
                 cache: false,

@@ -27,7 +27,6 @@ export async function get(request: libs.Request, response: libs.Response) {
         let q = libs.validator.trim(request.query.q);
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";
-        let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : types.ThemeOrder.newest;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
@@ -64,8 +63,15 @@ export async function get(request: libs.Request, response: libs.Response) {
             query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
-
-        let sort = order === types.ThemeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+        
+        let sort;
+        if (libs.semver.satisfies(request.v, ">=0.10.0")) {
+            let order = libs.validator.trim(request.query.order);
+            sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+        } else {
+            let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : 0;
+            sort = order === 1 ? { updateTime: -1 } : { createTime: -1 };
+        }
 
         let themes = await query.skip((page - 1) * limit)
             .limit(limit)
