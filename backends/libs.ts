@@ -72,6 +72,9 @@ export interface Request extends express.Request {
     files: any[];
 }
 
+import * as socket from "socket.io";
+export {socket};
+
 import Response = express.Response;
 export {Response};
 

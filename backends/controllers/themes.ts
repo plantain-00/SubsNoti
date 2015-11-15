@@ -66,6 +66,28 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         user.save();
         organization.save();
+        
+        // push the new theme.
+        let creatorId = user._id.toHexString();
+        let creator = {
+            id: creatorId,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar || services.avatar.getDefaultName(creatorId),
+        };
+        let newTheme :types.Theme = {
+            id: theme._id.toHexString(),
+            title: theme.title,
+            detail: theme.detail,
+            organizationId: organizationId.toHexString(),
+            createTime: theme.createTime.toISOString(),
+            updateTime: theme.updateTime ? theme.updateTime.toISOString() : undefined,
+            status: services.themeStatus.getType(theme.status),
+            creator: creator,
+            owners: [creator],
+            watchers: [creator],
+        };
+        services.push.emit(types.pushEvents.themeCreated, newTheme);
 
         services.logger.log(documentOfCreate.url, request);
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);

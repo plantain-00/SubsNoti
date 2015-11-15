@@ -28,6 +28,8 @@ services.cache.connect();
     await services.seed.init();
 })();
 
-app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
+let server = app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
     console.log(`Server is listening: ${settings.config.website.innerHostName}:${settings.config.website.port}`);
 });
+
+services.push.connect(server);

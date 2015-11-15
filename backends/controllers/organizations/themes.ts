@@ -92,14 +92,14 @@ export async function get(request: libs.Request, response: libs.Response) {
 
             let creatorId = creator._id.toHexString();
 
-            let theme = {
+            let theme: types.Theme = {
                 id: t._id.toHexString(),
                 title: t.title,
                 detail: t.detail,
                 organizationId: organizationId.toHexString(),
                 createTime: libs.semver.satisfies(request.v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22")) ? t.createTime.toISOString() : t.createTime.getTime(),
                 updateTime: t.updateTime ? (libs.semver.satisfies(request.v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22"))? t.updateTime.toISOString() : t.updateTime.getTime()) : undefined,
-                status: libs.semver.satisfies(request.v, ">=0.10.1") || libs.moment().isAfter(libs.moment("2015-11-22")) ? (t.status === types.ThemeStatus.open ? types.themeStatus.open : types.themeStatus.closed) : t.status,
+                status: libs.semver.satisfies(request.v, ">=0.10.1") || libs.moment().isAfter(libs.moment("2015-11-22")) ? services.themeStatus.getType(t.status) : t.status,
                 creator: {
                     id: creatorId,
                     name: creator.name,
