@@ -1,6 +1,5 @@
 import * as base from "./base";
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 declare let Vue;
 
@@ -9,7 +8,7 @@ interface Organization {
     name: string;
 }
 
-interface OrganizationsResponse extends interfaces.Response {
+interface OrganizationsResponse extends types.Response {
     organizations: Organization[];
 }
 
@@ -27,7 +26,7 @@ interface Theme {
     organizationId: string;
     createTime: number;
     updateTime?: number;
-    status: enums.ThemeStatus;
+    status: types.ThemeStatus;
     creator: User;
     owners: User[];
     watchers: User[];
@@ -41,7 +40,7 @@ interface Theme {
     isOwner: boolean;
 }
 
-interface ThemesResponse extends interfaces.Response {
+interface ThemesResponse extends types.Response {
     themes: Theme[];
     totalCount: number;
 }
@@ -61,7 +60,7 @@ interface VueBodyModel {
     isOpen: boolean;
     isClosed: boolean;
     showCreate: boolean;
-    order: enums.ThemeOrder;
+    order: types.ThemeOrder;
 
     nextThemeCount: number;
     canCreate: boolean;
@@ -106,7 +105,7 @@ let vueBody: VueBodyModel = new Vue({
         isOpen: true,
         isClosed: false,
         showCreate: false,
-        order: enums.ThemeOrder.newest,
+        order: types.ThemeOrder.newest,
     },
     computed: {
         nextThemeCount: function() {
@@ -123,7 +122,7 @@ let vueBody: VueBodyModel = new Vue({
         canShowCreate: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.vueHead.loginStatus === enums.LoginStatus.success;
+            return base.vueHead.loginStatus === types.LoginStatus.success;
         },
         canSave: function(): boolean {
             let self: VueBodyModel = this;
@@ -235,7 +234,7 @@ let vueBody: VueBodyModel = new Vue({
                 themeTitle: self.newThemeTitle,
                 themeDetail: self.newThemeDetail,
                 organizationId: self.currentOrganizationId,
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
@@ -258,7 +257,7 @@ let vueBody: VueBodyModel = new Vue({
         watch: function(theme: Theme) {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}).then((data: interfaces.Response) => {
+            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}).then((data: types.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
@@ -284,7 +283,7 @@ let vueBody: VueBodyModel = new Vue({
                 data: {},
                 cache: false,
                 type: "delete",
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     let index = _.findIndex(theme.watchers, w => w.id === base.vueHead.currentUserId);
                     if (~index) {
@@ -310,13 +309,13 @@ let vueBody: VueBodyModel = new Vue({
             $.ajax({
                 url: "/api/themes/" + theme.id + "?v=0.0.1",
                 data: {
-                    status: enums.ThemeStatus.closed
+                    status: types.ThemeStatus.closed
                 },
                 cache: false,
                 type: "put",
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = enums.ThemeStatus.closed;
+                    theme.status = types.ThemeStatus.closed;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -327,13 +326,13 @@ let vueBody: VueBodyModel = new Vue({
             $.ajax({
                 url: "/api/themes/" + theme.id + "?v=0.0.1",
                 data: {
-                    status: enums.ThemeStatus.open
+                    status: types.ThemeStatus.open
                 },
                 cache: false,
                 type: "put",
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = enums.ThemeStatus.open;
+                    theme.status = types.ThemeStatus.open;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -365,7 +364,7 @@ let vueBody: VueBodyModel = new Vue({
                 },
                 cache: false,
                 type: "put",
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     theme.title = self.titleInEditing;
                     theme.detail = self.detailInEditing;
@@ -392,7 +391,7 @@ let vueBody: VueBodyModel = new Vue({
 
             self.showCreate = !self.showCreate;
         },
-        clickOrder: function(order: enums.ThemeOrder) {
+        clickOrder: function(order: types.ThemeOrder) {
             let self: VueBodyModel = this;
 
             self.order = order;

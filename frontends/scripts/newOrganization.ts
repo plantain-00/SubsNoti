@@ -1,5 +1,5 @@
 import * as base from "./base";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 declare let Vue;
 
@@ -29,7 +29,7 @@ let vueBody: VueBodyModel = new Vue({
 
             $.post("/api/organizations?v=0.0.1", {
                 organizationName: self.organizationName
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.createdOrganizationCount++;
                     base.vueHead.showAlert(true, "success");

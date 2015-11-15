@@ -1,11 +1,9 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 import Schema = libs.mongoose.Schema;
@@ -21,7 +19,7 @@ export interface MongooseArray<T> extends Array<T> {
 
 export interface OrganizationDocument extends libs.mongoose.Document {
     name: string;
-    status: enums.OrganizationStatus;
+    status: types.OrganizationStatus;
 
     creator: UserDocument | libs.ObjectId;
     members: Array<UserDocument | libs.ObjectId>;
@@ -33,7 +31,7 @@ export interface UserDocument extends libs.mongoose.Document {
     email: string;
     name: string;
     salt: string;
-    status: enums.UserStatus;
+    status: types.UserStatus;
     avatar: string;
 
     joinedOrganizations: Array<OrganizationDocument | libs.ObjectId>;
@@ -47,7 +45,7 @@ export interface UserDocument extends libs.mongoose.Document {
 export interface ThemeDocument extends libs.mongoose.Document {
     title: string;
     detail: string;
-    status: enums.ThemeStatus;
+    status: types.ThemeStatus;
     createTime: Date;
     updateTime: Date;
 

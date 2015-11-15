@@ -2,12 +2,11 @@
 
 declare let Vue;
 
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 Vue.config.debug = true;
 
-interface CurrentUserResponse extends interfaces.CurrentUserResponse, interfaces.Response {
+interface CurrentUserResponse extends types.CurrentUserResponse, types.Response {
 
 }
 
@@ -85,7 +84,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 }
 
 interface VueHeadModel {
-    loginStatus: enums.LoginStatus;
+    loginStatus: types.LoginStatus;
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
@@ -110,7 +109,7 @@ let timeoutId: NodeJS.Timer;
 export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
     data: {
-        loginStatus: enums.LoginStatus.unknown,
+        loginStatus: types.LoginStatus.unknown,
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
@@ -160,7 +159,7 @@ export let vueHead: VueHeadModel = new Vue({
                 cache: false,
             }).then((data: CurrentUserResponse) => {
                 if (data.isSuccess) {
-                    self.loginStatus = enums.LoginStatus.fail;
+                    self.loginStatus = types.LoginStatus.fail;
                     self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
@@ -178,7 +177,7 @@ export let vueHead: VueHeadModel = new Vue({
 
             getCurrentUser(data => {
                 if (data.isSuccess) {
-                    self.loginStatus = enums.LoginStatus.success;
+                    self.loginStatus = types.LoginStatus.success;
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
@@ -191,7 +190,7 @@ export let vueHead: VueHeadModel = new Vue({
 
                     next(null, data);
                 } else {
-                    self.loginStatus = enums.LoginStatus.fail;
+                    self.loginStatus = types.LoginStatus.fail;
                     next(new Error(data.errorMessage), null);
                 }
             });

@@ -1,11 +1,9 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 function post(url: string, form, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {

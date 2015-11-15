@@ -1,14 +1,12 @@
 "use strict";
 
+import * as types from "../../../common/types";
+
 import * as libs from "../../libs";
 import * as settings from "../../settings";
-
-import * as enums from "../../../common/enums";
-import * as interfaces from "../../../common/interfaces";
-
 import * as services from "../../services";
 
-export let documentOfGet: libs.Document = {
+export let documentOfGet: types.Document = {
     url: "/api/organizations/:organization_id/themes",
     method: "get",
     documentUrl: "/doc/api/Get themes of an organization.html",
@@ -29,7 +27,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let q = libs.validator.trim(request.query.q);
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";
-        let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : enums.ThemeOrder.newest;
+        let order = libs.validator.isNumeric(request.query.order) ? libs.validator.toInt(request.query.order) : types.ThemeOrder.newest;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
@@ -54,11 +52,11 @@ export async function get(request: libs.Request, response: libs.Response) {
         });
 
         if (isOpen && !isClosed) {
-            query = query.where("status").equals(enums.ThemeStatus.open);
-            countQuery = countQuery.where("status").equals(enums.ThemeStatus.open);
+            query = query.where("status").equals(types.ThemeStatus.open);
+            countQuery = countQuery.where("status").equals(types.ThemeStatus.open);
         } else if (!isOpen && isClosed) {
-            query = query.where("status").equals(enums.ThemeStatus.closed);
-            countQuery = countQuery.where("status").equals(enums.ThemeStatus.closed);
+            query = query.where("status").equals(types.ThemeStatus.closed);
+            countQuery = countQuery.where("status").equals(types.ThemeStatus.closed);
         }
 
         // filtered by `title` or `detail`.
@@ -67,7 +65,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
 
-        let sort = order === enums.ThemeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+        let sort = order === types.ThemeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
 
         let themes = await query.skip((page - 1) * limit)
             .limit(limit)
@@ -125,7 +123,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             result.themes.push(theme);
         });
 
-        services.response.sendSuccess(response, enums.StatusCode.OK, result);
+        services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }

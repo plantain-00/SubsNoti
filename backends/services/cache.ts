@@ -1,11 +1,9 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 export let client: libs.RedisClient;
@@ -17,9 +15,9 @@ export function connect() {
     });
 }
 
-function getString(key: string, next: (error: interfaces.E, reply: string) => void) {
+function getString(key: string, next: (error: types.E, reply: string) => void) {
     client.get(key, (error: Error, reply) => {
-        next(services.error.fromError(error, enums.StatusCode.internalServerError), reply);
+        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
     });
 }
 
@@ -39,17 +37,17 @@ function set(key: string, value: any, seconds?: number) {
     }
 }
 
-function get(key: string, field: string, next: (error: interfaces.E, reply) => void) {
+function get(key: string, field: string, next: (error: types.E, reply) => void) {
     client.hmget(key, field, (error: Error, reply) => {
-        next(services.error.fromError(error, enums.StatusCode.internalServerError), reply);
+        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
     });
 }
 
 let getAsync = services.promise.promisify3<string, string, any>(get);
 
-function ttl(key: string, next: (error: interfaces.E, reply: number) => void) {
+function ttl(key: string, next: (error: types.E, reply: number) => void) {
     client.ttl(key, (error: Error, reply) => {
-        next(services.error.fromError(error, enums.StatusCode.internalServerError), reply);
+        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
     });
 }
 

@@ -1,10 +1,9 @@
 "use strict";
 
+import * as types from "../common/types";
+
 import * as libs from "./libs";
 import * as settings from "./settings";
-
-import * as enums from "../common/enums";
-
 import * as services from "./services";
 
 let app: libs.Application = libs.express();

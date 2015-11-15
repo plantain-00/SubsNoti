@@ -1,6 +1,9 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 "use strict";
+/**
+ * anything from node modules immediately.
+ */
 
 import * as express from "express";
 export {express};
@@ -69,23 +72,8 @@ export interface Request extends express.Request {
     files: any[];
 }
 
-export interface Document{
-    url: string;
-    method: "get" | "post" | "put" | "delete";
-    documentUrl: string;
-}
-
 import Response = express.Response;
 export {Response};
-
-import MysqlError = mysql.IError;
-export {MysqlError};
-
-import MysqlConnection = mysql.IConnection;
-export {MysqlConnection};
-
-import ServerResponse = http.ServerResponse;
-export {ServerResponse};
 
 import Application = express.Application;
 export {Application};

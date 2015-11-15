@@ -19,8 +19,6 @@ let revReplace = require("gulp-rev-replace");
 let shell = require("gulp-shell");
 let sass = require("gulp-sass");
 
-import * as environment from "./common/environment";
-
 let pjson = require("./package.json");
 
 gulp.task("clean", () => {
@@ -49,7 +47,7 @@ let minifyHtmlConfig = {
     spare: true,
 };
 
-let isDevelopment = process.env.NODE_ENV !== environment.productionEnvironment;
+let isDevelopment = process.env.NODE_ENV !== "production";
 
 gulp.task("watch", function() {
     watch("frontends/styles/*.scss", batch(function(events, done) {

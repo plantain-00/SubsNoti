@@ -1,14 +1,12 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
-export let documentOfCreate: libs.Document = {
+export let documentOfCreate: types.Document = {
     url: "/api/themes",
     method: "post",
     documentUrl: "/doc/api/Create a theme.html",
@@ -52,7 +50,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let theme = await services.mongo.Theme.create({
             title: themeTitle,
             detail: themeDetail,
-            status: enums.ThemeStatus.open,
+            status: types.ThemeStatus.open,
             createTime: new Date(),
             updateTime: new Date(),
             creator: userId,
@@ -70,13 +68,13 @@ export async function create(request: libs.Request, response: libs.Response) {
         organization.save();
 
         services.logger.log(documentOfCreate.url, request);
-        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }
 
-export let documentOfUpdate: libs.Document = {
+export let documentOfUpdate: types.Document = {
     url: "/api/themes/:theme_id",
     method: "put",
     documentUrl: "/doc/api/Update a theme.html",
@@ -93,9 +91,9 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let title = libs.validator.trim(request.body.title);
         let detail = libs.validator.trim(request.body.detail);
-        let status: enums.ThemeStatus = null;
+        let status: types.ThemeStatus = null;
 
-        if (libs.validator.isIn(request.body.status, [enums.ThemeStatus.open, enums.ThemeStatus.closed])) {
+        if (libs.validator.isIn(request.body.status, [types.ThemeStatus.open, types.ThemeStatus.closed])) {
             status = libs.validator.toInt(request.body.status);
         }
 
@@ -132,7 +130,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         theme.save();
 
-        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }

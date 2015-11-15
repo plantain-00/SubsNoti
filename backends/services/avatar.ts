@@ -1,11 +1,9 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 function createIfNotExists(id: string, next: (error: Error) => void) {
@@ -78,7 +76,7 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
                 return;
             }
 
-            let response: interfaces.Response = JSON.parse(body);
+            let response: types.Response = JSON.parse(body);
 
             if (response.isSuccess) {
                 next(null);

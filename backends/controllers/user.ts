@@ -1,14 +1,12 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
-export let documentOfGet: libs.Document = {
+export let documentOfGet: types.Document = {
     url: "/api/user",
     method: "get",
     documentUrl: "/doc/api/Get current user.html",
@@ -24,7 +22,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("email name createdOrganizations joinedOrganizations avatar")
             .exec();
         let id = userId.toHexString();
-        let result: interfaces.CurrentUserResponse = {
+        let result: types.CurrentUserResponse = {
             id: id,
             email: user.email,
             name: user.name,
@@ -33,13 +31,13 @@ export async function get(request: libs.Request, response: libs.Response) {
             avatar: user.avatar || services.avatar.getDefaultName(id),
         };
 
-        services.response.sendSuccess(response, enums.StatusCode.OK, result);
+        services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 }
 
-export let documentOfUpdate: libs.Document = {
+export let documentOfUpdate: types.Document = {
     url: "/api/user",
     method: "put",
     documentUrl: "/doc/api/Update current user.html",
@@ -79,7 +77,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
             response.status(json.response.statusCode).json(json.json);
         } else {
-            services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+            services.response.sendSuccess(response, types.StatusCode.createdOrModified);
         }
     } catch (error) {
         services.response.sendError(response, error, documentUrl);

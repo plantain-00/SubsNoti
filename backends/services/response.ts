@@ -1,19 +1,17 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
-export function sendSuccess(response: libs.Response, statusCode: enums.StatusCode, result?: Object) {
+export function sendSuccess(response: libs.Response, statusCode: types.StatusCode, result?: Object) {
     if (!result) {
         result = {};
     }
 
-    let baseResponse: interfaces.Response = {
+    let baseResponse: types.Response = {
         isSuccess: true,
         statusCode: statusCode,
     };
@@ -21,12 +19,12 @@ export function sendSuccess(response: libs.Response, statusCode: enums.StatusCod
     response.status(200).json(libs._.extend(baseResponse, result));
 }
 
-export function sendError(response: libs.Response, error: interfaces.E, documentUrl: string) {
+export function sendError(response: libs.Response, error: types.E, documentUrl: string) {
     let isE = error.statusCode;
 
-    let baseResponse: interfaces.Response = {
+    let baseResponse: types.Response = {
         isSuccess: false,
-        statusCode: isE ? error.statusCode : enums.StatusCode.internalServerError,
+        statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
         documentUrl: documentUrl,
     };
@@ -35,7 +33,7 @@ export function sendError(response: libs.Response, error: interfaces.E, document
         baseResponse.actualErrorMessage = error.message;
     }
 
-    if (settings.config.environment === settings.environment.developmentEnvironment) {
+    if (settings.config.currentEnvironment === settings.config.environment.development) {
         baseResponse.stack = error.stack;
     }
 

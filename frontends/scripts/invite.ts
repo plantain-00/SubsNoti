@@ -1,5 +1,5 @@
 import * as base from "./base";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 declare let Vue;
 
@@ -8,7 +8,7 @@ interface Organization {
     name: string;
 }
 
-interface OrganizationsResponse extends interfaces.Response {
+interface OrganizationsResponse extends types.Response {
     organizations: Organization[];
 }
 
@@ -66,7 +66,7 @@ let vueBody: VueBodyModel = new Vue({
         invite: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}).then((data: interfaces.Response) => {
+            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");
                 } else {

@@ -1,12 +1,13 @@
 "use strict";
 
-import {SettingsInterface} from "./SettingsInterface";
-import * as environment from "../common/environment";
+import * as types from "../common/types";
 
-export {environment};
-
-export let config: SettingsInterface = {
-    environment: environment.developmentEnvironment,
+export let config: types.SettingsInterface = {
+    environment: {
+        development: <types.environment>"development",
+        production: <types.environment>"production"
+    },
+    currentEnvironment: <types.environment>"development",
     db: {
         host: "",
         user: "",

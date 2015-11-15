@@ -1,5 +1,5 @@
 import * as base from "./base";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 declare let Vue;
 
@@ -91,7 +91,7 @@ let vueBody: VueBodyModel = new Vue({
                 name: self.name,
                 guid: guid,
                 code: self.code,
-            }).then((data: interfaces.Response) => {
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
                     window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
@@ -115,7 +115,7 @@ let vueBody: VueBodyModel = new Vue({
     },
 });
 
-interface CaptchaResponse extends interfaces.Response {
+interface CaptchaResponse extends types.Response {
     url: string;
 }
 

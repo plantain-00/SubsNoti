@@ -1,9 +1,9 @@
 import * as base from "./base";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 declare let Vue;
 
-interface UploadResponse extends interfaces.Response {
+interface UploadResponse extends types.Response {
     names: string[];
 }
 
@@ -71,7 +71,7 @@ let vueBody: VueBodyModel = new Vue({
                     },
                     cache: false,
                     type: "put",
-                }).then((data: interfaces.Response) => {
+                }).then((data: types.Response) => {
                     if (data.isSuccess) {
                         window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
 

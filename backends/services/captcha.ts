@@ -1,11 +1,9 @@
 "use strict";
 
+import * as types from "../../common/types";
+
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 /**
@@ -46,5 +44,5 @@ export async function validate(id: string, code: string): Promise<void> {
         return Promise.resolve();
     }
 
-    return Promise.reject<void>(services.error.fromMessage("the code is invalid or expired now.", enums.StatusCode.invalidRequest));
+    return Promise.reject<void>(services.error.fromMessage("the code is invalid or expired now.", types.StatusCode.invalidRequest));
 }
