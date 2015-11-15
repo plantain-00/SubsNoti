@@ -4,7 +4,7 @@
 # tools and global npm packages
 
 + git
-+ node.js 4.x(for ES6 support)
++ node.js >=4.0(for ES6 support)
 + tsd
 + typescript >=1.8(for ES6 and ES7 async function support)
 + gulp
@@ -16,6 +16,8 @@
 + graphviz
 + node-gyp build environment
 + node-canvas environment
++ tslint
++ scss-lint
 
 ## server only
 

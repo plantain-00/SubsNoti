@@ -1,11 +1,9 @@
-'use strict';
+"use strict";
+
+import * as types from "../common/types";
 
 import * as libs from "./libs";
 import * as settings from "./settings";
-
-import * as enums from "../common/enums";
-import * as interfaces from "../common/interfaces";
-
 import * as services from "./services";
 
 import * as user from "./controllers/user";
@@ -21,7 +19,7 @@ import * as organizationsUsersJoined from "./controllers/organizations/users/joi
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
-    function bind(document: { url: string; method: string; documentUrl: string }, handler: (request: libs.Request, response: libs.Response) => void) {
+    function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
     }
 

@@ -1,39 +1,40 @@
-'use strict';
+"use strict";
 
-import {SettingsInterface} from "./SettingsInterface";
-import * as environment from "../common/environment";
+import * as types from "../common/types";
 
-export {environment};
-
-export let config: SettingsInterface = {
-    environment: environment.developmentEnvironment,
+export let config: types.SettingsInterface = {
+    environment: {
+        development: <types.environment>"development",
+        production: <types.environment>"production"
+    },
+    currentEnvironment: <types.environment>"development",
     db: {
-        host: '',
-        user: '',
-        password: '',
-        database: ''
+        host: "",
+        user: "",
+        password: "",
+        database: "",
     },
     website: {
         port: 8888,
         innerHostName: "0.0.0.0",
-        outerHostName: "localhost"
+        outerHostName: "localhost",
     },
     smtp: {
         host: "",
         name: "",
-        password: ""
+        password: "",
     },
     redis: {
         host: "",
         port: 6379,
         options: {
             auth_pass: ""
-        }
+        },
     },
     mongodb: {
         url: "",
         user: "",
-        password: ""
+        password: "",
     },
     urls: {
         login: "/api/logged_in"
@@ -46,30 +47,30 @@ export let config: SettingsInterface = {
         user: "user_",
         emailFrequency: "email_frequency_",
         userCaptcha: "user_captcha_",
-        userCaptchaFrequency: "user_captcha_frequency_"
+        userCaptchaFrequency: "user_captcha_frequency_",
     },
     defaultItemLimit: 10,
     imageServer: {
         port: 7777,
         innerHostName: "0.0.0.0",
-        outerHostName: "localhost"
+        outerHostName: "localhost",
     },
     ipWhiteList: [
-        '127.0.0.1'
+        "127.0.0.1"
     ],
     imageUploader: {
         port: 9999,
         innerHostName: "0.0.0.0",
-        outerHostName: "localhost"
+        outerHostName: "localhost",
     },
-    avatar: 'avatar-',
+    avatar: "avatar-",
     cors: {
-        methods: 'GET,PUT,POST',
+        methods: "GET,PUT,POST",
         credentials: true,
         origin: [
-            'http://localhost:8888'
-        ]
-    }
+            "http://localhost:8888"
+        ],
+    },
 };
 
 try {

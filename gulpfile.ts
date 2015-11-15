@@ -1,173 +1,175 @@
 /// <reference path="./typings/tsd.d.ts" />
 
-'use strict';
+"use strict";
 
-import * as gulp from 'gulp';
-let del = require('del');
-let rename = require('gulp-rename');
+import * as gulp from "gulp";
+let del = require("del");
+let rename = require("gulp-rename");
 let ejs = require("gulp-ejs");
-let webpack = require('webpack-stream');
-let minifyHtml = require('gulp-minify-html');
-let rev = require('gulp-rev');
-let path = require('path');
-let minifyCSS = require('gulp-minify-css');
-let autoprefixer = require('autoprefixer');
-let postcss = require('gulp-postcss');
-let watch = require('gulp-watch');
-let batch = require('gulp-batch');
-let revReplace = require('gulp-rev-replace');
-let shell = require('gulp-shell');
-let sass = require('gulp-sass');
+let webpack = require("webpack-stream");
+let minifyHtml = require("gulp-minify-html");
+let rev = require("gulp-rev");
+let path = require("path");
+let minifyCSS = require("gulp-minify-css");
+let autoprefixer = require("autoprefixer");
+let postcss = require("gulp-postcss");
+let watch = require("gulp-watch");
+let batch = require("gulp-batch");
+let revReplace = require("gulp-rev-replace");
+let shell = require("gulp-shell");
+let sass = require("gulp-sass");
 
-import * as environment from './common/environment';
+let pjson = require("./package.json");
 
-let pjson = require('./package.json');
-
-gulp.task('clean', () => {
+gulp.task("clean", () => {
     del([
-        'backends/**/*.js',
+        "backends/**/*.js",
 
-        'common/**/*.js',
+        "common/**/*.js",
 
-        'frontends/doc/api/_book/',
-        'frontends/build/',
-        'frontends/scripts/*.js',
+        "frontends/doc/api/_book/",
+        "frontends/build/",
+        "frontends/scripts/*.js",
 
-        'publish/public/doc/',
-        'publish/public/scripts/',
-        'publish/public/styles',
-        'publish/public/*.html',
-        'publish/public/*.ico',
+        "publish/public/doc/",
+        "publish/public/scripts/",
+        "publish/public/styles",
+        "publish/public/*.html",
+        "publish/public/*.ico",
 
-        'publish/backends/',
-        'publish/common/'
+        "publish/backends/",
+        "publish/common/",
     ]);
 });
 
 let minifyHtmlConfig = {
     conditionals: true,
-    spare: true
+    spare: true,
 };
 
-let isDevelopment = process.env.NODE_ENV !== environment.productionEnvironment;
+let isDevelopment = process.env.NODE_ENV !== "production";
 
-gulp.task('watch', function() {
-    watch('frontends/styles/*.scss', batch(function(events, done) {
-        gulp.start('css', done);
+gulp.task("watch", function() {
+    watch("frontends/styles/*.scss", batch(function(events, done) {
+        gulp.start("css", done);
     }));
     watch("frontends/scripts/*.js", batch(function(events, done) {
-        gulp.start('js', done);
+        gulp.start("js", done);
     }));
     watch(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], batch(function(events, done) {
-        gulp.start('rev', done);
+        gulp.start("rev", done);
     }));
-    watch(['frontends/templates/*.ejs', "frontends/build/rev-manifest.json"], batch(function(events, done) {
-        gulp.start('html', done);
+    watch(["frontends/templates/*.ejs", "frontends/build/rev-manifest.json"], batch(function(events, done) {
+        gulp.start("html", done);
     }));
-    watch(['frontends/doc/api/*.md'], batch(function(events, done) {
-        gulp.start('doc', done);
+    watch(["frontends/doc/api/*.md"], batch(function(events, done) {
+        gulp.start("doc", done);
     }));
-    watch(['frontends/doc/api/*.dot'], batch(function(events, done) {
-        gulp.start('dot', done);
+    watch(["frontends/doc/api/*.dot"], batch(function(events, done) {
+        gulp.start("dot", done);
     }));
 });
 
-gulp.task('dot', shell.task([
-    'dot -Tsvg frontends/doc/api/DatabaseModels.dot > publish/public/doc/api/DatabaseModels.svg'
+gulp.task("dot", shell.task([
+    "dot -Tsvg frontends/doc/api/DatabaseModels.dot > publish/public/doc/api/DatabaseModels.svg"
 ]));
 
-gulp.task('gitbook', shell.task('gitbook build frontends/doc/api'));
+gulp.task("gitbook", shell.task("gitbook build frontends/doc/api"));
 
-gulp.task('run', shell.task('node publish/backends/app.js'));
+gulp.task("run", shell.task("node publish/backends/app.js"));
 
-gulp.task('make', shell.task('tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon'));
+gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
 
-gulp.task('doc', ['gitbook'], () => {
-    console.log('Starting "doc"...');
+gulp.task("tslint", shell.task("tslint common/**/*.ts && tslint backends/**/*.ts && tslint frontends/scripts/**/*.ts && tslint gulpfile.ts"));
+
+gulp.task("scss-lint", shell.task("scss-lint frontends/styles/*.scss"));
+
+gulp.task("doc", ["gitbook"], () => {
+    console.log("Starting 'doc'...");
     gulp.src("frontends/doc/api/_book/**")
         .pipe(gulp.dest("publish/public/doc/api/"));
-    console.log('Finished "doc".');
+    console.log("Finished 'doc'.");
 });
 
-gulp.task('icon', () => {
-    console.log('Starting "icon".');
+gulp.task("icon", () => {
+    console.log("Starting 'icon'.");
     gulp.src("frontends/favicon.ico")
         .pipe(gulp.dest("publish/public/"));
-    console.log('Finished "icon"...');
+    console.log("Finished 'icon'...");
 });
 
-gulp.task('css', () => {
-    console.log('Starting "css"...');
+gulp.task("css", () => {
+    console.log("Starting 'css'...");
     for (let file of ["base"]) {
         uglifyCss(file);
     }
-    console.log('Finished "css".');
+    console.log("Finished 'css'.");
 });
 
-gulp.task('js', () => {
-    console.log('Starting "js"...');
-    for (let file of ['index', 'login', 'newOrganization', 'invite', 'user']) {
+gulp.task("js", () => {
+    console.log("Starting 'js'...");
+    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
         bundleAndUglifyJs(file);
     }
-    console.log('Finished "js".');
+    console.log("Finished 'js'.");
 });
 
-gulp.task('rev', () => {
-    console.log('Starting "rev"...');
-    gulp.src(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], { base: 'frontends/build/' })
+gulp.task("rev", () => {
+    console.log("Starting 'rev'...");
+    gulp.src(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], { base: "frontends/build/" })
         .pipe(rev())
         .pipe(gulp.dest("publish/public/"))
         .pipe(rev.manifest())
         .pipe(gulp.dest("frontends/build/"));
 
-    gulp.src("frontends/build/scripts/*.map", { base: 'frontends/build/' })
+    gulp.src("frontends/build/scripts/*.map", { base: "frontends/build/" })
         .pipe(gulp.dest("publish/public/"));
-    console.log('Finished "rev".');
+    console.log("Finished 'rev'.");
 });
 
-gulp.task('html', () => {
-    console.log('Starting "html"...');
-    for (let file of ['index', 'login', 'newOrganization', 'invite', 'user']) {
+gulp.task("html", () => {
+    console.log("Starting 'html'...");
+    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
         bundleAndUglifyHtml(file);
     }
-    console.log('Finished "html".');
+    console.log("Finished 'html'.");
 });
 
 function uglifyCss(name: string) {
     if (isDevelopment) {
-        gulp.src('frontends/styles/' + name + '.scss')
+        gulp.src("frontends/styles/" + name + ".scss")
             .pipe(sass())
-            .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
+            .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(rename(name + ".css"))
-            .pipe(gulp.dest('frontends/build/styles/'));
+            .pipe(gulp.dest("frontends/build/styles/"));
     } else {
-        gulp.src('frontends/styles/' + name + '.scss')
+        gulp.src("frontends/styles/" + name + ".scss")
             .pipe(sass())
-            .pipe(postcss([autoprefixer({ browsers: ['last 2 versions'] })]))
+            .pipe(postcss([autoprefixer({ browsers: ["last 2 versions"] })]))
             .pipe(minifyCSS())
             .pipe(rename(name + ".min.css"))
-            .pipe(gulp.dest('frontends/build/styles/'));
+            .pipe(gulp.dest("frontends/build/styles/"));
     }
 }
 
 function bundleAndUglifyJs(name: string) {
     if (isDevelopment) {
-        gulp.src('frontends/scripts/' + name + '.js')
+        gulp.src("frontends/scripts/" + name + ".js")
             .pipe(webpack())
             .pipe(rename(name + ".js"))
-            .pipe(gulp.dest('frontends/build/scripts/'));
+            .pipe(gulp.dest("frontends/build/scripts/"));
     } else {
-        gulp.src('frontends/scripts/' + name + '.js')
+        gulp.src("frontends/scripts/" + name + ".js")
             .pipe(webpack({
                 plugins: [
                     new webpack.webpack.optimize.UglifyJsPlugin({ minimize: true })
                 ],
-                devtool: 'source-map',
+                devtool: "source-map",
                 output: {
-                    filename: name + '.min.js',
-                }
+                    filename: name + ".min.js"
+                },
             }))
-            .pipe(gulp.dest('frontends/build/scripts/'));
+            .pipe(gulp.dest("frontends/build/scripts/"));
     }
 }
 
@@ -175,11 +177,11 @@ function bundleAndUglifyHtml(name: string) {
     let manifest = gulp.src("frontends/build/rev-manifest.json");
 
     if (isDevelopment) {
-        gulp.src('frontends/templates/' + name + '.ejs')
+        gulp.src("frontends/templates/" + name + ".ejs")
             .pipe(ejs({
-                dotMin: '',
+                dotMin: "",
                 version: pjson.version,
-                environment: 'dev'
+                environment: "dev",
             }))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
@@ -187,11 +189,11 @@ function bundleAndUglifyHtml(name: string) {
             }))
             .pipe(gulp.dest("publish/public/"));
     } else {
-        gulp.src('frontends/templates/' + name + '.ejs')
+        gulp.src("frontends/templates/" + name + ".ejs")
             .pipe(ejs({
-                dotMin: '.min',
+                dotMin: ".min",
                 version: pjson.version,
-                environment: ''
+                environment: "",
             }))
             .pipe(minifyHtml(minifyHtmlConfig))
             .pipe(rename(name + ".html"))

@@ -1,11 +1,9 @@
-'use strict';
+"use strict";
+
+import * as types from "../../common/types";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 export function create(userId: string, salt: string): string {
@@ -23,7 +21,7 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
         if (noReject) {
             return Promise.resolve(null);
         }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", enums.StatusCode.unauthorized));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", types.StatusCode.unauthorized));
     }
 
     // may be it is already in cache.
@@ -33,11 +31,11 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
     }
 
     let tmp = authenticationCredential.split("g");
-    if (tmp.length != 3) {
+    if (tmp.length !== 3) {
         if (noReject) {
             return Promise.resolve(null);
         }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", types.StatusCode.unauthorized));
     }
 
     let milliseconds = parseInt(tmp[1], 16);
@@ -51,7 +49,7 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
         if (noReject) {
             return Promise.resolve(null);
         }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", enums.StatusCode.unauthorized));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", types.StatusCode.unauthorized));
     }
 
     // should be a valid user.
@@ -62,11 +60,11 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
         if (noReject) {
             return Promise.resolve(null);
         }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", enums.StatusCode.unauthorized));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", types.StatusCode.unauthorized));
     }
 
     // should be verified.
-    if (libs.md5(user.salt + milliseconds + userId) == tmp[0]) {
+    if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
         services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return Promise.resolve(id);
@@ -74,6 +72,6 @@ export async function authenticate(request: libs.Request, noReject?: boolean): P
         if (noReject) {
             return Promise.resolve(null);
         }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", enums.StatusCode.unauthorized));
+        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", types.StatusCode.unauthorized));
     }
 }

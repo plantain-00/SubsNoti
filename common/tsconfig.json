@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
-        "experimentalAsyncFunctions": true
+        "target": "es6"
     }
 }

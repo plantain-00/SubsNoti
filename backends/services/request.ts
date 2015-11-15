@@ -1,21 +1,19 @@
-'use strict';
+"use strict";
+
+import * as types from "../../common/types";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 function post(url: string, form, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
     libs.request.post({
         url: url,
-        form: form
+        form: form,
     }, (error, response, body) => {
         next(error, {
             response: response,
-            json: JSON.parse(body)
+            json: JSON.parse(body),
         });
     });
 }
@@ -25,11 +23,11 @@ export let postAsync = services.promise.promisify3<string, any, { response: libs
 function postMultipart(url: string, formData, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
     libs.request.post({
         url: url,
-        formData: formData
+        formData: formData,
     }, (error, response, body) => {
         next(error, {
             response: response,
-            json: JSON.parse(body)
+            json: JSON.parse(body),
         });
     });
 }
@@ -40,7 +38,7 @@ function get(url: string, next: (error: Error, response: { response: libs.http.I
     libs.request(url, (error, response, body) => {
         next(error, {
             response: response,
-            body: body
+            body: body,
         });
     });
 }

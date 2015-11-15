@@ -1,11 +1,9 @@
-'use strict';
+"use strict";
+
+import * as types from "../../common/types";
 
 import * as libs from "../libs";
 import * as settings from "../settings";
-
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
-
 import * as services from "../services";
 
 export function log(url: string, request: libs.Request) {
@@ -13,7 +11,7 @@ export function log(url: string, request: libs.Request) {
         time: new Date(),
         content: {
             url: url
-        }
+        },
     };
 
     if (!libs._.isEmpty(request.params)) {

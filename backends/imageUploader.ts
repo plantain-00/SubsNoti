@@ -1,10 +1,9 @@
-'use strict';
+"use strict";
+
+import * as types from "../common/types";
 
 import * as libs from "./libs";
 import * as settings from "./settings";
-
-import * as enums from "../common/enums";
-
 import * as services from "./services";
 
 let app: libs.Application = libs.express();
@@ -25,57 +24,53 @@ services.cache.connect();
 let documentOfUploadPersistentImages = {
     url: "/api/persistent/images",
     method: "post",
-    documentUrl: "Upload images to persistent directory.html"
+    documentUrl: "Upload images to persistent directory.html",
 };
 
 let documentOfUploadTemperaryImages = {
     url: "/api/temperary/images",
     method: "post",
-    documentUrl: "Upload images to temperary directory.html"
+    documentUrl: "Upload images to temperary directory.html",
 };
 
 let storage = libs.multer.diskStorage({
     destination: function(request: libs.Request, file, next) {
         if (request.path === documentOfUploadPersistentImages.url) {
-            next(null, 'images/');
-        }
-        else if (request.path === documentOfUploadTemperaryImages.url) {
-            next(null, 'images/tmp/');
-        }
-        else {
-            next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
+            next(null, "images/");
+        } else if (request.path === documentOfUploadTemperaryImages.url) {
+            next(null, "images/tmp/");
+        } else {
+            next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
         }
     },
     filename: function(request: libs.Request, file, next) {
         if (request.path === documentOfUploadPersistentImages.url) {
             next(null, file.fieldname);
-        }
-        else if (request.path === documentOfUploadTemperaryImages.url) {
+        } else if (request.path === documentOfUploadTemperaryImages.url) {
             next(null, libs.generateUuid() + libs.path.extname(file.originalname));
+        } else {
+            next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
         }
-        else {
-            next(services.error.fromMessage('can not upload files at this url:' + request.path, enums.StatusCode.forbidden));
-        }
-    }
-})
+    },
+});
 
 let upload = libs.multer({ storage: storage }).any();
 
 app.post(documentOfUploadPersistentImages.url, (request: libs.Request, response: libs.Response) => {
     let documentUrl = documentOfUploadPersistentImages.documentUrl;
 
-    if (!libs._.find(settings.config.ipWhiteList, i=> i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentUrl);
+    if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
+        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden), documentUrl);
         return;
     }
 
-    upload(request, response, error=> {
+    upload(request, response, error => {
         if (error) {
-            services.response.sendError(response, services.error.fromError(error, enums.StatusCode.invalidRequest), documentUrl);
+            services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest), documentUrl);
             return;
         }
 
-        services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
             names: libs._.map(request.files, (f: any) => f.filename)
         });
     });
@@ -87,18 +82,17 @@ app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, respo
     try {
         let userId = await services.authenticationCredential.authenticate(request);
 
-        upload(request, response, error=> {
+        upload(request, response, error => {
             if (error) {
-                services.response.sendError(response, services.error.fromError(error, enums.StatusCode.invalidRequest), documentUrl);
+                services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest), documentUrl);
                 return;
             }
 
-            services.response.sendSuccess(response, enums.StatusCode.createdOrModified, {
+            services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
                 names: libs._.map(request.files, (f: any) => f.filename)
             });
         });
-    }
-    catch (error) {
+    } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
 });
@@ -106,7 +100,7 @@ app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, respo
 let documentOfMoveImage = {
     url: "/api/images/persistent",
     method: "post",
-    documentUrl: "Move image from temperary directory to persistent directory.html"
+    documentUrl: "Move image from temperary directory to persistent directory.html",
 };
 
 app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Response) => {
@@ -114,27 +108,27 @@ app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Respons
     let newName = libs.validator.trim(request.body.newName);
 
     if (!name) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage('name'), documentOfMoveImage.documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("name"), documentOfMoveImage.documentUrl);
         return;
     }
 
     if (!newName) {
-        services.response.sendError(response, services.error.fromParameterIsMissedMessage('newName'), documentOfMoveImage.documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsMissedMessage("newName"), documentOfMoveImage.documentUrl);
         return;
     }
 
-    if (!libs._.find(settings.config.ipWhiteList, i=> i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage('your ip ' + request.ip + ' in not in the white list.', enums.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
+    if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
+        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
         return;
     }
 
-    libs.fs.rename(libs.path.join(__dirname, `../images/tmp/${name}`), libs.path.join(__dirname, `../images/${newName}`), error=> {
+    libs.fs.rename(libs.path.join(__dirname, `../images/tmp/${name}`), libs.path.join(__dirname, `../images/${newName}`), error => {
         if (error) {
-            services.response.sendError(response, services.error.fromMessage(error.message, enums.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
+            services.response.sendError(response, services.error.fromMessage(error.message, types.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
             return;
         }
 
-        services.response.sendSuccess(response, enums.StatusCode.createdOrModified);
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     });
 });
 

@@ -2,12 +2,11 @@
 
 declare let Vue;
 
-import * as enums from "../../common/enums";
-import * as interfaces from "../../common/interfaces";
+import * as types from "../../common/types";
 
 Vue.config.debug = true;
 
-interface CurrentUserResponse extends interfaces.CurrentUserResponse, interfaces.Response {
+interface CurrentUserResponse extends types.CurrentUserResponse, types.Response {
 
 }
 
@@ -19,13 +18,13 @@ export const localStorageNames = {
     lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
     lastOrganizationId: "lastOrganizationId",
     lastLoginEmail: "lastLoginEmail",
-    lastLoginName: "lastLoginName"
+    lastLoginName: "lastLoginName",
 };
 
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
-export let imageServerUrl = 'http://115.29.42.125:7777';
-export let imageUploaderUrl = 'http://115.29.42.125:9999';
+export let imageServerUrl = "http://115.29.42.125:7777";
+export let imageUploaderUrl = "http://115.29.42.125:9999";
 
 export function getFullUrl(avatar: string): string {
     return `${imageServerUrl}/${avatar}`;
@@ -75,7 +74,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
             data: {
                 v: "0.0.1"
             },
-            cache: false
+            cache: false,
         }).then((data: CurrentUserResponse) => {
             window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
 
@@ -85,7 +84,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
 }
 
 interface VueHeadModel {
-    loginStatus: enums.LoginStatus;
+    loginStatus: types.LoginStatus;
     currentUserId: string;
     currentUserName: string;
     currentUserEmail: string;
@@ -102,7 +101,7 @@ interface VueHeadModel {
 
     showAlert: (isSuccess: boolean, message: string) => void;
     exit: () => void;
-    authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void
+    authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void;
 }
 
 let timeoutId: NodeJS.Timer;
@@ -110,7 +109,7 @@ let timeoutId: NodeJS.Timer;
 export let vueHead: VueHeadModel = new Vue({
     el: "#vue-head",
     data: {
-        loginStatus: enums.LoginStatus.unknown,
+        loginStatus: types.LoginStatus.unknown,
         currentUserId: "",
         currentUserName: "",
         currentUserEmail: "",
@@ -120,7 +119,7 @@ export let vueHead: VueHeadModel = new Vue({
         requestCount: 0,
         alertIsSuccess: true,
         showAlertMessage: false,
-        alertMessage: ""
+        alertMessage: "",
     },
     computed: {
         canCreateOrganization: function() {
@@ -132,7 +131,7 @@ export let vueHead: VueHeadModel = new Vue({
             let self: VueHeadModel = this;
 
             return self.joinedOrganizationCount > 0;
-        }
+        },
     },
     methods: {
         showAlert: function(isSuccess: boolean, message: string) {
@@ -157,10 +156,10 @@ export let vueHead: VueHeadModel = new Vue({
             $.ajax({
                 type: "DELETE",
                 url: "/api/user/logged_in?v=0.0.1",
-                cache: false
+                cache: false,
             }).then((data: CurrentUserResponse) => {
                 if (data.isSuccess) {
-                    self.loginStatus = enums.LoginStatus.fail;
+                    self.loginStatus = types.LoginStatus.fail;
                     self.currentUserId = "";
                     self.currentUserName = "";
                     self.currentUserEmail = "";
@@ -168,8 +167,7 @@ export let vueHead: VueHeadModel = new Vue({
                     window.sessionStorage.removeItem("loginResult");
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
-                }
-                else {
+                } else {
                     self.showAlert(false, data.errorMessage);
                 }
             });
@@ -177,9 +175,9 @@ export let vueHead: VueHeadModel = new Vue({
         authenticate: function(next: (error: Error, data: CurrentUserResponse) => void) {
             let self: VueHeadModel = this;
 
-            getCurrentUser(data=> {
+            getCurrentUser(data => {
                 if (data.isSuccess) {
-                    self.loginStatus = enums.LoginStatus.success;
+                    self.loginStatus = types.LoginStatus.success;
                     self.currentUserId = data.id;
                     self.currentUserName = data.name;
                     self.currentUserEmail = data.email;
@@ -192,12 +190,12 @@ export let vueHead: VueHeadModel = new Vue({
 
                     next(null, data);
                 } else {
-                    self.loginStatus = enums.LoginStatus.fail;
+                    self.loginStatus = types.LoginStatus.fail;
                     next(new Error(data.errorMessage), null);
                 }
             });
-        }
-    }
+        },
+    },
 });
 
 $(document).ajaxSend(() => {
@@ -205,5 +203,5 @@ $(document).ajaxSend(() => {
 }).ajaxComplete(() => {
     vueHead.requestCount--;
 }).ajaxError(() => {
-    vueHead.showAlert(false, 'something happens unexpectedly, see console to get more details.');
+    vueHead.showAlert(false, "something happens unexpectedly, see console to get more details.");
 });
