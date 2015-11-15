@@ -24,8 +24,8 @@ interface Theme {
     title: string;
     detail: string;
     organizationId: string;
-    createTime: number;
-    updateTime?: number;
+    createTime: string;
+    updateTime?: string;
     status: types.ThemeStatusType;
     creator: User;
     owners: User[];
@@ -179,7 +179,7 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.10.1",
+                    v: "0.10.2",
                     order: self.order,
                 },
                 cache: false,
@@ -188,12 +188,11 @@ let vueBody: VueBodyModel = new Vue({
                     for (let theme of data.themes) {
                         theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
                         theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
-                        theme.createTimeText = moment(theme.createTime).fromNow();
+                        theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
                         if (theme.updateTime) {
-                            theme.updateTimeText = moment(theme.updateTime).fromNow();
+                            theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
                         } else {
-                            theme.updateTime = null;
-                            theme.updateTimeText = null;
+                            theme.updateTimeText = theme.createTimeText;
                         }
                         theme.isHovering = false;
                         theme.watchersEmails = self.getEmails(theme.watchers);
@@ -248,9 +247,11 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
-                theme.createTimeText = moment(theme.createTime).fromNow();
+                theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
                 if (theme.updateTime) {
-                    theme.updateTimeText = moment(theme.updateTime).fromNow();
+                    theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
+                } else {
+                    theme.updateTimeText = theme.createTimeText;
                 }
             }
         },
@@ -267,7 +268,7 @@ let vueBody: VueBodyModel = new Vue({
                     });
                     theme.isWatching = true;
                     theme.watchersEmails += base.vueHead.currentUserEmail + ";";
-                    theme.updateTime = new Date().getTime();
+                    theme.updateTime = moment().toISOString();
                     theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
@@ -291,7 +292,7 @@ let vueBody: VueBodyModel = new Vue({
                         theme.watchersEmails = self.getEmails(theme.watchers);
                     }
                     theme.isWatching = false;
-                    theme.updateTime = new Date().getTime();
+                    theme.updateTime = moment().toISOString();
                     theme.updateTimeText = moment(theme.updateTime).fromNow();
                     base.vueHead.showAlert(true, "success");
                 } else {
