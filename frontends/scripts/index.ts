@@ -390,6 +390,7 @@ let vueBody: VueBodyModel = new Vue({
 });
 
 declare let Clipboard;
+declare let socket;
 
 $(document).ready(function() {
     let clipboard = new Clipboard(".clip");
@@ -406,7 +407,6 @@ $(document).ready(function() {
         vueBody.getOrganizationsCurrentUserIn();
         setInterval(vueBody.setThemeTimeText, 10000);
 
-        var socket = io.connect(base.appServerUrl);
         socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
             if(theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);

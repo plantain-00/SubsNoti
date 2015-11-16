@@ -50,12 +50,3 @@ status | [ThemeStatus](./Theme status.html)
 creator | [User](#user)
 owners | [User](#user)[]
 watchers | [User](#user)[]
-
-### User
-
-key name | value type
---- | ---
-id | string
-name | string
-email | string
-avatar | string

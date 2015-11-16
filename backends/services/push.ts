@@ -6,15 +6,14 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let socketServer;
+let io;
 
 export function emit(event: string, arg: any) {
-    socketServer.emit(event, arg);
+    io.emit(event, arg);
 }
 
 export function connect(server: libs.http.Server) {
-    let io = libs.socket(server);
-    socketServer = io;
+    io = libs.socket(server);
 
     io.on("connection", socket => {
         let cookies = libs.cookie.parse(socket.handshake.headers.cookie);

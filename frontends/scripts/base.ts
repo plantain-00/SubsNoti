@@ -33,7 +33,6 @@ export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 export let imageServerUrl = "http://115.29.42.125:7777";
 export let imageUploaderUrl = "http://115.29.42.125:9999";
-export let appServerUrl = `http://${window.location.host}:${window.location.port}`;
 
 export function getFullUrl(avatar: string): string {
     return `${imageServerUrl}/${avatar}`;

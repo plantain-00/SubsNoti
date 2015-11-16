@@ -187,5 +187,9 @@
     </div>
 </div>
 <% include scripts %>
+<script>
+    // socket.io must be defined here.
+    var socket = io();
+</script>
 <script type="text/javascript" src="./scripts/index<%- dotMin %>.js"></script>
 <% include foot %>
