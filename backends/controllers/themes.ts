@@ -75,7 +75,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             email: user.email,
             avatar: user.avatar || services.avatar.getDefaultName(creatorId),
         };
-        let newTheme :types.Theme = {
+        let newTheme : types.Theme = {
             id: theme._id.toHexString(),
             title: theme.title,
             detail: theme.detail,
@@ -125,7 +125,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: id })
-            .select("title detail status owners")
+            .populate("creator owners watchers")
             .exec();
         if (!theme) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
@@ -151,6 +151,10 @@ export async function update(request: libs.Request, response: libs.Response) {
         }
 
         theme.save();
+        
+        // push the modified theme.
+        let result = services.theme.convert(theme);
+        services.push.emit(types.pushEvents.themeUpdated, result);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {

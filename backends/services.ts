@@ -47,3 +47,6 @@ export {push};
 
 import * as themeStatus from "./services/themeStatus";
 export {themeStatus};
+
+import * as theme from "./services/theme";
+export {theme};

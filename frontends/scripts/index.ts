@@ -303,7 +303,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.themeStatus.closed;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -320,7 +319,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.themeStatus.open;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -354,8 +352,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.title = self.titleInEditing;
-                    theme.detail = self.detailInEditing;
                     base.vueHead.showAlert(true, "success");
 
                     self.cancel(theme);
@@ -409,6 +405,16 @@ $(document).ready(function() {
             if(theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);
                 vueBody.themes.unshift(theme);
+            }
+        });
+
+        socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
+            if(theme.organizationId === vueBody.currentOrganizationId) {
+                let index = _.findIndex(vueBody.themes, t => t.id === theme.id);
+                if(index > -1) {
+                    vueBody.initTheme(theme);
+                    vueBody.themes["$set"](index, theme);
+                }
             }
         });
 
