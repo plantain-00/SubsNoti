@@ -31,32 +31,8 @@ order | [ThemeOrder](./Theme order.html) | false | "newest"
 
 key name | value type
 --- | ---
-themes | [Theme](#theme)[]
+themes | [Theme](./Theme.html)[]
 totalCount | number
-
-### Theme
-
-key name | value type
---- | ---
-id | string
-title | string
-detail | string
-organizationId | string
-createTime | ISO 8601 time string
-updateTime | ISO 8601 time string?
-status | [ThemeStatus](./Theme status.html)
-creator | [User](#user)
-owners | [User](#user)[]
-watchers | [User](#user)[]
-
-### User
-
-key name | value type
---- | ---
-id | string
-name | string
-email | string
-avatar | string
 
 ## version >=0.10.0
 
@@ -81,29 +57,5 @@ order | [ThemeOrder](./Theme order.html) | false | 0
 
 key name | value type
 --- | ---
-themes | [Theme](#theme)[]
+themes | [Theme](./Theme.html)[]
 totalCount | number
-
-### Theme
-
-key name | value type
---- | ---
-id | string
-title | string
-detail | string
-organizationId | string
-createTime | number
-updateTime | number?
-status | [ThemeStatus](./Theme status.html)
-creator | [User](#user)
-owners | [User](#user)[]
-watchers | [User](#user)[]
-
-### User
-
-key name | value type
---- | ---
-id | string
-name | string
-email | string
-avatar | string
