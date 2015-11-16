@@ -224,9 +224,7 @@ let vueBody: VueBodyModel = new Vue({
                 organizationId: self.currentOrganizationId,
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
-                    self.showCreate = false;
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
@@ -410,7 +408,7 @@ $(document).ready(function() {
         socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
             if(theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);
-                vueBody.themes.push(theme);
+                vueBody.themes.unshift(theme);
             }
         });
 
