@@ -188,9 +188,9 @@ let vueBody: VueBodyModel = new Vue({
 
             theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
             theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
-            theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
+            theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
             if (theme.updateTime) {
-                theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
+                theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
             } else {
                 theme.updateTimeText = theme.createTimeText;
             }
@@ -236,9 +236,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
-                theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
+                theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
                 if (theme.updateTime) {
-                    theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
+                    theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
                 } else {
                     theme.updateTimeText = theme.createTimeText;
                 }
@@ -406,7 +406,7 @@ $(document).ready(function() {
         vueBody.getOrganizationsCurrentUserIn();
         setInterval(vueBody.setThemeTimeText, 10000);
 
-        var socket = io.connect("http://localhost:8888");
+        var socket = io.connect("http://localhost:8888/");
         socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
             if(theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);

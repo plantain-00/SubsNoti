@@ -8,7 +8,11 @@
 import * as express from "express";
 export {express};
 
-export let cookieParser = require("cookie-parser");
+import * as cookieParser from "cookie-parser";
+export {cookieParser};
+
+import * as cookie from "cookie";
+export {cookie};
 
 export let bodyParser = require("body-parser");
 
