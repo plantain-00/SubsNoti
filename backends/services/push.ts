@@ -8,7 +8,7 @@ import * as services from "../services";
 
 let io;
 
-export function emit(event: string, arg: any) {
+export function emit(event: types.PushEvent, arg: any) {
     io.emit(event, arg);
 }
 
