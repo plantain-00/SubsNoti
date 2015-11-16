@@ -2,6 +2,7 @@ import * as base from "./base";
 import * as types from "../../common/types";
 
 declare let Vue;
+declare let io;
 
 interface Organization {
     id: string;
@@ -12,25 +13,7 @@ interface OrganizationsResponse extends types.Response {
     organizations: Organization[];
 }
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
-}
-
-interface Theme {
-    id: string;
-    title: string;
-    detail: string;
-    organizationId: string;
-    createTime: string;
-    updateTime?: string;
-    status: types.ThemeStatusType;
-    creator: User;
-    owners: User[];
-    watchers: User[];
-
+interface Theme extends types.Theme {
     createTimeText: string;
     updateTimeText?: string;
     isWatching: boolean;
@@ -70,6 +53,7 @@ interface VueBodyModel {
 
     getOrganizationsCurrentUserIn: () => void;
     fetchThemes: (page: number) => void;
+    initTheme: (theme: Theme) => void;
     clickOrganization: (organization: Organization) => void;
     createTheme: () => void;
     setThemeTimeText: () => void;
@@ -77,7 +61,7 @@ interface VueBodyModel {
     unwatch: (theme: Theme) => void;
     close: (theme: Theme) => void;
     reopen: (theme: Theme) => void;
-    getEmails: (users: User[]) => string;
+    getEmails: (users: types.User[]) => string;
     edit: (theme: Theme) => void;
     cancel: (theme: Theme) => void;
     save: (theme: Theme) => void;
@@ -163,7 +147,7 @@ let vueBody: VueBodyModel = new Vue({
                 }
             });
         },
-        getEmails: function(users: User[]) {
+        getEmails: function(users: types.User[]) {
             return _.reduce(users, (r, w) => r + w.email + ";", "");
         },
         fetchThemes: function(page: number) {
@@ -186,26 +170,7 @@ let vueBody: VueBodyModel = new Vue({
             }).then((data: ThemesResponse) => {
                 if (data.isSuccess) {
                     for (let theme of data.themes) {
-                        theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
-                        theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
-                        theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
-                        if (theme.updateTime) {
-                            theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
-                        } else {
-                            theme.updateTimeText = theme.createTimeText;
-                        }
-                        theme.isHovering = false;
-                        theme.watchersEmails = self.getEmails(theme.watchers);
-                        theme.ownersEmails = self.getEmails(theme.owners);
-                        theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
-
-                        for (let watcher of theme.watchers) {
-                            watcher.avatar = base.getFullUrl(watcher.avatar);
-                        }
-
-                        for (let owner of theme.owners) {
-                            owner.avatar = base.getFullUrl(owner.avatar);
-                        }
+                        self.initTheme(theme);
                     }
                     if (page === 1) {
                         self.themes = data.themes;
@@ -217,6 +182,30 @@ let vueBody: VueBodyModel = new Vue({
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
             });
+        },
+        initTheme: function(theme: Theme) {
+            let self: VueBodyModel = this;
+
+            theme.isWatching = theme.watchers.some(w => w.id === base.vueHead.currentUserId);
+            theme.isOwner = theme.owners.some(w => w.id === base.vueHead.currentUserId);
+            theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
+            if (theme.updateTime) {
+                theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
+            } else {
+                theme.updateTimeText = theme.createTimeText;
+            }
+            theme.isHovering = false;
+            theme.watchersEmails = self.getEmails(theme.watchers);
+            theme.ownersEmails = self.getEmails(theme.owners);
+            theme.creator.avatar = base.getFullUrl(theme.creator.avatar);
+
+            for (let watcher of theme.watchers) {
+                watcher.avatar = base.getFullUrl(watcher.avatar);
+            }
+
+            for (let owner of theme.owners) {
+                owner.avatar = base.getFullUrl(owner.avatar);
+            }
         },
         clickOrganization: function(organization: Organization) {
             let self: VueBodyModel = this;
@@ -235,9 +224,7 @@ let vueBody: VueBodyModel = new Vue({
                 organizationId: self.currentOrganizationId,
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    self.fetchThemes(1);
                     base.vueHead.showAlert(true, "success");
-                    self.showCreate = false;
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
                 }
@@ -247,9 +234,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             for (let theme of self.themes) {
-                theme.createTimeText = moment(theme.createTime, moment.ISO_8601).fromNow();
+                theme.createTimeText = moment(<string>theme.createTime, moment.ISO_8601).fromNow();
                 if (theme.updateTime) {
-                    theme.updateTimeText = moment(theme.updateTime, moment.ISO_8601).fromNow();
+                    theme.updateTimeText = moment(<string>theme.updateTime, moment.ISO_8601).fromNow();
                 } else {
                     theme.updateTimeText = theme.createTimeText;
                 }
@@ -316,7 +303,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.themeStatus.closed;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -333,7 +319,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.status = types.themeStatus.open;
                     base.vueHead.showAlert(true, "success");
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
@@ -367,8 +352,6 @@ let vueBody: VueBodyModel = new Vue({
                 type: "put",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
-                    theme.title = self.titleInEditing;
-                    theme.detail = self.detailInEditing;
                     base.vueHead.showAlert(true, "success");
 
                     self.cancel(theme);
@@ -401,12 +384,13 @@ let vueBody: VueBodyModel = new Vue({
 });
 
 declare let Clipboard;
+declare let socket;
 
 $(document).ready(function() {
     let clipboard = new Clipboard(".clip");
 
-    clipboard.on("success", function(e) {
-        base.vueHead.showAlert(true, "emails copied.");
+    clipboard.on("success", e => {
+        base.vueHead.showAlert(true, "emails copied:" + e.text);
     });
 
     base.vueHead.authenticate((error, data) => {
@@ -416,6 +400,23 @@ $(document).ready(function() {
 
         vueBody.getOrganizationsCurrentUserIn();
         setInterval(vueBody.setThemeTimeText, 10000);
+
+        socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
+            if(theme.organizationId === vueBody.currentOrganizationId) {
+                vueBody.initTheme(theme);
+                vueBody.themes.unshift(theme);
+            }
+        });
+
+        socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
+            if(theme.organizationId === vueBody.currentOrganizationId) {
+                let index = _.findIndex(vueBody.themes, t => t.id === theme.id);
+                if(index > -1) {
+                    vueBody.initTheme(theme);
+                    vueBody.themes["$set"](index, theme);
+                }
+            }
+        });
 
         let w = $(window);
         let d = $(document);

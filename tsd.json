@@ -6,16 +6,16 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "node/node.d.ts": {
-            "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         },
         "serve-static/serve-static.d.ts": {
-            "commit": "62eedc3121a5e28c50473d2e4a9cefbcb9c3957f"
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         },
         "mime/mime.d.ts": {
-            "commit": "62eedc3121a5e28c50473d2e4a9cefbcb9c3957f"
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         },
         "express/express.d.ts": {
-            "commit": "62eedc3121a5e28c50473d2e4a9cefbcb9c3957f"
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         },
         "gulp/gulp.d.ts": {
             "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
@@ -82,6 +82,15 @@
         },
         "form-data/form-data.d.ts": {
             "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
+        },
+        "socket.io/socket.io.d.ts": {
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
+        },
+        "cookie-parser/cookie-parser.d.ts": {
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
+        },
+        "cookie/cookie.d.ts": {
+            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         }
     }
 }

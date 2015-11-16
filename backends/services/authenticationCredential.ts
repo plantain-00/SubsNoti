@@ -16,7 +16,15 @@ export function create(userId: string, salt: string): string {
  * if set noReject = true, return null if fails.
  */
 export async function authenticate(request: libs.Request, noReject?: boolean): Promise<libs.ObjectId> {
-    let authenticationCredential = libs.validator.trim(request.cookies[settings.config.cookieKeys.authenticationCredential]);
+    return authenticateCookie(request.cookies[settings.config.cookieKeys.authenticationCredential], noReject);
+}
+
+/**
+ * identify current user.
+ * if set noReject = true, return null if fails.
+ */
+export async function authenticateCookie(cookie: string, noReject?: boolean): Promise<libs.ObjectId> {
+    let authenticationCredential = libs.validator.trim(cookie);
     if (!authenticationCredential) {
         if (noReject) {
             return Promise.resolve(null);

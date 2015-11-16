@@ -22,11 +22,4 @@ no
 
 key name | value type
 --- | ---
-organizations | [Organization](#organization)[]
-
-### Organization
-
-key name | value type
---- | ---
-id | string
-name | string
+organizations | [Organization](./organization.html)[]

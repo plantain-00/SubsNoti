@@ -55,6 +55,13 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
             user.save();
             theme.save();
+            
+            // push the modified theme.
+            theme = await services.mongo.Theme.findOne({ _id: themeId })
+                .populate("creator owners watchers")
+                .exec();
+            let result = services.theme.convert(theme);
+            services.push.emit(types.pushEvents.themeUpdated, result);
         }
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
@@ -112,6 +119,13 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
             user.save();
             theme.save();
+            
+            // push the modified theme.
+            theme = await services.mongo.Theme.findOne({ _id: themeId })
+                .populate("creator owners watchers")
+                .exec();
+            let result = services.theme.convert(theme);
+            services.push.emit(types.pushEvents.themeUpdated, result);
         }
 
         services.response.sendSuccess(response, types.StatusCode.deleted);

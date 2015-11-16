@@ -80,6 +80,31 @@ export const environment = {
     production: <Environment>"production",
 }
 
+export const pushEvents = {
+    themeCreated: "theme created",
+    themeUpdated: "theme updated",
+}
+
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+}
+
+export interface Theme {
+    id: string;
+    title: string;
+    detail: string;
+    organizationId: string;
+    createTime: string | number;
+    updateTime?: string | number;
+    status: ThemeStatusType | ThemeStatus;
+    creator: User;
+    owners: User[];
+    watchers: User[];
+}
+
 export interface SettingsInterface {
     currentEnvironment: Environment;
     db: {
