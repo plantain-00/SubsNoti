@@ -35,7 +35,6 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         // the organization should be public organization, or current user should join in it.
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select("joinedOrganizations createdThemes ownedThemes watchedThemes")
             .exec();
         if (!organizationId.equals(services.seed.publicOrganizationId)
             && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
