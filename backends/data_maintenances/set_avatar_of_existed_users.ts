@@ -6,7 +6,7 @@ import * as services from "../services";
 
 services.mongo.connect();
 
-(async() => {
+(async () => {
     try {
         let users = await services.mongo.User.find({}).exec();
         for (let user of users) {

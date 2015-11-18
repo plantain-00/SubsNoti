@@ -67,10 +67,12 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
             },
         };
 
-        libs.request.post({
+        let options = {
             url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images?v=0.12.3`,
             formData: formData,
-        }, (error, httpResponse, body) => {
+        };
+
+        libs.request.post(options, (error, httpResponse, body) => {
             if (error) {
                 next(error);
                 return;

@@ -21,7 +21,7 @@ export function route(app: libs.Application) {
     function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
     }
-    
+
     services.version.route(app);
 
     bind(user.documentOfGet, user.get);
@@ -64,7 +64,7 @@ export function route(app: libs.Application) {
             userCreated.get(request, response);
         }
     });
-    
+
     app.get("/api/organizations/:organization_id/user/:user_email/joined", (request: libs.Request, response: libs.Response) => {
         if (services.version.match(request.v, ">=0.12.2", "2015-11-25")) {
             response.status(404);

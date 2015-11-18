@@ -35,7 +35,7 @@ let vueBody: VueBodyModel = new Vue({
             let file = $(":file")[0]["files"][0];
             if (file) {
                 let formData = new FormData();
-                formData.append('file', file);
+                formData.append("file", file);
 
                 $.ajax({
                     url: base.imageUploaderUrl + "/api/temperary?v=0.12.3",

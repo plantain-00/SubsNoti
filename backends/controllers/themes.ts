@@ -74,7 +74,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             email: user.email,
             avatar: user.avatar || services.avatar.getDefaultName(creatorId),
         };
-        let newTheme : types.Theme = {
+        let newTheme: types.Theme = {
             id: theme._id.toHexString(),
             title: theme.title,
             detail: theme.detail,

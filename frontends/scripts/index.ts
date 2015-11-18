@@ -402,16 +402,16 @@ $(document).ready(function() {
         setInterval(vueBody.setThemeTimeText, 10000);
 
         socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
-            if(theme.organizationId === vueBody.currentOrganizationId) {
+            if (theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);
                 vueBody.themes.unshift(theme);
             }
         });
 
         socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
-            if(theme.organizationId === vueBody.currentOrganizationId) {
+            if (theme.organizationId === vueBody.currentOrganizationId) {
                 let index = _.findIndex(vueBody.themes, t => t.id === theme.id);
-                if(index > -1) {
+                if (index > -1) {
                     vueBody.initTheme(theme);
                     vueBody.themes["$set"](index, theme);
                 }

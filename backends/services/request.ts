@@ -7,10 +7,12 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 function post(url: string, form, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
-    libs.request.post({
+    let options = {
         url: url,
         form: form,
-    }, (error, response, body) => {
+    };
+
+    libs.request.post(options, (error, response, body) => {
         next(error, {
             response: response,
             json: JSON.parse(body),
@@ -21,10 +23,12 @@ function post(url: string, form, next: (error: Error, response: { response: libs
 export let postAsync = services.promise.promisify3<string, any, { response: libs.http.IncomingMessage, json: any }>(post);
 
 function postMultipart(url: string, formData, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
-    libs.request.post({
+    let options = {
         url: url,
         formData: formData,
-    }, (error, response, body) => {
+    };
+
+    libs.request.post(options, (error, response, body) => {
         next(error, {
             response: response,
             json: JSON.parse(body),
