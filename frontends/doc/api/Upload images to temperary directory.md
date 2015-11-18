@@ -2,7 +2,8 @@
 
 ## Url
 
-`post` `/api/temperary/images`
++ `post` `/api/temperary`
++ `post` `/api/temperary/images`(available < 0.12.3 and earlier than 2015-11-25)
 
 ## version >=0.5.3
 

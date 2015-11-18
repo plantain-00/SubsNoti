@@ -21,9 +21,9 @@ export function convert(theme: services.mongo.ThemeDocument, v?: string): types.
         title: theme.title,
         detail: theme.detail,
         organizationId: (<libs.ObjectId>theme.organization).toHexString(),
-        createTime: libs.semver.satisfies(v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22")) ? theme.createTime.toISOString() : theme.createTime.getTime(),
-        updateTime: theme.updateTime ? (libs.semver.satisfies(v, ">=0.10.2") || libs.moment().isAfter(libs.moment("2015-11-22")) ? theme.updateTime.toISOString() : theme.updateTime.getTime()) : undefined,
-        status: libs.semver.satisfies(v, ">=0.10.1") || libs.moment().isAfter(libs.moment("2015-11-22")) ? services.themeStatus.getType(theme.status) : theme.status,
+        createTime: services.version.match(v, ">=0.10.2", "2015-11-22") ? theme.createTime.toISOString() : theme.createTime.getTime(),
+        updateTime: theme.updateTime ? (services.version.match(v, ">=0.10.2", "2015-11-22")) ? theme.updateTime.toISOString() : theme.updateTime.getTime() : undefined,
+        status: services.version.match(v, ">=0.10.1", "2015-11-22") ? services.themeStatus.getType(theme.status) : theme.status,
         creator: {
             id: creatorId,
             name: creator.name,

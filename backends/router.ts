@@ -21,23 +21,8 @@ export function route(app: libs.Application) {
     function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => void) {
         app[document.method](document.url, handler);
     }
-
-    app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
-        let v = libs.validator.trim(request.query.v);
-
-        if (v === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("v"), "/doc/api/Parameters.html");
-            return;
-        }
-
-        if (!libs.semver.valid(v)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("v"), "/doc/api/Parameters.html");
-            return;
-        }
-
-        request.v = v;
-        next();
-    });
+    
+    services.version.route(app);
 
     bind(user.documentOfGet, user.get);
     bind(user.documentOfUpdate, user.update);
@@ -65,7 +50,7 @@ export function route(app: libs.Application) {
     bind(captcha.documentOfCreate, captcha.create);
 
     app.get("/api/user/joined/organizations", (request: libs.Request, response: libs.Response) => {
-        if (libs.semver.satisfies(request.v, ">=0.12.0") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
+        if (services.version.match(request.v, ">=0.12.0", "2015-11-25")) {
             response.status(404);
         } else {
             userJoined.get(request, response);
@@ -73,7 +58,7 @@ export function route(app: libs.Application) {
     });
 
     app.get("/api/user/created/organizations", (request: libs.Request, response: libs.Response) => {
-        if (libs.semver.satisfies(request.v, ">=0.12.1") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
+        if (services.version.match(request.v, ">=0.12.1", "2015-11-25")) {
             response.status(404);
         } else {
             userCreated.get(request, response);
@@ -81,7 +66,7 @@ export function route(app: libs.Application) {
     });
     
     app.get("/api/organizations/:organization_id/user/:user_email/joined", (request: libs.Request, response: libs.Response) => {
-        if (libs.semver.satisfies(request.v, ">=0.12.2") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
+        if (services.version.match(request.v, ">=0.12.2", "2015-11-25")) {
             response.status(404);
         } else {
             userJoined.invite(request, response);

@@ -65,7 +65,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         }
 
         let sort;
-        if (libs.semver.satisfies(request.v, ">=0.10.0") || libs.moment().isAfter(libs.moment("2015-11-22"))) {
+        if (services.version.match(request.v, ">=0.10.0", "2015-11-22")) {
             let order = libs.validator.trim(request.query.order);
             sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
         } else {

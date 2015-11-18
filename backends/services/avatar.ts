@@ -68,7 +68,7 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
         };
 
         libs.request.post({
-            url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images`,
+            url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images?v=0.12.3`,
             formData: formData,
         }, (error, httpResponse, body) => {
             if (error) {

@@ -50,3 +50,6 @@ export {themeStatus};
 
 import * as theme from "./services/theme";
 export {theme};
+
+import * as version from "./services/version";
+export {version};
