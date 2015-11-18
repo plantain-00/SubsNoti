@@ -2,7 +2,8 @@
 
 ## Url
 
-/api/user/created/organizations
++ /api/user/created
++ /api/user/created/organizations(available < 0.12.0 and earlier than 2015-11-25)
 
 ## Method
 

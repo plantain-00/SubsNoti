@@ -1,13 +1,13 @@
 "use strict";
 
-import * as types from "../../../../common/types";
+import * as types from "../../../common/types";
 
-import * as libs from "../../../libs";
-import * as settings from "../../../settings";
-import * as services from "../../../services";
+import * as libs from "../../libs";
+import * as settings from "../../settings";
+import * as services from "../../services";
 
 export let documentOfGet: types.Document = {
-    url: "/api/user/created/organizations",
+    url: "/api/user/created",
     method: "get",
     documentUrl: "/doc/api/Get created organizations.html",
 };
