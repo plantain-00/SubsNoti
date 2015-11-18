@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/organizations/:organization_id/themes
-
-## Method
-
-get
+`get` `/api/organizations/:organization_id/themes`
 
 ## version >=0.10.2
 

@@ -66,7 +66,7 @@ let vueBody: VueBodyModel = new Vue({
         invite: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations/" + self.currentOrganizationId + "/users/" + self.email + "/joined?v=0.0.1", {}).then((data: types.Response) => {
+            $.post("/api/users/" + self.email + "/joined/" + self.currentOrganizationId + "?v=0.0.1", {}).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");
                 } else {

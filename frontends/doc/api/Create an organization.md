@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/organizations
-
-## Method
-
-post
+`post` `/api/organizations`
 
 ## version >=0.0.1
 

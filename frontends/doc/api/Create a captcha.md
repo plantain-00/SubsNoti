@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/captchas
-
-## Method
-
-post
+`post` `/api/captchas`
 
 ## version >=0.3
 

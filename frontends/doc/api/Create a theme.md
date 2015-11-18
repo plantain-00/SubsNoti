@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/themes
-
-## Method
-
-post
+`post` `/api/themes`
 
 ## version >=0.0.1
 

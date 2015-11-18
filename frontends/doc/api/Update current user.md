@@ -4,11 +4,7 @@ the authentication credential should be stored in a cookie named 'authentication
 
 ## Url
 
-/api/user
-
-## Method
-
-put
+`put` `/api/user`
 
 ## version >=0.7.2
 

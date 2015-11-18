@@ -4,10 +4,6 @@
 
 /
 
-## Method
-
-WebSocket
-
 ## version >=0.11.2
 
 ### Expiration Date

@@ -15,7 +15,6 @@ import * as tokenSent from "./controllers/token_sent";
 import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
 import * as organizations from "./controllers/organizations";
-import * as organizationsUsersJoined from "./controllers/organizations/users/joined";
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
@@ -47,6 +46,7 @@ export function route(app: libs.Application) {
     bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);
 
     bind(userJoined.documentOfGet, userJoined.get);
+    bind(userJoined.documentOfInvite, userJoined.invite);
 
     bind(userCreated.documentOfGet, userCreated.get);
 
@@ -62,8 +62,6 @@ export function route(app: libs.Application) {
     bind(themes.documentOfCreate, themes.create);
     bind(themes.documentOfUpdate, themes.update);
 
-    bind(organizationsUsersJoined.documentOfInvite, organizationsUsersJoined.invite);
-
     bind(captcha.documentOfCreate, captcha.create);
 
     app.get("/api/user/joined/organizations", (request: libs.Request, response: libs.Response) => {
@@ -78,7 +76,15 @@ export function route(app: libs.Application) {
         if (libs.semver.satisfies(request.v, ">=0.12.1") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
             response.status(404);
         } else {
-            userJoined.get(request, response);
+            userCreated.get(request, response);
+        }
+    });
+    
+    app.get("/api/organizations/:organization_id/user/:user_email/joined", (request: libs.Request, response: libs.Response) => {
+        if (libs.semver.satisfies(request.v, ">=0.12.2") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
+            response.status(404);
+        } else {
+            userJoined.invite(request, response);
         }
     });
 }

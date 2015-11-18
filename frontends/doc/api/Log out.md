@@ -4,11 +4,7 @@ will delete authentication credential from cookie.
 
 ## Url
 
-/api/logged_in
-
-## Method
-
-delete
+`delete` `/api/logged_in`
 
 ## version >=0.0.1
 

@@ -2,12 +2,8 @@
 
 ## Url
 
-+ /api/user/created
-+ /api/user/created/organizations(available < 0.12.0 and earlier than 2015-11-25)
-
-## Method
-
-get
++ `get` `/api/user/created`
++ `get` `/api/user/created/organizations`(available < 0.12.0 and earlier than 2015-11-25)
 
 ## version >=0.0.1
 

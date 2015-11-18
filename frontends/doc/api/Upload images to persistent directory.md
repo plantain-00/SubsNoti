@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/persistent/images
-
-## Method
-
-post
+`post` `/api/persistent/images`
 
 ## version >=0.5.3
 

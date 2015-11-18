@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/themes/:theme_id
-
-## Method
-
-put
+`put` `/api/themes/:theme_id`
 
 ## version >=0.0.1
 

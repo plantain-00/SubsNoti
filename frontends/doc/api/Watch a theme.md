@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/user/themes/:theme_id/watched
-
-## Method
-
-post
+`post` `/api/user/themes/:theme_id/watched`
 
 ## version >=0.0.1
 

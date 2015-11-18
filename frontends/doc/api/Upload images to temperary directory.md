@@ -2,11 +2,7 @@
 
 ## Url
 
-/api/temperary/images
-
-## Method
-
-post
+`post` `/api/temperary/images`
 
 ## version >=0.5.3
 
