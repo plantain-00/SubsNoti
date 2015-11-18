@@ -124,9 +124,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/joined/organizations",
+                url: "/api/user/joined",
                 data: {
-                    v: "0.0.1"
+                    v: "0.12.0"
                 },
                 cache: false,
             }).then((data: OrganizationsResponse) => {

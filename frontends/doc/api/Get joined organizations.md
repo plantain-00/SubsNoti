@@ -2,7 +2,8 @@
 
 ## Url
 
-/api/user/joined/organizations
++ /api/user/joined
++ /api/user/joined/organizations(available < 0.12.0 and earlier than 2015-11-25)
 
 ## Method
 

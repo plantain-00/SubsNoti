@@ -8,7 +8,7 @@ import * as services from "./services";
 
 import * as user from "./controllers/user";
 import * as userLoggedIn from "./controllers/user/logged_in";
-import * as userJoinedOrganizations from "./controllers/user/joined/organizations";
+import * as userJoined from "./controllers/user/joined";
 import * as userCreatedOrganizations from "./controllers/user/created/organizations";
 import * as userThemeWatched from "./controllers/user/themes/watched";
 import * as tokenSent from "./controllers/token_sent";
@@ -46,7 +46,7 @@ export function route(app: libs.Application) {
     bind(userLoggedIn.documentOfGet, userLoggedIn.get);
     bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);
 
-    bind(userJoinedOrganizations.documentOfGet, userJoinedOrganizations.get);
+    bind(userJoined.documentOfGet, userJoined.get);
 
     bind(userCreatedOrganizations.documentOfGet, userCreatedOrganizations.get);
 
@@ -65,4 +65,12 @@ export function route(app: libs.Application) {
     bind(organizationsUsersJoined.documentOfInvite, organizationsUsersJoined.invite);
 
     bind(captcha.documentOfCreate, captcha.create);
+
+    app.get("/api/user/joined/organizations", (request: libs.Request, response: libs.Response) => {
+        if (libs.semver.satisfies(request.v, ">=0.12.0") || libs.moment().isAfter(libs.moment("2015-11-25"))) {
+            response.status(404);
+        } else {
+            userJoined.get(request, response);
+        }
+    });
 }
