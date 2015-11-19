@@ -245,7 +245,11 @@ let vueBody: VueBodyModel = new Vue({
         watch: function(theme: Theme) {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}).then((data: types.Response) => {
+            $.ajax({
+                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
+                data: {},
+                type: "put",
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
@@ -267,9 +271,8 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/themes/" + theme.id + "/watched?v=0.0.1",
+                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
                 data: {},
-                cache: false,
                 type: "delete",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {

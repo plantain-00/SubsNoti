@@ -10,7 +10,7 @@ import * as user from "./controllers/user";
 import * as userLoggedIn from "./controllers/user/logged_in";
 import * as userJoined from "./controllers/user/joined";
 import * as userCreated from "./controllers/user/created";
-import * as userThemeWatched from "./controllers/user/themes/watched";
+import * as userWatched from "./controllers/user/watched";
 import * as tokens from "./controllers/tokens";
 import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
@@ -33,8 +33,8 @@ export function route(app: libs.Application) {
 
     services.router.bind(organizations.documentOfCreate, organizations.create, app);
 
-    services.router.bind(userThemeWatched.documentOfWatch, userThemeWatched.watch, app);
-    services.router.bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch, app);
+    services.router.bind(userWatched.documentOfWatch, userWatched.watch, app);
+    services.router.bind(userWatched.documentOfUnwatch, userWatched.unwatch, app);
 
     services.router.bind(tokens.documentOfCreate, tokens.create, app);
 
@@ -49,4 +49,6 @@ export function route(app: libs.Application) {
     services.router.bindObsolete(userCreated.documentOfUserCreatedOrganizations, userCreated.get, app);
     services.router.bindObsolete(userJoined.documentOfObsoleteInvite, userJoined.invite, app);
     services.router.bindObsolete(tokens.documentOfSendToken, tokens.create, app);
+    services.router.bindObsolete(userWatched.obsoleteDocumentOfWatch, userWatched.watch, app);
+    services.router.bindObsolete(userWatched.obsoleteDocumentOfUnwatch, userWatched.unwatch, app);
 }
