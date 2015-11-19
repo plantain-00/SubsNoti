@@ -18,66 +18,35 @@ import * as organizations from "./controllers/organizations";
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
-    function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => void) {
-        app[document.method](document.url, handler);
-    }
-
     services.version.route(app);
 
-    bind(user.documentOfGet, user.get);
-    bind(user.documentOfUpdate, user.update);
+    services.router.bind(user.documentOfGet, user.get, app);
+    services.router.bind(user.documentOfUpdate, user.update, app);
 
-    bind(userLoggedIn.documentOfGet, userLoggedIn.get);
-    bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);
+    services.router.bind(userLoggedIn.documentOfGet, userLoggedIn.get, app);
+    services.router.bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis, app);
 
-    bind(userJoined.documentOfGet, userJoined.get);
-    bind(userJoined.documentOfInvite, userJoined.invite);
+    services.router.bind(userJoined.documentOfGet, userJoined.get, app);
+    services.router.bind(userJoined.documentOfInvite, userJoined.invite, app);
 
-    bind(userCreated.documentOfGet, userCreated.get);
+    services.router.bind(userCreated.documentOfGet, userCreated.get, app);
 
-    bind(organizations.documentOfCreate, organizations.create);
+    services.router.bind(organizations.documentOfCreate, organizations.create, app);
 
-    bind(userThemeWatched.documentOfWatch, userThemeWatched.watch);
-    bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch);
+    services.router.bind(userThemeWatched.documentOfWatch, userThemeWatched.watch, app);
+    services.router.bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch, app);
 
-    bind(tokens.documentOfCreate, tokens.create);
+    services.router.bind(tokens.documentOfCreate, tokens.create, app);
 
-    bind(organizationsThemes.documentOfGet, organizationsThemes.get);
+    services.router.bind(organizationsThemes.documentOfGet, organizationsThemes.get, app);
 
-    bind(themes.documentOfCreate, themes.create);
-    bind(themes.documentOfUpdate, themes.update);
+    services.router.bind(themes.documentOfCreate, themes.create, app);
+    services.router.bind(themes.documentOfUpdate, themes.update, app);
 
-    bind(captcha.documentOfCreate, captcha.create);
+    services.router.bind(captcha.documentOfCreate, captcha.create, app);
 
-    app.get("/api/user/joined/organizations", (request: libs.Request, response: libs.Response) => {
-        if (services.version.match(request.v, ">=0.12.0", "2015-11-25")) {
-            response.status(404);
-        } else {
-            userJoined.get(request, response);
-        }
-    });
-
-    app.get("/api/user/created/organizations", (request: libs.Request, response: libs.Response) => {
-        if (services.version.match(request.v, ">=0.12.1", "2015-11-25")) {
-            response.status(404);
-        } else {
-            userCreated.get(request, response);
-        }
-    });
-
-    app.get("/api/organizations/:organization_id/user/:user_email/joined", (request: libs.Request, response: libs.Response) => {
-        if (services.version.match(request.v, ">=0.12.2", "2015-11-25")) {
-            response.status(404);
-        } else {
-            userJoined.invite(request, response);
-        }
-    });
-
-    app.get("/api/token_sent", (request: libs.Request, response: libs.Response) => {
-        if (services.version.match(request.v, ">=0.12.7", "2015-11-26")) {
-            response.status(404);
-        } else {
-            tokens.create(request, response);
-        }
-    });
+    services.router.bindObsolete(userJoined.documentOfUserJoinedOrganization, userJoined.get, app);
+    services.router.bindObsolete(userCreated.documentOfUserCreatedOrganizations, userCreated.get, app);
+    services.router.bindObsolete(userJoined.documentOfObsoleteInvite, userJoined.invite, app);
+    services.router.bindObsolete(tokens.documentOfSendToken, tokens.create, app);
 }

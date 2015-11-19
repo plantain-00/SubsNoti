@@ -12,6 +12,14 @@ export let documentOfCreate: types.Document = {
     documentUrl: "/doc/api/Send token via email.html",
 };
 
+export let documentOfSendToken: types.ObsoleteDocument = {
+    url: "/api/token_sent",
+    method: "post",
+    documentUrl: "/doc/api/Send token via email.html",
+    versionRange: "<0.12.7",
+    expiredDate: "2015-11-26",
+};
+
 export async function create(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfCreate.documentUrl;
 

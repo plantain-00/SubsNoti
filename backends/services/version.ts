@@ -28,6 +28,6 @@ export function route(app: libs.Application) {
     });
 }
 
-export function match(version: string, versionRange: string, expiredDate: string): boolean {
-    return libs.semver.satisfies(version, versionRange) || libs.moment().isAfter(libs.moment(expiredDate));
+export function isNotExpired(version: string, versionRange: string, expiredDate: string): boolean {
+    return libs.semver.satisfies(version, versionRange) && libs.moment().isBefore(libs.moment(expiredDate));
 }

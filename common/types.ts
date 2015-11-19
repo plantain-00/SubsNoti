@@ -73,6 +73,11 @@ export interface Document {
     documentUrl: string;
 }
 
+export interface ObsoleteDocument extends Document {
+    versionRange: string;
+    expiredDate: string;
+}
+
 type Environment = "development" | "production";
 
 export const environment = {

@@ -53,3 +53,6 @@ export {theme};
 
 import * as version from "./services/version";
 export {version};
+
+import * as router from "./services/router";
+export {router};

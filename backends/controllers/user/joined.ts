@@ -12,6 +12,14 @@ export let documentOfGet: types.Document = {
     documentUrl: "/doc/api/Get joined organizations.html",
 };
 
+export let documentOfUserJoinedOrganization: types.ObsoleteDocument = {
+    url: "/api/user/joined/organizations",
+    method: "get",
+    documentUrl: "/doc/api/Get joined organizations.html",
+    versionRange: "<0.12.0",
+    expiredDate: "2015-11-25",
+};
+
 export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
@@ -55,6 +63,14 @@ export let documentOfInvite: types.Document = {
     url: "/api/users/:user_email/joined/:organization_id",
     method: "put",
     documentUrl: "/doc/api/Invite an user.html",
+};
+
+export let documentOfObsoleteInvite: types.ObsoleteDocument = {
+    url: "/api/organizations/:organization_id/user/:user_email/joined",
+    method: "post",
+    documentUrl: "/doc/api/Invite an user.html",
+    versionRange: "<0.12.2",
+    expiredDate: "2015-11-25",
 };
 
 export async function invite(request: libs.Request, response: libs.Response) {

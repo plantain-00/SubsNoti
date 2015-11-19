@@ -12,6 +12,14 @@ export let documentOfGet: types.Document = {
     documentUrl: "/doc/api/Get created organizations.html",
 };
 
+export let documentOfUserCreatedOrganizations: types.ObsoleteDocument = {
+    url: "/api/user/created/organizations",
+    method: "get",
+    documentUrl: "/doc/api/Get created organizations.html",
+    versionRange: "<0.12.1",
+    expiredDate: "2015-11-25",
+};
+
 export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
