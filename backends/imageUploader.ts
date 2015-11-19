@@ -22,7 +22,7 @@ app.use(libs.cors(settings.config.cors));
 services.cache.connect();
 
 let documentOfUploadPersistentImages = {
-    url: "/api/persistent/images",
+    url: "/api/persistent",
     method: "post",
     documentUrl: "Upload images to persistent directory.html",
 };
@@ -35,7 +35,7 @@ let documentOfUploadTemperaryImages = {
 
 let storage = libs.multer.diskStorage({
     destination: function(request: libs.Request, file, next) {
-        if (request.path === documentOfUploadPersistentImages.url) {
+        if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
             next(null, "images/");
         } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
             next(null, "images/tmp/");
@@ -44,7 +44,7 @@ let storage = libs.multer.diskStorage({
         }
     },
     filename: function(request: libs.Request, file, next) {
-        if (request.path === documentOfUploadPersistentImages.url) {
+        if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
             next(null, file.fieldname);
         } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
             next(null, libs.generateUuid() + libs.path.extname(file.originalname));
@@ -107,6 +107,14 @@ app.post("/api/temperary/images", (request: libs.Request, response: libs.Respons
         response.status(404);
     } else {
         uploadTemperaryImages(request, response);
+    }
+});
+
+app.post("/api/persistent/images", (request: libs.Request, response: libs.Response) => {
+    if (services.version.match(request.v, ">=0.12.5", "2015-11-26")) {
+        response.status(404);
+    } else {
+        uploadPersistentImages(request, response);
     }
 });
 

@@ -68,7 +68,7 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
         };
 
         let options = {
-            url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent/images?v=0.12.3`,
+            url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=0.12.5`,
             formData: formData,
         };
 
