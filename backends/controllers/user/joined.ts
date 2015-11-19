@@ -53,7 +53,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
 export let documentOfInvite: types.Document = {
     url: "/api/users/:user_email/joined/:organization_id",
-    method: "post",
+    method: "put",
     documentUrl: "/doc/api/Invite an user.html",
 };
 
