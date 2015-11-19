@@ -3,13 +3,7 @@
 ## Url
 
 + `post` `/api/persistent`
-+ `post` `/api/persistent/images`(available < 0.12.6 and earlier than 2015-11-26)
-
-## version >=0.5.3
-
-### Expiration Date
-
-no
++ `post` `/api/persistent/images`(version < 0.12.6 && date < 2015-11-26)
 
 ### [Parameters](./Parameters.html)
 

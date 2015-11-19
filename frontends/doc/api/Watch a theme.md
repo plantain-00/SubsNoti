@@ -3,13 +3,7 @@
 ## Url
 
 + `put` `/api/user/watched/:theme_id`
-+ `post` `/api/user/themes/:theme_id/watched`(available < 0.12.10 and earlier than 2015-11-26)
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
++ `post` `/api/user/themes/:theme_id/watched`(version < 0.12.10 && date < 2015-11-26)
 
 ### [Parameters](./Parameters.html)
 

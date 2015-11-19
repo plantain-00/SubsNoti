@@ -135,7 +135,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
             user.save();
             theme.save();
-            
+
             // push the modified theme.
             theme = await services.mongo.Theme.findOne({ _id: themeId })
                 .populate("creator owners watchers")

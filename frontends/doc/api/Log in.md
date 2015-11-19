@@ -6,12 +6,6 @@ will get authentication credential, and then store it to a cookie named 'authent
 
 `get` `/api/logged_in`
 
-## version >=0.0.1
-
-### Expiration Date
-
-no
-
 ### [Parameters](./Parameters.html)
 
 key name | value type | required

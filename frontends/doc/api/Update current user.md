@@ -6,12 +6,6 @@ the authentication credential should be stored in a cookie named 'authentication
 
 `put` `/api/user`
 
-## version >=0.7.2
-
-### Expiration Date
-
-no
-
 ### [Parameters](./Parameters.html)
 
 ### [Cookies](./Cookies.html)

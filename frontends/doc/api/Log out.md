@@ -6,12 +6,6 @@ will delete authentication credential from cookie.
 
 `delete` `/api/logged_in`
 
-## version >=0.0.1
-
-### Expiration Date
-
-no
-
 ### [Parameters](./Parameters.html)
 
 ### [Cookies](./Cookies.html)

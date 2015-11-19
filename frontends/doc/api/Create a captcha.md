@@ -4,12 +4,6 @@
 
 `post` `/api/captchas`
 
-## version >=0.3
-
-### Expiration Date
-
-no
-
 ### [Parameters](./Parameters.html)
 
 ### [Cookies](./Cookies.html)

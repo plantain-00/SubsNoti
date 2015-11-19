@@ -1,11 +1,5 @@
 # Response
 
-## version >=0.0.1
-
-### Expiration Date
-
-no
-
 ### values
 
 key name | value type | description

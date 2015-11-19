@@ -65,7 +65,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         user.save();
         organization.save();
-        
+
         // push the new theme.
         let creatorId = user._id.toHexString();
         let creator = {
@@ -150,7 +150,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         }
 
         theme.save();
-        
+
         // push the modified theme.
         let result = services.theme.convert(theme);
         services.push.emit(types.pushEvents.themeUpdated, result);

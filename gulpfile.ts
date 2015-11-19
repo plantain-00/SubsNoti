@@ -18,6 +18,7 @@ let batch = require("gulp-batch");
 let revReplace = require("gulp-rev-replace");
 let shell = require("gulp-shell");
 let sass = require("gulp-sass");
+let tslint = require("gulp-tslint");
 
 let pjson = require("./package.json");
 
@@ -80,9 +81,15 @@ gulp.task("gitbook", shell.task("gitbook build frontends/doc/api"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
-gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
+gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp tslint && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
 
-gulp.task("tslint", shell.task("tslint common/**/*.ts && tslint backends/**/*.ts && tslint frontends/scripts/**/*.ts && tslint gulpfile.ts"));
+gulp.task("tslint", () => {
+    return gulp.src(["common/**/*.ts", "backends/**/*.ts", "frontends/scripts/**/*.ts", "gulpfile.ts"])
+        .pipe(tslint({
+            tslint: require("tslint")
+        }))
+        .pipe(tslint.report("prose", { emitError: true }));
+});
 
 gulp.task("scss-lint", shell.task("scss-lint frontends/styles/*.scss"));
 

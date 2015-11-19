@@ -16,7 +16,7 @@ export const loginStatus = {
     unknown: <LoginStatus>"unknown",
     fail: <LoginStatus>"fail",
     success: <LoginStatus>"success",
-}
+};
 
 export const sessionStorageNames = {
     loginResult: "loginResult"
