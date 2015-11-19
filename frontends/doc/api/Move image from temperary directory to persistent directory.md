@@ -2,7 +2,8 @@
 
 ## Url
 
-`post` `/api/images/persistent`
++ `post` `/api/persistence`
++ `post` `/api/images/persistent`(available < 0.12.6 and earlier than 2015-11-26)
 
 ## version >=0.5.3
 

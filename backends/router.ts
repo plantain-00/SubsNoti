@@ -11,7 +11,7 @@ import * as userLoggedIn from "./controllers/user/logged_in";
 import * as userJoined from "./controllers/user/joined";
 import * as userCreated from "./controllers/user/created";
 import * as userThemeWatched from "./controllers/user/themes/watched";
-import * as tokenSent from "./controllers/token_sent";
+import * as tokens from "./controllers/tokens";
 import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
 import * as organizations from "./controllers/organizations";
@@ -40,7 +40,7 @@ export function route(app: libs.Application) {
     bind(userThemeWatched.documentOfWatch, userThemeWatched.watch);
     bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch);
 
-    bind(tokenSent.documentOfCreate, tokenSent.create);
+    bind(tokens.documentOfCreate, tokens.create);
 
     bind(organizationsThemes.documentOfGet, organizationsThemes.get);
 
@@ -70,6 +70,14 @@ export function route(app: libs.Application) {
             response.status(404);
         } else {
             userJoined.invite(request, response);
+        }
+    });
+
+    app.get("/api/token_sent", (request: libs.Request, response: libs.Response) => {
+        if (services.version.match(request.v, ">=0.12.7", "2015-11-26")) {
+            response.status(404);
+        } else {
+            tokens.create(request, response);
         }
     });
 }

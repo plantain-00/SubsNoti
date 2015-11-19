@@ -7,7 +7,7 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export let documentOfCreate: types.Document = {
-    url: "/api/token_sent",
+    url: "/api/tokens",
     method: "post",
     documentUrl: "/doc/api/Send token via email.html",
 };

@@ -4,7 +4,8 @@ will send a link with it to the given email.
 
 ## Url
 
-`post` `/api/token_sent`
++ `post` `/api/tokens`
++ `post` `/api/token_sent`(available < 0.12.7 and earlier than 2015-11-26)
 
 ## version >=0.3
 
