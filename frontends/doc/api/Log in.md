@@ -4,17 +4,7 @@ will get authentication credential, and then store it to a cookie named 'authent
 
 ## Url
 
-/api/logged_in
-
-## Method
-
-get
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
+`get` `/api/logged_in`
 
 ### [Parameters](./Parameters.html)
 

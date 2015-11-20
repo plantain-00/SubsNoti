@@ -2,17 +2,8 @@
 
 ## Url
 
-/api/user/created/organizations
-
-## Method
-
-get
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
++ `get` `/api/user/created`
++ `get` `/api/user/created/organizations`(version < 0.12.0 && date < 2015-11-25)
 
 ### [Parameters](./Parameters.html)
 
@@ -22,4 +13,4 @@ no
 
 key name | value type
 --- | ---
-organizations | [Organization](./organization.html)[]
+organizations | [Organization](./Organization.html)[]

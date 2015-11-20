@@ -27,7 +27,7 @@ export type ThemeOrderType = "newest" | "recently updated";
 export const themeOrder = {
     newest: <ThemeOrderType>"newest",
     recentlyUpdated: <ThemeOrderType>"recently updated",
-}
+};
 
 export const enum ThemeStatus {
     open,
@@ -39,7 +39,7 @@ export type ThemeStatusType = "open" | "closed";
 export const themeStatus = {
     open: <ThemeStatusType>"open",
     closed: <ThemeStatusType>"closed",
-}
+};
 
 export const enum UserStatus {
     normal
@@ -73,17 +73,24 @@ export interface Document {
     documentUrl: string;
 }
 
+export interface ObsoleteDocument extends Document {
+    versionRange: string;
+    expiredDate: string;
+}
+
 type Environment = "development" | "production";
 
 export const environment = {
     development: <Environment>"development",
     production: <Environment>"production",
-}
+};
+
+export type PushEvent = "theme created" | "theme updated";
 
 export const pushEvents = {
-    themeCreated: "theme created",
-    themeUpdated: "theme updated",
-}
+    themeCreated: <PushEvent>"theme created",
+    themeUpdated: <PushEvent>"theme updated",
+};
 
 export interface User {
     id: string;

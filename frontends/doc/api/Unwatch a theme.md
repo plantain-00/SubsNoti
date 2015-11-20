@@ -2,17 +2,8 @@
 
 ## Url
 
-/api/user/themes/:theme_id/watched
-
-## Method
-
-delete
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
++ `delete` `/api/user/watched/:theme_id`
++ `delete` `/api/user/themes/:theme_id/watched`(version < 0.12.10 && date < 2015-11-26)
 
 ### [Parameters](./Parameters.html)
 

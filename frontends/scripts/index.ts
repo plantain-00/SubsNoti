@@ -124,9 +124,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/joined/organizations",
+                url: "/api/user/joined",
                 data: {
-                    v: "0.0.1"
+                    v: "0.12.0"
                 },
                 cache: false,
             }).then((data: OrganizationsResponse) => {
@@ -245,7 +245,11 @@ let vueBody: VueBodyModel = new Vue({
         watch: function(theme: Theme) {
             let self: VueBodyModel = this;
 
-            $.post("/api/user/themes/" + theme.id + "/watched?v=0.0.1", {}).then((data: types.Response) => {
+            $.ajax({
+                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
+                data: {},
+                type: "put",
+            }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
                         id: base.vueHead.currentUserId,
@@ -267,9 +271,8 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/themes/" + theme.id + "/watched?v=0.0.1",
+                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
                 data: {},
-                cache: false,
                 type: "delete",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
@@ -393,7 +396,7 @@ $(document).ready(function() {
         base.vueHead.showAlert(true, "emails copied:" + e.text);
     });
 
-    base.vueHead.authenticate((error, data) => {
+    base.vueHead.authenticate(error => {
         if (error) {
             console.log(error);
         }
@@ -402,16 +405,16 @@ $(document).ready(function() {
         setInterval(vueBody.setThemeTimeText, 10000);
 
         socket.on(types.pushEvents.themeCreated, (theme: Theme) => {
-            if(theme.organizationId === vueBody.currentOrganizationId) {
+            if (theme.organizationId === vueBody.currentOrganizationId) {
                 vueBody.initTheme(theme);
                 vueBody.themes.unshift(theme);
             }
         });
 
         socket.on(types.pushEvents.themeUpdated, (theme: Theme) => {
-            if(theme.organizationId === vueBody.currentOrganizationId) {
+            if (theme.organizationId === vueBody.currentOrganizationId) {
                 let index = _.findIndex(vueBody.themes, t => t.id === theme.id);
-                if(index > -1) {
+                if (index > -1) {
                     vueBody.initTheme(theme);
                     vueBody.themes["$set"](index, theme);
                 }

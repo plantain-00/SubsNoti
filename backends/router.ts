@@ -8,61 +8,47 @@ import * as services from "./services";
 
 import * as user from "./controllers/user";
 import * as userLoggedIn from "./controllers/user/logged_in";
-import * as userJoinedOrganizations from "./controllers/user/joined/organizations";
-import * as userCreatedOrganizations from "./controllers/user/created/organizations";
-import * as userThemeWatched from "./controllers/user/themes/watched";
-import * as tokenSent from "./controllers/token_sent";
+import * as userJoined from "./controllers/user/joined";
+import * as userCreated from "./controllers/user/created";
+import * as userWatched from "./controllers/user/watched";
+import * as tokens from "./controllers/tokens";
 import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
 import * as organizations from "./controllers/organizations";
-import * as organizationsUsersJoined from "./controllers/organizations/users/joined";
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
-    function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => void) {
-        app[document.method](document.url, handler);
-    }
+    services.version.route(app);
 
-    app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
-        let v = libs.validator.trim(request.query.v);
+    services.router.bind(user.documentOfGet, user.get, app);
+    services.router.bind(user.documentOfUpdate, user.update, app);
 
-        if (v === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("v"), "/doc/api/Parameters.html");
-            return;
-        }
+    services.router.bind(userLoggedIn.documentOfGet, userLoggedIn.get, app);
+    services.router.bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis, app);
 
-        if (!libs.semver.valid(v)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("v"), "/doc/api/Parameters.html");
-            return;
-        }
+    services.router.bind(userJoined.documentOfGet, userJoined.get, app);
+    services.router.bind(userJoined.documentOfInvite, userJoined.invite, app);
 
-        request.v = v;
-        next();
-    });
+    services.router.bind(userCreated.documentOfGet, userCreated.get, app);
 
-    bind(user.documentOfGet, user.get);
-    bind(user.documentOfUpdate, user.update);
+    services.router.bind(organizations.documentOfCreate, organizations.create, app);
 
-    bind(userLoggedIn.documentOfGet, userLoggedIn.get);
-    bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis);
+    services.router.bind(userWatched.documentOfWatch, userWatched.watch, app);
+    services.router.bind(userWatched.documentOfUnwatch, userWatched.unwatch, app);
 
-    bind(userJoinedOrganizations.documentOfGet, userJoinedOrganizations.get);
+    services.router.bind(tokens.documentOfCreate, tokens.create, app);
 
-    bind(userCreatedOrganizations.documentOfGet, userCreatedOrganizations.get);
+    services.router.bind(organizationsThemes.documentOfGet, organizationsThemes.get, app);
 
-    bind(organizations.documentOfCreate, organizations.create);
+    services.router.bind(themes.documentOfCreate, themes.create, app);
+    services.router.bind(themes.documentOfUpdate, themes.update, app);
 
-    bind(userThemeWatched.documentOfWatch, userThemeWatched.watch);
-    bind(userThemeWatched.documentOfUnwatch, userThemeWatched.unwatch);
+    services.router.bind(captcha.documentOfCreate, captcha.create, app);
 
-    bind(tokenSent.documentOfCreate, tokenSent.create);
-
-    bind(organizationsThemes.documentOfGet, organizationsThemes.get);
-
-    bind(themes.documentOfCreate, themes.create);
-    bind(themes.documentOfUpdate, themes.update);
-
-    bind(organizationsUsersJoined.documentOfInvite, organizationsUsersJoined.invite);
-
-    bind(captcha.documentOfCreate, captcha.create);
+    services.router.bindObsolete(userJoined.documentOfUserJoinedOrganization, userJoined.get, app);
+    services.router.bindObsolete(userCreated.documentOfUserCreatedOrganizations, userCreated.get, app);
+    services.router.bindObsolete(userJoined.documentOfObsoleteInvite, userJoined.invite, app);
+    services.router.bindObsolete(tokens.documentOfSendToken, tokens.create, app);
+    services.router.bindObsolete(userWatched.obsoleteDocumentOfWatch, userWatched.watch, app);
+    services.router.bindObsolete(userWatched.obsoleteDocumentOfUnwatch, userWatched.unwatch, app);
 }

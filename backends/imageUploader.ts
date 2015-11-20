@@ -21,32 +21,62 @@ app.use(libs.cors(settings.config.cors));
 
 services.cache.connect();
 
-let documentOfUploadPersistentImages = {
-    url: "/api/persistent/images",
+let documentOfUploadPersistentImages: types.Document = {
+    url: "/api/persistent",
     method: "post",
     documentUrl: "Upload images to persistent directory.html",
 };
 
-let documentOfUploadTemperaryImages = {
-    url: "/api/temperary/images",
+let obsoleteDocumentOfUploadPersistentImages: types.ObsoleteDocument = {
+    url: "/api/persistent/images",
+    method: "post",
+    documentUrl: "Upload images to persistent directory.html",
+    versionRange: "<0.12.5",
+    expiredDate: "2015-11-26",
+};
+
+let documentOfUploadTemperaryImages: types.Document = {
+    url: "/api/temperary",
     method: "post",
     documentUrl: "Upload images to temperary directory.html",
 };
 
+let obsoleteDocumentOfUploadTemperaryImages: types.ObsoleteDocument = {
+    url: "/api/temperary/images",
+    method: "post",
+    documentUrl: "Upload images to temperary directory.html",
+    versionRange: "<0.12.3",
+    expiredDate: "2015-11-25",
+};
+
+let documentOfMoveImage: types.Document = {
+    url: "/api/persistence",
+    method: "post",
+    documentUrl: "Move image from temperary directory to persistent directory.html",
+};
+
+let obsoleteDocumentOfMoveImage: types.ObsoleteDocument = {
+    url: "/api/images/persistent",
+    method: "post",
+    documentUrl: "Move image from temperary directory to persistent directory.html",
+    versionRange: "<0.12.6",
+    expiredDate: "2015-11-26",
+};
+
 let storage = libs.multer.diskStorage({
     destination: function(request: libs.Request, file, next) {
-        if (request.path === documentOfUploadPersistentImages.url) {
+        if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
             next(null, "images/");
-        } else if (request.path === documentOfUploadTemperaryImages.url) {
+        } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
             next(null, "images/tmp/");
         } else {
             next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
         }
     },
     filename: function(request: libs.Request, file, next) {
-        if (request.path === documentOfUploadPersistentImages.url) {
+        if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
             next(null, file.fieldname);
-        } else if (request.path === documentOfUploadTemperaryImages.url) {
+        } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
             next(null, libs.generateUuid() + libs.path.extname(file.originalname));
         } else {
             next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
@@ -56,7 +86,9 @@ let storage = libs.multer.diskStorage({
 
 let upload = libs.multer({ storage: storage }).any();
 
-app.post(documentOfUploadPersistentImages.url, (request: libs.Request, response: libs.Response) => {
+services.version.route(app);
+
+function uploadPersistentImages(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUploadPersistentImages.documentUrl;
 
     if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
@@ -74,9 +106,9 @@ app.post(documentOfUploadPersistentImages.url, (request: libs.Request, response:
             names: libs._.map(request.files, (f: any) => f.filename)
         });
     });
-});
+}
 
-app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, response: libs.Response) => {
+async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfUploadTemperaryImages.documentUrl;
 
     try {
@@ -95,15 +127,9 @@ app.post(documentOfUploadTemperaryImages.url, async(request: libs.Request, respo
     } catch (error) {
         services.response.sendError(response, error, documentUrl);
     }
-});
+}
 
-let documentOfMoveImage = {
-    url: "/api/images/persistent",
-    method: "post",
-    documentUrl: "Move image from temperary directory to persistent directory.html",
-};
-
-app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Response) => {
+function moveImage(request: libs.Request, response: libs.Response) {
     let name = libs.validator.trim(request.body.name);
     let newName = libs.validator.trim(request.body.newName);
 
@@ -130,7 +156,15 @@ app.post(documentOfMoveImage.url, (request: libs.Request, response: libs.Respons
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     });
-});
+}
+
+services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, app);
+services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app);
+services.router.bind(documentOfMoveImage, moveImage, app);
+
+services.router.bindObsolete(obsoleteDocumentOfUploadPersistentImages, uploadPersistentImages, app);
+services.router.bindObsolete(obsoleteDocumentOfUploadTemperaryImages, uploadTemperaryImages, app);
+services.router.bindObsolete(obsoleteDocumentOfMoveImage, moveImage, app);
 
 app.listen(settings.config.imageUploader.port, settings.config.imageUploader.innerHostName, () => {
     console.log(`Image uploader is listening: ${settings.config.imageUploader.innerHostName}:${settings.config.imageUploader.port}`);

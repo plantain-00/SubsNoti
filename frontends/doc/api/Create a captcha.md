@@ -2,17 +2,7 @@
 
 ## Url
 
-/api/captchas
-
-## Method
-
-post
-
-## version >=0.3
-
-### Expiration Date
-
-no
+`post` `/api/captchas`
 
 ### [Parameters](./Parameters.html)
 

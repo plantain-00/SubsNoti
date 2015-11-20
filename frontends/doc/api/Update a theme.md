@@ -2,17 +2,7 @@
 
 ## Url
 
-/api/themes/:theme_id
-
-## Method
-
-put
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
+`put` `/api/themes/:theme_id`
 
 ### [Parameters](./Parameters.html)
 

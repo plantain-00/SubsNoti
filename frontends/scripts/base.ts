@@ -16,7 +16,7 @@ export const loginStatus = {
     unknown: <LoginStatus>"unknown",
     fail: <LoginStatus>"fail",
     success: <LoginStatus>"success",
-}
+};
 
 export const sessionStorageNames = {
     loginResult: "loginResult"
@@ -109,7 +109,7 @@ interface VueHeadModel {
 
     showAlert: (isSuccess: boolean, message: string) => void;
     exit: () => void;
-    authenticate: (next: (error: Error, data: CurrentUserResponse) => void) => void;
+    authenticate: (next: (error: Error) => void) => void;
 }
 
 let timeoutId: NodeJS.Timer;
@@ -180,7 +180,7 @@ export let vueHead: VueHeadModel = new Vue({
                 }
             });
         },
-        authenticate: function(next: (error: Error, data: CurrentUserResponse) => void) {
+        authenticate: function(next: (error: Error) => void) {
             let self: VueHeadModel = this;
 
             getCurrentUser(data => {
@@ -196,10 +196,10 @@ export let vueHead: VueHeadModel = new Vue({
                     window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
                     window.localStorage.setItem(localStorageNames.lastLoginName, data.name);
 
-                    next(null, data);
+                    next(null);
                 } else {
                     self.loginStatus = loginStatus.fail;
-                    next(new Error(data.errorMessage), null);
+                    next(new Error(data.errorMessage));
                 }
             });
         },

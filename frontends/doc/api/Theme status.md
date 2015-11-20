@@ -1,11 +1,5 @@
 # Theme Status
 
-## version >=0.10.1
-
-### Expiration Date
-
-no
-
 ### values
 
 value | description
@@ -13,11 +7,7 @@ value | description
 open |
 closed |
 
-## version >=0.0.1
-
-### Expiration Date
-
-2015-11-22
+## version < 0.10.1 && date < 2015-11-22
 
 ### values
 

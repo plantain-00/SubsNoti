@@ -2,17 +2,8 @@
 
 ## Url
 
-/api/persistent/images
-
-## Method
-
-post
-
-## version >=0.5.3
-
-### Expiration Date
-
-no
++ `post` `/api/persistent`
++ `post` `/api/persistent/images`(version < 0.12.6 && date < 2015-11-26)
 
 ### [Parameters](./Parameters.html)
 

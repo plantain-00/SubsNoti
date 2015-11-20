@@ -15,13 +15,17 @@ export function connect() {
     });
 }
 
-function getString(key: string, next: (error: types.E, reply: string) => void) {
-    client.get(key, (error: Error, reply) => {
-        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
+export function getStringAsync(key: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        client.get(key, (error: Error, reply) => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
+            resolve(reply);
+        });
     });
 }
-
-export let getStringAsync = services.promise.promisify2<string, string>(getString);
 
 export function setString(key: string, value: string, seconds?: number) {
     client.set(key, value);
@@ -37,24 +41,32 @@ function set(key: string, value: any, seconds?: number) {
     }
 }
 
-function get(key: string, field: string, next: (error: types.E, reply) => void) {
-    client.hmget(key, field, (error: Error, reply) => {
-        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
-    });
-}
-
-let getAsync = services.promise.promisify3<string, string, any>(get);
-
-function ttl(key: string, next: (error: types.E, reply: number) => void) {
-    client.ttl(key, (error: Error, reply) => {
-        next(services.error.fromError(error, types.StatusCode.internalServerError), reply);
+function getAsync(key: string, field: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        client.hmget(key, field, (error: Error, reply) => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
+            resolve(reply);
+        });
     });
 }
 
 /**
  * query the remain time of a cache.
  */
-export let ttlAsync = services.promise.promisify2<string, number>(ttl);
+export function ttlAsync(key: string): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+        client.ttl(key, (error: Error, reply) => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
+            resolve(reply);
+        });
+    });
+}
 
 export function deleteKeyAsync(key: string): Promise<void> {
     return deleteKeysAsync([key]);

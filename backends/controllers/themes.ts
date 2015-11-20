@@ -35,7 +35,6 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         // the organization should be public organization, or current user should join in it.
         let user = await services.mongo.User.findOne({ _id: userId })
-            .select("joinedOrganizations createdThemes ownedThemes watchedThemes")
             .exec();
         if (!organizationId.equals(services.seed.publicOrganizationId)
             && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
@@ -66,7 +65,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         user.save();
         organization.save();
-        
+
         // push the new theme.
         let creatorId = user._id.toHexString();
         let creator = {
@@ -75,7 +74,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             email: user.email,
             avatar: user.avatar || services.avatar.getDefaultName(creatorId),
         };
-        let newTheme : types.Theme = {
+        let newTheme: types.Theme = {
             id: theme._id.toHexString(),
             title: theme.title,
             detail: theme.detail,
@@ -151,7 +150,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         }
 
         theme.save();
-        
+
         // push the modified theme.
         let result = services.theme.convert(theme);
         services.push.emit(types.pushEvents.themeUpdated, result);

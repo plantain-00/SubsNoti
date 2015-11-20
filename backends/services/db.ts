@@ -10,89 +10,100 @@ let pool = libs.mysql.createPool(settings.config.db);
 
 import MysqlConnection = libs.mysql.IConnection;
 
-function access(sql: string, parameters: any[], next: (error: types.E, rows: any) => void) {
-    pool.getConnection((error, connection) => {
-        if (error) {
-            next(services.error.fromError(error, types.StatusCode.internalServerError), null);
-            return;
-        }
+function getConnection(): Promise<MysqlConnection> {
+    return new Promise<MysqlConnection>((resolve, reject) => {
+        pool.getConnection((error, connection) => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
 
+            resolve(connection);
+        });
+    });
+}
+
+function accessAsync<T>(sql: string, parameters: any[]): Promise<T> {
+    return getConnection().then(connection => {
+        return new Promise<T>((resolve, reject) => {
+            connection.query(sql, parameters, (error, rows) => {
+                if (error) {
+                    connection.release();
+                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                    return;
+                }
+
+                connection.release();
+                resolve(rows);
+            });
+        });
+    });
+}
+
+export let queryAsync: (sql: string, parameters: any[]) => Promise<any[]> = accessAsync;
+
+export let insertAsync: (sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessAsync;
+
+export function beginTransactionAsync(): Promise<MysqlConnection> {
+    return getConnection().then(connection => {
+        return new Promise<MysqlConnection>((resolve, reject) => {
+            connection.beginTransaction(error => {
+                if (error) {
+                    connection.release();
+                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                    return;
+                }
+
+                resolve(connection);
+            });
+        });
+    });
+}
+
+function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, parameters: any[]): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
-                connection.release();
-                next(services.error.fromError(error, types.StatusCode.internalServerError), null);
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
+
+            resolve(rows);
+        });
+    }).catch(error => {
+        return rollbackAsync(connection).then(() => {
+            return Promise.reject(error);
+        });
+    });
+}
+
+export let queryInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<any[]> = accessInTransactionAsync;
+
+export let insertInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessInTransactionAsync;
+
+export function rollbackAsync(connection: MysqlConnection): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        connection.rollback(() => {
+            connection.release();
+            resolve();
+        });
+    });
+}
+
+export function endTransactionAsync(connection: MysqlConnection): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        connection.commit(error => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
                 return;
             }
 
             connection.release();
-            next(null, rows);
+            resolve();
+        });
+    }).catch(error => {
+        return rollbackAsync(connection).then(() => {
+            return Promise.reject(error);
         });
     });
 }
-
-export let queryAsync = services.promise.promisify3<string, any[], any[]>(access);
-
-export let insertAsync = services.promise.promisify3<string, any[], { insertId: number }>(access);
-
-function beginTransaction(next: (error: types.E, connection: MysqlConnection) => void): void {
-    pool.getConnection((error, connection) => {
-        if (error) {
-            next(services.error.fromError(error, types.StatusCode.internalServerError), null);
-            return;
-        }
-
-        connection.beginTransaction(error => {
-            if (error) {
-                connection.release();
-                next(services.error.fromError(error, types.StatusCode.internalServerError), null);
-                return;
-            }
-
-            next(null, connection);
-        });
-    });
-}
-
-export let beginTransactionAsync = services.promise.promisify1<MysqlConnection>(beginTransaction);
-
-function accessInTransaction(connection: MysqlConnection, sql: string, parameters: any[], next: (error: types.E, rows: any) => void) {
-    connection.query(sql, parameters, (error, rows) => {
-        if (error) {
-            rollback(connection, () => {
-                next(services.error.fromError(error, types.StatusCode.internalServerError), null);
-            });
-            return;
-        }
-
-        next(null, rows);
-    });
-}
-
-export let queryInTransactionAsync = services.promise.promisify4<MysqlConnection, string, any[], any[]>(accessInTransaction);
-
-export let insertInTransactionAsync = services.promise.promisify4<MysqlConnection, string, any[], { insertId: number }>(accessInTransaction);
-
-function rollback(connection: MysqlConnection, next: () => void): void {
-    connection.rollback(() => {
-        connection.release();
-        next();
-    });
-}
-
-export let rollbackAsync = services.promise.promisify2<MysqlConnection, void>(rollback);
-
-function endTransaction(connection: MysqlConnection, next: (error: types.E) => void): void {
-    connection.commit(error => {
-        if (error) {
-            rollback(connection, () => {
-                next(services.error.fromError(error, types.StatusCode.internalServerError));
-            });
-            return;
-        }
-
-        connection.release();
-        next(null);
-    });
-}
-
-export let endTransactionAsync = services.promise.promisify2<MysqlConnection, void>(endTransaction);

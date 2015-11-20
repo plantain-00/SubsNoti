@@ -2,17 +2,7 @@
 
 ## Url
 
-/api/organizations
-
-## Method
-
-post
-
-## version >=0.0.1
-
-### Expiration Date
-
-no
+`post` `/api/organizations`
 
 ### [Parameters](./Parameters.html)
 

@@ -66,7 +66,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         if (avatarFileName) {
             let newName = settings.config.avatar + userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
 
-            let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/images/persistent`, {
+            let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistence?v=0.12.6`, {
                 name: avatarFileName,
                 newName: newName,
             });

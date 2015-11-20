@@ -2,17 +2,7 @@
 
 ## Url
 
-/api/organizations/:organization_id/themes
-
-## Method
-
-get
-
-## version >=0.10.2
-
-### Expiration Date
-
-no
+`get` `/api/organizations/:organization_id/themes`
 
 ### [Parameters](./Parameters.html)
 
@@ -34,11 +24,7 @@ key name | value type
 themes | [Theme](./Theme.html)[]
 totalCount | number
 
-## version >=0.10.0
-
-### Expiration Date
-
-2015-11-22
+## version < 0.10.2 && date < 2015-11-22
 
 ### [Parameters](./Parameters.html)
 

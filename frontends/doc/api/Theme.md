@@ -1,11 +1,5 @@
 # Theme
 
-## version >=0.10.2
-
-### Expiration Date
-
-no
-
 ### Models
 
 key name | value type
@@ -30,11 +24,7 @@ name | string
 email | string
 avatar | string
 
-## version >=0.10.0
-
-### Expiration Date
-
-2015-11-22
+## version < 0.10.2 && date < 2015-11-22
 
 ### Models
 

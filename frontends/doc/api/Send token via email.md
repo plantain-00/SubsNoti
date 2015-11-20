@@ -4,17 +4,8 @@ will send a link with it to the given email.
 
 ## Url
 
-/api/token_sent
-
-## Method
-
-post
-
-## version >=0.3
-
-### Expiration Date
-
-no
++ `post` `/api/tokens`
++ `post` `/api/token_sent`(version < 0.12.7 && date < 2015-11-26)
 
 ### [Parameters](./Parameters.html)
 

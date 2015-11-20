@@ -35,10 +35,10 @@ let vueBody: VueBodyModel = new Vue({
             let file = $(":file")[0]["files"][0];
             if (file) {
                 let formData = new FormData();
-                formData.append(`file`, file);
+                formData.append("file", file);
 
                 $.ajax({
-                    url: base.imageUploaderUrl + "/api/temperary/images",
+                    url: base.imageUploaderUrl + "/api/temperary?v=0.12.3",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -75,7 +75,7 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
 
-                        base.vueHead.authenticate((error, data) => {
+                        base.vueHead.authenticate(error => {
                             if (error) {
                                 console.log(error);
                             } else {
@@ -95,7 +95,7 @@ let vueBody: VueBodyModel = new Vue({
 });
 
 $(document).ready(function() {
-    base.vueHead.authenticate((error, data) => {
+    base.vueHead.authenticate(error => {
         if (error) {
             console.log(error);
         } else {

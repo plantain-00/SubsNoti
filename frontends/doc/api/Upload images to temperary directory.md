@@ -2,17 +2,8 @@
 
 ## Url
 
-/api/temperary/images
-
-## Method
-
-post
-
-## version >=0.5.3
-
-### Expiration Date
-
-no
++ `post` `/api/temperary`
++ `post` `/api/temperary/images`(version < 0.12.3 && date < 2015-11-25)
 
 ### [Parameters](./Parameters.html)
 

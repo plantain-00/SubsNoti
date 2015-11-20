@@ -4,17 +4,7 @@ the authentication credential should be stored in a cookie named 'authentication
 
 ## Url
 
-/api/user
-
-## Method
-
-put
-
-## version >=0.7.2
-
-### Expiration Date
-
-no
+`put` `/api/user`
 
 ### [Parameters](./Parameters.html)
 

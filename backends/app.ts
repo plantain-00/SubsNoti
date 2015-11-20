@@ -24,7 +24,7 @@ services.mongo.connect();
 
 services.cache.connect();
 
-(async() => {
+(async () => {
     await services.seed.init();
 })();
 

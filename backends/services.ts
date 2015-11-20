@@ -1,8 +1,5 @@
 "use strict";
 
-import * as promise from "./services/promise";
-export {promise};
-
 import * as error from "./services/error";
 export {error};
 
@@ -50,3 +47,9 @@ export {themeStatus};
 
 import * as theme from "./services/theme";
 export {theme};
+
+import * as version from "./services/version";
+export {version};
+
+import * as router from "./services/router";
+export {router};
