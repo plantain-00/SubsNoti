@@ -85,7 +85,7 @@ let vueBody: VueBodyModel = new Vue({
 });
 
 $(document).ready(function() {
-    base.vueHead.authenticate((error, data) => {
+    base.vueHead.authenticate(error => {
         if (error) {
             console.log(error);
         }

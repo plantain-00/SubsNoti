@@ -14,16 +14,21 @@ let transporter = libs.nodemailer.createTransport({
     },
 });
 
-function send(to: string, subject: string, html: string, next: (error: types.E) => void) {
+export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     let mailOptions = {
         from: settings.config.smtp.name,
         to: to,
         subject: subject,
         html: html,
     };
-    transporter.sendMail(mailOptions, error => {
-        next(services.error.fromError(error, types.StatusCode.internalServerError));
+    return new Promise<void>((resolve, reject) => {
+        transporter.sendMail(mailOptions, error => {
+            if (error) {
+                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                return;
+            }
+
+            resolve();
+        });
     });
 }
-
-export let sendAsync = services.promise.promisify4<string, string, string, void>(send);

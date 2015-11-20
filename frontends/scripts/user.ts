@@ -75,7 +75,7 @@ let vueBody: VueBodyModel = new Vue({
                     if (data.isSuccess) {
                         window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
 
-                        base.vueHead.authenticate((error, data) => {
+                        base.vueHead.authenticate(error => {
                             if (error) {
                                 console.log(error);
                             } else {
@@ -95,7 +95,7 @@ let vueBody: VueBodyModel = new Vue({
 });
 
 $(document).ready(function() {
-    base.vueHead.authenticate((error, data) => {
+    base.vueHead.authenticate(error => {
         if (error) {
             console.log(error);
         } else {

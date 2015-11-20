@@ -6,26 +6,30 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-function createIfNotExists(id: string, next: (error: Error) => void) {
+/**
+ * if exists, do nothing, otherwise create one and save it.
+ */
+export function createIfNotExistsAsync(id: string): Promise<void> {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
-    libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, function(error, response, body) {
-        if (error) {
-            console.log("error:" + error);
-            next(null);
-        }
-        if (response.statusCode === 200) {
-            console.log("exists:" + fileName);
-            next(null);
-        } else {
-            console.log("statusCode:" + response.statusCode);
-            console.log("creating:" + fileName);
-            create(seed, fileName, next);
-        }
+    return new Promise<void>((resolve, reject) => {
+        libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, async (error, response, body) => {
+            if (error) {
+                console.log("error:" + error);
+            } else if (response.statusCode === 200) {
+                console.log("exists:" + fileName);
+            } else {
+                console.log("statusCode:" + response.statusCode);
+                console.log("creating:" + fileName);
+                await createAsync(seed, fileName);
+            }
+
+            resolve();
+        });
     });
 }
 
-function create(seed: string, fileName: string, next: (error: Error) => void) {
+function createAsync(seed: string, fileName: string): Promise<void> {
     let red = seed.substr(0, 2);
     let blue = seed.substr(2, 2);
     let green = seed.substr(4, 2);
@@ -50,12 +54,16 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
         }
     }
 
-    canvas.toBuffer(function(error, buf) {
-        if (error) {
-            next(error);
-            return;
-        }
+    return new Promise<any>((resolve, reject) => {
+        canvas.toBuffer(function(error, buf) {
+            if (error) {
+                reject(error);
+                return;
+            }
 
+            resolve(buf);
+        });
+    }).then(buf => {
         let formData = {
 
         };
@@ -72,28 +80,25 @@ function create(seed: string, fileName: string, next: (error: Error) => void) {
             formData: formData,
         };
 
-        libs.request.post(options, (error, httpResponse, body) => {
-            if (error) {
-                next(error);
-                return;
-            }
+        return new Promise<void>((resolve, reject) => {
+            libs.request.post(options, (error, httpResponse, body) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
 
-            let response: types.Response = JSON.parse(body);
+                let response: types.Response = JSON.parse(body);
 
-            if (response.isSuccess) {
-                next(null);
-                return;
-            }
+                if (response.isSuccess) {
+                    resolve();
+                    return;
+                }
 
-            next(new Error(response.errorMessage));
+                reject(new Error(response.errorMessage));
+            });
         });
     });
 }
-
-/**
- * if exists, do nothing, otherwise create one and save it.
- */
-export let createIfNotExistsAsync = services.promise.promisify2<string, void>(createIfNotExists);
 
 export function getDefaultName(id: string): string {
     return settings.config.avatar + id + ".png";

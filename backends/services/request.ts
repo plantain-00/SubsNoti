@@ -6,45 +6,62 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-function post(url: string, form, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
+interface Response {
+    response: libs.http.IncomingMessage;
+    json: any;
+}
+
+function post(options: any): Promise<Response> {
+    return new Promise<Response>((resolve, reject) => {
+        libs.request.post(options, (error, response, body) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve({
+                response: response,
+                json: JSON.parse(body),
+            });
+        });
+    });
+}
+
+export function postAsync(url: string, form): Promise<Response> {
     let options = {
         url: url,
         form: form,
     };
 
-    libs.request.post(options, (error, response, body) => {
-        next(error, {
-            response: response,
-            json: JSON.parse(body),
-        });
-    });
+    return post(options);
 }
 
-export let postAsync = services.promise.promisify3<string, any, { response: libs.http.IncomingMessage, json: any }>(post);
-
-function postMultipart(url: string, formData, next: (error: Error, response: { response: libs.http.IncomingMessage, json: any }) => void) {
+export function postMultipartAsync(url: string, formData: any): Promise<Response> {
     let options = {
         url: url,
         formData: formData,
     };
 
-    libs.request.post(options, (error, response, body) => {
-        next(error, {
-            response: response,
-            json: JSON.parse(body),
+    return post(options);
+}
+
+interface GetResponse {
+    response: libs.http.IncomingMessage;
+    body: any;
+}
+
+export function getAsync(url: string): Promise<GetResponse> {
+    return new Promise<GetResponse>((resolve, reject) => {
+        libs.request(url, (error, response, body) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve({
+                response: response,
+                body: body,
+            });
         });
     });
 }
-
-export let postMultipartAsync = services.promise.promisify3<string, any, { response: libs.http.IncomingMessage, json: any }>(postMultipart);
-
-function get(url: string, next: (error: Error, response: { response: libs.http.IncomingMessage, body: string }) => void) {
-    libs.request(url, (error, response, body) => {
-        next(error, {
-            response: response,
-            body: body,
-        });
-    });
-}
-
-export let getAsync = services.promise.promisify2<string, { response: libs.http.IncomingMessage, body: string }>(get);
