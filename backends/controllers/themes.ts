@@ -13,11 +13,9 @@ export let documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfCreate.documentUrl;
-
     try {
         if (!libs.validator.isMongoId(request.body.organizationId)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organizationId"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organizationId"));
             return;
         }
 
@@ -25,7 +23,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let themeTitle = libs.validator.trim(request.body.themeTitle);
         if (themeTitle === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"));
             return;
         }
 
@@ -33,7 +31,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let userId = request.userId;
         if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            services.response.sendError(response, services.error.fromUnauthorized());
             return;
         }
         // the organization should be public organization, or current user should join in it.
@@ -41,7 +39,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             .exec();
         if (!organizationId.equals(services.seed.publicOrganizationId)
             && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
             return;
         }
 
@@ -94,7 +92,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         services.logger.log(documentOfCreate.url, request);
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }
 
@@ -105,11 +103,9 @@ export let documentOfUpdate: types.Document = {
 };
 
 export async function update(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfUpdate.documentUrl;
-
     try {
         if (!libs.validator.isMongoId(request.params.theme_id)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
             return;
         }
 
@@ -125,7 +121,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let userId = request.userId;
         if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            services.response.sendError(response, services.error.fromUnauthorized());
             return;
         }
 
@@ -134,13 +130,13 @@ export async function update(request: libs.Request, response: libs.Response) {
             .populate("creator owners watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
             return;
         }
 
         // current user should be one of the theme's owners.
         if (!libs._.find(theme.owners, (o: libs.ObjectId) => o.equals(userId))) {
-            services.response.sendError(response, services.error.fromThemeIsNotYoursMessage(), documentUrl);
+            services.response.sendError(response, services.error.fromThemeIsNotYoursMessage());
             return;
         }
 
@@ -164,6 +160,6 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

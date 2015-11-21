@@ -21,10 +21,8 @@ export let documentOfSendToken: types.ObsoleteDocument = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfCreate.documentUrl;
-
     if (!libs.validator.isEmail(request.body.email)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"));
         return;
     }
 
@@ -35,7 +33,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let code = libs.validator.trim(request.body.code);
         let guid = libs.validator.trim(request.body.guid);
         if (code === "" || guid === "") {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"));
             return;
         }
 
@@ -67,6 +65,6 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

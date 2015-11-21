@@ -21,15 +21,13 @@ export let documentOfObsoleteInvite: types.ObsoleteDocument = {
 };
 
 export async function invite(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfInvite.documentUrl;
-
     if (!libs.validator.isMongoId(request.params.organization_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
         return;
     }
 
     if (!libs.validator.isEmail(request.params.user_email)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"));
         return;
     }
 
@@ -39,7 +37,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
 
         let userId = request.userId;
         if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            services.response.sendError(response, services.error.fromUnauthorized());
             return;
         }
 
@@ -48,7 +46,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
             .select("members")
             .exec();
         if (!organization) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
             return;
         }
 
@@ -57,13 +55,13 @@ export async function invite(request: libs.Request, response: libs.Response) {
             .select("_id joinedOrganizations")
             .exec();
         if (!user) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"));
             return;
         }
 
         // current user should be a member of the organization
         if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
             return;
         }
 
@@ -78,6 +76,6 @@ export async function invite(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

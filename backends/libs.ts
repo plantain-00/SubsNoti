@@ -77,11 +77,12 @@ export interface Request extends express.Request {
     userId: ObjectId;
 }
 
+export interface Response extends express.Response {
+    documentUrl: string;
+}
+
 import * as socket from "socket.io";
 export {socket};
-
-import Response = express.Response;
-export {Response};
 
 import Application = express.Application;
 export {Application};

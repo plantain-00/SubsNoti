@@ -6,17 +6,19 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
+let documentUrl = "/doc/api/Parameters.html";
+
 export function route(app: libs.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
         let v = libs.validator.trim(request.query.v);
 
         if (v === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("v"), "/doc/api/Parameters.html");
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("v"), documentUrl);
             return;
         }
 
         if (!libs.semver.valid(v)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("v"), "/doc/api/Parameters.html");
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("v"), documentUrl);
             return;
         }
 

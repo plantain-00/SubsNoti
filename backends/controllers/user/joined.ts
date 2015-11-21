@@ -21,8 +21,6 @@ export let documentOfUserJoinedOrganization: types.ObsoleteDocument = {
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfGet.documentUrl;
-
     try {
         let userId = request.userId;
 
@@ -55,6 +53,6 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

@@ -13,11 +13,9 @@ export let documentOfGet: types.Document = {
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfGet.documentUrl;
-
     try {
         if (!libs.validator.isMongoId(request.params.organization_id)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
             return;
         }
 
@@ -33,7 +31,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             // identify current user.
             let userId = request.userId;
             if (!userId) {
-                services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+                services.response.sendError(response, services.error.fromUnauthorized());
                 return;
             }
 
@@ -42,7 +40,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 .exec();
 
             if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
-                services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+                services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
                 return;
             }
         }
@@ -97,6 +95,6 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }
