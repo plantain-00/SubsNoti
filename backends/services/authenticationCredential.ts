@@ -13,23 +13,18 @@ export function create(userId: string, salt: string): string {
 
 /**
  * identify current user.
- * if set noReject = true, return null if fails.
  */
-export async function authenticate(request: libs.Request, noReject?: boolean): Promise<libs.ObjectId> {
-    return authenticateCookie(request.cookies[settings.config.cookieKeys.authenticationCredential], noReject);
+export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
+    return authenticateCookie(request.cookies[settings.config.cookieKeys.authenticationCredential]);
 }
 
 /**
  * identify current user.
- * if set noReject = true, return null if fails.
  */
-export async function authenticateCookie(cookie: string, noReject?: boolean): Promise<libs.ObjectId> {
+export async function authenticateCookie(cookie: string): Promise<libs.ObjectId> {
     let authenticationCredential = libs.validator.trim(cookie);
     if (!authenticationCredential) {
-        if (noReject) {
-            return Promise.resolve(null);
-        }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("no authentication credential", types.StatusCode.unauthorized));
+        return Promise.resolve(null);
     }
 
     // may be it is already in cache.
@@ -40,10 +35,7 @@ export async function authenticateCookie(cookie: string, noReject?: boolean): Pr
 
     let tmp = authenticationCredential.split("g");
     if (tmp.length !== 3) {
-        if (noReject) {
-            return Promise.resolve(null);
-        }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", types.StatusCode.unauthorized));
+        return Promise.resolve(null);
     }
 
     let milliseconds = parseInt(tmp[1], 16);
@@ -54,10 +46,7 @@ export async function authenticateCookie(cookie: string, noReject?: boolean): Pr
     // should not expire.
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-        if (noReject) {
-            return Promise.resolve(null);
-        }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("authentication credential is out of date", types.StatusCode.unauthorized));
+        return Promise.resolve(null);
     }
 
     // should be a valid user.
@@ -65,10 +54,7 @@ export async function authenticateCookie(cookie: string, noReject?: boolean): Pr
         .select("salt")
         .exec();
     if (!user) {
-        if (noReject) {
-            return Promise.resolve(null);
-        }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid user", types.StatusCode.unauthorized));
+        return Promise.resolve(null);
     }
 
     // should be verified.
@@ -77,9 +63,6 @@ export async function authenticateCookie(cookie: string, noReject?: boolean): Pr
 
         return Promise.resolve(id);
     } else {
-        if (noReject) {
-            return Promise.resolve(null);
-        }
-        return Promise.reject<libs.ObjectId>(services.error.fromMessage("invalid authentication credential", types.StatusCode.unauthorized));
+        return Promise.resolve(null);
     }
 }

@@ -31,7 +31,11 @@ export async function get(request: libs.Request, response: libs.Response) {
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
             // identify current user.
-            let userId = await services.authenticationCredential.authenticate(request);
+            let userId = request.userId;
+            if (!userId) {
+                services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+                return;
+            }
 
             let user = await services.mongo.User.findOne({ _id: userId })
                 .select("joinedOrganizations")

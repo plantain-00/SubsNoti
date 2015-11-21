@@ -24,7 +24,11 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         let user = await services.mongo.User.findOne({ _id: userId })
             .populate("createdOrganizations")

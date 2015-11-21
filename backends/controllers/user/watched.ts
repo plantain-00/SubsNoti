@@ -31,7 +31,11 @@ export async function watch(request: libs.Request, response: libs.Response) {
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })
@@ -103,7 +107,11 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })

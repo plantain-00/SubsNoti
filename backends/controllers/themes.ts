@@ -31,8 +31,11 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let themeDetail = libs.validator.trim(request.body.themeDetail);
 
-        let userId = await services.authenticationCredential.authenticate(request);
-
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
         // the organization should be public organization, or current user should join in it.
         let user = await services.mongo.User.findOne({ _id: userId })
             .exec();
@@ -120,7 +123,11 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(request.params.theme_id);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: id })

@@ -16,7 +16,11 @@ export async function get(request: libs.Request, response: libs.Response) {
     let documentUrl = documentOfGet.documentUrl;
 
     try {
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         let user = await services.mongo.User.findOne({ _id: userId })
             .select("email name createdOrganizations joinedOrganizations avatar")
@@ -50,7 +54,11 @@ export async function update(request: libs.Request, response: libs.Response) {
         let name = libs.validator.trim(request.body.name);
         let avatarFileName = libs.validator.trim(request.body.avatarFileName);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         let user = await services.mongo.User.findOne({ _id: userId })
             .select("name avatar")

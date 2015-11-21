@@ -30,6 +30,6 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
         return Promise.reject(new Error(`do it later after ${reply} seconds`));
     }
 
-    services.cache.setString(keyPrefix + key, key, seconds);
+    services.cache.setString(frequencyKey, key, seconds);
     return Promise.resolve();
 }

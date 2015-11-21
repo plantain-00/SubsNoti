@@ -112,7 +112,11 @@ async function uploadTemperaryImages(request: libs.Request, response: libs.Respo
     let documentUrl = documentOfUploadTemperaryImages.documentUrl;
 
     try {
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         upload(request, response, error => {
             if (error) {

@@ -74,6 +74,7 @@ export let cors = require("cors");
 export interface Request extends express.Request {
     v: string;
     files: any[];
+    userId: ObjectId;
 }
 
 import * as socket from "socket.io";

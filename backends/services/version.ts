@@ -6,9 +6,6 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-export let publicOrganizationId: libs.ObjectId;
-export let publicOrganizationName = "public";
-
 export function route(app: libs.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
         let v = libs.validator.trim(request.query.v);

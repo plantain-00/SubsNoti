@@ -118,24 +118,24 @@ export interface SettingsInterface {
         host: string,
         user: string,
         password: string,
-        database: string
+        database: string,
     };
     website: {
         port: number,
         innerHostName: string,
-        outerHostName: string
+        outerHostName: string,
     };
     smtp: {
         host: string,
         name: string,
-        password: string
+        password: string,
     };
     redis: {
-        host: string
+        host: string,
         port: number,
         options: {
-            auth_pass: string
-        }
+            auth_pass: string,
+        },
     };
     mongodb: {
         url: string,
@@ -153,24 +153,32 @@ export interface SettingsInterface {
         user: string,
         emailFrequency: string,
         userCaptcha: string,
-        userCaptchaFrequency: string
+        userCaptchaFrequency: string,
+        rateLimit: {
+            userId: string,
+            ip: string,
+        },
     };
     defaultItemLimit: number;
     imageServer: {
         port: number,
         innerHostName: string,
-        outerHostName: string
+        outerHostName: string,
     };
     ipWhiteList: string[];
     imageUploader: {
         port: number,
         innerHostName: string,
-        outerHostName: string
+        outerHostName: string,
     };
     avatar: string;
     cors: {
         methods: string | string[],
         credentials: boolean,
-        origin: Array<string | RegExp>
+        origin: Array<string | RegExp>,
+    };
+    rateLimit: {
+        user: number,
+        ip: number,
     };
 }

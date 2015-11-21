@@ -22,7 +22,11 @@ export async function create(request: libs.Request, response: libs.Response) {
             return;
         }
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized(), documentUrl);
+            return;
+        }
 
         // the name should not be used by other organizations.
         if (organizationName === services.seed.publicOrganizationName) {

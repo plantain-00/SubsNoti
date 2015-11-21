@@ -19,6 +19,7 @@ import * as organizations from "./controllers/organizations";
 import * as captcha from "./controllers/captcha";
 
 export function route(app: libs.Application) {
+    services.rateLimit.route(app);
     services.version.route(app);
 
     services.router.bind(user.documentOfGet, user.get, app);
