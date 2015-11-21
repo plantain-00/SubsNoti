@@ -4,10 +4,10 @@ will send a link with it to the given email.
 
 ## Url
 
-+ `post` `/api/tokens`
-+ `post` `/api/token_sent`(version < 0.12.7 && date < 2015-11-26)
++ `POST` `/api/tokens`
++ `POST` `/api/token_sent`(version < 0.12.7 && date < 2015-11-26)
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### Request Body
 

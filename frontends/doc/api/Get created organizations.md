@@ -2,10 +2,10 @@
 
 ## Url
 
-+ `get` `/api/user/created`
-+ `get` `/api/user/created/organizations`(version < 0.12.0 && date < 2015-11-25)
++ `GET` `/api/user/created`
++ `GET` `/api/user/created/organizations`(version < 0.12.0 && date < 2015-11-25)
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

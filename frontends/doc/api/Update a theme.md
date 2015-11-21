@@ -2,9 +2,9 @@
 
 ## Url
 
-`put` `/api/themes/:theme_id`
+`PUT` `/api/themes/:theme_id`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

@@ -27,7 +27,7 @@ let vueBody: VueBodyModel = new Vue({
         add: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/organizations?v=0.0.1", {
+            $.post("/api/organizations", {
                 organizationName: self.organizationName
             }).then((data: types.Response) => {
                 if (data.isSuccess) {

@@ -4,9 +4,9 @@ will delete authentication credential from cookie.
 
 ## Url
 
-`delete` `/api/logged_in`
+`DELETE` `/api/logged_in`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

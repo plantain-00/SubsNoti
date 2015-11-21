@@ -19,7 +19,7 @@ export function route(app: libs.Application) {
 
         request.userId = userId;
 
-        if (request.method.toLowerCase() === "get") {
+        if (request.method === "GET") {
             response.setHeader("Last-Modified", new Date().toUTCString());
         }
 
@@ -28,7 +28,7 @@ export function route(app: libs.Application) {
         let limit: number;
 
         if (userId) {
-            if (request.method.toLowerCase() === "post") {
+            if (request.method === "POST") {
                 key = settings.config.cacheKeys.rateLimit.contentCreation + userId.toHexString();
                 errorMessage = "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.";
                 limit = settings.config.rateLimit.contentCreation;

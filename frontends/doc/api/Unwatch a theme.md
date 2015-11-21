@@ -2,10 +2,10 @@
 
 ## Url
 
-+ `delete` `/api/user/watched/:theme_id`
-+ `delete` `/api/user/themes/:theme_id/watched`(version < 0.12.10 && date < 2015-11-26)
++ `DELETE` `/api/user/watched/:theme_id`
++ `DELETE` `/api/user/themes/:theme_id/watched`(version < 0.12.10 && date < 2015-11-26)
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

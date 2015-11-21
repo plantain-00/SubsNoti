@@ -59,7 +59,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         await services.frequency.limitEmail(email, 60 * 60);
 
         let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
-        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}&v=0.0.1`;
+        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 

@@ -2,9 +2,9 @@
 
 ## Url
 
-`get` `/api/organizations/:organization_id/themes`
+`GET` `/api/organizations/:organization_id/themes`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 key name | value type | required | default value
 --- | --- | --- | ---
@@ -26,7 +26,7 @@ totalCount | number
 
 ## version < 0.10.2 && date < 2015-11-22
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 key name | value type | required | default value
 --- | --- | --- | ---

@@ -38,7 +38,7 @@ let vueBody: VueBodyModel = new Vue({
                 formData.append("file", file);
 
                 $.ajax({
-                    url: base.imageUploaderUrl + "/api/temperary?v=0.12.3",
+                    url: base.imageUploaderUrl + "/api/temperary",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -64,13 +64,13 @@ let vueBody: VueBodyModel = new Vue({
 
             if (self.name.trim() !== base.vueHead.currentUserName || avatarFileName) {
                 $.ajax({
-                    url: "/api/user?v=0.0.1",
+                    url: "/api/user",
                     data: {
                         name: self.name,
                         avatarFileName: avatarFileName,
                     },
                     cache: false,
-                    type: "put",
+                    type: "PUT",
                 }).then((data: types.Response) => {
                     if (data.isSuccess) {
                         window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);

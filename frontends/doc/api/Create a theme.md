@@ -2,9 +2,9 @@
 
 ## Url
 
-`post` `/api/themes`
+`POST` `/api/themes`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 
