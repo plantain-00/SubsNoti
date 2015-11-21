@@ -11,6 +11,7 @@ import * as userLoggedIn from "./controllers/user/logged_in";
 import * as userJoined from "./controllers/user/joined";
 import * as userCreated from "./controllers/user/created";
 import * as userWatched from "./controllers/user/watched";
+import * as usersJoined from "./controllers/users/joined";
 import * as tokens from "./controllers/tokens";
 import * as organizationsThemes from "./controllers/organizations/themes";
 import * as themes from "./controllers/themes";
@@ -27,7 +28,7 @@ export function route(app: libs.Application) {
     services.router.bind(userLoggedIn.documentOfDelete, userLoggedIn.deleteThis, app);
 
     services.router.bind(userJoined.documentOfGet, userJoined.get, app);
-    services.router.bind(userJoined.documentOfInvite, userJoined.invite, app);
+    services.router.bind(usersJoined.documentOfInvite, usersJoined.invite, app);
 
     services.router.bind(userCreated.documentOfGet, userCreated.get, app);
 
@@ -47,7 +48,7 @@ export function route(app: libs.Application) {
 
     services.router.bindObsolete(userJoined.documentOfUserJoinedOrganization, userJoined.get, app);
     services.router.bindObsolete(userCreated.documentOfUserCreatedOrganizations, userCreated.get, app);
-    services.router.bindObsolete(userJoined.documentOfObsoleteInvite, userJoined.invite, app);
+    services.router.bindObsolete(usersJoined.documentOfObsoleteInvite, usersJoined.invite, app);
     services.router.bindObsolete(tokens.documentOfSendToken, tokens.create, app);
     services.router.bindObsolete(userWatched.obsoleteDocumentOfWatch, userWatched.watch, app);
     services.router.bindObsolete(userWatched.obsoleteDocumentOfUnwatch, userWatched.unwatch, app);
