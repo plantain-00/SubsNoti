@@ -19,6 +19,10 @@ export function route(app: libs.Application) {
 
         request.userId = userId;
 
+        if (request.method.toLowerCase() === "get") {
+            response.setHeader("Last-Modified", new Date().toUTCString());
+        }
+
         let key: string;
         let errorMessage: string;
         let limit: number;
