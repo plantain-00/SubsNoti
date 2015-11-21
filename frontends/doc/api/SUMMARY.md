@@ -1,11 +1,11 @@
 # Summary
 
 * [Introduction](README.md)
-* [Common](Common.md)
+* [Request](Request.md)
     * [Parameters](Parameters.md)
     * [Headers](Headers.md)
-    * [Response](Response.md)
     * [Cookies](Cookies.md)
+* [Response](Response.md)
 * [Authentication](Authentication.md)
     * [Send token via email](Send token via email.md)
     * [Log in](Log in.md)
