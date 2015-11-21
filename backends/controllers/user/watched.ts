@@ -21,17 +21,19 @@ export let obsoleteDocumentOfWatch: types.ObsoleteDocument = {
 };
 
 export async function watch(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfWatch.documentUrl;
-
     if (!libs.validator.isMongoId(request.params.theme_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
         return;
     }
 
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized());
+            return;
+        }
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })
@@ -39,7 +41,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
             .select("organization watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
             return;
         }
 
@@ -47,7 +49,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
             && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
             return;
         }
 
@@ -74,7 +76,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }
 
@@ -93,17 +95,19 @@ export let obsoleteDocumentOfUnwatch: types.ObsoleteDocument = {
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfUnwatch.documentUrl;
-
     if (!libs.validator.isMongoId(request.params.theme_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
         return;
     }
 
     try {
         let themeId = new libs.ObjectId(request.params.theme_id);
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized());
+            return;
+        }
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })
@@ -111,7 +115,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             .select("organization watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
             return;
         }
 
@@ -119,7 +123,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
             && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage(), documentUrl);
+            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
             return;
         }
 
@@ -147,6 +151,6 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
         services.response.sendSuccess(response, types.StatusCode.deleted);
 
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

@@ -125,9 +125,6 @@ let vueBody: VueBodyModel = new Vue({
 
             $.ajax({
                 url: "/api/user/joined",
-                data: {
-                    v: "0.12.0"
-                },
                 cache: false,
             }).then((data: OrganizationsResponse) => {
                 if (data.isSuccess) {
@@ -163,7 +160,6 @@ let vueBody: VueBodyModel = new Vue({
                     q: self.q,
                     isOpen: self.isOpen,
                     isClosed: self.isClosed,
-                    v: "0.10.2",
                     order: self.order,
                 },
                 cache: false,
@@ -218,7 +214,7 @@ let vueBody: VueBodyModel = new Vue({
         createTheme: function() {
             let self: VueBodyModel = this;
 
-            $.post("/api/themes?v=0.0.1", {
+            $.post("/api/themes", {
                 themeTitle: self.newThemeTitle,
                 themeDetail: self.newThemeDetail,
                 organizationId: self.currentOrganizationId,
@@ -246,9 +242,8 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
-                data: {},
-                type: "put",
+                url: "/api/user/watched/" + theme.id,
+                type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     theme.watchers.push({
@@ -271,9 +266,9 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/user/watched/" + theme.id + "?v=0.12.10",
+                url: "/api/user/watched/" + theme.id,
                 data: {},
-                type: "delete",
+                type: "DELETE",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     let index = _.findIndex(theme.watchers, w => w.id === base.vueHead.currentUserId);
@@ -298,12 +293,12 @@ let vueBody: VueBodyModel = new Vue({
         },
         close: function(theme: Theme) {
             $.ajax({
-                url: "/api/themes/" + theme.id + "?v=0.0.1",
+                url: "/api/themes/" + theme.id,
                 data: {
                     status: types.ThemeStatus.closed
                 },
                 cache: false,
-                type: "put",
+                type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");
@@ -314,12 +309,12 @@ let vueBody: VueBodyModel = new Vue({
         },
         reopen: function(theme: Theme) {
             $.ajax({
-                url: "/api/themes/" + theme.id + "?v=0.0.1",
+                url: "/api/themes/" + theme.id,
                 data: {
                     status: types.ThemeStatus.open
                 },
                 cache: false,
-                type: "put",
+                type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");
@@ -346,13 +341,13 @@ let vueBody: VueBodyModel = new Vue({
             let self: VueBodyModel = this;
 
             $.ajax({
-                url: "/api/themes/" + theme.id + "?v=0.0.1",
+                url: "/api/themes/" + theme.id,
                 data: {
                     title: self.titleInEditing,
                     detail: self.detailInEditing,
                 },
                 cache: false,
-                type: "put",
+                type: "PUT",
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success");

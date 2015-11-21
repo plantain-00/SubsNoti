@@ -1,6 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
 declare let Vue;
+declare let version;
 
 import * as types from "../../common/types";
 
@@ -79,9 +80,6 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
     } else {
         $.ajax({
             url: "/api/user",
-            data: {
-                v: "0.0.1"
-            },
             cache: false,
         }).then((data: CurrentUserResponse) => {
             window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
@@ -163,7 +161,7 @@ export let vueHead: VueHeadModel = new Vue({
 
             $.ajax({
                 type: "DELETE",
-                url: "/api/user/logged_in?v=0.0.1",
+                url: "/api/user/logged_in",
                 cache: false,
             }).then((data: CurrentUserResponse) => {
                 if (data.isSuccess) {
@@ -212,4 +210,10 @@ $(document).ajaxSend(() => {
     vueHead.requestCount--;
 }).ajaxError(() => {
     vueHead.showAlert(false, "something happens unexpectedly, see console to get more details.");
+});
+
+$.ajaxSetup({
+    headers: {
+        "X-Version": version
+    },
 });

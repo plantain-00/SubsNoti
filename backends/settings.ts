@@ -44,6 +44,11 @@ export let config: types.SettingsInterface = {
         emailFrequency: "email_frequency_",
         userCaptcha: "user_captcha_",
         userCaptchaFrequency: "user_captcha_frequency_",
+        rateLimit: {
+            userId: "rateLimit_userId_",
+            ip: "rateLimit_ip_",
+            contentCreation: "rateLimit_contentCreation_",
+        },
     },
     defaultItemLimit: 10,
     imageServer: {
@@ -66,6 +71,11 @@ export let config: types.SettingsInterface = {
         origin: [
             "http://localhost:8888"
         ],
+    },
+    rateLimit: {
+        user: 5000,
+        ip: 60,
+        contentCreation: 10,
     },
 };
 

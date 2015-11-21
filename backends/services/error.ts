@@ -38,3 +38,7 @@ export function fromOrganizationIsPrivateMessage(): types.E {
 export function fromThemeIsNotYoursMessage(): types.E {
     return fromError(new Error(`the theme is not owned by you.`), types.StatusCode.unauthorized);
 }
+
+export function fromUnauthorized(): types.E {
+    return fromError(new Error("the authentication credential is missed, out of date or invalid"), types.StatusCode.unauthorized);
+}

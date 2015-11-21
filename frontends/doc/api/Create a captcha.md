@@ -2,9 +2,9 @@
 
 ## Url
 
-`post` `/api/captchas`
+`POST` `/api/captchas`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

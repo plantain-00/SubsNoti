@@ -2,9 +2,9 @@
 
 ## Url
 
-`post` `/api/organizations`
+`POST` `/api/organizations`
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### [Cookies](./Cookies.html)
 

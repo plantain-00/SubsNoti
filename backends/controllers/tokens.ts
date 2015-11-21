@@ -21,10 +21,8 @@ export let documentOfSendToken: types.ObsoleteDocument = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfCreate.documentUrl;
-
     if (!libs.validator.isEmail(request.body.email)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"), documentUrl);
+        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"));
         return;
     }
 
@@ -35,7 +33,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let code = libs.validator.trim(request.body.code);
         let guid = libs.validator.trim(request.body.guid);
         if (code === "" || guid === "") {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"));
             return;
         }
 
@@ -61,12 +59,12 @@ export async function create(request: libs.Request, response: libs.Response) {
         await services.frequency.limitEmail(email, 60 * 60);
 
         let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
-        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}&v=0.0.1`;
+        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

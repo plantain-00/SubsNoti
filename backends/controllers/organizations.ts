@@ -18,21 +18,25 @@ export async function create(request: libs.Request, response: libs.Response) {
     try {
         let organizationName = libs.validator.trim(request.body.organizationName);
         if (organizationName === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"));
             return;
         }
 
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized());
+            return;
+        }
 
         // the name should not be used by other organizations.
         if (organizationName === services.seed.publicOrganizationName) {
-            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest), documentUrl);
+            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest));
             return;
         }
         let organizationCount = await services.mongo.Organization.count({ name: organizationName })
             .exec();
         if (organizationCount > 0) {
-            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest), documentUrl);
+            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest));
             return;
         }
 
@@ -41,7 +45,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             .select("createdOrganizations joinedOrganizations")
             .exec();
         if (user.createdOrganizations.length >= settings.config.maxOrganizationNumberUserCanCreate) {
-            services.response.sendError(response, services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest), documentUrl);
+            services.response.sendError(response, services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest));
             return;
         }
 
@@ -60,6 +64,6 @@ export async function create(request: libs.Request, response: libs.Response) {
         services.logger.log(documentOfCreate.url, request);
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

@@ -53,3 +53,6 @@ export {version};
 
 import * as router from "./services/router";
 export {router};
+
+import * as rateLimit from "./services/rateLimit";
+export {rateLimit};

@@ -2,10 +2,10 @@
 
 ## Url
 
-+ `post` `/api/persistence`
-+ `post` `/api/images/persistent`(version < 0.12.6 && date < 2015-11-26)
++ `POST` `/api/persistence`
++ `POST` `/api/images/persistent`(version < 0.12.6 && date < 2015-11-26)
 
-### [Parameters](./Parameters.html)
+### [Headers](./Headers.html)
 
 ### Request Body
 

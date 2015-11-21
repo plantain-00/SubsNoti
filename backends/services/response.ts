@@ -19,14 +19,14 @@ export function sendSuccess(response: libs.Response, statusCode: types.StatusCod
     response.status(200).json(libs._.extend(baseResponse, result));
 }
 
-export function sendError(response: libs.Response, error: types.E, documentUrl: string) {
+export function sendError(response: libs.Response, error: types.E, documentUrl?: string) {
     let isE = error.statusCode;
 
     let baseResponse: types.Response = {
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: documentUrl,
+        documentUrl: documentUrl ? documentUrl : response.documentUrl,
     };
 
     if (!isE) {

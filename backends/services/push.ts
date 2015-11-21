@@ -17,8 +17,10 @@ export function connect(server: libs.http.Server) {
 
     io.on("connection", socket => {
         let cookies = libs.cookie.parse(socket.handshake.headers.cookie);
-        services.authenticationCredential.authenticateCookie(cookies[settings.config.cookieKeys.authenticationCredential]).catch(error => {
-            socket.disconnect(true);
+        services.authenticationCredential.authenticateCookie(cookies[settings.config.cookieKeys.authenticationCredential]).then(userId => {
+            if (!userId) {
+                socket.disconnect(true);
+            }
         });
     });
 }

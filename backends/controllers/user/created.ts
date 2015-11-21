@@ -21,10 +21,12 @@ export let documentOfUserCreatedOrganizations: types.ObsoleteDocument = {
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfGet.documentUrl;
-
     try {
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized());
+            return;
+        }
 
         let user = await services.mongo.User.findOne({ _id: userId })
             .populate("createdOrganizations")
@@ -41,6 +43,6 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }

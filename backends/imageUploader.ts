@@ -89,16 +89,14 @@ let upload = libs.multer({ storage: storage }).any();
 services.version.route(app);
 
 function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfUploadPersistentImages.documentUrl;
-
     if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden), documentUrl);
+        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden));
         return;
     }
 
     upload(request, response, error => {
         if (error) {
-            services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest), documentUrl);
+            services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest));
             return;
         }
 
@@ -109,14 +107,16 @@ function uploadPersistentImages(request: libs.Request, response: libs.Response) 
 }
 
 async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfUploadTemperaryImages.documentUrl;
-
     try {
-        let userId = await services.authenticationCredential.authenticate(request);
+        let userId = request.userId;
+        if (!userId) {
+            services.response.sendError(response, services.error.fromUnauthorized());
+            return;
+        }
 
         upload(request, response, error => {
             if (error) {
-                services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest), documentUrl);
+                services.response.sendError(response, services.error.fromError(error, types.StatusCode.invalidRequest));
                 return;
             }
 
@@ -125,7 +125,7 @@ async function uploadTemperaryImages(request: libs.Request, response: libs.Respo
             });
         });
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }
 

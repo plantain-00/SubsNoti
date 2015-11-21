@@ -13,13 +13,11 @@ export let documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfCreate.documentUrl;
-
     try {
         let id = libs.validator.trim(request.body.id);
 
         if (id === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("id"), documentUrl);
+            services.response.sendError(response, services.error.fromParameterIsMissedMessage("id"));
             return;
         }
 
@@ -29,6 +27,6 @@ export async function create(request: libs.Request, response: libs.Response) {
             url: url
         });
     } catch (error) {
-        services.response.sendError(response, error, documentUrl);
+        services.response.sendError(response, error);
     }
 }
