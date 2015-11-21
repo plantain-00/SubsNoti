@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "0.12.13",
+    "version": "0.12.15",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -18,7 +18,7 @@
         "lodash": "latest",
         "md5": "latest",
         "moment": "latest",
-        "mongoose": "latest",
+        "mongoose": "^4.2.5",
         "multer": "latest",
         "mysql": "latest",
         "node-uuid": "latest",
