@@ -47,6 +47,7 @@ export let config: types.SettingsInterface = {
         rateLimit: {
             userId: "rateLimit_userId_",
             ip: "rateLimit_ip_",
+            contentCreation: "rateLimit_contentCreation_",
         },
     },
     defaultItemLimit: 10,
@@ -74,6 +75,7 @@ export let config: types.SettingsInterface = {
     rateLimit: {
         user: 5000,
         ip: 60,
+        contentCreation: 10,
     },
 };
 

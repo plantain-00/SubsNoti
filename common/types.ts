@@ -157,6 +157,7 @@ export interface SettingsInterface {
         rateLimit: {
             userId: string,
             ip: string,
+            contentCreation: string,
         },
     };
     defaultItemLimit: number;
@@ -180,5 +181,6 @@ export interface SettingsInterface {
     rateLimit: {
         user: number,
         ip: number,
+        contentCreation: number,
     };
 }
