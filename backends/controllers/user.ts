@@ -70,7 +70,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         if (avatarFileName) {
             let newName = settings.config.avatar + userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
 
-            let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistence?v=0.12.6`, {
+            let json = await services.request.postAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistence?v=${settings.pjson.version}`, {
                 name: avatarFileName,
                 newName: newName,
             });
@@ -79,7 +79,7 @@ export async function update(request: libs.Request, response: libs.Response) {
             user.avatar = newName;
             user.save();
 
-            response.status(json.response.statusCode).json(json.json);
+            response.status(json.response.statusCode).json(json.body);
         } else {
             services.response.sendSuccess(response, types.StatusCode.createdOrModified);
         }

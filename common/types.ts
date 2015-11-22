@@ -112,6 +112,13 @@ export interface Theme {
     watchers: User[];
 }
 
+export type ResponseType = "json" | "html";
+
+export const responseType = {
+    json: <ResponseType>"json",
+    html: <ResponseType>"html",
+};
+
 export interface SettingsInterface {
     currentEnvironment: Environment;
     db: {
@@ -159,6 +166,7 @@ export interface SettingsInterface {
             ip: string,
             contentCreation: string,
         },
+        githubLoginCode: string,
     };
     defaultItemLimit: number;
     imageServer: {
@@ -182,5 +190,11 @@ export interface SettingsInterface {
         user: number,
         ip: number,
         contentCreation: number,
+    };
+    login: {
+        github: {
+            clientId: string,
+            clientSecret: string,
+        },
     };
 }

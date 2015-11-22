@@ -39,26 +39,8 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         await services.captcha.validate(guid, code);
 
-        // find out if the email is someone's. if no, create an account.
-        let user = await services.mongo.User.findOne({ email: email })
-            .select("_id salt email")
-            .exec();
-        if (!user) {
-            let salt = libs.generateUuid();
-            user = await services.mongo.User.create({
-                email: email,
-                name: name,
-                salt: salt,
-                status: types.UserStatus.normal,
-            });
-            await services.avatar.createIfNotExistsAsync(user._id.toHexString());
+        let token = await services.tokens.create(email, documentOfCreate.url, request);
 
-            services.logger.log(documentOfCreate.url, request);
-        }
-
-        await services.frequency.limitEmail(email, 60 * 60);
-
-        let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
         let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
 
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);

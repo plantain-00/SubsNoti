@@ -46,17 +46,24 @@
                             <span>Login now...</span>
                         </a>
                         <a href="./user.html"
-                            v-if="loginStatus === 'success'">
+                            v-show="loginStatus === 'success'"
+                            style="display: none;">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;
                             <span>{{currentUserName}}</span>
                             <span class="glyphicon glyphicon-envelope" style="top:2px"></span> &nbsp;
                             <span>{{currentUserEmail}}</span>
-                            <img :src="currentAvatar" style="height: 20px; width:20px;">
+                            <img :src="currentAvatar"style="height: 20px; width:20px;" v-if="loginStatus === 'success'">
                         </a>
                         <a href="./login.html"
                             v-show="loginStatus === 'fail'"
                             style="display: none;">
                             <span class="glyphicon glyphicon-user" style="top:2px"></span> &nbsp;Login
+                        </a>
+                    </li>
+                    <li v-show="loginStatus == 'fail'"
+                        style="display: none;">
+                        <a href="./login_with_github">
+                            <span class="fa fa-github" style="top:2px"></span> &nbsp;Login with Github
                         </a>
                     </li>
                     <li v-show="loginStatus == 'success'">

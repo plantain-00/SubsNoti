@@ -6,13 +6,13 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-interface Response {
+interface Response<T> {
     response: libs.http.IncomingMessage;
-    json: any;
+    body: T;
 }
 
-function post(options: any): Promise<Response> {
-    return new Promise<Response>((resolve, reject) => {
+export function post<T>(options: any): Promise<Response<T>> {
+    return new Promise<Response<T>>((resolve, reject) => {
         libs.request.post(options, (error, response, body) => {
             if (error) {
                 reject(error);
@@ -21,38 +21,33 @@ function post(options: any): Promise<Response> {
 
             resolve({
                 response: response,
-                json: JSON.parse(body),
+                body: JSON.parse(body),
             });
         });
     });
 }
 
-export function postAsync(url: string, form): Promise<Response> {
+export function postAsync<T>(url: string, form): Promise<Response<T>> {
     let options = {
         url: url,
         form: form,
     };
 
-    return post(options);
+    return post<T>(options);
 }
 
-export function postMultipartAsync(url: string, formData: any): Promise<Response> {
+export function postMultipartAsync<T>(url: string, formData: any): Promise<Response<T>> {
     let options = {
         url: url,
         formData: formData,
     };
 
-    return post(options);
+    return post<T>(options);
 }
 
-interface GetResponse {
-    response: libs.http.IncomingMessage;
-    body: any;
-}
-
-export function getAsync(url: string): Promise<GetResponse> {
-    return new Promise<GetResponse>((resolve, reject) => {
-        libs.request(url, (error, response, body) => {
+export function get<T>(options: any, type: types.ResponseType): Promise<Response<T>> {
+    return new Promise<Response<T>>((resolve, reject) => {
+        libs.request(options, (error, response, body) => {
             if (error) {
                 reject(error);
                 return;
@@ -60,8 +55,14 @@ export function getAsync(url: string): Promise<GetResponse> {
 
             resolve({
                 response: response,
-                body: body,
+                body: type === types.responseType.json ? JSON.parse(body) : body,
             });
         });
     });
+}
+
+export function getAsync<T>(url: string, type: types.ResponseType): Promise<Response<T>> {
+    return get<T>({
+        url: url
+    }, type);
 }

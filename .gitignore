@@ -39,3 +39,4 @@ publish/**/*.ico
 frontends/doc/api/_book/
 publish/public/doc/
 publish/public/avatars/*.png
+publish/package.json
