@@ -115,7 +115,7 @@ gulp.task("css", () => {
 });
 
 gulp.task("js", () => {
-    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
+    for (let file of ["index", "login", "new-organization", "invite", "user"]) {
         bundleAndUglifyJs(file);
     }
 });
@@ -132,7 +132,7 @@ gulp.task("rev", () => {
 });
 
 gulp.task("html", () => {
-    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
+    for (let file of ["index", "login", "new_organization", "invite", "user", "error"]) {
         bundleAndUglifyHtml(file);
     }
 });
