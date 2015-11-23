@@ -29,7 +29,7 @@ export function createIfNotExistsAsync(id: string): Promise<void> {
     });
 }
 
-function createAsync(seed: string, fileName: string): Promise<void> {
+function createAsync(seed: string, fileName: string): Promise<any> {
     let red = seed.substr(0, 2);
     let blue = seed.substr(2, 2);
     let green = seed.substr(4, 2);
@@ -75,28 +75,7 @@ function createAsync(seed: string, fileName: string): Promise<void> {
             },
         };
 
-        let options = {
-            url: `http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=0.12.5`,
-            formData: formData,
-        };
-
-        return new Promise<void>((resolve, reject) => {
-            libs.request.post(options, (error, httpResponse, body) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-
-                let response: types.Response = JSON.parse(body);
-
-                if (response.isSuccess) {
-                    resolve();
-                    return;
-                }
-
-                reject(new Error(response.errorMessage));
-            });
-        });
+        return services.request.postMultipartAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=${settings.pjson.version}`, formData);
     });
 }
 

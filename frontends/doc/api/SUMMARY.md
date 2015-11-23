@@ -8,7 +8,6 @@
 * [Response](Response.md)
 * [Authentication](Authentication.md)
     * [Send token via email](Send token via email.md)
-    * [Log in](Log in.md)
     * [Log out](Log out.md)
     * [Create a captcha](Create a captcha.md)
 * [User](User.md)

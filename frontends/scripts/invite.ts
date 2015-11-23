@@ -34,7 +34,7 @@ let vueBody: VueBodyModel = new Vue({
         canInvite: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.isEmail(self.email.trim()) && base.vueHead.requestCount === 0;
+            return base.common.isEmail(self.email.trim()) && base.vueHead.requestCount === 0;
         },
     },
     methods: {

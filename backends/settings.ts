@@ -33,7 +33,7 @@ export let config: types.SettingsInterface = {
         password: "",
     },
     urls: {
-        login: "/api/logged_in"
+        login: "/login_with_authentication_credential"
     },
     maxOrganizationNumberUserCanCreate: 3,
     cookieKeys: {
@@ -49,6 +49,7 @@ export let config: types.SettingsInterface = {
             ip: "rateLimit_ip_",
             contentCreation: "rateLimit_contentCreation_",
         },
+        githubLoginCode: "github_login_",
     },
     defaultItemLimit: 10,
     imageServer: {
@@ -77,7 +78,15 @@ export let config: types.SettingsInterface = {
         ip: 60,
         contentCreation: 10,
     },
+    login: {
+        github: {
+            clientId: "",
+            clientSecret: "",
+        },
+    },
 };
+
+export let pjson = require("../package.json");
 
 try {
     let secret = require("./secret");

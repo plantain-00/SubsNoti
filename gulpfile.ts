@@ -81,7 +81,7 @@ gulp.task("gitbook", shell.task("gitbook build frontends/doc/api"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
-gulp.task("make", shell.task("tsc -p backends --pretty && mocha publish/backends/tests && tsc -p frontends --pretty && gulp tslint && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
+gulp.task("make", shell.task("tsc -p backends --pretty && gulp package && mocha publish/backends/tests && tsc -p frontends --pretty && gulp tslint && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
 
 gulp.task("tslint", () => {
     return gulp.src(["common/**/*.ts", "backends/**/*.ts", "frontends/scripts/**/*.ts", "gulpfile.ts"])
@@ -103,6 +103,11 @@ gulp.task("icon", () => {
         .pipe(gulp.dest("publish/public/"));
 });
 
+gulp.task("package", () => {
+    gulp.src("package.json")
+        .pipe(gulp.dest("publish/"));
+});
+
 gulp.task("css", () => {
     for (let file of ["base"]) {
         uglifyCss(file);
@@ -110,7 +115,7 @@ gulp.task("css", () => {
 });
 
 gulp.task("js", () => {
-    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
+    for (let file of ["index", "login", "new-organization", "invite", "user", "error"]) {
         bundleAndUglifyJs(file);
     }
 });
@@ -127,7 +132,7 @@ gulp.task("rev", () => {
 });
 
 gulp.task("html", () => {
-    for (let file of ["index", "login", "newOrganization", "invite", "user"]) {
+    for (let file of ["index", "login", "new_organization", "invite", "user", "error"]) {
         bundleAndUglifyHtml(file);
     }
 });
@@ -173,13 +178,17 @@ function bundleAndUglifyJs(name: string) {
 function bundleAndUglifyHtml(name: string) {
     let manifest = gulp.src("frontends/build/rev-manifest.json");
 
+    let config = {
+        dotMin: ".min",
+        version: pjson.version,
+        environment: "",
+    };
+
     if (isDevelopment) {
+        config.dotMin = "";
+        config.environment = "dev";
         gulp.src("frontends/templates/" + name + ".ejs")
-            .pipe(ejs({
-                dotMin: "",
-                version: pjson.version,
-                environment: "dev",
-            }))
+            .pipe(ejs(config))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({
                 manifest: manifest
@@ -187,11 +196,7 @@ function bundleAndUglifyHtml(name: string) {
             .pipe(gulp.dest("publish/public/"));
     } else {
         gulp.src("frontends/templates/" + name + ".ejs")
-            .pipe(ejs({
-                dotMin: ".min",
-                version: pjson.version,
-                environment: "",
-            }))
+            .pipe(ejs(config))
             .pipe(minifyHtml(minifyHtmlConfig))
             .pipe(rename(name + ".html"))
             .pipe(revReplace({

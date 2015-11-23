@@ -39,3 +39,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
 
     response.status(200).json(baseResponse);
 }
+
+export function redirectToErrorPage(response: libs.Response, message: string) {
+    response.redirect("/error.html?message=" + encodeURIComponent(message));
+}

@@ -23,20 +23,3 @@ id | string
 name | string
 email | string
 avatar | string
-
-## version < 0.10.2 && date < 2015-11-22
-
-### Models
-
-key name | value type
---- | ---
-id | string
-title | string
-detail | string
-organizationId | string
-createTime | number
-updateTime | number?
-status | [ThemeStatus](./Theme status.html)
-creator | [User](#user)
-owners | [User](#user)[]
-watchers | [User](#user)[]
