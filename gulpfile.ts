@@ -115,7 +115,7 @@ gulp.task("css", () => {
 });
 
 gulp.task("js", () => {
-    for (let file of ["index", "login", "new-organization", "invite", "user"]) {
+    for (let file of ["index", "login", "new-organization", "invite", "user", "error"]) {
         bundleAndUglifyJs(file);
     }
 });

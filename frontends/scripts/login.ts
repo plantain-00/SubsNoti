@@ -19,7 +19,7 @@ interface VueBodyModel {
     refreshCaptcha: () => void;
 }
 
-let guid = base.guid();
+let guid = base.common.guid();
 
 let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
@@ -41,7 +41,7 @@ let vueBody: VueBodyModel = new Vue({
             set: function(value: string) {
                 let self: VueBodyModel = this;
 
-                if (base.isEmail(value)) {
+                if (base.common.isEmail(value)) {
                     let tmp = value.trim().toLowerCase().split("@");
                     self.emailHead = tmp[0];
                     self.emailTail = tmp[1];

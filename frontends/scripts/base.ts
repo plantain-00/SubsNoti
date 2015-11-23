@@ -1,9 +1,10 @@
-/// <reference path="../../typings/tsd.d.ts" />
-
 declare let Vue;
 declare let version;
 
 import * as types from "../../common/types";
+import * as common from "./common";
+
+export {common};
 
 Vue.config.debug = true;
 
@@ -39,31 +40,8 @@ export function getFullUrl(avatar: string): string {
     return `${imageServerUrl}/${avatar}`;
 }
 
-function getUrlParameter(name: string): string {
-    let reg: RegExp = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    let array: RegExpMatchArray = window.location.search.substr(1).match(reg);
-    if (array && array.length >= 3) {
-        return decodeURI(array[2]);
-    }
-    return null;
-}
-
-function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-}
-
-export function guid() {
-    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
-}
-
-export function isEmail(s: string): boolean {
-    return /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(s);
-}
-
 function getCurrentUser(next: (data: CurrentUserResponse) => void) {
-    let willClearPreviousStatus = getUrlParameter("clear_previous_status");
+    let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
 
     let loginResult;
 

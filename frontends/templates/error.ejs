@@ -1,31 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>v<%- version%> <%- environment%></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap<%- dotMin %>.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme<%- dotMin %>.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome<%- dotMin %>.css">
-    <link rel="stylesheet" href="./styles/base<%- dotMin %>.css">
-</head>
-
-<body>
-    <div class="container" style="margin-top: 60px;">
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                </div>
-                <div class="panel-body">
-                    <div class="alert alert-danger" role="alert">
-                        go to <a href="/index.html" class="alert-link">Home page</a> now.
-                    </div>
+<% include hair %>
+<div class="container" style="margin-top: 60px;">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger" role="alert">
+                    <span id="message"></span>
+                    go to <a href="/index.html" class="alert-link">Home page</a> now.
                 </div>
             </div>
         </div>
     </div>
+</div>
 <% include scripts %>
+<script type="text/javascript" src="./scripts/error<%- dotMin %>.js"></script>
 <% include foot %>
