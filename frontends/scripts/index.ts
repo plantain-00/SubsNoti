@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as common from "./common";
 import * as types from "../../common/types";
 
 declare let Vue;
@@ -130,7 +131,7 @@ let vueBody: VueBodyModel = new Vue({
                 if (data.isSuccess) {
                     self.organizationsCurrentUserIn = data.organizations;
                     if (data.organizations.length > 0) {
-                        let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                        let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                         if (lastOrganizationId && ~_.findIndex(data.organizations, o => o.id === lastOrganizationId)) {
                             self.currentOrganizationId = lastOrganizationId;
                         } else {
@@ -209,7 +210,7 @@ let vueBody: VueBodyModel = new Vue({
             self.currentOrganizationId = organization.id;
             self.fetchThemes(1);
 
-            window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
+            window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
         },
         createTheme: function() {
             let self: VueBodyModel = this;
