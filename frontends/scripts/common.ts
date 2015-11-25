@@ -22,3 +22,14 @@ export function guid() {
 export function isEmail(s: string): boolean {
     return /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(s);
 }
+
+export const sessionStorageNames = {
+    loginResult: "loginResult"
+};
+
+export const localStorageNames = {
+    lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
+    lastOrganizationId: "lastOrganizationId",
+    lastLoginEmail: "lastLoginEmail",
+    lastLoginName: "lastLoginName",
+};

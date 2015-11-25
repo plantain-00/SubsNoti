@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as common from "./common";
 import * as types from "../../common/types";
 
 declare let Vue;
@@ -34,7 +35,7 @@ let vueBody: VueBodyModel = new Vue({
         canInvite: function(): boolean {
             let self: VueBodyModel = this;
 
-            return base.common.isEmail(self.email.trim()) && base.vueHead.requestCount === 0;
+            return common.isEmail(self.email.trim()) && base.vueHead.requestCount === 0;
         },
     },
     methods: {
@@ -48,7 +49,7 @@ let vueBody: VueBodyModel = new Vue({
                 if (data.isSuccess) {
                     self.organizationsCurrentUserCreated = data.organizations;
                     if (data.organizations.length > 0) {
-                        let lastOrganizationId = window.localStorage.getItem(base.localStorageNames.lastOrganizationId);
+                        let lastOrganizationId = window.localStorage.getItem(common.localStorageNames.lastOrganizationId);
                         if (lastOrganizationId && ~_.findIndex(data.organizations, o => o.id === lastOrganizationId)) {
                             self.currentOrganizationId = lastOrganizationId;
                         } else {
@@ -76,7 +77,7 @@ let vueBody: VueBodyModel = new Vue({
 
             self.currentOrganizationId = organization.id;
 
-            window.localStorage.setItem(base.localStorageNames.lastOrganizationId, organization.id);
+            window.localStorage.setItem(common.localStorageNames.lastOrganizationId, organization.id);
         },
     },
 });

@@ -16,7 +16,8 @@ export function connect(server: libs.http.Server) {
     io = libs.socket(server);
 
     io.on("connection", socket => {
-        let cookies = libs.cookie.parse(socket.handshake.headers.cookie);
+        let cookie = libs.validator.trim(socket.handshake.headers.cookie);
+        let cookies = libs.cookie.parse(cookie);
         services.authenticationCredential.authenticateCookie(cookies[settings.config.cookieKeys.authenticationCredential]).then(userId => {
             if (!userId) {
                 socket.disconnect(true);

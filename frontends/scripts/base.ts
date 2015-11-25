@@ -4,8 +4,6 @@ declare let version;
 import * as types from "../../common/types";
 import * as common from "./common";
 
-export {common};
-
 Vue.config.debug = true;
 
 interface CurrentUserResponse extends types.CurrentUserResponse, types.Response {
@@ -20,17 +18,6 @@ export const loginStatus = {
     success: <LoginStatus>"success",
 };
 
-export const sessionStorageNames = {
-    loginResult: "loginResult"
-};
-
-export const localStorageNames = {
-    lastSuccessfulEmailTime: "lastSuccessfulEmailTime",
-    lastOrganizationId: "lastOrganizationId",
-    lastLoginEmail: "lastLoginEmail",
-    lastLoginName: "lastLoginName",
-};
-
 export let itemLimit = 10;
 export let maxOrganizationNumberUserCanCreate = 3;
 export let imageServerUrl = "http://115.29.42.125:7777";
@@ -41,15 +28,7 @@ export function getFullUrl(avatar: string): string {
 }
 
 function getCurrentUser(next: (data: CurrentUserResponse) => void) {
-    let willClearPreviousStatus = common.getUrlParameter("clear_previous_status");
-
-    let loginResult;
-
-    if (willClearPreviousStatus === "√") {
-        window.sessionStorage.removeItem(sessionStorageNames.loginResult);
-    } else {
-        loginResult = window.sessionStorage.getItem(sessionStorageNames.loginResult);
-    }
+    let loginResult = window.sessionStorage.getItem(common.sessionStorageNames.loginResult);
 
     if (loginResult) {
         let data: CurrentUserResponse = JSON.parse(loginResult);
@@ -60,7 +39,7 @@ function getCurrentUser(next: (data: CurrentUserResponse) => void) {
             url: "/api/user",
             cache: false,
         }).then((data: CurrentUserResponse) => {
-            window.sessionStorage.setItem(sessionStorageNames.loginResult, JSON.stringify(data));
+            window.sessionStorage.setItem(common.sessionStorageNames.loginResult, JSON.stringify(data));
 
             next(data);
         });
@@ -148,7 +127,7 @@ export let vueHead: VueHeadModel = new Vue({
                     self.currentUserName = "";
                     self.currentUserEmail = "";
                     self.currentAvatar = "";
-                    window.sessionStorage.removeItem(sessionStorageNames.loginResult);
+                    window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
                     self.createdOrganizationCount = maxOrganizationNumberUserCanCreate;
                     self.joinedOrganizationCount = 0;
                 } else {
@@ -169,8 +148,8 @@ export let vueHead: VueHeadModel = new Vue({
                     self.createdOrganizationCount = data.createdOrganizationCount;
                     self.joinedOrganizationCount = data.joinedOrganizationCount;
 
-                    window.localStorage.setItem(localStorageNames.lastLoginEmail, data.email);
-                    window.localStorage.setItem(localStorageNames.lastLoginName, data.name);
+                    window.localStorage.setItem(common.localStorageNames.lastLoginEmail, data.email);
+                    window.localStorage.setItem(common.localStorageNames.lastLoginName, data.name);
 
                     next(null);
                 } else {

@@ -20,7 +20,7 @@ import * as captcha from "./controllers/captcha";
 
 function setCookie(request: libs.Request, response: libs.Response, token: string) {
     if (!token) {
-        response.redirect("/index.html");
+        response.redirect("/success.html");
         return;
     }
 
@@ -29,7 +29,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         httpOnly: true,
     });
 
-    response.redirect("/index.html?clear_previous_status=√");
+    response.redirect("/success.html?clear_previous_status=√");
 }
 
 export function route(app: libs.Application) {

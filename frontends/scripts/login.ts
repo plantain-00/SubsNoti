@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as common from "./common";
 import * as types from "../../common/types";
 
 declare let Vue;
@@ -19,7 +20,7 @@ interface VueBodyModel {
     refreshCaptcha: () => void;
 }
 
-let guid = base.common.guid();
+let guid = common.guid();
 
 let vueBody: VueBodyModel = new Vue({
     el: "#vue-body",
@@ -41,7 +42,7 @@ let vueBody: VueBodyModel = new Vue({
             set: function(value: string) {
                 let self: VueBodyModel = this;
 
-                if (base.common.isEmail(value)) {
+                if (common.isEmail(value)) {
                     let tmp = value.trim().toLowerCase().split("@");
                     self.emailHead = tmp[0];
                     self.emailTail = tmp[1];
@@ -77,7 +78,7 @@ let vueBody: VueBodyModel = new Vue({
         login: function() {
             let self: VueBodyModel = this;
 
-            let lastSuccessfulEmailTime: string = window.localStorage.getItem(base.localStorageNames.lastSuccessfulEmailTime);
+            let lastSuccessfulEmailTime: string = window.localStorage.getItem(common.localStorageNames.lastSuccessfulEmailTime);
             if (lastSuccessfulEmailTime) {
                 let time = new Date().getTime() - parseInt(lastSuccessfulEmailTime, 10);
                 if (time < 60 * 1000) {
@@ -86,7 +87,7 @@ let vueBody: VueBodyModel = new Vue({
                 }
             }
 
-            $.post("/api/token_sent", {
+            $.post("/api/tokens", {
                 email: `${self.emailHead}@${self.emailTail}`,
                 name: self.name,
                 guid: guid,
@@ -94,7 +95,7 @@ let vueBody: VueBodyModel = new Vue({
             }).then((data: types.Response) => {
                 if (data.isSuccess) {
                     base.vueHead.showAlert(true, "success, please check your email.");
-                    window.localStorage.setItem(base.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
+                    window.localStorage.setItem(common.localStorageNames.lastSuccessfulEmailTime, new Date().getTime().toString());
                 } else {
                     base.vueHead.showAlert(false, data.errorMessage);
                     self.refreshCaptcha();
@@ -124,8 +125,8 @@ $(document).ready(function() {
         if (error) {
             console.log(error);
 
-            vueBody.rawEmail = window.localStorage.getItem(base.localStorageNames.lastLoginEmail);
-            vueBody.name = window.localStorage.getItem(base.localStorageNames.lastLoginName);
+            vueBody.rawEmail = window.localStorage.getItem(common.localStorageNames.lastLoginEmail);
+            vueBody.name = window.localStorage.getItem(common.localStorageNames.lastLoginName);
 
             vueBody.refreshCaptcha();
             return;

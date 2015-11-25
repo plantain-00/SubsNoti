@@ -74,10 +74,10 @@ gulp.task("watch", function() {
 });
 
 gulp.task("dot", shell.task([
-    "dot -Tsvg frontends/doc/api/DatabaseModels.dot > publish/public/doc/api/DatabaseModels.svg"
+    "dot -Tsvg frontends/doc/database_models.dot > publish/public/doc/database_models.svg"
 ]));
 
-gulp.task("gitbook", shell.task("gitbook build frontends/doc/api"));
+gulp.task("gitbook", shell.task("gitbook build frontends/doc"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
@@ -94,8 +94,8 @@ gulp.task("tslint", () => {
 gulp.task("scss-lint", shell.task("scss-lint frontends/styles/*.scss"));
 
 gulp.task("doc", ["gitbook"], () => {
-    gulp.src("frontends/doc/api/_book/**")
-        .pipe(gulp.dest("publish/public/doc/api/"));
+    gulp.src("frontends/doc/_book/**")
+        .pipe(gulp.dest("publish/public/doc/"));
 });
 
 gulp.task("icon", () => {
@@ -115,7 +115,7 @@ gulp.task("css", () => {
 });
 
 gulp.task("js", () => {
-    for (let file of ["index", "login", "new-organization", "invite", "user", "error"]) {
+    for (let file of ["index", "login", "new-organization", "invite", "user", "error", "success"]) {
         bundleAndUglifyJs(file);
     }
 });
@@ -132,7 +132,7 @@ gulp.task("rev", () => {
 });
 
 gulp.task("html", () => {
-    for (let file of ["index", "login", "new_organization", "invite", "user", "error"]) {
+    for (let file of ["index", "login", "new_organization", "invite", "user", "error", "success"]) {
         bundleAndUglifyHtml(file);
     }
 });

@@ -7,7 +7,7 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 /**
- * create a code, store it in cache, create an iamge, return an base64 url of it.
+ * create a code, store it in cache, create an image, return an base64 url of it.
  */
 export async function create(id: string): Promise<string> {
     await services.frequency.limitCaptcha(id, 1);

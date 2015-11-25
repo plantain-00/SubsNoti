@@ -1,4 +1,5 @@
 import * as base from "./base";
+import * as common from "./common";
 import * as types from "../../common/types";
 
 declare let Vue;
@@ -73,7 +74,7 @@ let vueBody: VueBodyModel = new Vue({
                     type: "PUT",
                 }).then((data: types.Response) => {
                     if (data.isSuccess) {
-                        window.sessionStorage.removeItem(base.sessionStorageNames.loginResult);
+                        window.sessionStorage.removeItem(common.sessionStorageNames.loginResult);
 
                         base.vueHead.authenticate(error => {
                             if (error) {

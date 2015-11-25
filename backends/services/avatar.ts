@@ -9,24 +9,18 @@ import * as services from "../services";
 /**
  * if exists, do nothing, otherwise create one and save it.
  */
-export function createIfNotExistsAsync(id: string): Promise<void> {
+export async function createIfNotExistsAsync(id: string): Promise<void> {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
-    return new Promise<void>((resolve, reject) => {
-        libs.request(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, async (error, response, body) => {
-            if (error) {
-                console.log("error:" + error);
-            } else if (response.statusCode === 200) {
-                console.log("exists:" + fileName);
-            } else {
-                console.log("statusCode:" + response.statusCode);
-                console.log("creating:" + fileName);
-                await createAsync(seed, fileName);
-            }
-
-            resolve();
-        });
-    });
+    let response = await services.request.getAsync(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, "html");
+    if (response.response.statusCode === 200) {
+        console.log("exists:" + fileName);
+        return Promise.resolve();
+    } else {
+        console.log("statusCode:" + response.response.statusCode);
+        console.log("creating:" + fileName);
+        return createAsync(seed, fileName);
+    }
 }
 
 function createAsync(seed: string, fileName: string): Promise<any> {
