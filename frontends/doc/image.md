@@ -1,5 +1,5 @@
 # image
 
-## `/{{uid}}.png`
+## `/avatar-{{uid}}.png`
 
 ## `/tmp/*`
