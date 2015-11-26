@@ -27,40 +27,16 @@ let documentOfUploadPersistentImages: types.Document = {
     documentUrl: "Upload images to persistent directory.html",
 };
 
-let obsoleteDocumentOfUploadPersistentImages: types.ObsoleteDocument = {
-    url: "/api/persistent/images",
-    method: "post",
-    documentUrl: "Upload images to persistent directory.html",
-    versionRange: "<0.12.5",
-    expiredDate: "2015-11-26",
-};
-
 let documentOfUploadTemperaryImages: types.Document = {
     url: "/api/temperary",
     method: "post",
     documentUrl: "Upload images to temperary directory.html",
 };
 
-let obsoleteDocumentOfUploadTemperaryImages: types.ObsoleteDocument = {
-    url: "/api/temperary/images",
-    method: "post",
-    documentUrl: "Upload images to temperary directory.html",
-    versionRange: "<0.12.3",
-    expiredDate: "2015-11-25",
-};
-
 let documentOfMoveImage: types.Document = {
     url: "/api/persistence",
     method: "post",
     documentUrl: "Move image from temperary directory to persistent directory.html",
-};
-
-let obsoleteDocumentOfMoveImage: types.ObsoleteDocument = {
-    url: "/api/images/persistent",
-    method: "post",
-    documentUrl: "Move image from temperary directory to persistent directory.html",
-    versionRange: "<0.12.6",
-    expiredDate: "2015-11-26",
 };
 
 let storage = libs.multer.diskStorage({
@@ -161,10 +137,6 @@ function moveImage(request: libs.Request, response: libs.Response) {
 services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, app);
 services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app);
 services.router.bind(documentOfMoveImage, moveImage, app);
-
-services.router.bindObsolete(obsoleteDocumentOfUploadPersistentImages, uploadPersistentImages, app);
-services.router.bindObsolete(obsoleteDocumentOfUploadTemperaryImages, uploadTemperaryImages, app);
-services.router.bindObsolete(obsoleteDocumentOfMoveImage, moveImage, app);
 
 app.listen(settings.config.imageUploader.port, settings.config.imageUploader.innerHostName, () => {
     console.log(`Image uploader is listening: ${settings.config.imageUploader.innerHostName}:${settings.config.imageUploader.port}`);

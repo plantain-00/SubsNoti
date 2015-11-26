@@ -1,23 +1,15 @@
 "use strict";
 
-import * as types from "../../../common/types";
+import * as types from "../../../../common/types";
 
-import * as libs from "../../libs";
-import * as settings from "../../settings";
-import * as services from "../../services";
+import * as libs from "../../../libs";
+import * as settings from "../../../settings";
+import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user/created",
     method: "get",
     documentUrl: "/doc/api/Get created organizations.html",
-};
-
-export let documentOfUserCreatedOrganizations: types.ObsoleteDocument = {
-    url: "/api/user/created/organizations",
-    method: "get",
-    documentUrl: "/doc/api/Get created organizations.html",
-    versionRange: "<0.12.1",
-    expiredDate: "2015-11-25",
 };
 
 export async function get(request: libs.Request, response: libs.Response) {

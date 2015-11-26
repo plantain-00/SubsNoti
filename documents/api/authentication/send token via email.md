@@ -4,8 +4,7 @@ will send a link with it to the given email.
 
 ## url
 
-+ `POST` `/api/tokens`
-+ `POST` `/api/token_sent`(version < 0.12.7 && date < 2015-11-26)
+`POST` `/api/tokens`
 
 ### [headers](../request/headers.html)
 

@@ -1,23 +1,15 @@
 "use strict";
 
-import * as types from "../../../common/types";
+import * as types from "../../../../common/types";
 
-import * as libs from "../../libs";
-import * as settings from "../../settings";
-import * as services from "../../services";
+import * as libs from "../../../libs";
+import * as settings from "../../../settings";
+import * as services from "../../../services";
 
 export let documentOfWatch: types.Document = {
     url: "/api/user/watched/:theme_id",
     method: "put",
     documentUrl: "/doc/api/Watch a theme.html",
-};
-
-export let obsoleteDocumentOfWatch: types.ObsoleteDocument = {
-    url: "/api/user/themes/:theme_id/watched",
-    method: "post",
-    documentUrl: "/doc/api/Watch a theme.html",
-    versionRange: "<0.12.10",
-    expiredDate: "2015-11-26",
 };
 
 export async function watch(request: libs.Request, response: libs.Response) {
@@ -84,14 +76,6 @@ export let documentOfUnwatch: types.Document = {
     url: "/api/user/watched/:theme_id",
     method: "delete",
     documentUrl: "/doc/api/Unwatch a theme.html",
-};
-
-export let obsoleteDocumentOfUnwatch: types.ObsoleteDocument = {
-    url: "/api/user/themes/:theme_id/watched",
-    method: "delete",
-    documentUrl: "/doc/api/Unwatch a theme.html",
-    versionRange: "<0.12.10",
-    expiredDate: "2015-11-26",
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {

@@ -2,8 +2,7 @@
 
 ## url
 
-+ `POST` `/api/persistence`
-+ `POST` `/api/images/persistent`(version < 0.12.6 && date < 2015-11-26)
+`POST` `/api/persistence`
 
 ### [headers](../request/headers.html)
 

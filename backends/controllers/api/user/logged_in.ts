@@ -1,10 +1,10 @@
 "use strict";
 
-import * as types from "../../../common/types";
+import * as types from "../../../../common/types";
 
-import * as libs from "../../libs";
-import * as settings from "../../settings";
-import * as services from "../../services";
+import * as libs from "../../../libs";
+import * as settings from "../../../settings";
+import * as services from "../../../services";
 
 export let documentOfDelete: types.Document = {
     url: "/api/user/logged_in",
