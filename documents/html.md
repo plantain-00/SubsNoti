@@ -2,7 +2,7 @@
 
 ## `/login_with_github`
 
-## `/login_with_authentication_credential
+## `/login_with_authentication_credential`
 
 ## `/github_code`
 
