@@ -32,11 +32,9 @@ node_modules
 **/*.css
 secret.ts
 **/*.svg
-doc/_book/
 frontends/build/
-public/doc/
+documents/_book/
+publish/documents/
 publish/**/*.ico
-frontends/doc/api/_book/
-publish/public/doc/
 publish/public/avatars/*.png
 publish/package.json

@@ -28,13 +28,14 @@ gulp.task("clean", () => {
 
         "common/**/*.js",
 
-        "frontends/doc/api/_book/",
+        "documents/_book/",
+
         "frontends/build/",
         "frontends/scripts/*.js",
 
-        "publish/public/doc/",
+        "publish/documents/",
         "publish/public/scripts/",
-        "publish/public/styles",
+        "publish/public/styles/",
         "publish/public/*.html",
         "publish/public/*.ico",
 
@@ -65,19 +66,19 @@ gulp.task("watch", function() {
     watch(["frontends/templates/*.ejs", "frontends/build/rev-manifest.json"], batch(function(events, done) {
         gulp.start("html", done);
     }));
-    watch(["frontends/doc/api/*.md"], batch(function(events, done) {
+    watch(["documents/**/*.md"], batch(function(events, done) {
         gulp.start("doc", done);
     }));
-    watch(["frontends/doc/api/*.dot"], batch(function(events, done) {
+    watch(["documents/**/*.dot"], batch(function(events, done) {
         gulp.start("dot", done);
     }));
 });
 
 gulp.task("dot", shell.task([
-    "dot -Tsvg frontends/doc/database_models.dot > publish/public/doc/database_models.svg"
+    "dot -Tsvg documents/database_models.dot > publish/documents/database_models.svg"
 ]));
 
-gulp.task("gitbook", shell.task("gitbook build frontends/doc"));
+gulp.task("gitbook", shell.task("gitbook build documents"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
@@ -94,8 +95,8 @@ gulp.task("tslint", () => {
 gulp.task("scss-lint", shell.task("scss-lint frontends/styles/*.scss"));
 
 gulp.task("doc", ["gitbook"], () => {
-    gulp.src("frontends/doc/_book/**")
-        .pipe(gulp.dest("publish/public/doc/"));
+    gulp.src("documents/_book/**")
+        .pipe(gulp.dest("publish/documents/"));
 });
 
 gulp.task("icon", () => {
