@@ -24,16 +24,18 @@
 + `npm install`
 + `tsc`: compile `gulpfile.ts` to `gulpfile.js`
 + `gulp make`: compile, bundle and so on
-  - `tsc -p backends --pretty`: build the typescript files for backends
-  - `gulp package`: publish `package.json`
+  - `gulp back`: build backend things
+    + `tsc -p backends --pretty`: build the typescript files for backends
+  - `gulp front`: build frontend things
+    + `tsc -p frontends --pretty`: build the typescript files for frontends
+    + `gulp css`: build scss files, then publish the generated css files
+    + `gulp js`: publish and pack js files
+    + `gulp rev`: collect the versions of js and css files
+    + `gulp html`: build `ejs` files, bundle the generated html files
   - `mocha publish/backends/tests`: run tests for backends
-  - `tsc -p frontends --pretty`: build the typescript files for frontends
+  - `gulp package`: publish `package.json`
   - `gulp tslint`: run tslint for all `ts` files
   - `gulp scss-lint`: run scss-lint for all `scss` files
-  - `gulp css`: build scss files, then publish the generated css files
-  - `gulp js`: publish and pack js files
-  - `gulp rev`: collect the versions of js and css files
-  - `gulp html`: build `ejs` files, bundle the generated html files
   - `gulp doc`: build documents, then publish it
     + `gulp gitbook`: build documents with gitbook
   - `gulp dot`: generate images from `dot` files

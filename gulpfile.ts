@@ -59,7 +59,11 @@ gulp.task("gitbook", shell.task("gitbook build documents"));
 
 gulp.task("run", shell.task("node publish/backends/app.js"));
 
-gulp.task("make", shell.task("tsc -p backends --pretty && gulp package && mocha publish/backends/tests && tsc -p frontends --pretty && gulp tslint && gulp scss-lint && gulp css && gulp js && gulp rev && gulp html && gulp doc && gulp dot && gulp icon"));
+gulp.task("back", shell.task("tsc -p backends --pretty"));
+
+gulp.task("front", shell.task("tsc -p frontends --pretty && gulp css && gulp js && gulp rev && gulp html"));
+
+gulp.task("make", shell.task("gulp back && gulp front && mocha publish/backends/tests && gulp package && gulp tslint && gulp scss-lint && gulp doc && gulp dot && gulp icon"));
 
 gulp.task("tslint", () => {
     return gulp.src(["common/**/*.ts", "backends/**/*.ts", "frontends/scripts/**/*.ts", "gulpfile.ts"])
