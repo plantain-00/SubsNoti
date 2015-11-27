@@ -2,6 +2,7 @@
 
 * [introduction](README.md)
 * [api](api/README.md)
+    * [version](api/version.md)
     * [request](api/request.md)
         * [parameters](api/request/parameters.md)
         * [headers](api/request/headers.md)

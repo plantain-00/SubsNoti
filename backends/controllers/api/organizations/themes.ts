@@ -84,7 +84,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         };
 
         libs._.each(themes, (theme: services.mongo.ThemeDocument) => {
-            result.themes.push(services.theme.convert(theme, request.v));
+            result.themes.push(services.theme.convert(theme));
         });
 
         services.response.sendSuccess(response, types.StatusCode.OK, result);

@@ -9,11 +9,7 @@ import * as services from "../services";
 export let publicOrganizationId: libs.ObjectId;
 export let publicOrganizationName = "public";
 
-export function convert(theme: services.mongo.ThemeDocument, v?: string): types.Theme {
-    if (!v) {
-        v = settings.pjson.version;
-    }
-
+export function convert(theme: services.mongo.ThemeDocument): types.Theme {
     let creator = <services.mongo.UserDocument>theme.creator;
     let creatorId = creator._id.toHexString();
     let result: types.Theme = {

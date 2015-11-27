@@ -91,7 +91,9 @@ export let config: types.SettingsInterface = {
     },
 };
 
-export let pjson = require("../package.json");
+let pjson = require("../package.json");
+
+export let version = pjson.version;
 
 try {
     let secret = require("./secret");

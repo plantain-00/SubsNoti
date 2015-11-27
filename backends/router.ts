@@ -18,9 +18,14 @@ import * as themes from "./controllers/api/themes";
 import * as organizations from "./controllers/api/organizations";
 import * as captcha from "./controllers/api/captcha";
 import * as html from "./controllers/html";
+import * as version from "./controllers/api/version";
 
 export function route(app: libs.Application) {
     services.rateLimit.route(app);
+
+    // this should be before the `version` route
+    services.router.bind(version.documentOfGet, version.get, app);
+
     services.version.route(app);
 
     services.router.bind(user.documentOfGet, user.get, app);

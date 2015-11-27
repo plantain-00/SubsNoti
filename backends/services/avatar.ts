@@ -69,7 +69,7 @@ function createAsync(seed: string, fileName: string): Promise<any> {
             },
         };
 
-        return services.request.postMultipartAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=${settings.pjson.version}`, formData);
+        return services.request.postMultipartAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=${settings.version}`, formData);
     });
 }
 
