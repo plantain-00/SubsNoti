@@ -24,19 +24,19 @@ services.cache.connect();
 let documentOfUploadPersistentImages: types.Document = {
     url: "/api/persistent",
     method: "post",
-    documentUrl: "/api/image/Upload images to persistent directory.html",
+    documentUrl: "/api/image/upload images to persistent directory.html",
 };
 
 let documentOfUploadTemperaryImages: types.Document = {
     url: "/api/temperary",
     method: "post",
-    documentUrl: "/api/image/Upload images to temperary directory.html",
+    documentUrl: "/api/image/upload images to temperary directory.html",
 };
 
 let documentOfMoveImage: types.Document = {
     url: "/api/persistence",
     method: "post",
-    documentUrl: "/api/image/Move image from temperary directory to persistent directory.html",
+    documentUrl: "/api/image/move image from temperary directory to persistent directory.html",
 };
 
 let storage = libs.multer.diskStorage({
