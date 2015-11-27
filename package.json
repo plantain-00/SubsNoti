@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "0.14.15",
+    "version": "0.14.16",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -35,7 +35,6 @@
         "autoprefixer": "latest",
         "del": "latest",
         "gulp": "latest",
-        "gulp-batch": "latest",
         "gulp-ejs": "latest",
         "gulp-minify-css": "latest",
         "gulp-minify-html": "latest",
@@ -46,7 +45,6 @@
         "gulp-sass": "latest",
         "gulp-shell": "latest",
         "gulp-tslint": "latest",
-        "gulp-watch": "latest",
         "webpack-stream": "latest"
     },
     "engines": {

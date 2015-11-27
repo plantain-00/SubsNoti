@@ -13,8 +13,6 @@ let path = require("path");
 let minifyCSS = require("gulp-minify-css");
 let autoprefixer = require("autoprefixer");
 let postcss = require("gulp-postcss");
-let watch = require("gulp-watch");
-let batch = require("gulp-batch");
 let revReplace = require("gulp-rev-replace");
 let shell = require("gulp-shell");
 let sass = require("gulp-sass");
@@ -52,27 +50,6 @@ let minifyHtmlConfig = {
 import * as types from "./common/types";
 
 let isDevelopment = process.env.NODE_ENV !== types.environment.production;
-
-gulp.task("watch", function() {
-    watch("frontends/styles/*.scss", batch(function(events, done) {
-        gulp.start("css", done);
-    }));
-    watch("frontends/scripts/*.js", batch(function(events, done) {
-        gulp.start("js", done);
-    }));
-    watch(["frontends/build/styles/*.css", "frontends/build/scripts/*.js"], batch(function(events, done) {
-        gulp.start("rev", done);
-    }));
-    watch(["frontends/templates/*.ejs", "frontends/build/rev-manifest.json"], batch(function(events, done) {
-        gulp.start("html", done);
-    }));
-    watch(["documents/**/*.md"], batch(function(events, done) {
-        gulp.start("doc", done);
-    }));
-    watch(["documents/**/*.dot"], batch(function(events, done) {
-        gulp.start("dot", done);
-    }));
-});
 
 gulp.task("dot", shell.task([
     "dot -Tsvg documents/database_models.dot > publish/documents/database_models.svg"
