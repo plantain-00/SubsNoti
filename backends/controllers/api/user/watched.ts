@@ -9,7 +9,7 @@ import * as services from "../../../services";
 export let documentOfWatch: types.Document = {
     url: "/api/user/watched/:theme_id",
     method: "put",
-    documentUrl: "/doc/api/Watch a theme.html",
+    documentUrl: "/api/theme/watch a theme.html",
 };
 
 export async function watch(request: libs.Request, response: libs.Response) {
@@ -75,7 +75,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 export let documentOfUnwatch: types.Document = {
     url: "/api/user/watched/:theme_id",
     method: "delete",
-    documentUrl: "/doc/api/Unwatch a theme.html",
+    documentUrl: "/api/theme/unwatch a theme.html",
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {

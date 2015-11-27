@@ -6,6 +6,10 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
+function redirectToErrorPage(response: libs.Response, message: string) {
+    response.redirect("/error.html?message=" + encodeURIComponent(message));
+}
+
 function setCookie(request: libs.Request, response: libs.Response, token: string) {
     if (!token) {
         response.redirect("/success.html");
@@ -55,18 +59,18 @@ export async function githubCode(request: libs.Request, response: libs.Response)
     let code = libs.validator.trim(request.query.code);
 
     if (state === "") {
-        services.response.redirectToErrorPage(response, "missed parameter:state");
+        redirectToErrorPage(response, "missed parameter:state");
         return;
     }
 
     if (code === "") {
-        services.response.redirectToErrorPage(response, "missed parameter:code");
+        redirectToErrorPage(response, "missed parameter:code");
         return;
     }
 
     let value = await services.cache.getStringAsync(settings.config.cacheKeys.githubLoginCode + state);
     if (!value) {
-        services.response.redirectToErrorPage(response, "invalid parameter:state");
+        redirectToErrorPage(response, "invalid parameter:state");
         return;
     }
 
@@ -98,7 +102,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             return b.verified && b.primary;
         });
         if (!email) {
-            services.response.redirectToErrorPage(response, "no verified email");
+            redirectToErrorPage(response, "no verified email");
             return;
         }
 
@@ -108,6 +112,6 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         setCookie(request, response, token);
     } catch (error) {
-        services.response.redirectToErrorPage(response, error.message);
+        redirectToErrorPage(response, error.message);
     }
 }

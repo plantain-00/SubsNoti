@@ -11,7 +11,7 @@ export let publicOrganizationName = "public";
 
 export function convert(theme: services.mongo.ThemeDocument, v?: string): types.Theme {
     if (!v) {
-        v = "0.11.5";
+        v = settings.pjson.version;
     }
 
     let creator = <services.mongo.UserDocument>theme.creator;

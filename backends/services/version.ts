@@ -6,7 +6,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let documentUrl = "/doc/api/Parameters.html";
+let documentUrl = "/api/Parameters.html";
 let versionHeaderName = "X-Version";
 
 export function route(app: libs.Application) {

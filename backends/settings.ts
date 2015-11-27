@@ -84,6 +84,11 @@ export let config: types.SettingsInterface = {
             clientSecret: "",
         },
     },
+    documentServer: {
+        port: 9997,
+        innerHostName: "0.0.0.0",
+        outerHostName: "localhost",
+    },
 };
 
 export let pjson = require("../package.json");

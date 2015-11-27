@@ -9,7 +9,7 @@ import * as services from "../../../services";
 export let documentOfDelete: types.Document = {
     url: "/api/user/logged_in",
     method: "delete",
-    documentUrl: "/doc/api/Log out.html",
+    documentUrl: "/api/authentication/log out.html",
 };
 
 export function deleteThis(request: libs.Request, response: libs.Response): void {

@@ -9,7 +9,7 @@ import * as services from "../../services";
 export let documentOfCreate: types.Document = {
     url: "/api/captchas",
     method: "post",
-    documentUrl: "/doc/api/Create an captcha.html",
+    documentUrl: "/api/authentication/create an captcha.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {

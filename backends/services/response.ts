@@ -26,7 +26,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: documentUrl ? documentUrl : response.documentUrl,
+        documentUrl: `http://${settings.config.documentServer.outerHostName}:${settings.config.documentServer.port}` + (documentUrl ? documentUrl : response.documentUrl),
     };
 
     if (!isE) {
@@ -38,8 +38,4 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
     }
 
     response.status(200).json(baseResponse);
-}
-
-export function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect("/error.html?message=" + encodeURIComponent(message));
 }

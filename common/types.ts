@@ -197,4 +197,9 @@ export interface SettingsInterface {
             clientSecret: string,
         },
     };
+    documentServer: {
+        port: number,
+        innerHostName: string,
+        outerHostName: string,
+    };
 }

@@ -9,7 +9,7 @@ import * as services from "../../services";
 export let documentOfCreate: types.Document = {
     url: "/api/organizations",
     method: "post",
-    documentUrl: "/doc/api/Create an organization.html",
+    documentUrl: "/api/organization/create an organization.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {

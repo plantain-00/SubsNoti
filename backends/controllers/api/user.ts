@@ -9,7 +9,7 @@ import * as services from "../../services";
 export let documentOfGet: types.Document = {
     url: "/api/user",
     method: "get",
-    documentUrl: "/doc/api/Get current user.html",
+    documentUrl: "/api/user/get current user.html",
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
@@ -42,7 +42,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 export let documentOfUpdate: types.Document = {
     url: "/api/user",
     method: "put",
-    documentUrl: "/doc/api/Update current user.html",
+    documentUrl: "/api/user/update current user.html",
 };
 
 export async function update(request: libs.Request, response: libs.Response) {

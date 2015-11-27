@@ -9,7 +9,7 @@ import * as services from "../../../services";
 export let documentOfGet: types.Document = {
     url: "/api/user/created",
     method: "get",
-    documentUrl: "/doc/api/Get created organizations.html",
+    documentUrl: "/api/organization/get created organizations.html",
 };
 
 export async function get(request: libs.Request, response: libs.Response) {

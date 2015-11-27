@@ -9,7 +9,7 @@ import * as services from "../../services";
 export let documentOfCreate: types.Document = {
     url: "/api/themes",
     method: "post",
-    documentUrl: "/doc/api/Create a theme.html",
+    documentUrl: "/api/theme/create a theme.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
@@ -99,7 +99,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 export let documentOfUpdate: types.Document = {
     url: "/api/themes/:theme_id",
     method: "put",
-    documentUrl: "/doc/api/Update a theme.html",
+    documentUrl: "/api/theme/update a theme.html",
 };
 
 export async function update(request: libs.Request, response: libs.Response) {

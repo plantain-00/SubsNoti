@@ -9,7 +9,7 @@ import * as services from "../../services";
 export let documentOfCreate: types.Document = {
     url: "/api/tokens",
     method: "post",
-    documentUrl: "/doc/api/Send token via email.html",
+    documentUrl: "/api/authentication/send token via email.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {

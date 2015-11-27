@@ -11,7 +11,7 @@ interface Rate {
     resetMoment: string;
 }
 
-let documentUrl = "/doc/api/Response.html";
+let documentUrl = "/api/Response.html";
 
 export function route(app: libs.Application) {
     app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
