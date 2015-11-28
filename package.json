@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "0.14.12",
+    "version": "1.0.0",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -27,27 +27,15 @@
         "request": "latest",
         "semver": "latest",
         "socket.io": "latest",
-        "tslint": "next",
-        "typescript": "next",
         "validator": "latest"
     },
     "devDependencies": {
-        "autoprefixer": "latest",
-        "del": "latest",
         "gulp": "latest",
-        "gulp-batch": "latest",
-        "gulp-ejs": "latest",
-        "gulp-minify-css": "latest",
-        "gulp-minify-html": "latest",
-        "gulp-postcss": "latest",
-        "gulp-rename": "latest",
-        "gulp-rev": "latest",
-        "gulp-rev-replace": "latest",
-        "gulp-sass": "latest",
         "gulp-shell": "latest",
-        "gulp-tslint": "latest",
-        "gulp-watch": "latest",
-        "webpack-stream": "latest"
+        "gulp-tslint": "^3.6.0",
+        "live-server": "latest",
+        "tslint": "next",
+        "typescript": "next"
     },
     "engines": {
         "node": "4.x"

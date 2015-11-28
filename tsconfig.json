@@ -5,9 +5,6 @@
     },
     "exclude": [
         "node_modules",
-        "frontends",
-        "backends",
-        "documents",
-        "publish"
+        "typings"
     ]
 }

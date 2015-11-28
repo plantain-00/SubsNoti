@@ -3,65 +3,39 @@
 
 # tools and global npm packages
 
-+ git
 + node.js >=4.0(for ES6 support)
-+ tsd
-+ typescript >=1.8(for ES6 and ES7 async function support)
++ typescript@next(for ES6 and ES7 async function support)
 + gulp
 + mocha
-+ mysql(optional)
 + mongodb
 + redis
-+ gitbook-cli
-+ graphviz
 + node-gyp build environment
 + node-canvas environment
-+ scss-lint
-
-## server only
-
-+ pm2
-
-## development only
-
-+ nodemon
++ pm2(host api and image uploader)
 
 # development
 
-## make
++ `npm install`
++ `gulp build`
++ `gulp host`
++ `gulp host-imageUploader`
++ `gulp host-imageServer`
 
-+ `script/make.bat`
+# production
 
-or
-
-+ `script/make.sh`
-
-then all is in `publish`.
-
-## watch
-
-+ `script/watch.bat`
-
-or
-
-+ `script/watch.sh`
-
-# deploy
-
-+ `git pull`
-+ `scripts/make.sh`
-+ `scripts/deploy.sh`
++ `gulp deploy`
++ `pm2 restart all`
 
 # demo
 
-## development
+## api
 
-http://115.29.42.125:8888/
+http://115.29.42.125:9998/
 
-## production
+## image uploader
 
-http://115.29.42.125/
+http://115.29.42.125:9999/
 
-## document
+## image server
 
-http://115.29.42.125:9997/
+http://115.29.42.125:7777/
