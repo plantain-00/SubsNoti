@@ -17,9 +17,6 @@
         "express/express.d.ts": {
             "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
         },
-        "gulp/gulp.d.ts": {
-            "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
-        },
         "mysql/mysql.d.ts": {
             "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
         },

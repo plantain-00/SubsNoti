@@ -1,5 +1,4 @@
 /// <reference path="express/express.d.ts" />
-/// <reference path="gulp/gulp.d.ts" />
 /// <reference path="lodash/lodash.d.ts" />
 /// <reference path="mime/mime.d.ts" />
 /// <reference path="mocha/mocha.d.ts" />

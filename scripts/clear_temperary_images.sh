@@ -1,1 +1,0 @@
-rm -rf /opt/SubsNoti_dev/images/tmp/*
