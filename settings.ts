@@ -1,6 +1,6 @@
 "use strict";
 
-import * as types from "../common/types";
+import * as types from "./types";
 
 export let config: types.SettingsInterface = {
     currentEnvironment: types.environment.development,

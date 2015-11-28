@@ -1,6 +1,8 @@
+/// <reference path="./typings/tsd.d.ts" />
+
 "use strict";
 
-var gulp = require("gulp");
+import * as gulp from "gulp";
 let shell = require("gulp-shell");
 let tslint = require("gulp-tslint");
 let liveServer = require("live-server");
@@ -8,7 +10,7 @@ let pjson = require("./package.json");
 
 var types = require("./common/types");
 
-let command = "tsc -p backends --pretty && gulp build-backends-package"
+let command = "tsc --pretty && gulp build-backends-package"
 
 gulp.task("build", shell.task("gulp build-backends && mocha publish/backends/tests && gulp tslint"));
 
