@@ -11,7 +11,7 @@ import * as services from "../services";
 export async function createIfNotExistsAsync(id: string): Promise<void> {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
-    let response = await services.request.getAsync(`http://${settings.config.imageServer.outerHostName}:${settings.config.imageServer.port}/${fileName}`, "html");
+    let response = await services.request.getAsync(`${settings.imageServer}/${fileName}`, "html");
     if (response.response.statusCode === 200) {
         console.log("exists:" + fileName);
         return Promise.resolve();
@@ -68,10 +68,10 @@ function createAsync(seed: string, fileName: string): Promise<any> {
             },
         };
 
-        return services.request.postMultipartAsync(`http://${settings.config.imageUploader.outerHostName}:${settings.config.imageUploader.port}/api/persistent?v=${settings.version}`, formData);
+        return services.request.postMultipartAsync(`${settings.imageUploader}/api/persistent`, settings.version, formData);
     });
 }
 
 export function getDefaultName(id: string): string {
-    return settings.config.avatar + id + ".png";
+    return settings.imagePaths.avatar + id + ".png";
 }

@@ -5,9 +5,13 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let pool = libs.mysql.createPool(settings.config.db);
+let pool: libs.mysql.IPool;
 
 import MysqlConnection = libs.mysql.IConnection;
+
+export function connect() {
+    pool = libs.mysql.createPool(settings.db);
+}
 
 function getConnection(): Promise<MysqlConnection> {
     return new Promise<MysqlConnection>((resolve, reject) => {

@@ -11,7 +11,7 @@ let versionHeaderName = "X-Version";
 export function route(app: libs.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
         let v = libs.validator.trim(request.header(versionHeaderName));
-        if (request.path === settings.config.urls.login && request.method === "GET") {
+        if (request.path === settings.urls.login && request.method === "GET") {
             next();
             return;
         }

@@ -2,105 +2,123 @@
 
 import * as types from "./types";
 
-export let config: types.SettingsInterface = {
-    currentEnvironment: types.environment.development,
-    db: {
-        host: "",
+export let currentEnvironment: types.Environment = types.environment.development;
+
+export let db = {
+    host: "",
+    user: "",
+    password: "",
+    database: "",
+};
+
+export let smtp = {
+    host: "",
+    auth: {
         user: "",
-        password: "",
-        database: "",
+        pass: "",
     },
-    website: {
-        port: 9998,
-        innerHostName: "0.0.0.0",
-        outerHostName: "localhost",
+};
+
+export let redis = {
+    host: "",
+    port: 6379,
+    options: {
+        auth_pass: ""
     },
-    smtp: {
-        host: "",
-        name: "",
-        password: "",
+};
+
+export let mongodb = {
+    url: "",
+    options: {
+        user: "",
+        pass: "",
     },
-    redis: {
-        host: "",
-        port: 6379,
-        options: {
-            auth_pass: ""
-        },
-    },
-    mongodb: {
-        url: "",
-        options: {
-            user: "",
-            pass: "",
-        },
-    },
-    urls: {
-        login: "/login_with_authentication_credential"
-    },
-    maxOrganizationNumberUserCanCreate: 3,
-    cookieKeys: {
-        authenticationCredential: "authentication_credential"
-    },
-    cacheKeys: {
-        user: "user_",
-        emailFrequency: "email_frequency_",
-        userCaptcha: "user_captcha_",
-        userCaptchaFrequency: "user_captcha_frequency_",
-        rateLimit: {
-            userId: "rateLimit_userId_",
-            ip: "rateLimit_ip_",
-            contentCreation: "rateLimit_contentCreation_",
-        },
-        githubLoginCode: "github_login_",
-    },
-    defaultItemLimit: 10,
-    imageServer: {
-        port: 7777,
-        innerHostName: "0.0.0.0",
-        outerHostName: "localhost",
-    },
-    ipWhiteList: [
-        "127.0.0.1"
-    ],
-    imageUploader: {
-        port: 9999,
-        innerHostName: "0.0.0.0",
-        outerHostName: "localhost",
-    },
-    avatar: "avatar-",
-    cors: {
-        methods: "GET,PUT,POST,DELETE",
-        credentials: true,
-        origin: [
-            "http://localhost:8888",
-            "http://localhost:80",
-        ],
-    },
+};
+
+export let api = {
+    host: "localhost",
+    port: 9998,
+};
+
+export function getApi() {
+    if (api.port === 80) {
+        return `http://${api.host}`;
+    }
+    return `http://${api.host}:${api.port}`;
+}
+
+export let urls: {
+    login: "/login_with_authentication_credential"
+};
+
+export let imageUploader = {
+    host: "localhost",
+    port: 9999,
+};
+
+export function getImageUploader() {
+    if (imageUploader.port === 80) {
+        return `http://${imageUploader.host}`;
+    }
+    return `http://${imageUploader.host}:${imageUploader.port}`;
+}
+
+export let documentServer = "http://localhost:9997";
+
+export let imageServer = "http://localhost:7777";
+
+export let maxOrganizationNumberUserCanCreate = 3;
+
+export let cookieKeys: {
+    authenticationCredential: "authentication_credential"
+};
+
+export let cacheKeys = {
+    user: "user_",
+    userCaptcha: "user_captcha_",
     rateLimit: {
-        user: 5000,
-        ip: 600,
-        contentCreation: 10,
+        userId: "rateLimit_userId_",
+        ip: "rateLimit_ip_",
+        contentCreation: "rateLimit_contentCreation_",
+        sendEmail: "rateLimit_sendEmail_",
+        userCaptcha: "rateLimit_userCaptcha_",
     },
-    login: {
-        github: {
-            clientId: "",
-            clientSecret: "",
-        },
-    },
-    documentServer: {
-        port: 9997,
-        innerHostName: "0.0.0.0",
-        outerHostName: "localhost",
+    githubLoginCode: "github_login_",
+};
+
+export let defaultItemLimit = 10;
+
+export let uploadIPWhiteList: [
+    "127.0.0.1"
+];
+
+export let imagePaths = {
+    avatar: "avatar-"
+};
+
+export let cors = {
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+    origin: [
+        "http://localhost:8888"
+    ],
+};
+
+export let rateLimit = {
+    user: 5000,
+    ip: 600,
+    contentCreation: 10,
+    sendEmail: 3600,
+    userCaptcha: 1,
+};
+
+export let login = {
+    github: {
+        clientId: "",
+        clientSecret: "",
     },
 };
 
 let pjson = require("./package.json");
 
 export let version = pjson.version;
-
-try {
-    let secret = require("./secret");
-    secret.load(config);
-} catch (e) {
-    console.log(e);
-}

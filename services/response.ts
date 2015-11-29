@@ -25,14 +25,14 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: `http://${settings.config.documentServer.outerHostName}:${settings.config.documentServer.port}` + (documentUrl ? documentUrl : response.documentUrl),
+        documentUrl: settings.documentServer + (documentUrl ? documentUrl : response.documentUrl),
     };
 
     if (!isE) {
         baseResponse.actualErrorMessage = error.message;
     }
 
-    if (settings.config.currentEnvironment === types.environment.development) {
+    if (settings.currentEnvironment === types.environment.development) {
         baseResponse.stack = error.stack;
     }
 

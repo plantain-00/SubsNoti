@@ -13,7 +13,7 @@ export let documentOfDelete: types.Document = {
 };
 
 export function deleteThis(request: libs.Request, response: libs.Response): void {
-    response.clearCookie(settings.config.cookieKeys.authenticationCredential);
+    response.clearCookie(settings.cookieKeys.authenticationCredential);
 
     services.response.sendSuccess(response, types.StatusCode.deleted);
 }

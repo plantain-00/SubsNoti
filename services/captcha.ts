@@ -9,12 +9,12 @@ import * as services from "../services";
  * create a code, store it in cache, create an image, return an base64 url of it.
  */
 export async function create(id: string): Promise<string> {
-    await services.frequency.limitCaptcha(id, 1);
+    await services.frequency.limitCaptcha(id);
 
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.
     let code = Math.round((Math.random() * 35 + 1) * 60466176).toString(36).toUpperCase();
 
-    services.cache.setString(settings.config.cacheKeys.userCaptcha + id, code, 60);
+    services.cache.setString(settings.cacheKeys.userCaptcha + id, code, 60);
 
     let width = 140;
     let height = 45;
@@ -34,7 +34,7 @@ export async function create(id: string): Promise<string> {
  * validate the code matched the one from the cache.
  */
 export async function validate(id: string, code: string): Promise<void> {
-    let key = settings.config.cacheKeys.userCaptcha + id;
+    let key = settings.cacheKeys.userCaptcha + id;
     let targetCode = await services.cache.getStringAsync(key);
 
     await services.cache.deleteKeyAsync(key);

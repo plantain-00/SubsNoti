@@ -56,7 +56,7 @@ export interface ThemeDocument extends libs.mongoose.Document {
 }
 
 export function connect() {
-    libs.mongoose.connect(settings.config.mongodb.url, settings.config.mongodb.options);
+    libs.mongoose.connect(settings.mongodb.url, settings.mongodb.options);
 
     libs.mongoose.connection.on("error", console.error.bind(console, "connection error:"));
 

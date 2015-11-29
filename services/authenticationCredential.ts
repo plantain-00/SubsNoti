@@ -14,7 +14,7 @@ export function create(userId: string, salt: string): string {
  * identify current user.
  */
 export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
-    return authenticateCookie(request.cookies[settings.config.cookieKeys.authenticationCredential]);
+    return authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
 }
 
 /**
@@ -27,7 +27,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
     }
 
     // may be it is already in cache.
-    let reply = await services.cache.getStringAsync(settings.config.cacheKeys.user + authenticationCredential);
+    let reply = await services.cache.getStringAsync(settings.cacheKeys.user + authenticationCredential);
     if (reply) {
         return Promise.resolve(new libs.ObjectId(reply));
     }
@@ -58,7 +58,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
 
     // should be verified.
     if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
-        services.cache.setString(settings.config.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
+        services.cache.setString(settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return Promise.resolve(id);
     } else {

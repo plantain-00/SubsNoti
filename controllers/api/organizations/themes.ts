@@ -20,7 +20,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         let organizationId = new libs.ObjectId(request.params.organization_id);
         let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
-        let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.config.defaultItemLimit;
+        let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.defaultItemLimit;
         let q = libs.validator.trim(request.query.q);
         let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
         let isClosed = libs.validator.trim(request.query.isClosed) === "true";

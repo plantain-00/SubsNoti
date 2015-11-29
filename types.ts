@@ -1,7 +1,3 @@
-/**
- * enum, interface, class, type. do not rely on other thing.
- */
-
 export const enum OrganizationStatus {
     normal
 }
@@ -78,7 +74,7 @@ export interface ObsoleteDocument extends Document {
     expiredDate: string;
 }
 
-type Environment = "development" | "production";
+export type Environment = "development" | "production";
 
 export const environment = {
     development: <Environment>"development",
@@ -118,90 +114,3 @@ export const responseType = {
     json: <ResponseType>"json",
     html: <ResponseType>"html",
 };
-
-export interface SettingsInterface {
-    currentEnvironment: Environment;
-    db: {
-        host: string,
-        user: string,
-        password: string,
-        database: string,
-    };
-    website: {
-        port: number,
-        innerHostName: string,
-        outerHostName: string,
-    };
-    smtp: {
-        host: string,
-        name: string,
-        password: string,
-    };
-    redis: {
-        host: string,
-        port: number,
-        options: {
-            auth_pass: string,
-        },
-    };
-    mongodb: {
-        url: string,
-        options: {
-            user: string,
-            pass: string
-        },
-    };
-    urls: {
-        login: string
-    };
-    maxOrganizationNumberUserCanCreate: number;
-    cookieKeys: {
-        authenticationCredential: string
-    };
-    cacheKeys: {
-        user: string,
-        emailFrequency: string,
-        userCaptcha: string,
-        userCaptchaFrequency: string,
-        rateLimit: {
-            userId: string,
-            ip: string,
-            contentCreation: string,
-        },
-        githubLoginCode: string,
-    };
-    defaultItemLimit: number;
-    imageServer: {
-        port: number,
-        innerHostName: string,
-        outerHostName: string,
-    };
-    ipWhiteList: string[];
-    imageUploader: {
-        port: number,
-        innerHostName: string,
-        outerHostName: string,
-    };
-    avatar: string;
-    cors: {
-        methods: string | string[],
-        credentials: boolean,
-        origin: Array<string | RegExp>,
-    };
-    rateLimit: {
-        user: number,
-        ip: number,
-        contentCreation: number,
-    };
-    login: {
-        github: {
-            clientId: string,
-            clientSecret: string,
-        },
-    };
-    documentServer: {
-        port: number,
-        innerHostName: string,
-        outerHostName: string,
-    };
-}

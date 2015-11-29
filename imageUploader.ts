@@ -3,11 +3,19 @@
 import * as types from "./types";
 import * as libs from "./libs";
 import * as settings from "./settings";
+
+try {
+    let secret = require("./secret");
+    secret.load();
+} catch (e) {
+    console.log(e);
+}
+
 import * as services from "./services";
 
 let app: libs.Application = libs.express();
 
-app.settings.env = settings.config.currentEnvironment;
+app.settings.env = settings.currentEnvironment;
 
 app.use(libs.compression());
 
@@ -16,7 +24,7 @@ app.use(libs.cookieParser());
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-app.use(libs.cors(settings.config.cors));
+app.use(libs.cors(settings.cors));
 
 services.cache.connect();
 
@@ -64,7 +72,7 @@ let upload = libs.multer({ storage: storage }).any();
 services.version.route(app);
 
 function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-    if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
+    if (!libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
         services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden));
         return;
     }
@@ -118,7 +126,7 @@ function moveImage(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    if (!libs._.find(settings.config.ipWhiteList, i => i === request.ip)) {
+    if (!libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
         services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list.`, types.StatusCode.forbidden), documentOfUploadPersistentImages.documentUrl);
         return;
     }
@@ -137,6 +145,6 @@ services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, a
 services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app);
 services.router.bind(documentOfMoveImage, moveImage, app);
 
-app.listen(settings.config.imageUploader.port, settings.config.imageUploader.innerHostName, () => {
-    console.log(`Image uploader is listening: ${settings.config.imageUploader.innerHostName}:${settings.config.imageUploader.port}`);
+app.listen(settings.imageUploader.port, settings.imageUploader.host, () => {
+    console.log(`Image uploader is listening: ${settings.getImageUploader()}`);
 });

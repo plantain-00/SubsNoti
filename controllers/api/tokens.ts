@@ -33,7 +33,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let token = await services.tokens.create(email, documentOfCreate.url, request);
 
-        let url = `http://${settings.config.website.outerHostName}:${settings.config.website.port}${settings.config.urls.login}?authentication_credential=${token}`;
+        let url = `${settings.getApi()}${settings.urls.login}?authentication_credential=${token}`;
 
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 

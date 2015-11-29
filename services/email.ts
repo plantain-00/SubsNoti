@@ -5,17 +5,15 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let transporter = libs.nodemailer.createTransport({
-    host: settings.config.smtp.host,
-    auth: {
-        user: settings.config.smtp.name,
-        pass: settings.config.smtp.password,
-    },
-});
+let transporter: libs.nodemailer.Transporter;
+
+export function connect() {
+    transporter = libs.nodemailer.createTransport(settings.smtp);
+}
 
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     let mailOptions = {
-        from: settings.config.smtp.name,
+        from: settings.smtp.auth.user,
         to: to,
         subject: subject,
         html: html,

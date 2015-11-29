@@ -44,7 +44,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let user = await services.mongo.User.findOne({ _id: userId })
             .select("createdOrganizations joinedOrganizations")
             .exec();
-        if (user.createdOrganizations.length >= settings.config.maxOrganizationNumberUserCanCreate) {
+        if (user.createdOrganizations.length >= settings.maxOrganizationNumberUserCanCreate) {
             services.response.sendError(response, services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest));
             return;
         }

@@ -8,7 +8,7 @@ import * as services from "../services";
 export let client: libs.RedisClient;
 
 export function connect() {
-    client = libs.redis.createClient(settings.config.redis.port, settings.config.redis.host, settings.config.redis.options);
+    client = libs.redis.createClient(settings.redis.port, settings.redis.host, settings.redis.options);
     client.on("error", error => {
         console.log(error);
     });

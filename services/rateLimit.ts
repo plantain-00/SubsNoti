@@ -28,18 +28,18 @@ export function route(app: libs.Application) {
 
         if (userId) {
             if (request.method === "POST") {
-                key = settings.config.cacheKeys.rateLimit.contentCreation + userId.toHexString();
+                key = settings.cacheKeys.rateLimit.contentCreation + userId.toHexString();
                 errorMessage = "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.";
-                limit = settings.config.rateLimit.contentCreation;
+                limit = settings.rateLimit.contentCreation;
             } else {
-                key = settings.config.cacheKeys.rateLimit.userId + userId.toHexString();
+                key = settings.cacheKeys.rateLimit.userId + userId.toHexString();
                 errorMessage = "API rate limit exceeded for current user.";
-                limit = settings.config.rateLimit.user;
+                limit = settings.rateLimit.user;
             }
         } else {
-            key = settings.config.cacheKeys.rateLimit.ip + request.ip;
+            key = settings.cacheKeys.rateLimit.ip + request.ip;
             errorMessage = `API rate limit exceeded for ${request.ip}, you can login to get a higher rate limit.`;
-            limit = settings.config.rateLimit.ip;
+            limit = settings.rateLimit.ip;
         }
 
         let value = await services.cache.getStringAsync(key);

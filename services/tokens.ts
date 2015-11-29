@@ -29,7 +29,7 @@ export async function create(email: string, url: string, request: libs.Request):
         services.logger.log(url, request);
     }
 
-    await services.frequency.limitEmail(email, 60 * 60);
+    await services.frequency.limitEmail(email);
 
     let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
 

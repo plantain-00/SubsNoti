@@ -3,6 +3,14 @@
 import * as types from "./types";
 import * as libs from "./libs";
 import * as settings from "./settings";
+
+try {
+    let secret = require("./secret");
+    secret.load();
+} catch (e) {
+    console.log(e);
+}
+
 import * as services from "./services";
 
 import * as user from "./controllers/api/user";
@@ -21,7 +29,7 @@ import * as version from "./controllers/api/version";
 
 let app: libs.Application = libs.express();
 
-app.settings.env = settings.config.currentEnvironment;
+app.settings.env = settings.currentEnvironment;
 
 app.use(libs.compression());
 
@@ -30,7 +38,7 @@ app.use(libs.cookieParser());
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-app.use(libs.cors(settings.config.cors));
+app.use(libs.cors(settings.cors));
 
 services.rateLimit.route(app);
 
@@ -71,12 +79,14 @@ services.mongo.connect();
 
 services.cache.connect();
 
+services.email.connect();
+
 (async () => {
     await services.seed.init();
 })();
 
-let server = app.listen(settings.config.website.port, settings.config.website.innerHostName, () => {
-    console.log(`Server is listening: ${settings.config.website.innerHostName}:${settings.config.website.port}`);
+let server = app.listen(settings.api.port, settings.api.host, () => {
+    console.log(`Server is listening: ${settings.getApi()}`);
 });
 
 services.push.connect(server);
