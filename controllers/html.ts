@@ -108,7 +108,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         let verifiedEmail = email.email.toLowerCase();
 
-        let token = await services.tokens.create(verifiedEmail, githubCodeUrl, request);
+        let token = await services.tokens.create(verifiedEmail, githubCodeUrl, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);
     } catch (error) {

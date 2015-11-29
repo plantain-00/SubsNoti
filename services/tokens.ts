@@ -5,7 +5,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-export async function create(email: string, url: string, request: libs.Request): Promise<string> {
+export async function create(email: string, url: string, request: libs.Request, name: string): Promise<string> {
     if (!libs.validator.isEmail(email)) {
         return Promise.reject<string>(services.error.fromParameterIsInvalidMessage("email"));
     }

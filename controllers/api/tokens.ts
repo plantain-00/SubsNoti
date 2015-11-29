@@ -31,7 +31,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         await services.captcha.validate(guid, code);
 
-        let token = await services.tokens.create(email, documentOfCreate.url, request);
+        let token = await services.tokens.create(email, documentOfCreate.url, request, name);
 
         let url = `${settings.getApi()}${settings.urls.login}?authentication_credential=${token}`;
 
