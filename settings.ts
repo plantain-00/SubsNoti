@@ -47,7 +47,7 @@ export function getApi() {
     return `http://${api.host}:${api.port}`;
 }
 
-export let urls: {
+export let urls = {
     login: "/login_with_authentication_credential"
 };
 
@@ -69,7 +69,7 @@ export let imageServer = "http://localhost:7777";
 
 export let maxOrganizationNumberUserCanCreate = 3;
 
-export let cookieKeys: {
+export let cookieKeys = {
     authenticationCredential: "authentication_credential"
 };
 
@@ -88,7 +88,7 @@ export let cacheKeys = {
 
 export let defaultItemLimit = 10;
 
-export let uploadIPWhiteList: [
+export let uploadIPWhiteList = [
     "127.0.0.1"
 ];
 
