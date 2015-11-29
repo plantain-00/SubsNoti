@@ -29,8 +29,10 @@ export let config: types.SettingsInterface = {
     },
     mongodb: {
         url: "",
-        user: "",
-        password: "",
+        options: {
+            user: "",
+            pass: "",
+        },
     },
     urls: {
         login: "/login_with_authentication_credential"

@@ -146,8 +146,10 @@ export interface SettingsInterface {
     };
     mongodb: {
         url: string,
-        user: string,
-        password: string
+        options: {
+            user: string,
+            pass: string
+        },
     };
     urls: {
         login: string
