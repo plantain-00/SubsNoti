@@ -21,7 +21,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         httpOnly: true,
     });
 
-    response.redirect(settings.getApi() + "/success.html?clear_previous_status=√");
+    response.redirect(settings.frontEndsServer + "/success.html?clear_previous_status=√");
 }
 
 export let documentOfLogin: types.Document = {
