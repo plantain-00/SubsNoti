@@ -26,7 +26,7 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
     if (value) {
         let reply = await services.cache.ttlAsync(frequencyKey);
 
-        return Promise.reject(new Error(`do it later after ${reply} seconds`));
+        return Promise.reject(services.error.fromMessage(`do it later after ${reply} seconds`, types.StatusCode.tooManyRequest));
     }
 
     services.cache.setString(frequencyKey, "1", seconds);

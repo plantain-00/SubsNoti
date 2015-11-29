@@ -23,21 +23,25 @@ export function fromMessage(message: string, statusCode: types.StatusCode): type
 }
 
 export function fromParameterIsMissedMessage(parameter: string): types.E {
-    return fromError(new Error(`the parameter '${parameter}' is missed.`), types.StatusCode.invalidRequest);
+    return fromMessage(`the parameter '${parameter}' is missed.`, types.StatusCode.invalidRequest);
 }
 
 export function fromParameterIsInvalidMessage(parameter: string): types.E {
-    return fromError(new Error(`the parameter '${parameter}' is invalid.`), types.StatusCode.invalidRequest);
+    return fromMessage(`the parameter '${parameter}' is invalid.`, types.StatusCode.invalidRequest);
 }
 
 export function fromOrganizationIsPrivateMessage(): types.E {
-    return fromError(new Error(`the organization is private and only available to its members.`), types.StatusCode.unauthorized);
+    return fromMessage(`the organization is private and only available to its members.`, types.StatusCode.unauthorized);
 }
 
 export function fromThemeIsNotYoursMessage(): types.E {
-    return fromError(new Error(`the theme is not owned by you.`), types.StatusCode.unauthorized);
+    return fromMessage(`the theme is not owned by you.`, types.StatusCode.unauthorized);
 }
 
 export function fromUnauthorized(): types.E {
-    return fromError(new Error("the authentication credential is missed, out of date or invalid"), types.StatusCode.unauthorized);
+    return fromMessage("the authentication credential is missed, out of date or invalid", types.StatusCode.unauthorized);
+}
+
+export function fromInvalidIP(ip): types.E {
+    return fromMessage(`your ip ${ip} in not in the white list.`, types.StatusCode.forbidden);
 }

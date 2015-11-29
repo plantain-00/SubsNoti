@@ -75,7 +75,7 @@ services.version.route(app);
 
 function uploadPersistentImages(request: libs.Request, response: libs.Response) {
     if (!libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list. the white list is: ${settings.uploadIPWhiteList.join()}.`, types.StatusCode.forbidden));
+        services.response.sendError(response, services.error.fromInvalidIP(request.ip));
         return;
     }
 
@@ -129,7 +129,7 @@ function moveImage(request: libs.Request, response: libs.Response) {
     }
 
     if (!libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
-        services.response.sendError(response, services.error.fromMessage(`your ip ${request.ip} in not in the white list. the white list is: ${settings.uploadIPWhiteList.join()}.`, types.StatusCode.forbidden), documentOfMoveImage.documentUrl);
+        services.response.sendError(response, services.error.fromInvalidIP(request.ip), documentOfMoveImage.documentUrl);
         return;
     }
 

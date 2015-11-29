@@ -14,7 +14,6 @@ export async function create(email: string, url: string, request: libs.Request):
 
     // find out if the email is someone's. if no, create an account.
     let user = await services.mongo.User.findOne({ email: email })
-        .select("_id salt email")
         .exec();
     if (!user) {
         let salt = libs.generateUuid();
