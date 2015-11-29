@@ -67,6 +67,8 @@ export let documentServer = "http://localhost:9997";
 
 export let imageServer = "http://localhost:7777";
 
+export let frontEndsServer = "http://localhost:8888";
+
 export let maxOrganizationNumberUserCanCreate = 3;
 
 export let cookieKeys = {
