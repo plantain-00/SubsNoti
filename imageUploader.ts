@@ -69,6 +69,8 @@ let storage = libs.multer.diskStorage({
 
 let upload = libs.multer({ storage: storage }).any();
 
+services.rateLimit.route(app);
+
 services.version.route(app);
 
 function uploadPersistentImages(request: libs.Request, response: libs.Response) {
