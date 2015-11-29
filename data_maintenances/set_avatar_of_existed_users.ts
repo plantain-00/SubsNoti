@@ -2,6 +2,14 @@
 
 import * as libs from "../libs";
 import * as settings from "../settings";
+
+try {
+    let secret = require("../secret");
+    secret.load();
+} catch (e) {
+    console.log(e);
+}
+
 import * as services from "../services";
 
 services.mongo.connect();

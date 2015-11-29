@@ -11,18 +11,19 @@ import * as services from "../services";
 export async function createIfNotExistsAsync(id: string): Promise<void> {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
-    let response = await services.request.getAsync(`${settings.imageServer}/${fileName}`, "html");
-    if (response.response.statusCode === 200) {
+    let existResponse = await services.request.getAsync(`${settings.imageServer}/${fileName}`, "html");
+    if (existResponse.response.statusCode === 200) {
         console.log("exists:" + fileName);
-        return Promise.resolve();
     } else {
-        console.log("statusCode:" + response.response.statusCode);
+        console.log("statusCode:" + existResponse.response.statusCode);
         console.log("creating:" + fileName);
-        return createAsync(seed, fileName);
+        let creationResponse = await createAsync(seed, fileName);
+        console.log(creationResponse.body);
     }
+    return Promise.resolve();
 }
 
-function createAsync(seed: string, fileName: string): Promise<any> {
+function createAsync(seed: string, fileName: string) {
     let red = seed.substr(0, 2);
     let blue = seed.substr(2, 2);
     let green = seed.substr(4, 2);
@@ -57,9 +58,7 @@ function createAsync(seed: string, fileName: string): Promise<any> {
             resolve(buf);
         });
     }).then(buf => {
-        let formData = {
-
-        };
+        let formData = {};
         formData[fileName] = {
             value: buf,
             options: {

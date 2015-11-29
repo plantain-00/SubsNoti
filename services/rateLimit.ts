@@ -26,6 +26,12 @@ export function route(app: libs.Application) {
         let errorMessage: string;
         let limit: number;
 
+        // no rate limit for ip in the white list.
+        if (libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
+            next();
+            return;
+        }
+
         if (userId) {
             if (request.method === "POST") {
                 key = settings.cacheKeys.rateLimit.contentCreation + userId.toHexString();
