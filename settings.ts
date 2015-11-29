@@ -76,7 +76,7 @@ export let config: types.SettingsInterface = {
     },
     rateLimit: {
         user: 5000,
-        ip: 60,
+        ip: 600,
         contentCreation: 10,
     },
     login: {
@@ -92,7 +92,7 @@ export let config: types.SettingsInterface = {
     },
 };
 
-let pjson = require("../package.json");
+let pjson = require("./package.json");
 
 export let version = pjson.version;
 

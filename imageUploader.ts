@@ -123,7 +123,7 @@ function moveImage(request: libs.Request, response: libs.Response) {
         return;
     }
 
-    libs.fs.rename(libs.path.join(__dirname, `../images/tmp/${name}`), libs.path.join(__dirname, `../images/${newName}`), error => {
+    libs.fs.rename(libs.path.join(__dirname, `images/tmp/${name}`), libs.path.join(__dirname, `images/${newName}`), error => {
         if (error) {
             services.response.sendError(response, services.error.fromMessage(error.message, types.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
             return;

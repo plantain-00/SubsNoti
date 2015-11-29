@@ -104,9 +104,9 @@ export interface Theme {
     title: string;
     detail: string;
     organizationId: string;
-    createTime: string | number;
-    updateTime?: string | number;
-    status: ThemeStatusType | ThemeStatus;
+    createTime: string;
+    updateTime?: string;
+    status: ThemeStatusType;
     creator: User;
     owners: User[];
     watchers: User[];

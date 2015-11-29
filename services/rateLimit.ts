@@ -48,6 +48,9 @@ export function route(app: libs.Application) {
         if (value) {
             rate = JSON.parse(value);
             if (rate.remain <= 0) {
+                response.setHeader("X-RateLimit-Limit", limit.toString());
+                response.setHeader("X-RateLimit-Remain", rate.remain.toString());
+                response.setHeader("X-RateLimit-ResetMoment", rate.resetMoment);
                 services.response.sendError(response, services.error.fromMessage(errorMessage, types.StatusCode.tooManyRequest), documentUrl);
                 return;
             }

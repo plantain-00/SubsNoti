@@ -6,13 +6,13 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect("/error.html?message=" + encodeURIComponent(message));
+function redirectToErrorPage(response: libs.Response, message: string, remoteAddress: string) {
+    response.redirect(remoteAddress + "/error.html?message=" + encodeURIComponent(message));
 }
 
-function setCookie(request: libs.Request, response: libs.Response, token: string) {
+function setCookie(request: libs.Request, response: libs.Response, token: string, remoteAddress: string) {
     if (!token) {
-        response.redirect("/success.html");
+        response.redirect(remoteAddress + "/success.html");
         return;
     }
 
@@ -21,7 +21,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         httpOnly: true,
     });
 
-    response.redirect("/success.html?clear_previous_status=√");
+    response.redirect(remoteAddress + "/success.html?clear_previous_status=√");
 }
 
 export let documentOfLogin: types.Document = {
@@ -31,7 +31,7 @@ export let documentOfLogin: types.Document = {
 };
 
 export function login(request: libs.Request, response: libs.Response) {
-    setCookie(request, response, request.query.authentication_credential);
+    setCookie(request, response, request.query.authentication_credential, request.connection.remoteAddress);
 }
 
 export let documentOfLoginWithGithub: types.Document = {
@@ -42,7 +42,8 @@ export let documentOfLoginWithGithub: types.Document = {
 
 export function loginWithGithub(request: libs.Request, response: libs.Response) {
     let state = libs.generateUuid();
-    services.cache.setString(settings.config.cacheKeys.githubLoginCode + state, "1", 10 * 60);
+    let remoteAddress = request.connection.remoteAddress;
+    services.cache.setString(settings.config.cacheKeys.githubLoginCode + state, remoteAddress, 10 * 60);
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.config.login.github.clientId}&scope=user:email&state=${state}`);
 }
 
@@ -59,18 +60,18 @@ export async function githubCode(request: libs.Request, response: libs.Response)
     let code = libs.validator.trim(request.query.code);
 
     if (state === "") {
-        redirectToErrorPage(response, "missed parameter:state");
+        redirectToErrorPage(response, "missed parameter:state", "");
         return;
     }
 
     if (code === "") {
-        redirectToErrorPage(response, "missed parameter:code");
+        redirectToErrorPage(response, "missed parameter:code", "");
         return;
     }
 
-    let value = await services.cache.getStringAsync(settings.config.cacheKeys.githubLoginCode + state);
-    if (!value) {
-        redirectToErrorPage(response, "invalid parameter:state");
+    let remoteAddress = await services.cache.getStringAsync(settings.config.cacheKeys.githubLoginCode + state);
+    if (!remoteAddress) {
+        redirectToErrorPage(response, "invalid parameter:state", remoteAddress);
         return;
     }
 
@@ -102,7 +103,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             return b.verified && b.primary;
         });
         if (!email) {
-            redirectToErrorPage(response, "no verified email");
+            redirectToErrorPage(response, "no verified email", remoteAddress);
             return;
         }
 
@@ -110,8 +111,8 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         let token = await services.tokens.create(verifiedEmail, githubCodeUrl, request);
 
-        setCookie(request, response, token);
+        setCookie(request, response, token, remoteAddress);
     } catch (error) {
-        redirectToErrorPage(response, error.message);
+        redirectToErrorPage(response, error.message, "");
     }
 }
