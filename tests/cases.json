@@ -1,0 +1,14 @@
+[
+    {
+        "request": {
+            "url": "/api/version"
+        },
+        "response": {
+            "body": {
+                "isSuccess": true,
+                "statusCode": 200,
+                "version": "1.0.6"
+            }
+        }
+    }
+]
