@@ -71,3 +71,19 @@ export function getAsync<T>(url: string, type: types.ResponseType): Promise<Resp
         url: url
     }, type);
 }
+
+export function request(options: any): Promise<{ response: libs.http.IncomingMessage; body: string; }> {
+    return new Promise((resolve, reject) => {
+        libs.request(options, (error, response, body) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve({
+                response: response,
+                body: body,
+            });
+        });
+    });
+}
