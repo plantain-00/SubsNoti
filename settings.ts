@@ -35,6 +35,14 @@ export let mongodb = {
     },
 };
 
+export let mongodbTest = {
+    url: "",
+    options: {
+        user: "",
+        pass: "",
+    },
+};
+
 export let api = {
     host: "localhost",
     port: 9998,
@@ -67,7 +75,7 @@ export let documentServer = "http://localhost:9997";
 
 export let imageServer = "http://localhost:7777";
 
-export let frontEndsServer = "http://localhost:8888";
+export let frontendsServer = "http://localhost:8888";
 
 export let maxOrganizationNumberUserCanCreate = 3;
 

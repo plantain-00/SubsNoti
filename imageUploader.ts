@@ -140,5 +140,5 @@ services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app
 services.router.bind(documentOfMoveImage, moveImage, app);
 
 app.listen(settings.imageUploader.port, settings.imageUploader.host, () => {
-    console.log(`Image uploader is listening: ${settings.getImageUploader()}`);
+    console.log(`Image uploader is listening: ${settings.getImageUploader()} and in ${settings.currentEnvironment}`);
 });

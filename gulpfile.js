@@ -4,10 +4,17 @@ let gulp = require("gulp");
 let shell = require("gulp-shell");
 let tslint = require("gulp-tslint");
 let liveServer = require("live-server");
+let mkdirp = require("mkdirp");
 
-gulp.task("build", shell.task("mkdir images\\tmp || tsc --pretty && gulp tslint"));
+mkdirp("images/tmp", error => {
+    if (error) {
+        console.log(error);
+    }
+});
 
-gulp.task("deploy", shell.task("mkdir -p 'images/tmp' && tsc --pretty && gulp tslint"));
+gulp.task("build", shell.task("tsc --pretty && gulp tslint"));
+
+gulp.task("deploy", shell.task("tsc --pretty && gulp tslint"));
 
 gulp.task("tslint", () => {
     return gulp.src(["controllers/**/*.ts", "data_maintenances/*.ts", "services/*.ts", "tests/*.ts", "*.ts"])
@@ -18,6 +25,8 @@ gulp.task("tslint", () => {
 });
 
 gulp.task("host", shell.task("node api.js"));
+
+gulp.task("host-api-test", shell.task("node apiTest.js"));
 
 gulp.task("host-imageUploader", shell.task("node imageUploader.js"));
 

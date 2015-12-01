@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -35,6 +35,7 @@
         "gulp-shell": "latest",
         "gulp-tslint": "^3.6.0",
         "live-server": "latest",
+        "mkdirp": "latest",
         "tslint": "next",
         "typescript": "next"
     },

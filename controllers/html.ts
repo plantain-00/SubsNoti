@@ -7,12 +7,12 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect(settings.frontEndsServer + "/error.html?message=" + encodeURIComponent(message));
+    response.redirect(settings.frontendsServer + "/error.html?message=" + encodeURIComponent(message));
 }
 
 function setCookie(request: libs.Request, response: libs.Response, token: string) {
     if (!token) {
-        response.redirect(settings.frontEndsServer + "/success.html");
+        response.redirect(settings.frontendsServer + "/success.html");
         return;
     }
 
@@ -21,7 +21,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         httpOnly: true,
     });
 
-    response.redirect(settings.frontEndsServer + "/success.html?clear_previous_status=√");
+    response.redirect(settings.frontendsServer + "/success.html?clear_previous_status=√");
 }
 
 export let documentOfLogin: types.Document = {
