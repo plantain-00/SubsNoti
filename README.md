@@ -6,7 +6,6 @@
 + node.js >=4.0(for ES6 support)
 + typescript@next(for ES6 and ES7 async function support)
 + gulp
-+ mocha
 + mongodb
 + redis
 + node-gyp build environment

@@ -25,3 +25,4 @@
 /// <reference path="socket.io/socket.io.d.ts" />
 /// <reference path="cookie-parser/cookie-parser.d.ts" />
 /// <reference path="cookie/cookie.d.ts" />
+/// <reference path="faker/faker.d.ts" />

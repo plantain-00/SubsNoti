@@ -114,18 +114,3 @@ export const responseType = {
     json: <ResponseType>"json",
     html: <ResponseType>"html",
 };
-
-export interface Case {
-    request: {
-        url: string;
-        method?: "get" | "post" | "put" | "delete";
-        headers?: any;
-    };
-    dataType?: ResponseType;
-    response: {
-        body: any;
-        cookie?: any;
-        headers?: any;
-        statusCode?: StatusCode;
-    };
-}

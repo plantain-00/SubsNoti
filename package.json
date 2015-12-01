@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -30,6 +30,7 @@
         "validator": "latest"
     },
     "devDependencies": {
+        "faker": "latest",
         "gulp": "latest",
         "gulp-shell": "latest",
         "gulp-tslint": "^3.6.0",
