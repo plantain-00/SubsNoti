@@ -10,6 +10,7 @@
     "files.exclude": {
         "node_modules/": true,
         "images/": true,
+        "test_images/": true,
         "**/*.js": true
     }
 }

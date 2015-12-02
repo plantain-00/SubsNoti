@@ -7,8 +7,8 @@ import CaseName = integration.CaseName;
 
 let responses = {};
 
-integration.run((caseName, response) => {
-    responses[caseName] = response;
+integration.run((caseName, body) => {
+    responses[caseName] = body;
     console.log(`case ${caseName} is done.`);
     return Promise.resolve();
 }).then(() => {

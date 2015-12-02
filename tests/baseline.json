@@ -3,5 +3,9 @@
         "isSuccess": true,
         "statusCode": 200,
         "version": "1.0.14"
+    },
+    "1": {
+        "isSuccess": true,
+        "statusCode": 204
     }
 }

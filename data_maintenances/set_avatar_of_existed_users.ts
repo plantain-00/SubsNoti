@@ -16,4 +16,6 @@ services.mongo.connect();
     } catch (error) {
         console.log(error);
     }
+
+    libs.mongoose.disconnect();
 })();

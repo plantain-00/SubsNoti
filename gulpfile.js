@@ -12,6 +12,12 @@ mkdirp("images/tmp", error => {
     }
 });
 
+mkdirp("test_images/tmp", error => {
+    if (error) {
+        console.log(error);
+    }
+});
+
 gulp.task("build", shell.task("tsc --pretty && gulp tslint"));
 
 gulp.task("deploy", shell.task("tsc --pretty && gulp tslint"));
@@ -29,6 +35,8 @@ gulp.task("host", shell.task("node apiDevelopment.js"));
 gulp.task("host-api-test", shell.task("node apiTest.js"));
 
 gulp.task("host-imageUploader", shell.task("node imageUploader.js"));
+
+gulp.task("host-imageUploader-test", shell.task("node imageUploaderTest.js"));
 
 gulp.task("host-imageServer", () => {
     liveServer.start({

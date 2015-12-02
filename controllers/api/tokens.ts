@@ -35,9 +35,15 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let url = `${settings.getApi()}${settings.urls.login}?authentication_credential=${token}`;
 
-        await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
+        if (settings.currentEnvironment === types.environment.test) {
+            services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+                url: url
+            });
+        } else {
+            await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
 
-        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+            services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+        }
     } catch (error) {
         services.response.sendError(response, error);
     }

@@ -21,10 +21,11 @@ export async function create(request: libs.Request, response: libs.Response) {
             return;
         }
 
-        let url = await services.captcha.create(id);
+        let captcha = await services.captcha.create(id);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-            url: url
+            url: captcha.url,
+            code: settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
         });
     } catch (error) {
         services.response.sendError(response, error);

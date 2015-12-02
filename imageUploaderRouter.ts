@@ -42,9 +42,17 @@ export function route() {
     let storage = libs.multer.diskStorage({
         destination: function(request: libs.Request, file, next) {
             if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
-                next(null, "images/");
+                if (settings.currentEnvironment === types.environment.test) {
+                    next(null, "test_images/");
+                } else {
+                    next(null, "images/");
+                }
             } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
-                next(null, "images/tmp/");
+                if (settings.currentEnvironment === types.environment.test) {
+                    next(null, "test_images/tmp/");
+                } else {
+                    next(null, "images/tmp/");
+                }
             } else {
                 next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
             }

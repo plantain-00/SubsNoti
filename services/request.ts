@@ -10,7 +10,7 @@ interface Response<T> {
     body: T;
 }
 
-export function post<T>(options: any): Promise<Response<T>> {
+export function post<T>(options: libs.request.Options): Promise<Response<T>> {
     return new Promise<Response<T>>((resolve, reject) => {
         libs.request.post(options, (error, response, body) => {
             if (error) {
@@ -50,7 +50,7 @@ export function postMultipartAsync<T>(url: string, version: string, formData: an
     return post<T>(options);
 }
 
-export function get<T>(options: any, type: types.ResponseType): Promise<Response<T>> {
+export function get<T>(options: libs.request.Options, type: types.ResponseType): Promise<Response<T>> {
     return new Promise<Response<T>>((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
@@ -72,7 +72,15 @@ export function getAsync<T>(url: string, type: types.ResponseType): Promise<Resp
     }, type);
 }
 
-export function request(options: any): Promise<{ response: libs.http.IncomingMessage; body: string; }> {
+export function request(options: libs.request.Options, type?: types.ResponseType): Promise<{ response: libs.http.IncomingMessage; body: any; }> {
+    if (!type) {
+        type = types.responseType.json;
+    }
+
+    if (settings.currentEnvironment === types.environment.test) {
+        console.log(`requesting: ${options.url}`);
+    }
+
     return new Promise((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
@@ -82,7 +90,7 @@ export function request(options: any): Promise<{ response: libs.http.IncomingMes
 
             resolve({
                 response: response,
-                body: body,
+                body: type === types.responseType.json ? JSON.parse(body) : body,
             });
         });
     });

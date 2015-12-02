@@ -8,7 +8,7 @@ import * as services from "../services";
 /**
  * create a code, store it in cache, create an image, return an base64 url of it.
  */
-export async function create(id: string): Promise<string> {
+export async function create(id: string): Promise<{ url: string; code: string; }> {
     await services.frequency.limitCaptcha(id);
 
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.
@@ -27,7 +27,10 @@ export async function create(id: string): Promise<string> {
     context.font = "30px Georgia";
     context.fillText(code, 10, height - 10);
 
-    return Promise.resolve(canvas.toDataURL());
+    return Promise.resolve({
+        url: canvas.toDataURL(),
+        code: code,
+    });
 }
 
 /**
