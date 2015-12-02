@@ -1,9 +1,6 @@
 /// <reference path="./typings/tsd.d.ts" />
 
 "use strict";
-/**
- * anything from node modules immediately.
- */
 
 import * as express from "express";
 export {express};

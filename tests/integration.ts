@@ -5,13 +5,18 @@ import * as faker from "faker";
 import * as types from "../types";
 import * as libs from "../libs";
 import * as settings from "../settings";
+
+settings.currentEnvironment = types.environment.test;
+
 import * as services from "../services";
 
-(async () => {
-    try {
-        let versionResponse = await services.request.getAsync<types.Response>(settings.getApi() + "/api/version", "json");
-        console.log(JSON.stringify(versionResponse.body, null, "    "));
-    } catch (error) {
-        console.log(error);
-    }
-})();
+let apiUrl = settings.getApi();
+
+export const enum CaseName {
+    getVersion
+}
+
+export async function run(operate: (caseName: CaseName, response: any) => Promise<void>) {
+    let versionResponse = await services.request.getAsync<types.Response>(apiUrl + "/api/version", "json");
+    await operate(CaseName.getVersion, versionResponse.body);
+}
