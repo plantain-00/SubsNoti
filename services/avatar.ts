@@ -11,7 +11,7 @@ import * as services from "../services";
 export async function createIfNotExistsAsync(id: string): Promise<void> {
     let seed: string = libs.md5(id);
     let fileName = getDefaultName(id);
-    let existResponse = await services.request.getAsync(`${settings.imageServer}/${fileName}`, "html");
+    let existResponse = await services.request.getAsync(`${settings.imageServer.get(settings.currentEnvironment)}/${fileName}`, "html");
     if (existResponse.response.statusCode === 200) {
         console.log("exists:" + fileName);
     } else {

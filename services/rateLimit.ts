@@ -27,7 +27,7 @@ export function route(app: libs.Application) {
         let limit: number;
 
         // no rate limit for ip in the white list.
-        if (libs._.find(settings.uploadIPWhiteList, i => i === request.ip)) {
+        if (libs._.find(settings.uploadIPWhiteList.get(settings.currentEnvironment), i => i === request.ip)) {
             next();
             return;
         }

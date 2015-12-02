@@ -10,7 +10,7 @@ let pool: libs.mysql.IPool;
 import MysqlConnection = libs.mysql.IConnection;
 
 export function connect() {
-    pool = libs.mysql.createPool(settings.db);
+    pool = libs.mysql.createPool(settings.db.get(settings.currentEnvironment));
 }
 
 function getConnection(): Promise<MysqlConnection> {

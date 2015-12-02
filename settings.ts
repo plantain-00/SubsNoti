@@ -4,64 +4,43 @@ import * as types from "./types";
 
 export let currentEnvironment: types.Environment;
 
-export let db = {
-    host: "",
-    user: "",
-    password: "",
-    database: "",
-};
+export let db = new Map<types.Environment, { host: string; user: string; password: string; database: string; }>();
 
-export let smtp = {
-    host: "",
-    auth: {
-        user: "",
-        pass: "",
-    },
-};
+export let smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
 
-export let redis = {
-    host: "",
-    port: 6379,
-    options: {
-        auth_pass: ""
-    },
-};
+export let redis = new Map<types.Environment, { host: string; port: number; options: { auth_pass: string; }; }>();
 
 export let mongodb = new Map<types.Environment, { url: string; options: { user: string; pass: string; } }>();
 
-export let api = {
-    host: "localhost",
-    port: 9998,
-};
+export let api = new Map<types.Environment, { host: string; port: number; }>();
 
 export function getApi() {
-    if (api.port === 80) {
-        return `http://${api.host}`;
+    let localApi = api.get(currentEnvironment);
+    if (localApi.port === 80) {
+        return `http://${localApi.host}`;
     }
-    return `http://${api.host}:${api.port}`;
+    return `http://${localApi.host}:${localApi.port}`;
 }
 
 export let urls = {
     login: "/login_with_authentication_credential"
 };
 
-export let imageUploader = {
-    host: "localhost",
-    port: 9999,
-};
+export let imageUploader = new Map<types.Environment, { host: string; port: number; }>();
 
 export function getImageUploader() {
-    if (imageUploader.port === 80) {
-        return `http://${imageUploader.host}`;
+    let localImageUploader = imageUploader.get(currentEnvironment);
+    if (localImageUploader.port === 80) {
+        return `http://${localImageUploader.host}`;
     }
-    return `http://${imageUploader.host}:${imageUploader.port}`;
+    return `http://${localImageUploader.host}:${localImageUploader.port}`;
 }
 
-export let documentServer = "http://localhost:9997";
+export let documentServer = new Map<types.Environment, string>();
 
-export let imageServer = "http://localhost:7777";
+export let imageServer = new Map<types.Environment, string>();
 
-export let frontendsServer = "http://localhost:8888";
+export let frontendsServer = new Map<types.Environment, string>();
 
 export let maxOrganizationNumberUserCanCreate = 3;
 
@@ -84,21 +63,13 @@ export let cacheKeys = {
 
 export let defaultItemLimit = 10;
 
-export let uploadIPWhiteList = [
-    "127.0.0.1"
-];
+export let uploadIPWhiteList = new Map<types.Environment, string[]>();
 
 export let imagePaths = {
     avatar: "avatar-"
 };
 
-export let cors = {
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
-    origin: [
-        "http://localhost:8888"
-    ],
-};
+export let cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
 
 export let rateLimit = {
     user: 5000,

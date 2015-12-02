@@ -8,12 +8,12 @@ import * as services from "../services";
 let transporter: libs.nodemailer.Transporter;
 
 export function connect() {
-    transporter = libs.nodemailer.createTransport(settings.smtp);
+    transporter = libs.nodemailer.createTransport(settings.smtp.get(settings.currentEnvironment));
 }
 
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     let mailOptions = {
-        from: settings.smtp.auth.user,
+        from: settings.smtp.get(settings.currentEnvironment).auth.user,
         to: to,
         subject: subject,
         html: html,

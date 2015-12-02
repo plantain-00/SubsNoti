@@ -31,7 +31,7 @@ export function route() {
     app.use(libs.bodyParser.json());
     app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-    app.use(libs.cors(settings.cors));
+    app.use(libs.cors(settings.cors.get(settings.currentEnvironment)));
 
     services.rateLimit.route(app);
 
@@ -78,7 +78,8 @@ export function route() {
         await services.seed.init();
     })();
 
-    let server = app.listen(settings.api.port, settings.api.host, () => {
+    let api = settings.api.get(settings.currentEnvironment);
+    let server = app.listen(api.port, api.host, () => {
         console.log(`Server is listening: ${settings.getApi()} and in ${settings.currentEnvironment}`);
     });
 

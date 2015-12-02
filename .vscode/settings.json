@@ -9,20 +9,7 @@
     // Configure glob patterns for excluding files and folders.
     "files.exclude": {
         "node_modules/": true,
-        "services/*.js": true,
-        "controllers/**/*.js": true,
-        "secret.js": true,
-        "api.js": true,
-        "imageUploader.js": true,
-        "data_maintenances/*.js": true,
-        "tests/*.js": true,
-        "types.js": true,
-        "libs.js": true,
-        "services.js": true,
-        "settings.js": true,
         "images/": true,
-        "apiRouter.js": true,
-        "apiTest.js": true,
-        "apiDevelopment.js": true
+        "*.js": true
     }
 }
