@@ -24,7 +24,7 @@ gulp.task("tslint", () => {
         .pipe(tslint.report("prose", { emitError: true }));
 });
 
-gulp.task("host", shell.task("node api.js"));
+gulp.task("host", shell.task("node apiDevelopment.js"));
 
 gulp.task("host-api-test", shell.task("node apiTest.js"));
 

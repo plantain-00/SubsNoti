@@ -1,12 +1,5 @@
 "use strict";
 
-try {
-    let secret = require("./secret");
-    secret.load();
-} catch (e) {
-    console.log(e);
-}
-
 import * as error from "./services/error";
 export {error};
 

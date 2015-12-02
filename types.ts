@@ -74,10 +74,11 @@ export interface ObsoleteDocument extends Document {
     expiredDate: string;
 }
 
-export type Environment = "development" | "production";
+export type Environment = "development" | "test" | "production";
 
 export const environment = {
     development: <Environment>"development",
+    test: <Environment>"test",
     production: <Environment>"production",
 };
 

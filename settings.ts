@@ -2,7 +2,7 @@
 
 import * as types from "./types";
 
-export let currentEnvironment: types.Environment = types.environment.development;
+export let currentEnvironment: types.Environment;
 
 export let db = {
     host: "",
@@ -27,21 +27,7 @@ export let redis = {
     },
 };
 
-export let mongodb = {
-    url: "",
-    options: {
-        user: "",
-        pass: "",
-    },
-};
-
-export let mongodbTest = {
-    url: "",
-    options: {
-        user: "",
-        pass: "",
-    },
-};
+export let mongodb = new Map<types.Environment, { url: string; options: { user: string; pass: string; } }>();
 
 export let api = {
     host: "localhost",
@@ -132,3 +118,10 @@ export let login = {
 let pjson = require("./package.json");
 
 export let version = pjson.version;
+
+try {
+    let secret = require("./secret");
+    secret.load();
+} catch (e) {
+    console.log(e);
+}

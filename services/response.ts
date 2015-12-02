@@ -32,7 +32,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         baseResponse.actualErrorMessage = error.message;
     }
 
-    if (settings.currentEnvironment === types.environment.development) {
+    if (settings.currentEnvironment !== types.environment.production) {
         baseResponse.stack = error.stack;
     }
 
