@@ -3,11 +3,9 @@
 import * as libs from "../libs";
 import * as integration from "./integration";
 
-import CaseName = integration.CaseName;
-
 let baseline: any[] = require("./baseline.json");
 
-integration.run((caseName, body) => {
+integration.operate = (caseName, body) => {
     let expected = JSON.stringify(baseline[caseName]);
     let actually = JSON.stringify(body);
     if (expected !== actually) {
@@ -15,7 +13,9 @@ integration.run((caseName, body) => {
     }
     console.log(`case ${caseName} is passed.`);
     return Promise.resolve();
-}).then(() => {
+};
+
+integration.run().then(() => {
     console.log("all test cases are passed!");
 }).catch(error => {
     console.log(error);

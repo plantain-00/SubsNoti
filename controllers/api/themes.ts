@@ -113,8 +113,11 @@ export async function update(request: libs.Request, response: libs.Response) {
         let detail = libs.validator.trim(request.body.detail);
         let status: types.ThemeStatus = null;
 
-        if (libs.validator.isIn(request.body.status, [types.ThemeStatus.open, types.ThemeStatus.closed])) {
-            status = libs.validator.toInt(request.body.status);
+        if (request.body.status === "open") {
+            status = types.ThemeStatus.open;
+        }
+        if (request.body.status === "closed") {
+            status = types.ThemeStatus.closed;
         }
 
         let id = new libs.ObjectId(request.params.theme_id);

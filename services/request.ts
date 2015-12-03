@@ -78,7 +78,7 @@ export function request(options: libs.request.Options, type?: types.ResponseType
     }
 
     if (settings.currentEnvironment === types.environment.test) {
-        console.log(`requesting: ${options.url}`);
+        console.log(`${options.method || "get"}: ${options.url}`);
     }
 
     return new Promise((resolve, reject) => {
