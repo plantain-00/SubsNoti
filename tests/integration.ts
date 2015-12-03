@@ -1,5 +1,7 @@
 "use strict";
 
+import * as assert from "assert";
+
 import * as types from "../types";
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -20,13 +22,14 @@ let seeds = require("./seeds.json");
 export async function run(operate: (caseName: CaseName, body: string) => Promise<void>) {
     let versionResponse = await services.request.request({ url: apiUrl + "/api/version" });
     await operate(CaseName.getVersion, versionResponse.body);
+    assert(versionResponse.body["version"]);
 
     let headers = {
         "X-Version": versionResponse.body["version"]
     };
 
     services.mongo.connect();
-    services.mongo.User.remove({});
+    await services.mongo.User.remove({}).exec();
     libs.mongoose.disconnect();
 
     let guid = libs.generateUuid();
@@ -40,6 +43,7 @@ export async function run(operate: (caseName: CaseName, body: string) => Promise
         },
     });
     console.log(captchaResponse.body);
+    assert(versionResponse.body["code"]);
 
     let tokenResponse = await services.request.request({
         url: apiUrl + "/api/tokens",
@@ -53,6 +57,7 @@ export async function run(operate: (caseName: CaseName, body: string) => Promise
         },
     });
     console.log(tokenResponse.body);
+    assert(versionResponse.body["url"]);
 
     let jar = libs.request.jar();
     let loginResponse = await services.request.request({
@@ -60,6 +65,7 @@ export async function run(operate: (caseName: CaseName, body: string) => Promise
         headers: headers,
         jar: jar,
     }, "html");
+    assert(libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential]);
 
     let logoutResponse = await services.request.request({
         url: apiUrl + "/api/user/logged_in",
