@@ -18,7 +18,7 @@ let headers;
 
 export let operate: (caseName: string, body: string) => Promise<void>;
 
-let seeds = require("./seeds.json");
+let seeds: types.TestSeed = require("./seeds.json");
 
 async function getVersion(caseName: string) {
     let options = {

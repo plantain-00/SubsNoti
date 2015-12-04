@@ -2,9 +2,10 @@
 
 import * as faker from "faker";
 
+import * as types from "../types";
 import * as libs from "../libs";
 
-let seeds = require("./seeds.json");
+let seeds: types.TestSeed = require("./seeds.json");
 
 if (!seeds.email) {
     seeds.email = faker.internet.email();

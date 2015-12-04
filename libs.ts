@@ -66,6 +66,9 @@ export let multer = require("multer");
 import * as request from "request";
 export {request};
 
+import * as qs from "qs";
+export {qs};
+
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 

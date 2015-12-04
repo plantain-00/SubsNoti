@@ -88,6 +88,9 @@
         },
         "faker/faker.d.ts": {
             "commit": "fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38"
+        },
+        "qs/qs.d.ts": {
+            "commit": "78d36dd49b6b55b9fdfe61776a12bf05c8b07777"
         }
     }
 }

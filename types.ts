@@ -63,9 +63,18 @@ export interface Response {
     actualErrorMessage?: string;
 }
 
+export type HttpMethod = "get" | "post" | "put" | "delete";
+
+export const httpMethod = {
+    get: <HttpMethod>"get",
+    post: <HttpMethod>"post",
+    put: <HttpMethod>"put",
+    delete: <HttpMethod>"delete",
+};
+
 export interface Document {
     url: string;
-    method: "get" | "post" | "put" | "delete";
+    method: HttpMethod;
     documentUrl: string;
 }
 
@@ -115,3 +124,13 @@ export const responseType = {
     json: <ResponseType>"json",
     html: <ResponseType>"html",
 };
+
+export interface TestSeed {
+    email: string;
+    name: string;
+    organizationName: string;
+    themeTitle: string;
+    themeDetail: string;
+    newThemeTitle: string;
+    newThemeDetail: string;
+}

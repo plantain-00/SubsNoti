@@ -15,7 +15,7 @@ export function sendSuccess(response: libs.Response, statusCode: types.StatusCod
         statusCode: statusCode,
     };
 
-    response.status(200).json(libs._.extend(baseResponse, result));
+    response.status(types.StatusCode.OK).json(libs._.extend(baseResponse, result));
 }
 
 export function sendError(response: libs.Response, error: types.E, documentUrl?: string) {
@@ -36,5 +36,5 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         baseResponse.stack = error.stack;
     }
 
-    response.status(200).json(baseResponse);
+    response.status(types.StatusCode.OK).json(baseResponse);
 }

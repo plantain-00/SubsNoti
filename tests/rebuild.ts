@@ -7,7 +7,7 @@ let responses = {};
 
 integration.operate = (caseName, body) => {
     responses[caseName] = body;
-    console.log(`case ${caseName} is done.`);
+    console.log(`case "${caseName}" is done.`);
     return Promise.resolve();
 };
 

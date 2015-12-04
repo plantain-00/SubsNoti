@@ -9,7 +9,7 @@ import * as services from "../services";
 let frontendsServer = settings.frontendsServer.get(settings.currentEnvironment);
 
 function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect(frontendsServer + "/error.html?message=" + encodeURIComponent(message));
+    response.redirect(frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
 }
 
 function setCookie(request: libs.Request, response: libs.Response, token: string) {
@@ -98,7 +98,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
                 Authorization: `token ${accessToken}`,
                 "User-Agent": "SubsNoti",
             },
-        }, types.responseType.json);
+        });
 
         let email = libs._.find(emailsResponse.body, b => {
             return b.verified && b.primary;

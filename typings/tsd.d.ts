@@ -26,3 +26,4 @@
 /// <reference path="cookie-parser/cookie-parser.d.ts" />
 /// <reference path="cookie/cookie.d.ts" />
 /// <reference path="faker/faker.d.ts" />
+/// <reference path="qs/qs.d.ts" />

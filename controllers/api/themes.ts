@@ -113,10 +113,10 @@ export async function update(request: libs.Request, response: libs.Response) {
         let detail = libs.validator.trim(request.body.detail);
         let status: types.ThemeStatus = null;
 
-        if (request.body.status === "open") {
+        if (request.body.status === types.themeStatus.open) {
             status = types.ThemeStatus.open;
         }
-        if (request.body.status === "closed") {
+        if (request.body.status === types.themeStatus.closed) {
             status = types.ThemeStatus.closed;
         }
 
