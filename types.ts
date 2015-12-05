@@ -133,4 +133,7 @@ export interface TestSeed {
     themeDetail: string;
     newThemeTitle: string;
     newThemeDetail: string;
+    newName: string;
+    clientName: string;
+    clientEmail: string;
 }

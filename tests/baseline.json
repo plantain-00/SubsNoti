@@ -1,8 +1,37 @@
 {
     "getVersion": {
         "isSuccess": true,
+        "statusCode": 200
+    },
+    "clientCreateCaptcha": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "clientCreateToken": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "clientLogin": "<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width, initial-scale=1\"><title>v1.0.16</title><link rel=stylesheet href=https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css><link rel=stylesheet href=./styles/base-a8d4edec0c.min.css></head><body><div class=container style=\"margin-top: 60px;\"><div class=row><div class=\"panel panel-default\"><div class=panel-body><div class=\"alert alert-success\" role=alert>success! go to <a href=/index.html class=alert-link>Home page</a> now.</div></div></div></div></div><!--[if lt IE 9]>\n<script src=\"https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js\"></script>\n<script src=\"https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js\"></script>\n<![endif]--><script src=https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js></script><script src=https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js></script><script src=https://cdn.jsdelivr.net/vue/1.0.0/vue.min.js></script><script src=https://cdn.jsdelivr.net/momentjs/2.10.6/moment.min.js></script><script src=https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js></script><script src=https://cdn.jsdelivr.net/clipboard.js/1.4.2/clipboard.min.js></script><script src=http://115.29.42.125:9998/socket.io/socket.io.js></script><script>\n  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\n  ga('create', 'UA-66896648-1', 'auto');\n  ga('send', 'pageview');\n</script><script>\n  var version = \"1.0.16\";\n  var imageServerBaseUrl = \"http://115.29.42.125:7777\";\n  var imageUploaderBaseUrl = \"http://115.29.42.125:9999\";\n  var apiBaseUrl = \"http://115.29.42.125:9998\";\n</script><script type=text/javascript src=./scripts/success-8281231d3d.min.js></script></body></html>",
+    "clientGetCurrentUser": {
+        "isSuccess": true,
         "statusCode": 200,
-        "version": "1.0.18"
+        "email": "torrance.hammes4@hotmail.com",
+        "name": "Mellie.Douglas",
+        "createdOrganizationCount": 0,
+        "joinedOrganizationCount": 0
+    },
+    "getJoinedOrganizationsOfClient": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "organizations": [
+            {
+                "name": "public"
+            }
+        ]
+    },
+    "clientLogout": {
+        "isSuccess": true,
+        "statusCode": 204
     },
     "createCaptcha": {
         "isSuccess": true,
@@ -169,7 +198,48 @@
             }
         ]
     },
+    "updateUser": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getCurrentUserAfterUpdated": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "email": "diamond_harber@gmail.com",
+        "name": "Maybell_Prohaska",
+        "createdOrganizationCount": 1,
+        "joinedOrganizationCount": 1
+    },
+    "invite": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
     "logout": {
+        "isSuccess": true,
+        "statusCode": 204
+    },
+    "clientLoginAgain": "<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width, initial-scale=1\"><title>v1.0.16</title><link rel=stylesheet href=https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css><link rel=stylesheet href=./styles/base-a8d4edec0c.min.css></head><body><div class=container style=\"margin-top: 60px;\"><div class=row><div class=\"panel panel-default\"><div class=panel-body><div class=\"alert alert-success\" role=alert>success! go to <a href=/index.html class=alert-link>Home page</a> now.</div></div></div></div></div><!--[if lt IE 9]>\n<script src=\"https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js\"></script>\n<script src=\"https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js\"></script>\n<![endif]--><script src=https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js></script><script src=https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js></script><script src=https://cdn.jsdelivr.net/vue/1.0.0/vue.min.js></script><script src=https://cdn.jsdelivr.net/momentjs/2.10.6/moment.min.js></script><script src=https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js></script><script src=https://cdn.jsdelivr.net/clipboard.js/1.4.2/clipboard.min.js></script><script src=http://115.29.42.125:9998/socket.io/socket.io.js></script><script>\n  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\n  ga('create', 'UA-66896648-1', 'auto');\n  ga('send', 'pageview');\n</script><script>\n  var version = \"1.0.16\";\n  var imageServerBaseUrl = \"http://115.29.42.125:7777\";\n  var imageUploaderBaseUrl = \"http://115.29.42.125:9999\";\n  var apiBaseUrl = \"http://115.29.42.125:9998\";\n</script><script type=text/javascript src=./scripts/success-8281231d3d.min.js></script></body></html>",
+    "clientGetCurrentUserAfterInvited": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "email": "torrance.hammes4@hotmail.com",
+        "name": "Mellie.Douglas",
+        "createdOrganizationCount": 0,
+        "joinedOrganizationCount": 1
+    },
+    "getJoinedOrganizationsOfClientAfterInvited": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "organizations": [
+            {
+                "name": "Welch, Harris and Williamson"
+            },
+            {
+                "name": "public"
+            }
+        ]
+    },
+    "clientLogoutAgain": {
         "isSuccess": true,
         "statusCode": 204
     }

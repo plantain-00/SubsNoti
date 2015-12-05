@@ -80,10 +80,6 @@ export function request(options: libs.request.Options, type?: types.ResponseType
         type = types.responseType.json;
     }
 
-    if (settings.currentEnvironment === types.environment.test) {
-        console.log(`${options.method || types.httpMethod.get}: ${options.url}`);
-    }
-
     return new Promise((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {

@@ -3,3 +3,4 @@ secret.ts
 images/
 **/*.js
 !gulpfile.js
+test_images/

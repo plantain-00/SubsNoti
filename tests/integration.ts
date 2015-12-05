@@ -27,9 +27,9 @@ async function getVersion(caseName: string) {
     let response = await services.request.request(options);
 
     let version: string = response.body["version"];
-    assert(version, JSON.stringify(response.body));
+    assert(version === settings.version, JSON.stringify(response.body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, libs._.omit<any, any>(response.body, ["version"]));
 
     return Promise.resolve(version);
 }
@@ -53,14 +53,14 @@ async function createCaptcha(guid: string, caseName: string) {
     return Promise.resolve(code);
 }
 
-async function createToken(guid: string, code: string, caseName: string) {
+async function createToken(guid: string, code: string, caseName: string, email: string, name: string) {
     let options = {
         url: apiUrl + "/api/tokens",
         headers: headers,
         method: "post",
         form: {
-            email: seeds.email,
-            name: seeds.name,
+            email: email,
+            name: name,
             guid: guid,
             code: code,
         },
@@ -88,7 +88,7 @@ async function login(url: string, caseName: string) {
 
     await operate(caseName, response.body);
 
-    return Promise.resolve(authenticationCredential);
+    return Promise.resolve();
 }
 
 async function logout(caseName: string) {
@@ -268,6 +268,37 @@ async function updateTheme(themeId: string, caseName: string) {
     return Promise.resolve();
 }
 
+async function updateUser(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user`,
+        method: "put",
+        headers: headers,
+        jar: jar,
+        form: {
+            name: seeds.newName
+        },
+    };
+    let response = await services.request.request(options);
+
+    await operate(caseName, response.body);
+
+    return Promise.resolve();
+}
+
+async function invite(caseName: string, email: string, organizationId: string) {
+    let options = {
+        url: apiUrl + `/api/users/${email}/joined/${organizationId}`,
+        method: "put",
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    await operate(caseName, response.body);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -281,13 +312,29 @@ export async function run() {
     await services.mongo.Theme.remove({}).exec();
     libs.mongoose.disconnect();
 
+
+    let clientGuid = libs.generateUuid();
+
+    let clientCode = await createCaptcha(clientGuid, "clientCreateCaptcha");
+
+    let clientUrl = await createToken(clientGuid, clientCode, "clientCreateToken", seeds.clientEmail, seeds.clientName);
+
+    await login(clientUrl, "clientLogin");
+
+    let client = await getCurrentUser("clientGetCurrentUser");
+
+    let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizationsOfClient");
+
+    await logout("clientLogout");
+
+
     let guid = libs.generateUuid();
 
     let code = await createCaptcha(guid, "createCaptcha");
 
-    let url = await createToken(guid, code, "createToken");
+    let url = await createToken(guid, code, "createToken", seeds.email, seeds.name);
 
-    let authenticationCredential = await login(url, "login");
+    await login(url, "login");
 
     let user = await getCurrentUser("getCurrentUser");
 
@@ -319,5 +366,20 @@ export async function run() {
 
     await getThemesOfOrganization(organizationId, "getThemesOfOrganizationAfterUpdated");
 
+    await updateUser("updateUser");
+
+    user = await getCurrentUser("getCurrentUserAfterUpdated");
+
+    await invite("invite", client.email, organizationId);
+
     await logout("logout");
+
+
+    await login(clientUrl, "clientLoginAgain");
+
+    client = await getCurrentUser("clientGetCurrentUserAfterInvited");
+
+    clientOrganizations = await getJoinedOrganizations("getJoinedOrganizationsOfClientAfterInvited");
+
+    await logout("clientLogoutAgain");
 }

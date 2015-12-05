@@ -28,6 +28,15 @@ if (!seeds.newThemeTitle) {
 if (!seeds.newThemeDetail) {
     seeds.newThemeDetail = faker.lorem.paragraph();
 }
+if (!seeds.newName) {
+    seeds.newName = faker.internet.userName();
+}
+if (!seeds.clientEmail) {
+    seeds.clientEmail = faker.internet.email();
+}
+if (!seeds.clientName) {
+    seeds.clientName = faker.internet.userName();
+}
 
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
