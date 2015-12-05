@@ -136,7 +136,9 @@ export function route() {
             return;
         }
 
-        libs.fs.rename(libs.path.join(__dirname, `images/tmp/${name}`), libs.path.join(__dirname, `images/${newName}`), error => {
+        let path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
+
+        libs.fs.rename(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`), error => {
             if (error) {
                 services.response.sendError(response, services.error.fromMessage(error.message, types.StatusCode.invalidRequest), documentOfMoveImage.documentUrl);
                 return;

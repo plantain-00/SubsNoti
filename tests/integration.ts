@@ -12,6 +12,7 @@ import * as services from "../services";
 
 let apiUrl = settings.getApi();
 let imageServer = settings.imageServer.get(settings.currentEnvironment);
+let imageUploader = settings.getImageUploader();
 
 let jar = libs.request.jar();
 
@@ -29,6 +30,7 @@ async function getVersion(caseName: string) {
 
     let version: string = response.body["version"];
     assert(version === settings.version, JSON.stringify(response.body));
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, libs._.omit<any, any>(response.body, ["version"]));
 
@@ -48,6 +50,7 @@ async function createCaptcha(guid: string, caseName: string) {
 
     let code: string = response.body["code"];
     assert(code, JSON.stringify(response.body));
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, libs._.omit<any, any>(response.body, ["url", "code"]));
 
@@ -70,6 +73,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
 
     let url: string = response.body["url"];
     assert(url, JSON.stringify(response.body));
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, libs._.omit<any, any>(response.body, ["url"]));
 
@@ -103,6 +107,7 @@ async function logout(caseName: string) {
 
     let authenticationCredential = libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential];
     assert(!authenticationCredential);
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, response.body);
 }
@@ -115,12 +120,14 @@ async function getCurrentUser(caseName: string) {
     };
     let response = await services.request.request(options);
 
+    assert(response.body.isSuccess, JSON.stringify(response.body));
+
     await operate(caseName, libs._.omit<any, any>(response.body, ["id", "avatar"]));
 
     return Promise.resolve(response.body);
 }
 
-async function createAnOrganization(caseName: string) {
+async function createOrganization(caseName: string) {
     let options = {
         url: apiUrl + "/api/organizations",
         method: "post",
@@ -131,6 +138,8 @@ async function createAnOrganization(caseName: string) {
         },
     };
     let response = await services.request.request(options);
+
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, response.body);
 
@@ -152,6 +161,7 @@ async function getCreatedOrganizations(caseName: string) {
 
     let organizations: Organization[] = response.body["organizations"];
     assert(organizations);
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     let result = libs._.omit<any, any>(response.body, "organizations");
     result["organizations"] = libs._.map(organizations, organization => libs._.omit<any, any>(organization, "id"));
@@ -170,6 +180,7 @@ async function getJoinedOrganizations(caseName: string) {
 
     let organizations: Organization[] = response.body["organizations"];
     assert(organizations);
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     let result = libs._.omit<any, any>(response.body, "organizations");
     result["organizations"] = libs._.map(organizations, organization => libs._.omit<any, any>(organization, "id"));
@@ -188,6 +199,8 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
         },
     };
     let response = await services.request.request(options);
+
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     let result = libs._.omit<any, any>(response.body, "themes");
     result.themes = libs._.map(response.body.themes, (theme: any) => {
@@ -217,6 +230,8 @@ async function createTheme(organizationId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
+    assert(response.body.isSuccess, JSON.stringify(response.body));
+
     await operate(caseName, response.body);
 
     return Promise.resolve();
@@ -231,6 +246,8 @@ async function unwatch(themeId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
+    assert(response.body.isSuccess, JSON.stringify(response.body));
+
     await operate(caseName, response.body);
 
     return Promise.resolve();
@@ -244,6 +261,8 @@ async function watch(themeId: string, caseName: string) {
         jar: jar,
     };
     let response = await services.request.request(options);
+
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, response.body);
 
@@ -264,22 +283,75 @@ async function updateTheme(themeId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
+    assert(response.body.isSuccess, JSON.stringify(response.body));
+
     await operate(caseName, response.body);
 
     return Promise.resolve();
 }
 
+async function uploadAvatar(caseName: string) {
+    let fileName = "newAvatar.png";
+    let formData = {};
+    formData[fileName] = {
+        value: libs.fs.createReadStream(libs.path.resolve(__dirname, fileName)),
+        options: {
+            filename: fileName,
+            contentType: "image/png",
+        },
+    };
+
+    let options = {
+        url: imageUploader + `/api/temperary`,
+        method: "post",
+        headers: headers,
+        jar: jar,
+        formData: formData,
+    };
+    let response = await services.request.request(options);
+
+    let names: string[] = response.body["names"];
+    assert(names.length === 1, JSON.stringify(response.body));
+    assert(response.body.isSuccess, JSON.stringify(response.body));
+
+    await operate(caseName, libs._.omit<any, any>(response.body, ["names"]));
+
+    return Promise.resolve(names);
+}
+
+async function getTemperaryImage(fileName: string, caseName: string) {
+    let options = {
+        url: imageServer + `/tmp/${fileName}`
+    };
+    let response = await services.request.request(options, types.responseType.others);
+
+    await operate(caseName, {
+        statusCode: response.response.statusCode,
+        base64: new Buffer(response.body).toString("base64"),
+    });
+
+    return Promise.resolve();
+}
+
 async function updateUser(caseName: string) {
+    let names = await uploadAvatar("uploadAvatar");
+    let name = names[0];
+
+    await getTemperaryImage(name, "getTemperaryImage");
+
     let options = {
         url: apiUrl + `/api/user`,
         method: "put",
         headers: headers,
         jar: jar,
         form: {
-            name: seeds.newName
+            name: seeds.newName,
+            avatarFileName: name,
         },
     };
     let response = await services.request.request(options);
+
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, response.body);
 
@@ -294,6 +366,8 @@ async function invite(caseName: string, email: string, organizationId: string) {
         jar: jar,
     };
     let response = await services.request.request(options);
+
+    assert(response.body.isSuccess, JSON.stringify(response.body));
 
     await operate(caseName, response.body);
 
@@ -356,7 +430,7 @@ export async function run() {
 
     await getAvatar(user.id, "getAvatar");
 
-    await createAnOrganization("createAnOrganization");
+    await createOrganization("createOrganization");
 
     await getCreatedOrganizations("getCreatedOrganizations");
 
