@@ -167,3 +167,5 @@ export interface TestSeed {
     clientName: string;
     clientEmail: string;
 }
+
+export const yes = "√";

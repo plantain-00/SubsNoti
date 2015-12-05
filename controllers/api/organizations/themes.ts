@@ -22,8 +22,8 @@ export async function get(request: libs.Request, response: libs.Response) {
         let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
         let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.defaultItemLimit;
         let q = libs.validator.trim(request.query.q);
-        let isOpen = libs.validator.trim(request.query.isOpen) !== "false";
-        let isClosed = libs.validator.trim(request.query.isClosed) === "true";
+        let isOpen = libs.validator.trim(request.query.isOpen) === types.yes;
+        let isClosed = libs.validator.trim(request.query.isClosed) === types.yes;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {

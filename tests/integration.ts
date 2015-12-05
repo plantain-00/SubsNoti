@@ -91,7 +91,9 @@ async function login(url: string, caseName: string) {
     let authenticationCredential = libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential];
     assert(authenticationCredential);
 
-    await operate(caseName, response.body);
+    await operate(caseName, {
+        statusCode: response.response.statusCode
+    });
 
     return Promise.resolve();
 }
@@ -328,8 +330,7 @@ async function getTemperaryImage(fileName: string, caseName: string) {
     let response = await services.request.request(options, types.responseType.others);
 
     await operate(caseName, {
-        statusCode: response.response.statusCode,
-        base64: new Buffer(response.body).toString("base64"),
+        statusCode: response.response.statusCode
     });
 
     return Promise.resolve();

@@ -23,7 +23,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         httpOnly: true,
     });
 
-    response.redirect(frontendsServer + "/success.html?clear_previous_status=√");
+    response.redirect(frontendsServer + "/success.html?clear_previous_status=" + types.yes);
 }
 
 export let documentOfLogin: types.Document = {
