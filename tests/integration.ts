@@ -28,13 +28,13 @@ async function getVersion(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let version: string = response.body["version"];
-    assert(version === settings.version, JSON.stringify(response.body));
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.VersionResponse = response.body;
+    assert(body.version === settings.version, JSON.stringify(body));
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, libs._.omit<any, any>(response.body, ["version"]));
+    await operate(caseName, libs._.omit<any, any>(body, ["version"]));
 
-    return Promise.resolve(version);
+    return Promise.resolve(body.version);
 }
 
 async function createCaptcha(guid: string, caseName: string) {
@@ -48,13 +48,13 @@ async function createCaptcha(guid: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let code: string = response.body["code"];
-    assert(code, JSON.stringify(response.body));
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.CaptchaResponse = response.body;
+    assert(body.code, JSON.stringify(body));
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, libs._.omit<any, any>(response.body, ["url", "code"]));
+    await operate(caseName, libs._.omit<any, any>(body, ["url", "code"]));
 
-    return Promise.resolve(code);
+    return Promise.resolve(body.code);
 }
 
 async function createToken(guid: string, code: string, caseName: string, email: string, name: string) {
@@ -71,13 +71,13 @@ async function createToken(guid: string, code: string, caseName: string, email: 
     };
     let response = await services.request.request(options);
 
-    let url: string = response.body["url"];
-    assert(url, JSON.stringify(response.body));
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.TokenResponse = response.body;
+    assert(body.url, JSON.stringify(body));
+    assert(response.body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, libs._.omit<any, any>(response.body, ["url"]));
+    await operate(caseName, libs._.omit<any, any>(body, ["url"]));
 
-    return Promise.resolve(url);
+    return Promise.resolve(body.url);
 }
 
 async function login(url: string, caseName: string) {
@@ -120,11 +120,12 @@ async function getCurrentUser(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.CurrentUserResponse = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, libs._.omit<any, any>(response.body, ["id", "avatar"]));
+    await operate(caseName, libs._.omit<any, any>(body, ["id", "avatar"]));
 
-    return Promise.resolve(response.body);
+    return Promise.resolve(body);
 }
 
 async function createOrganization(caseName: string) {
@@ -139,16 +140,12 @@ async function createOrganization(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
-}
-
-interface Organization {
-    id: string;
-    name: string;
 }
 
 async function getCreatedOrganizations(caseName: string) {
@@ -159,15 +156,15 @@ async function getCreatedOrganizations(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let organizations: Organization[] = response.body["organizations"];
-    assert(organizations);
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.OrganizationResponse = response.body;
+    assert(body.organizations);
+    assert(body.isSuccess, JSON.stringify(body));
 
-    let result = libs._.omit<any, any>(response.body, "organizations");
-    result["organizations"] = libs._.map(organizations, organization => libs._.omit<any, any>(organization, "id"));
+    let result = libs._.omit<any, any>(body, "organizations");
+    result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
-    return Promise.resolve(organizations);
+    return Promise.resolve(body.organizations);
 }
 
 async function getJoinedOrganizations(caseName: string) {
@@ -178,15 +175,15 @@ async function getJoinedOrganizations(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let organizations: Organization[] = response.body["organizations"];
-    assert(organizations);
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.OrganizationResponse = response.body;
+    assert(body.organizations);
+    assert(body.isSuccess, JSON.stringify(body));
 
-    let result = libs._.omit<any, any>(response.body, "organizations");
-    result["organizations"] = libs._.map(organizations, organization => libs._.omit<any, any>(organization, "id"));
+    let result = libs._.omit<any, any>(body, "organizations");
+    result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
-    return Promise.resolve(organizations);
+    return Promise.resolve(body.organizations);
 }
 
 async function getThemesOfOrganization(organizationId: string, caseName: string) {
@@ -200,10 +197,11 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.ThemeResponse = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    let result = libs._.omit<any, any>(response.body, "themes");
-    result.themes = libs._.map(response.body.themes, (theme: any) => {
+    let result = libs._.omit<any, any>(body, "themes");
+    result.themes = libs._.map(body.themes, (theme: types.Theme) => {
         let t = libs._.pick<any, any>(theme, "title", "detail", "status");
         t.creator = libs._.pick<any, any>(theme.creator, "name", "email");
         t.owners = libs._.map(theme.owners, owner => libs._.pick<any, any>(owner, "name", "email"));
@@ -213,7 +211,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
 
     await operate(caseName, result);
 
-    return Promise.resolve(response.body);
+    return Promise.resolve(body);
 }
 
 async function createTheme(organizationId: string, caseName: string) {
@@ -230,9 +228,10 @@ async function createTheme(organizationId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }
@@ -246,9 +245,10 @@ async function unwatch(themeId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }
@@ -262,9 +262,10 @@ async function watch(themeId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }
@@ -283,9 +284,10 @@ async function updateTheme(themeId: string, caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }
@@ -310,13 +312,13 @@ async function uploadAvatar(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let names: string[] = response.body["names"];
-    assert(names.length === 1, JSON.stringify(response.body));
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.TemperaryResponse = response.body;
+    assert(body.names.length === 1, JSON.stringify(body));
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, libs._.omit<any, any>(response.body, ["names"]));
+    await operate(caseName, libs._.omit<any, any>(body, ["names"]));
 
-    return Promise.resolve(names);
+    return Promise.resolve(body.names);
 }
 
 async function getTemperaryImage(fileName: string, caseName: string) {
@@ -351,9 +353,10 @@ async function updateUser(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }
@@ -367,9 +370,10 @@ async function invite(caseName: string, email: string, organizationId: string) {
     };
     let response = await services.request.request(options);
 
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+    assert(body.isSuccess, JSON.stringify(body));
 
-    await operate(caseName, response.body);
+    await operate(caseName, body);
 
     return Promise.resolve();
 }

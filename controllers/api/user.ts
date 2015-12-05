@@ -24,16 +24,15 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("email name createdOrganizations joinedOrganizations avatar")
             .exec();
         let id = userId.toHexString();
-        let result: types.CurrentUserResponse = {
+
+        services.response.sendSuccess(response, types.StatusCode.OK, {
             id: id,
             email: user.email,
             name: user.name,
             createdOrganizationCount: user.createdOrganizations.length,
             joinedOrganizationCount: user.joinedOrganizations.length,
             avatar: user.avatar || services.avatar.getDefaultName(id),
-        };
-
-        services.response.sendSuccess(response, types.StatusCode.OK, result);
+        });
     } catch (error) {
         services.response.sendError(response, error);
     }

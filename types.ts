@@ -41,15 +41,6 @@ export const enum UserStatus {
     normal
 }
 
-export interface CurrentUserResponse {
-    id: string;
-    email: string;
-    name: string;
-    createdOrganizationCount: number;
-    joinedOrganizationCount: number;
-    avatar: string;
-}
-
 export interface E extends Error {
     statusCode: StatusCode;
 }
@@ -61,6 +52,37 @@ export interface Response {
     stack?: string;
     documentUrl?: string;
     actualErrorMessage?: string;
+}
+
+export interface CurrentUserResponse extends Response {
+    id: string;
+    email: string;
+    name: string;
+    createdOrganizationCount: number;
+    joinedOrganizationCount: number;
+    avatar: string;
+}
+
+export interface VersionResponse extends Response {
+    version: string;
+}
+
+export interface CaptchaResponse extends Response {
+    url: string;
+    code?: string;
+}
+
+export interface TokenResponse extends Response {
+    url?: string;
+}
+
+export interface Organization {
+    id: string;
+    name: string;
+}
+
+export interface OrganizationResponse extends Response {
+    organizations: Organization[];
 }
 
 export type HttpMethod = "get" | "post" | "put" | "delete";
@@ -116,6 +138,14 @@ export interface Theme {
     creator: User;
     owners: User[];
     watchers: User[];
+}
+
+export interface ThemeResponse extends Response {
+    themes: Theme[];
+}
+
+export interface TemperaryResponse extends Response {
+    names: string[];
 }
 
 export type ResponseType = "json" | "others";
