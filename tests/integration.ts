@@ -11,12 +11,13 @@ settings.currentEnvironment = types.environment.test;
 import * as services from "../services";
 
 let apiUrl = settings.getApi();
+let imageServer = settings.imageServer.get(settings.currentEnvironment);
 
 let jar = libs.request.jar();
 
 let headers;
 
-export let operate: (caseName: string, body: string) => Promise<void>;
+export let operate: (caseName: string, body: any) => Promise<void>;
 
 let seeds: types.TestSeed = require("./seeds.json");
 
@@ -81,7 +82,7 @@ async function login(url: string, caseName: string) {
         headers: headers,
         jar: jar,
     };
-    let response = await services.request.request(options, "html");
+    let response = await services.request.request(options, types.responseType.others);
 
     let authenticationCredential = libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential];
     assert(authenticationCredential);
@@ -202,7 +203,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     return Promise.resolve(response.body);
 }
 
-async function createATheme(organizationId: string, caseName: string) {
+async function createTheme(organizationId: string, caseName: string) {
     let options = {
         url: apiUrl + "/api/themes",
         method: "post",
@@ -299,6 +300,19 @@ async function invite(caseName: string, email: string, organizationId: string) {
     return Promise.resolve();
 }
 
+async function getAvatar(uid: string, caseName: string) {
+    let options = {
+        url: imageServer + `/avatar-${uid}.png`
+    };
+    let response = await services.request.request(options, types.responseType.others);
+
+    await operate(caseName, {
+        statusCode: response.response.statusCode
+    });
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -315,17 +329,19 @@ export async function run() {
 
     let clientGuid = libs.generateUuid();
 
-    let clientCode = await createCaptcha(clientGuid, "clientCreateCaptcha");
+    let clientCode = await createCaptcha(clientGuid, "createCaptcha-client");
 
-    let clientUrl = await createToken(clientGuid, clientCode, "clientCreateToken", seeds.clientEmail, seeds.clientName);
+    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientEmail, seeds.clientName);
 
-    await login(clientUrl, "clientLogin");
+    await login(clientUrl, "login-client");
 
-    let client = await getCurrentUser("clientGetCurrentUser");
+    let client = await getCurrentUser("getCurrentUser-client");
 
-    let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizationsOfClient");
+    await getAvatar(client.id, "getAvatar-client");
 
-    await logout("clientLogout");
+    let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
+
+    await logout("logout-client");
 
 
     let guid = libs.generateUuid();
@@ -338,6 +354,8 @@ export async function run() {
 
     let user = await getCurrentUser("getCurrentUser");
 
+    await getAvatar(user.id, "getAvatar");
+
     await createAnOrganization("createAnOrganization");
 
     await getCreatedOrganizations("getCreatedOrganizations");
@@ -347,7 +365,7 @@ export async function run() {
     let organizationId = organizations[0].id;
     assert(organizationId);
 
-    await createATheme(organizationId, "createATheme");
+    await createTheme(organizationId, "createTheme");
 
     let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
 
@@ -356,30 +374,30 @@ export async function run() {
 
     await unwatch(themeId, "unwatch");
 
-    await getThemesOfOrganization(organizationId, "getThemesOfOrganizationAfterUnwatched");
+    await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUnwatched");
 
     await watch(themeId, "watch");
 
-    await getThemesOfOrganization(organizationId, "getThemesOfOrganizationAfterWatched");
+    await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterWatched");
 
     await updateTheme(themeId, "updateTheme");
 
-    await getThemesOfOrganization(organizationId, "getThemesOfOrganizationAfterUpdated");
+    await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUpdated");
 
     await updateUser("updateUser");
 
-    user = await getCurrentUser("getCurrentUserAfterUpdated");
+    user = await getCurrentUser("getCurrentUser-afterUpdated");
 
     await invite("invite", client.email, organizationId);
 
     await logout("logout");
 
 
-    await login(clientUrl, "clientLoginAgain");
+    await login(clientUrl, "login-client-afterInvited");
 
-    client = await getCurrentUser("clientGetCurrentUserAfterInvited");
+    client = await getCurrentUser("getCurrentUser-client-afterInvited");
 
-    clientOrganizations = await getJoinedOrganizations("getJoinedOrganizationsOfClientAfterInvited");
+    clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
 
-    await logout("clientLogoutAgain");
+    await logout("logout-client-afterInvited");
 }

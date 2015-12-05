@@ -118,11 +118,11 @@ export interface Theme {
     watchers: User[];
 }
 
-export type ResponseType = "json" | "html";
+export type ResponseType = "json" | "others";
 
 export const responseType = {
     json: <ResponseType>"json",
-    html: <ResponseType>"html",
+    others: <ResponseType>"others",
 };
 
 export interface TestSeed {

@@ -5,13 +5,15 @@ import * as integration from "./integration";
 
 let baseline: any[] = require("./baseline.json");
 
+let index = 1;
+
 integration.operate = (caseName, body) => {
     let expected = JSON.stringify(baseline[caseName]);
     let actually = JSON.stringify(body);
     if (expected !== actually) {
         throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     }
-    console.log(`case "${caseName}" is passed.`);
+    console.log(`${index++}: case "${caseName}" is passed.`);
     return Promise.resolve();
 };
 

@@ -48,3 +48,14 @@ gulp.task("host-imageServer", () => {
         wait: 500,
     });
 });
+
+gulp.task("host-imageServer-test", () => {
+    liveServer.start({
+        port: 7777,
+        host: "0.0.0.0",
+        root: "test_images",
+        open: false,
+        ignore: "",
+        wait: 500,
+    });
+});
