@@ -14,33 +14,36 @@ export let documentOfCreate: types.Document = {
 
 export async function create(request: libs.Request, response: libs.Response) {
     try {
-        if (!libs.validator.isMongoId(request.body.organizationId)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organizationId"));
-            return;
+        interface Body {
+            organizationId: string;
+            themeTitle: string;
+            themeDetail: string;
         }
 
-        let organizationId = new libs.ObjectId(request.body.organizationId);
+        let body: Body = request.body;
 
-        let themeTitle = libs.validator.trim(request.body.themeTitle);
+        if (!libs.validator.isMongoId(body.organizationId)) {
+            throw services.error.fromParameterIsInvalidMessage("organizationId");
+        }
+
+        let organizationId = new libs.ObjectId(body.organizationId);
+
+        let themeTitle = libs.validator.trim(body.themeTitle);
         if (themeTitle === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("themeTitle"));
-            return;
+            throw services.error.fromParameterIsMissedMessage("themeTitle");
         }
 
-        let themeDetail = libs.validator.trim(request.body.themeDetail);
+        let themeDetail = libs.validator.trim(body.themeDetail);
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
         // the organization should be public organization, or current user should join in it.
-        let user = await services.mongo.User.findOne({ _id: userId })
+        let user = await services.mongo.User.findOne({ _id: request.userId })
             .exec();
         if (!organizationId.equals(services.seed.publicOrganizationId)
             && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
-            return;
+            throw services.error.fromOrganizationIsPrivateMessage();
         }
 
         let organization = await services.mongo.Organization.findOne({ _id: organizationId })
@@ -53,9 +56,9 @@ export async function create(request: libs.Request, response: libs.Response) {
             status: types.ThemeStatus.open,
             createTime: new Date(),
             updateTime: new Date(),
-            creator: userId,
-            owners: [userId],
-            watchers: [userId],
+            creator: request.userId,
+            owners: [request.userId],
+            watchers: [request.userId],
             organization: organizationId,
         });
 
@@ -104,28 +107,35 @@ export let documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     try {
-        if (!libs.validator.isMongoId(request.params.theme_id)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-            return;
+        let params: { theme_id: string; } = request.params;
+
+        if (!libs.validator.isMongoId(params.theme_id)) {
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
         }
 
-        let title = libs.validator.trim(request.body.title);
-        let detail = libs.validator.trim(request.body.detail);
+        interface Body {
+            title: string;
+            detail: string;
+            status: types.ThemeStatusType;
+        }
+
+        let body: Body = request.body;
+
+        let title = libs.validator.trim(body.title);
+        let detail = libs.validator.trim(body.detail);
         let status: types.ThemeStatus = null;
 
-        if (request.body.status === types.themeStatus.open) {
+        if (body.status === types.themeStatus.open) {
             status = types.ThemeStatus.open;
         }
-        if (request.body.status === types.themeStatus.closed) {
+        if (body.status === types.themeStatus.closed) {
             status = types.ThemeStatus.closed;
         }
 
-        let id = new libs.ObjectId(request.params.theme_id);
+        let id = new libs.ObjectId(params.theme_id);
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
         // the theme should be available.
@@ -133,14 +143,12 @@ export async function update(request: libs.Request, response: libs.Response) {
             .populate("creator owners watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
         }
 
         // current user should be one of the theme's owners.
-        if (!libs._.find(theme.owners, (o: libs.ObjectId) => o.equals(userId))) {
-            services.response.sendError(response, services.error.fromThemeIsNotYoursMessage());
-            return;
+        if (!libs._.find(theme.owners, (o: libs.ObjectId) => o.equals(request.userId))) {
+            throw services.error.fromThemeIsNotYoursMessage();
         }
 
         if (title) {

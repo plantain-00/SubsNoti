@@ -13,21 +13,14 @@ export function route(app: libs.Application) {
         let v = libs.validator.trim(request.header(versionHeaderName));
         if (request.path === settings.urls.login && request.method === "GET") {
             next();
-            return;
-        }
-
-        if (v === "") {
+        } else if (v === "") {
             services.response.sendError(response, services.error.fromParameterIsMissedMessage(versionHeaderName), documentUrl);
-            return;
-        }
-
-        if (!libs.semver.valid(v)) {
+        } else if (!libs.semver.valid(v)) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage(versionHeaderName), documentUrl);
-            return;
+        } else {
+            request.v = v;
+            next();
         }
-
-        request.v = v;
-        next();
     });
 }
 

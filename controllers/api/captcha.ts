@@ -14,19 +14,21 @@ export let documentOfCreate: types.Document = {
 
 export async function create(request: libs.Request, response: libs.Response) {
     try {
-        let id = libs.validator.trim(request.body.id);
+        let body: { id: string; } = request.body;
+
+        let id = libs.validator.trim(body.id);
 
         if (id === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("id"));
-            return;
+            throw services.error.fromParameterIsMissedMessage("id");
         }
 
         let captcha = await services.captcha.create(id);
 
-        services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+        let result: types.CaptchaResult = {
             url: captcha.url,
             code: settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
-        });
+        };
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
     } catch (error) {
         services.response.sendError(response, error);
     }

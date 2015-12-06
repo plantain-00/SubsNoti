@@ -13,12 +13,10 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        let userId = request.userId;
+        let result: types.OrganizationResult;
 
-        let result;
-
-        if (userId) {
-            let user = await services.mongo.User.findOne({ _id: userId })
+        if (request.userId) {
+            let user = await services.mongo.User.findOne({ _id: request.userId })
                 .populate("joinedOrganizations")
                 .select("joinedOrganizations")
                 .exec();

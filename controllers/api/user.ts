@@ -14,16 +14,14 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
-        let user = await services.mongo.User.findOne({ _id: userId })
+        let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("email name createdOrganizations joinedOrganizations avatar")
             .exec();
-        let id = userId.toHexString();
+        let id = request.userId.toHexString();
 
         services.response.sendSuccess(response, types.StatusCode.OK, {
             id: id,
@@ -46,16 +44,21 @@ export let documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     try {
-        let name = libs.validator.trim(request.body.name);
-        let avatarFileName = libs.validator.trim(request.body.avatarFileName);
-
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        interface Body {
+            name: string;
+            avatarFileName: string;
         }
 
-        let user = await services.mongo.User.findOne({ _id: userId })
+        let body: Body = request.body;
+
+        let name = libs.validator.trim(body.name);
+        let avatarFileName = libs.validator.trim(body.avatarFileName);
+
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
+        }
+
+        let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("name avatar")
             .exec();
 
@@ -67,7 +70,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         // if change avatar, then move image.
         if (avatarFileName) {
-            let newName = settings.imagePaths.avatar + userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
+            let newName = settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
 
             let json = await services.request.postAsync(`${settings.getImageUploader()}/api/persistence`, settings.version, {
                 name: avatarFileName,

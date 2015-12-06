@@ -15,13 +15,12 @@ export function post<T>(options: libs.request.Options): Promise<Response<T>> {
         libs.request.post(options, (error, response, body) => {
             if (error) {
                 reject(error);
-                return;
+            } else {
+                resolve({
+                    response: response,
+                    body: JSON.parse(body),
+                });
             }
-
-            resolve({
-                response: response,
-                body: JSON.parse(body),
-            });
         });
     });
 }
@@ -55,13 +54,12 @@ export function get<T>(options: libs.request.Options, type?: types.ResponseType)
         libs.request(options, (error, response, body) => {
             if (error) {
                 reject(error);
-                return;
+            } else {
+                resolve({
+                    response: response,
+                    body: type === types.responseType.json ? JSON.parse(body) : body,
+                });
             }
-
-            resolve({
-                response: response,
-                body: type === types.responseType.json ? JSON.parse(body) : body,
-            });
         });
     });
 }
@@ -84,13 +82,12 @@ export function request(options: libs.request.Options, type?: types.ResponseType
         libs.request(options, (error, response, body) => {
             if (error) {
                 reject(error);
-                return;
+            } else {
+                resolve({
+                    response: response,
+                    body: type === types.responseType.json ? JSON.parse(body) : body,
+                });
             }
-
-            resolve({
-                response: response,
-                body: type === types.responseType.json ? JSON.parse(body) : body,
-            });
         });
     });
 }

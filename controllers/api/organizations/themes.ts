@@ -13,38 +13,46 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!libs.validator.isMongoId(request.params.organization_id)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
-            return;
+        interface Query {
+            page: string;
+            limit: string;
+            q: string;
+            isOpen: string;
+            isClosed: string;
+            order: string;
         }
 
-        let organizationId = new libs.ObjectId(request.params.organization_id);
-        let page = libs.validator.isNumeric(request.query.page) ? libs.validator.toInt(request.query.page) : 1;
-        let limit = libs.validator.isNumeric(request.query.limit) ? libs.validator.toInt(request.query.limit) : settings.defaultItemLimit;
-        let q = libs.validator.trim(request.query.q);
-        let isOpen = libs.validator.trim(request.query.isOpen) === types.yes;
-        let isClosed = libs.validator.trim(request.query.isClosed) === types.yes;
+        let params: { organization_id: string } = request.params;
+        if (!libs.validator.isMongoId(request.params.organization_id)) {
+            throw services.error.fromParameterIsInvalidMessage("organization_id");
+        }
+
+        let query: Query = request.query;
+
+        let organizationId = new libs.ObjectId(params.organization_id);
+        let page = libs.validator.isNumeric(query.page) ? libs.validator.toInt(query.page) : 1;
+        let limit = libs.validator.isNumeric(query.limit) ? libs.validator.toInt(query.limit) : settings.defaultItemLimit;
+        let q = libs.validator.trim(query.q);
+        let isOpen = libs.validator.trim(query.isOpen) !== types.no;
+        let isClosed = libs.validator.trim(query.isClosed) === types.yes;
 
         // the organization should be public organization, or current user should join in it.
         if (!organizationId.equals(services.seed.publicOrganizationId)) {
             // identify current user.
-            let userId = request.userId;
-            if (!userId) {
-                services.response.sendError(response, services.error.fromUnauthorized());
-                return;
+            if (!request.userId) {
+                throw services.error.fromUnauthorized();
             }
 
-            let user = await services.mongo.User.findOne({ _id: userId })
+            let user = await services.mongo.User.findOne({ _id: request.userId })
                 .select("joinedOrganizations")
                 .exec();
 
             if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
-                services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
-                return;
+                throw services.error.fromOrganizationIsPrivateMessage();
             }
         }
 
-        let query = services.mongo.Theme.find({
+        let themesQuery = services.mongo.Theme.find({
             organization: organizationId
         });
         let countQuery = services.mongo.Theme.find({
@@ -52,34 +60,34 @@ export async function get(request: libs.Request, response: libs.Response) {
         });
 
         if (isOpen && !isClosed) {
-            query = query.where("status").equals(types.ThemeStatus.open);
+            themesQuery = themesQuery.where("status").equals(types.ThemeStatus.open);
             countQuery = countQuery.where("status").equals(types.ThemeStatus.open);
         } else if (!isOpen && isClosed) {
-            query = query.where("status").equals(types.ThemeStatus.closed);
+            themesQuery = themesQuery.where("status").equals(types.ThemeStatus.closed);
             countQuery = countQuery.where("status").equals(types.ThemeStatus.closed);
         }
 
         // filtered by `title` or `detail`.
         if (q) {
-            query = query.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
+            themesQuery = themesQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
             countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
         }
 
-        let order = libs.validator.trim(request.query.order);
+        let order = libs.validator.trim(query.order);
         let sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
 
-        let themes = await query.skip((page - 1) * limit)
+        let themes = await themesQuery.skip((page - 1) * limit)
             .limit(limit)
             .sort(sort)
             .populate("creator owners watchers")
             .exec();
 
-        let totalCount = await countQuery.count()
+        let totalCount: any = await countQuery.count()
             .exec();
 
-        let result = {
+        let result: types.ThemeResult = {
             themes: [],
-            totalCount: totalCount,
+            totalCount: <number>totalCount,
         };
 
         libs._.each(themes, (theme: services.mongo.ThemeDocument) => {

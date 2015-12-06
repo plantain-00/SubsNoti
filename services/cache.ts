@@ -20,9 +20,9 @@ export function getStringAsync(key: string): Promise<string> {
         client.get(key, (error: Error, reply) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve(reply);
             }
-            resolve(reply);
         });
     });
 }
@@ -46,9 +46,9 @@ function getAsync(key: string, field: string): Promise<any> {
         client.hmget(key, field, (error: Error, reply) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve(reply);
             }
-            resolve(reply);
         });
     });
 }
@@ -61,9 +61,9 @@ export function ttlAsync(key: string): Promise<number> {
         client.ttl(key, (error: Error, reply) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve(reply);
             }
-            resolve(reply);
         });
     });
 }

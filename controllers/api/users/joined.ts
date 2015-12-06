@@ -13,24 +13,27 @@ export let documentOfInvite: types.Document = {
 };
 
 export async function invite(request: libs.Request, response: libs.Response) {
-    if (!libs.validator.isMongoId(request.params.organization_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
-        return;
-    }
-
-    if (!libs.validator.isEmail(request.params.user_email)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"));
-        return;
-    }
-
     try {
-        let organizationId = new libs.ObjectId(request.params.organization_id);
-        let email = libs.validator.trim(request.params.user_email).toLowerCase();
+        interface Params {
+            organization_id: string;
+            user_email: string;
+        }
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        let params: Params = request.params;
+
+        if (!libs.validator.isMongoId(params.organization_id)) {
+            throw services.error.fromParameterIsInvalidMessage("organization_id");
+        }
+
+        if (!libs.validator.isEmail(params.user_email)) {
+            throw services.error.fromParameterIsInvalidMessage("user_email");
+        }
+
+        let organizationId = new libs.ObjectId(params.organization_id);
+        let email = libs.validator.trim(params.user_email).toLowerCase();
+
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
         // the organization should be available.
@@ -38,8 +41,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
             .select("members")
             .exec();
         if (!organization) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("organization_id"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("organization_id");
         }
 
         // the email should belong to one of users.
@@ -47,14 +49,12 @@ export async function invite(request: libs.Request, response: libs.Response) {
             .select("_id joinedOrganizations")
             .exec();
         if (!user) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("user_email"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("user_email");
         }
 
         // current user should be a member of the organization
-        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
-            return;
+        if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+            throw services.error.fromOrganizationIsPrivateMessage();
         }
 
         // if the user is already a member, do nothing.

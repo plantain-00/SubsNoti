@@ -18,10 +18,9 @@ function getConnection(): Promise<MysqlConnection> {
         pool.getConnection((error, connection) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve(connection);
             }
-
-            resolve(connection);
         });
     });
 }
@@ -30,14 +29,12 @@ function accessAsync<T>(sql: string, parameters: any[]): Promise<T> {
     return getConnection().then(connection => {
         return new Promise<T>((resolve, reject) => {
             connection.query(sql, parameters, (error, rows) => {
-                if (error) {
-                    connection.release();
-                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                    return;
-                }
-
                 connection.release();
-                resolve(rows);
+                if (error) {
+                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                } else {
+                    resolve(rows);
+                }
             });
         });
     });
@@ -54,10 +51,9 @@ export function beginTransactionAsync(): Promise<MysqlConnection> {
                 if (error) {
                     connection.release();
                     reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                    return;
+                } else {
+                    resolve(connection);
                 }
-
-                resolve(connection);
             });
         });
     });
@@ -68,10 +64,9 @@ function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, p
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve(rows);
             }
-
-            resolve(rows);
         });
     }).catch(error => {
         return rollbackAsync(connection).then(() => {
@@ -98,11 +93,10 @@ export function endTransactionAsync(connection: MysqlConnection): Promise<void> 
         connection.commit(error => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                connection.release();
+                resolve();
             }
-
-            connection.release();
-            resolve();
         });
     }).catch(error => {
         return rollbackAsync(connection).then(() => {

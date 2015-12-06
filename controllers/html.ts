@@ -15,15 +15,14 @@ function redirectToErrorPage(response: libs.Response, message: string) {
 function setCookie(request: libs.Request, response: libs.Response, token: string) {
     if (!token) {
         response.redirect(frontendsServer + "/success.html");
-        return;
+    } else {
+        response.cookie(settings.cookieKeys.authenticationCredential, token, {
+            expires: libs.moment().clone().add(1, "months").toDate(),
+            httpOnly: true,
+        });
+
+        response.redirect(frontendsServer + "/success.html?clear_previous_status=" + types.yes);
     }
-
-    response.cookie(settings.cookieKeys.authenticationCredential, token, {
-        expires: libs.moment().clone().add(1, "months").toDate(),
-        httpOnly: true,
-    });
-
-    response.redirect(frontendsServer + "/success.html?clear_previous_status=" + types.yes);
 }
 
 export let documentOfLogin: types.Document = {
@@ -57,26 +56,30 @@ export let documentOfGithubCode: types.Document = {
 };
 
 export async function githubCode(request: libs.Request, response: libs.Response) {
-    let state = libs.validator.trim(request.query.state);
-    let code = libs.validator.trim(request.query.code);
-
-    if (state === "") {
-        redirectToErrorPage(response, "missed parameter:state");
-        return;
-    }
-
-    if (code === "") {
-        redirectToErrorPage(response, "missed parameter:code");
-        return;
-    }
-
-    let value = await services.cache.getStringAsync(settings.cacheKeys.githubLoginCode + state);
-    if (!value) {
-        redirectToErrorPage(response, "invalid parameter:state");
-        return;
-    }
-
     try {
+        interface Query {
+            state: string;
+            code: string;
+        }
+
+        let query: Query = request.query;
+
+        let state = libs.validator.trim(query.state);
+        let code = libs.validator.trim(query.code);
+
+        if (state === "") {
+            throw new Error("missed parameter:state");
+        }
+
+        if (code === "") {
+            throw new Error("missed parameter:code");
+        }
+
+        let value = await services.cache.getStringAsync(settings.cacheKeys.githubLoginCode + state);
+        if (!value) {
+            throw new Error("invalid parameter:state");
+        }
+
         let accessTokenResponse = await services.request.post<{ access_token: string; scope: string; token_type: string; }>({
             url: "https://github.com/login/oauth/access_token",
             headers: {
@@ -104,12 +107,10 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             return b.verified && b.primary;
         });
         if (!email) {
-            redirectToErrorPage(response, "no verified email");
-            return;
+            throw new Error("no verified email");
         }
 
         let verifiedEmail = email.email.toLowerCase();
-
         let token = await services.tokens.create(verifiedEmail, githubCodeUrl, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);

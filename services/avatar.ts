@@ -52,10 +52,11 @@ function createAsync(seed: string, fileName: string) {
         canvas.toBuffer(function(error, buf) {
             if (error) {
                 reject(error);
-                return;
+            } else {
+                resolve(buf);
             }
 
-            resolve(buf);
+
         });
     }).then(buf => {
         let formData = {};

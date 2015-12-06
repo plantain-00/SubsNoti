@@ -13,7 +13,9 @@ export let documentOfGet: types.Document = {
 };
 
 export function get(request: libs.Request, response: libs.Response) {
-    services.response.sendSuccess(response, types.StatusCode.OK, {
+    let result: types.VersionResult = {
         version: settings.version
-    });
+    };
+
+    services.response.sendSuccess(response, types.StatusCode.OK, result);
 }

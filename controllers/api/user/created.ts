@@ -13,17 +13,15 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
-        let user = await services.mongo.User.findOne({ _id: userId })
+        let user = await services.mongo.User.findOne({ _id: request.userId })
             .populate("createdOrganizations")
             .select("createdOrganizations")
             .exec();
-        let result = {
+        let result: types.OrganizationResult = {
             organizations: libs._.map(user.createdOrganizations, (o: services.mongo.OrganizationDocument) => {
                 return {
                     id: o._id.toHexString(),

@@ -96,3 +96,15 @@ export {RedisClient};
 export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }
+
+export let renameAsync = (oldPath: string, newPath: string) => {
+    return new Promise((resolve, reject) => {
+        fs.rename(oldPath, newPath, error => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve();
+            }
+        });
+    });
+};

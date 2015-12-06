@@ -12,19 +12,22 @@ export let documentOfWatch: types.Document = {
     documentUrl: "/api/theme/watch a theme.html",
 };
 
+interface Params {
+    theme_id: string;
+}
+
 export async function watch(request: libs.Request, response: libs.Response) {
-    if (!libs.validator.isMongoId(request.params.theme_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-        return;
-    }
-
     try {
-        let themeId = new libs.ObjectId(request.params.theme_id);
+        let params: Params = request.params;
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!libs.validator.isMongoId(params.theme_id)) {
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
+        }
+
+        let themeId = new libs.ObjectId(params.theme_id);
+
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
         // the theme should be available.
@@ -33,26 +36,24 @@ export async function watch(request: libs.Request, response: libs.Response) {
             .select("organization watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
         }
 
         // current user should be the member of the organization that the theme in, or the organization is public.
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
-            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
-            return;
+            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+            throw services.error.fromOrganizationIsPrivateMessage();
         }
 
         // if current user already watched the theme, then do nothing.
-        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
-            let user = await services.mongo.User.findOne({ _id: userId })
+        if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(request.userId))) {
+            let user = await services.mongo.User.findOne({ _id: request.userId })
                 .select("watchedThemes")
                 .exec();
 
             user.watchedThemes.push(themeId);
-            theme.watchers.push(userId);
+            theme.watchers.push(request.userId);
             theme.updateTime = new Date();
 
             user.save();
@@ -79,18 +80,17 @@ export let documentOfUnwatch: types.Document = {
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {
-    if (!libs.validator.isMongoId(request.params.theme_id)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-        return;
-    }
-
     try {
-        let themeId = new libs.ObjectId(request.params.theme_id);
+        let params: Params = request.params;
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!libs.validator.isMongoId(params.theme_id)) {
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
+        }
+
+        let themeId = new libs.ObjectId(params.theme_id);
+
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
         // the theme should be available.
@@ -99,26 +99,24 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             .select("organization watchers")
             .exec();
         if (!theme) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("theme_id"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("theme_id");
         }
 
         // current user should be the member of the organization that the theme in, or the organization is public.
         let organization = <services.mongo.OrganizationDocument>theme.organization;
         if (!organization._id.equals(services.seed.publicOrganizationId)
-            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(userId))) {
-            services.response.sendError(response, services.error.fromOrganizationIsPrivateMessage());
-            return;
+            && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+            throw services.error.fromOrganizationIsPrivateMessage();
         }
 
         // if current user already unwatched the theme, then do nothing.
-        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(userId))) {
-            let user = await services.mongo.User.findOne({ _id: userId })
+        if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(request.userId))) {
+            let user = await services.mongo.User.findOne({ _id: request.userId })
                 .select("watchedThemes")
                 .exec();
 
             (<services.mongo.MongooseArray<libs.ObjectId>>user.watchedThemes).pull(themeId);
-            (<services.mongo.MongooseArray<libs.ObjectId>>theme.watchers).pull(userId);
+            (<services.mongo.MongooseArray<libs.ObjectId>>theme.watchers).pull(request.userId);
             theme.updateTime = new Date();
 
             user.save();

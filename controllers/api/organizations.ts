@@ -13,47 +13,41 @@ export let documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let documentUrl = documentOfCreate.documentUrl;
-
     try {
-        let organizationName = libs.validator.trim(request.body.organizationName);
+        let body: { organizationName: string; } = request.body;
+
+        let organizationName = libs.validator.trim(body.organizationName);
         if (organizationName === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage("organizationName"));
-            return;
+            throw services.error.fromParameterIsMissedMessage("organizationName");
         }
 
-        let userId = request.userId;
-        if (!userId) {
-            services.response.sendError(response, services.error.fromUnauthorized());
-            return;
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
 
         // the name should not be used by other organizations.
         if (organizationName === services.seed.publicOrganizationName) {
-            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest));
-            return;
+            throw services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest);
         }
         let organizationCount = await services.mongo.Organization.count({ name: organizationName })
             .exec();
         if (organizationCount > 0) {
-            services.response.sendError(response, services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest));
-            return;
+            throw services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest);
         }
 
         // current user should not create too many organizations.
-        let user = await services.mongo.User.findOne({ _id: userId })
+        let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("createdOrganizations joinedOrganizations")
             .exec();
         if (user.createdOrganizations.length >= settings.maxOrganizationNumberUserCanCreate) {
-            services.response.sendError(response, services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest));
-            return;
+            throw services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest);
         }
 
         let organization = await services.mongo.Organization.create({
             name: organizationName,
             status: types.OrganizationStatus.normal,
-            creator: userId,
-            members: [userId],
+            creator: request.userId,
+            members: [request.userId],
         });
 
         user.createdOrganizations.push(organization._id);

@@ -63,27 +63,35 @@ export interface CurrentUserResponse extends Response {
     avatar: string;
 }
 
-export interface VersionResponse extends Response {
+export interface VersionResult {
     version: string;
 }
 
-export interface CaptchaResponse extends Response {
+export interface VersionResponse extends Response, VersionResult { }
+
+export interface CaptchaResult {
     url: string;
     code?: string;
 }
 
-export interface TokenResponse extends Response {
+export interface CaptchaResponse extends Response, CaptchaResult { }
+
+export interface TokenResult {
     url?: string;
 }
+
+export interface TokenResponse extends Response, TokenResult { }
 
 export interface Organization {
     id: string;
     name: string;
 }
 
-export interface OrganizationResponse extends Response {
+export interface OrganizationResult {
     organizations: Organization[];
 }
+
+export interface OrganizationResponse extends Response, OrganizationResult { }
 
 export type HttpMethod = "get" | "post" | "put" | "delete";
 
@@ -139,10 +147,12 @@ export interface Theme {
     owners: User[];
     watchers: User[];
 }
-
-export interface ThemeResponse extends Response {
+export interface ThemeResult {
     themes: Theme[];
+    totalCount: number;
 }
+
+export interface ThemeResponse extends Response, ThemeResult { }
 
 export interface TemperaryResponse extends Response {
     names: string[];
@@ -169,3 +179,4 @@ export interface TestSeed {
 }
 
 export const yes = "√";
+export const no = "X";

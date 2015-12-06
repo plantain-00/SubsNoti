@@ -1,7 +1,5 @@
 "use strict";
 
-import * as assert from "assert";
-
 import * as types from "../types";
 import * as libs from "../libs";
 import * as settings from "../settings";
@@ -29,8 +27,9 @@ async function getVersion(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.VersionResponse = response.body;
-    assert(body.version === settings.version, JSON.stringify(body));
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || body.version !== settings.version) {
+        throw body;
+    }
 
     await operate(caseName, libs._.omit<any, any>(body, ["version"]));
 
@@ -41,7 +40,7 @@ async function createCaptcha(guid: string, caseName: string) {
     let options = {
         url: apiUrl + "/api/captchas",
         headers: headers,
-        method: "post",
+        method: types.httpMethod.post,
         form: {
             id: guid
         },
@@ -49,8 +48,9 @@ async function createCaptcha(guid: string, caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.CaptchaResponse = response.body;
-    assert(body.code, JSON.stringify(body));
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || !body.code) {
+        throw body;
+    }
 
     await operate(caseName, libs._.omit<any, any>(body, ["url", "code"]));
 
@@ -61,7 +61,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
     let options = {
         url: apiUrl + "/api/tokens",
         headers: headers,
-        method: "post",
+        method: types.httpMethod.post,
         form: {
             email: email,
             name: name,
@@ -72,8 +72,9 @@ async function createToken(guid: string, code: string, caseName: string, email: 
     let response = await services.request.request(options);
 
     let body: types.TokenResponse = response.body;
-    assert(body.url, JSON.stringify(body));
-    assert(response.body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || !body.url) {
+        throw body;
+    }
 
     await operate(caseName, libs._.omit<any, any>(body, ["url"]));
 
@@ -88,8 +89,11 @@ async function login(url: string, caseName: string) {
     };
     let response = await services.request.request(options, types.responseType.others);
 
-    let authenticationCredential = libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential];
-    assert(authenticationCredential);
+    let cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
+    let authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
+    if (!authenticationCredential) {
+        throw cookies;
+    }
 
     await operate(caseName, {
         statusCode: response.response.statusCode
@@ -102,14 +106,21 @@ async function logout(caseName: string) {
     let options = {
         url: apiUrl + "/api/user/logged_in",
         headers: headers,
-        method: "delete",
+        method: types.httpMethod.delete,
         jar: jar,
     };
     let response = await services.request.request(options);
 
-    let authenticationCredential = libs.cookie.parse(jar.getCookieString(apiUrl))[settings.cookieKeys.authenticationCredential];
-    assert(!authenticationCredential);
-    assert(response.body.isSuccess, JSON.stringify(response.body));
+    let body: types.Response = response.body;
+
+    let cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
+    let authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
+    if (!body.isSuccess) {
+        throw body;
+    }
+    if (authenticationCredential) {
+        throw cookies;
+    }
 
     await operate(caseName, response.body);
 }
@@ -123,7 +134,9 @@ async function getCurrentUser(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.CurrentUserResponse = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, libs._.omit<any, any>(body, ["id", "avatar"]));
 
@@ -133,7 +146,7 @@ async function getCurrentUser(caseName: string) {
 async function createOrganization(caseName: string) {
     let options = {
         url: apiUrl + "/api/organizations",
-        method: "post",
+        method: types.httpMethod.post,
         headers: headers,
         jar: jar,
         form: {
@@ -143,7 +156,9 @@ async function createOrganization(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -159,8 +174,9 @@ async function getCreatedOrganizations(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.OrganizationResponse = response.body;
-    assert(body.organizations);
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || !body.organizations) {
+        throw body;
+    }
 
     let result = libs._.omit<any, any>(body, "organizations");
     result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
@@ -178,8 +194,9 @@ async function getJoinedOrganizations(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.OrganizationResponse = response.body;
-    assert(body.organizations);
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || !body.organizations) {
+        throw body;
+    }
 
     let result = libs._.omit<any, any>(body, "organizations");
     result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
@@ -194,13 +211,15 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
         headers: headers,
         jar: jar,
         qs: {
-            isClosed: "true"
+            isClosed: types.yes
         },
     };
     let response = await services.request.request(options);
 
     let body: types.ThemeResponse = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     let result = libs._.omit<any, any>(body, "themes");
     result.themes = libs._.map(body.themes, (theme: types.Theme) => {
@@ -219,7 +238,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
 async function createTheme(organizationId: string, caseName: string) {
     let options = {
         url: apiUrl + "/api/themes",
-        method: "post",
+        method: types.httpMethod.post,
         headers: headers,
         jar: jar,
         form: {
@@ -231,7 +250,9 @@ async function createTheme(organizationId: string, caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -241,14 +262,16 @@ async function createTheme(organizationId: string, caseName: string) {
 async function unwatch(themeId: string, caseName: string) {
     let options = {
         url: apiUrl + `/api/user/watched/${themeId}`,
-        method: "delete",
+        method: types.httpMethod.delete,
         headers: headers,
         jar: jar,
     };
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -258,14 +281,16 @@ async function unwatch(themeId: string, caseName: string) {
 async function watch(themeId: string, caseName: string) {
     let options = {
         url: apiUrl + `/api/user/watched/${themeId}`,
-        method: "put",
+        method: types.httpMethod.put,
         headers: headers,
         jar: jar,
     };
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -275,19 +300,21 @@ async function watch(themeId: string, caseName: string) {
 async function updateTheme(themeId: string, caseName: string) {
     let options = {
         url: apiUrl + `/api/themes/${themeId}`,
-        method: "put",
+        method: types.httpMethod.put,
         headers: headers,
         jar: jar,
         form: {
             title: seeds.newThemeTitle,
             detail: seeds.newThemeDetail,
-            status: "closed",
+            status: types.themeStatus.closed,
         },
     };
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -307,7 +334,7 @@ async function uploadAvatar(caseName: string) {
 
     let options = {
         url: imageUploader + `/api/temperary`,
-        method: "post",
+        method: types.httpMethod.post,
         headers: headers,
         jar: jar,
         formData: formData,
@@ -315,8 +342,9 @@ async function uploadAvatar(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.TemperaryResponse = response.body;
-    assert(body.names.length === 1, JSON.stringify(body));
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess || body.names.length !== 1) {
+        throw body;
+    }
 
     await operate(caseName, libs._.omit<any, any>(body, ["names"]));
 
@@ -344,7 +372,7 @@ async function updateUser(caseName: string) {
 
     let options = {
         url: apiUrl + `/api/user`,
-        method: "put",
+        method: types.httpMethod.put,
         headers: headers,
         jar: jar,
         form: {
@@ -355,7 +383,9 @@ async function updateUser(caseName: string) {
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -365,14 +395,16 @@ async function updateUser(caseName: string) {
 async function invite(caseName: string, email: string, organizationId: string) {
     let options = {
         url: apiUrl + `/api/users/${email}/joined/${organizationId}`,
-        method: "put",
+        method: types.httpMethod.put,
         headers: headers,
         jar: jar,
     };
     let response = await services.request.request(options);
 
     let body: types.Response = response.body;
-    assert(body.isSuccess, JSON.stringify(body));
+    if (!body.isSuccess) {
+        throw body;
+    }
 
     await operate(caseName, body);
 
@@ -442,14 +474,18 @@ export async function run() {
     let organizations = await getJoinedOrganizations("getJoinedOrganizations");
 
     let organizationId = organizations[0].id;
-    assert(organizationId);
+    if (!organizationId) {
+        throw organizations;
+    }
 
     await createTheme(organizationId, "createTheme");
 
     let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
 
     let themeId = themes.themes[0].id;
-    assert(themeId);
+    if (!themeId) {
+        throw themes.themes;
+    }
 
     await unwatch(themeId, "unwatch");
 

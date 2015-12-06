@@ -13,20 +13,26 @@ export let documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    if (!libs.validator.isEmail(request.body.email)) {
-        services.response.sendError(response, services.error.fromParameterIsInvalidMessage("email"));
-        return;
-    }
-
-    let email = libs.validator.trim(request.body.email).toLowerCase();
-    let name = libs.validator.trim(request.body.name);
-
     try {
-        let code = libs.validator.trim(request.body.code);
-        let guid = libs.validator.trim(request.body.guid);
+        interface Body {
+            email: string;
+            name: string;
+            code: string;
+            guid: string;
+        }
+
+        let body: Body = request.body;
+
+        if (!libs.validator.isEmail(body.email)) {
+            throw services.error.fromParameterIsInvalidMessage("email");
+        }
+
+        let email = libs.validator.trim(body.email).toLowerCase();
+        let name = libs.validator.trim(body.name);
+        let code = libs.validator.trim(body.code);
+        let guid = libs.validator.trim(body.guid);
         if (code === "" || guid === "") {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage("code or guid"));
-            return;
+            throw services.error.fromParameterIsInvalidMessage("code or guid");
         }
 
         await services.captcha.validate(guid, code);
@@ -35,15 +41,16 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let url = `${settings.getApi()}${settings.urls.login}?authentication_credential=${token}`;
 
+        let result: types.TokenResult;
         if (settings.currentEnvironment === types.environment.test) {
-            services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+            result = {
                 url: url
-            });
+            };
         } else {
             await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
-
-            services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+            result = {};
         }
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
     } catch (error) {
         services.response.sendError(response, error);
     }

@@ -22,10 +22,9 @@ export function sendAsync(to: string, subject: string, html: string): Promise<vo
         transporter.sendMail(mailOptions, error => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
-                return;
+            } else {
+                resolve();
             }
-
-            resolve();
         });
     });
 }
