@@ -68,7 +68,7 @@ function createAsync(seed: string, fileName: string) {
             },
         };
 
-        return services.request.postMultipartAsync(`${settings.getImageUploader()}/api/persistent`, settings.version, formData);
+        return services.request.postMultipartAsync(`${settings.getImageUploader()}/api/persistent`, formData);
     });
 }
 

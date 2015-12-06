@@ -427,9 +427,8 @@ async function getAvatar(uid: string, caseName: string) {
 export async function run() {
     let version = await getVersion("getVersion");
 
-    headers = {
-        "X-Version": version
-    };
+    headers = {};
+    headers[settings.headerNames.version] = version;
 
     services.mongo.connect();
     await services.mongo.User.remove({}).exec();

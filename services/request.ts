@@ -25,26 +25,26 @@ export function post<T>(options: libs.request.Options): Promise<Response<T>> {
     });
 }
 
-export function postAsync<T>(url: string, version: string, form): Promise<Response<T>> {
+export function postAsync<T>(url: string, form): Promise<Response<T>> {
     let options = {
         url: url,
         form: form,
-        headers: {
-            "X-Version": version
-        },
+        headers: {},
     };
+
+    options[settings.headerNames.version] = settings.version;
 
     return post<T>(options);
 }
 
-export function postMultipartAsync<T>(url: string, version: string, formData: any): Promise<Response<T>> {
+export function postMultipartAsync<T>(url: string, formData: any): Promise<Response<T>> {
     let options = {
         url: url,
         formData: formData,
-        headers: {
-            "X-Version": version
-        },
+        headers: {},
     };
+
+    options[settings.headerNames.version] = settings.version;
 
     return post<T>(options);
 }

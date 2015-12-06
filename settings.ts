@@ -90,6 +90,15 @@ let pjson = require("./package.json");
 
 export let version = pjson.version;
 
+export let headerNames = {
+    version: "X-Version",
+    rateLimit: {
+        limit: "X-RateLimit-Limit",
+        remain: "X-RateLimit-Remain",
+        resetMoment: "X-RateLimit-ResetMoment",
+    }
+};
+
 try {
     let secret = require("./secret");
     secret.load();
