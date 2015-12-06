@@ -32,7 +32,7 @@ export function postAsync<T>(url: string, form): Promise<Response<T>> {
         headers: {},
     };
 
-    options[settings.headerNames.version] = settings.version;
+    options.headers[settings.headerNames.version] = settings.version;
 
     return post<T>(options);
 }
@@ -44,7 +44,7 @@ export function postMultipartAsync<T>(url: string, formData: any): Promise<Respo
         headers: {},
     };
 
-    options[settings.headerNames.version] = settings.version;
+    options.headers[settings.headerNames.version] = settings.version;
 
     return post<T>(options);
 }

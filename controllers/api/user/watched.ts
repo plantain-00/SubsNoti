@@ -64,7 +64,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
                 .populate("creator owners watchers")
                 .exec();
             let result = services.theme.convert(theme);
-            services.push.emit(types.pushEvents.themeUpdated, result);
+            services.push.emitTheme(types.themePushEvents.themeUpdated, result);
         }
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
@@ -127,7 +127,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
                 .populate("creator owners watchers")
                 .exec();
             let result = services.theme.convert(theme);
-            services.push.emit(types.pushEvents.themeUpdated, result);
+            services.push.emitTheme(types.themePushEvents.themeUpdated, result);
         }
 
         services.response.sendSuccess(response, types.StatusCode.deleted);

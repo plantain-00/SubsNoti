@@ -90,7 +90,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             owners: [creator],
             watchers: [creator],
         };
-        services.push.emit(types.pushEvents.themeCreated, newTheme);
+        services.push.emitTheme(types.themePushEvents.themeCreated, newTheme);
 
         services.logger.log(documentOfCreate.url, request);
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
@@ -167,7 +167,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         // push the modified theme.
         let result = services.theme.convert(theme);
-        services.push.emit(types.pushEvents.themeUpdated, result);
+        services.push.emitTheme(types.themePushEvents.themeUpdated, result);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {

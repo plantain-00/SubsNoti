@@ -121,11 +121,11 @@ export const environment = {
     production: <Environment>"production",
 };
 
-export type PushEvent = "theme created" | "theme updated";
+export type ThemePushEvent = "theme created" | "theme updated";
 
-export const pushEvents = {
-    themeCreated: <PushEvent>"theme created",
-    themeUpdated: <PushEvent>"theme updated",
+export const themePushEvents = {
+    themeCreated: <ThemePushEvent>"theme created",
+    themeUpdated: <ThemePushEvent>"theme updated",
 };
 
 export interface User {
