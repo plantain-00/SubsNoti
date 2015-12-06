@@ -96,7 +96,7 @@ export let headerNames = {
         limit: "X-RateLimit-Limit",
         remain: "X-RateLimit-Remain",
         resetMoment: "X-RateLimit-ResetMoment",
-    }
+    },
 };
 
 try {
