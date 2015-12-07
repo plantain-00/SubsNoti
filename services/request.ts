@@ -50,6 +50,9 @@ export function postMultipartAsync<T>(url: string, formData: any): Promise<Respo
 }
 
 export function get<T>(options: libs.request.Options, type?: types.ResponseType): Promise<Response<T>> {
+    if (!type) {
+        type = types.responseType.json;
+    }
     return new Promise<Response<T>>((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
@@ -65,9 +68,6 @@ export function get<T>(options: libs.request.Options, type?: types.ResponseType)
 }
 
 export function getAsync<T>(url: string, type?: types.ResponseType): Promise<Response<T>> {
-    if (!type) {
-        type = types.responseType.json;
-    }
     return get<T>({
         url: url
     }, type);
