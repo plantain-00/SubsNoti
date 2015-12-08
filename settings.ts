@@ -8,11 +8,25 @@ export let db = new Map<types.Environment, { host: string; user: string; passwor
 
 export let smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
 
-export let redis = new Map<types.Environment, { host: string; port: number; options: { auth_pass: string; }; }>();
+export let redis = new Map<types.Environment, { host: string; port: number; options?: { auth_pass: string; }; }>();
 
-export let mongodb = new Map<types.Environment, { url: string; options: { user: string; pass: string; } }>();
+redis.set("test", {
+    host: "localhost",
+    port: 6379,
+});
+
+export let mongodb = new Map<types.Environment, { url: string; options?: { user: string; pass: string; } }>();
+
+mongodb.set("test", {
+    url: "mongodb://127.0.0.1:27017/log_db_test"
+});
 
 export let api = new Map<types.Environment, { host: string; port: number; }>();
+
+api.set("test", {
+    host: "localhost",
+    port: 9998,
+});
 
 export function getApi() {
     let localApi = api.get(currentEnvironment);
@@ -28,6 +42,11 @@ export let urls = {
 
 export let imageUploader = new Map<types.Environment, { host: string; port: number; }>();
 
+imageUploader.set("test", {
+    host: "localhost",
+    port: 9999,
+});
+
 export function getImageUploader() {
     let localImageUploader = imageUploader.get(currentEnvironment);
     if (localImageUploader.port === 80) {
@@ -38,9 +57,15 @@ export function getImageUploader() {
 
 export let documentServer = new Map<types.Environment, string>();
 
+documentServer.set("test", "http://localhost:9997");
+
 export let imageServer = new Map<types.Environment, string>();
 
+imageServer.set("test", "http://localhost:7777");
+
 export let frontendsServer = new Map<types.Environment, string>();
+
+frontendsServer.set("test", "http://115.29.42.125");
 
 export let maxOrganizationNumberUserCanCreate = 3;
 
@@ -65,11 +90,21 @@ export let defaultItemLimit = 10;
 
 export let uploadIPWhiteList = new Map<types.Environment, string[]>();
 
+uploadIPWhiteList.set("test", ["127.0.0.1"]);
+
 export let imagePaths = {
     avatar: "avatar-"
 };
 
 export let cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
+
+cors.set("test", {
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+    origin: [
+        "http://localhost:8888"
+    ],
+});
 
 export let rateLimit = {
     user: 5000,
