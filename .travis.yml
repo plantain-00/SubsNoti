@@ -11,7 +11,7 @@ script:
   - gulp host-api-test &
   - gulp host-imageUploader-test &
   - gulp host-imageServer-test &
-  - node tests/test.js
+  - node tests\test.js
 services:
   - mongodb
   - redis-server
