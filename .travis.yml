@@ -8,9 +8,9 @@ before_script:
   - npm install -g typescript@next
   - gulp build
 script:
-  - gulp host-api-test
-  - gulp host-imageUploader-test
-  - gulp host-imageServer-test
+  - gulp host-api-test &
+  - gulp host-imageUploader-test &
+  - gulp host-imageServer-test &
   - node tests/test.js
 services:
   - mongodb
