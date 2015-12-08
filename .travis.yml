@@ -11,7 +11,8 @@ script:
   - gulp host-api-test &
   - gulp host-imageUploader-test &
   - gulp host-imageServer-test &
-  - node tests\test.js
+  - sleep 15
+  - node tests/test.js
 services:
   - mongodb
   - redis-server
