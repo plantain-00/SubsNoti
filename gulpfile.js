@@ -5,16 +5,17 @@ let shell = require("gulp-shell");
 let tslint = require("gulp-tslint");
 let liveServer = require("live-server");
 let mkdirp = require("mkdirp");
+let colors = require("colors");
 
 mkdirp("images/tmp", error => {
     if (error) {
-        console.log(error);
+        console.log(colors.red(error));
     }
 });
 
 mkdirp("test_images/tmp", error => {
     if (error) {
-        console.log(error);
+        console.log(colors.red(error));
     }
 });
 

@@ -40,6 +40,6 @@ if (!seeds.clientName) {
 
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
-        console.log(error);
+        console.log(libs.colors.red(<any>error));
     }
 });

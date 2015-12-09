@@ -14,13 +14,13 @@ integration.operate = (caseName, body) => {
     if (expected !== actually) {
         throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     }
-    console.log(`${index++}: case "${caseName}" is passed.`);
+    console.log(libs.colors.green(`${index++}: case "${caseName}" is passed.`));
     return Promise.resolve();
 };
 
 integration.run().then(() => {
-    console.log("all test cases are passed!");
+    console.log(libs.colors.green("all test cases are passed!"));
 }).catch(error => {
-    console.log(error);
+    console.log(libs.colors.red(error));
     exit(1);
 });

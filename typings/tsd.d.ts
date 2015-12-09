@@ -27,3 +27,4 @@
 /// <reference path="cookie/cookie.d.ts" />
 /// <reference path="faker/faker.d.ts" />
 /// <reference path="qs/qs.d.ts" />
+/// <reference path="colors/colors.d.ts" />

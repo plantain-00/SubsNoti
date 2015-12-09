@@ -14,7 +14,7 @@ services.mongo.connect();
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
         }
     } catch (error) {
-        console.log(error);
+        console.log(libs.colors.red(error));
     }
 
     libs.mongoose.disconnect();

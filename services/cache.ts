@@ -11,7 +11,7 @@ export function connect() {
     let redis = settings.redis.get(settings.currentEnvironment);
     client = libs.redis.createClient(redis.port, redis.host, redis.options);
     client.on("error", error => {
-        console.log(error);
+        console.log(libs.colors.red(error));
     });
 }
 

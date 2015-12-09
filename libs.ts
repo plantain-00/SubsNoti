@@ -74,6 +74,9 @@ export {ObjectId};
 
 export let cors = require("cors");
 
+import * as colors from "colors";
+export {colors};
+
 export interface Request extends express.Request {
     v: string;
     files: any[];

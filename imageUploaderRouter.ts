@@ -41,13 +41,15 @@ export function route() {
 
     let storage = libs.multer.diskStorage({
         destination: function(request: libs.Request, file, next) {
-            if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
+            if (request.path === documentOfUploadPersistentImages.url
+                || request.path === "/api/persistent/images") {
                 if (settings.currentEnvironment === types.environment.test) {
                     next(null, "test_images/");
                 } else {
                     next(null, "images/");
                 }
-            } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
+            } else if (request.path === documentOfUploadTemperaryImages.url
+                || request.path === "/api/temperary/images") {
                 if (settings.currentEnvironment === types.environment.test) {
                     next(null, "test_images/tmp/");
                 } else {
@@ -58,9 +60,11 @@ export function route() {
             }
         },
         filename: function(request: libs.Request, file, next) {
-            if (request.path === documentOfUploadPersistentImages.url || request.path === "/api/persistent/images") {
+            if (request.path === documentOfUploadPersistentImages.url
+                || request.path === "/api/persistent/images") {
                 next(null, file.fieldname);
-            } else if (request.path === documentOfUploadTemperaryImages.url || request.path === "/api/temperary/images") {
+            } else if (request.path === documentOfUploadTemperaryImages.url
+                || request.path === "/api/temperary/images") {
                 next(null, libs.generateUuid() + libs.path.extname(file.originalname));
             } else {
                 next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
@@ -154,6 +158,6 @@ export function route() {
 
     let imageUploader = settings.imageUploader.get(settings.currentEnvironment);
     app.listen(imageUploader.port, imageUploader.host, () => {
-        console.log(`Image uploader is listening: ${settings.getImageUploader()} and in ${settings.currentEnvironment}`);
+        console.log(libs.colors.green(`Image uploader is listening: ${settings.getImageUploader()} and in ${settings.currentEnvironment}`));
     });
 }

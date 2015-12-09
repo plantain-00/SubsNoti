@@ -80,7 +80,7 @@ export function route() {
 
     let api = settings.api.get(settings.currentEnvironment);
     let server = app.listen(api.port, api.host, () => {
-        console.log(`Server is listening: ${settings.getApi()} and in ${settings.currentEnvironment}`);
+        console.log(libs.colors.green(`Server is listening: ${settings.getApi()} and in ${settings.currentEnvironment}`));
     });
 
     services.push.connect(server);
