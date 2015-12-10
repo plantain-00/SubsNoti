@@ -147,7 +147,7 @@ export let scopes: types.Scope[] = [
     { name: "read:access_token", description: "get access tokens" },
     { name: "write:access_token", description: "create, update an access token" },
     { name: "delete:access_token", description: "delete an access token" },
-]
+];
 
 try {
     let secret = require("./secret");

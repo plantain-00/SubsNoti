@@ -16,7 +16,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     try {
         let result: types.ScopeResult = {
             scopes: settings.scopes
-        }
+        };
         services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
         services.response.sendError(response, error);
