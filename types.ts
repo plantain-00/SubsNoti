@@ -158,6 +158,17 @@ export interface TemperaryResponse extends Response {
     names: string[];
 }
 
+export interface Scope {
+    name: string;
+    description: string;
+}
+
+export interface ScopeResult {
+    scopes: Scope[];
+}
+
+export interface ScopeResponse extends Response, ScopeResult { }
+
 export type ResponseType = "json" | "others";
 
 export const responseType = {

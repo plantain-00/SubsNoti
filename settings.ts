@@ -134,6 +134,21 @@ export let headerNames = {
     },
 };
 
+export let scopes: types.Scope[] = [
+    { name: "read:user", description: "get current user" },
+    { name: "write:user", description: "update current user" },
+    { name: "read:organization", description: "get joined or created organizations" },
+    { name: "write:organization", description: "create an organization; invite an user" },
+    { name: "read:theme", description: "get themes of an organization" },
+    { name: "write:theme", description: "create, update, watch, unwatch a theme" },
+    { name: "read:application", description: "get registered or authorized applications" },
+    { name: "write:application", description: "register, update, revoke an application, reset client secret" },
+    { name: "delete:application", description: "delete an application" },
+    { name: "read:access_token", description: "get access tokens" },
+    { name: "write:access_token", description: "create, update an access token" },
+    { name: "delete:access_token", description: "delete an access token" },
+]
+
 try {
     let secret = require("./secret");
     secret.load();

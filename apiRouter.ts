@@ -18,6 +18,7 @@ import * as organizations from "./controllers/api/organizations";
 import * as captcha from "./controllers/api/captcha";
 import * as html from "./controllers/html";
 import * as version from "./controllers/api/version";
+import * as scopes from "./controllers/api/scopes";
 
 export function route() {
     let app: libs.Application = libs.express();
@@ -67,6 +68,8 @@ export function route() {
     services.router.bind(html.documentOfLogin, html.login, app);
     services.router.bind(html.documentOfLoginWithGithub, html.loginWithGithub, app);
     services.router.bind(html.documentOfGithubCode, html.githubCode, app);
+
+    services.router.bind(scopes.documentOfGet, scopes.get, app);
 
     services.mongo.connect();
 
