@@ -90,12 +90,6 @@ export interface Response extends express.Response {
 import * as socket from "socket.io";
 export {socket};
 
-import Application = express.Application;
-export {Application};
-
-import RedisClient = redis.RedisClient;
-export {RedisClient};
-
 export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }

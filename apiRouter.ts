@@ -21,7 +21,7 @@ import * as version from "./controllers/api/version";
 import * as scopes from "./controllers/api/scopes";
 
 export function route() {
-    let app: libs.Application = libs.express();
+    let app = libs.express();
 
     app.settings.env = settings.currentEnvironment;
 

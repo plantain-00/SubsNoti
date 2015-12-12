@@ -6,7 +6,7 @@ import * as settings from "./settings";
 import * as services from "./services";
 
 export function route() {
-    let app: libs.Application = libs.express();
+    let app = libs.express();
 
     app.settings.env = settings.currentEnvironment;
 
