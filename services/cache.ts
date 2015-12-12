@@ -5,7 +5,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-export let client: libs.RedisClient;
+export let client: libs.redis.RedisClient;
 
 export function connect() {
     let redis = settings.redis.get(settings.currentEnvironment);

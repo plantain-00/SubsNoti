@@ -12,7 +12,7 @@ interface Rate {
 
 let documentUrl = "/api/response.html";
 
-export function route(app: libs.Application) {
+export function route(app: libs.express.Application) {
     app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
         let userId = await services.authenticationCredential.authenticate(request);
 

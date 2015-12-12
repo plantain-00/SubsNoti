@@ -7,7 +7,7 @@ import * as services from "../services";
 
 let documentUrl = "/api/request/parameters.html";
 
-export function route(app: libs.Application) {
+export function route(app: libs.express.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
         let v = libs.validator.trim(request.header(settings.headerNames.version));
         if (request.path === settings.urls.login && request.method === "GET") {
