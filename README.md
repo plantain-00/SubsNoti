@@ -30,12 +30,12 @@
 
 ## api
 
-http://115.29.42.125/
+https://yorkyao.xyz/
 
 ## image uploader
 
-http://115.29.42.125:9999/
+https://yorkyao.xyz:9999/
 
 ## image server
 
-http://115.29.42.125:7777/
+https://yorkyao.xyz:7777/

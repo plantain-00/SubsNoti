@@ -39,7 +39,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let token = await services.tokens.create(email, documentOfCreate.url, request, name);
 
-        let url = `${settings.getApi()}${settings.urls.login}?authentication_credential=${token}`;
+        let url = `${settings.api.get(settings.currentEnvironment)}${settings.urls.login}?authentication_credential=${token}`;
 
         let result: types.TokenResult;
         if (settings.currentEnvironment === types.environment.test) {

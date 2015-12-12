@@ -156,8 +156,7 @@ export function route() {
     services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app);
     services.router.bind(documentOfMoveImage, moveImage, app);
 
-    let imageUploader = settings.imageUploader.get(settings.currentEnvironment);
-    app.listen(imageUploader.port, imageUploader.host, () => {
-        console.log(libs.colors.green(`Image uploader is listening: ${settings.getImageUploader()} and in ${settings.currentEnvironment}`));
+    app.listen(settings.imageUploaderPort, "localhost", () => {
+        console.log(libs.colors.green(`Image uploader is listening: ${settings.imageUploaderPort} and in ${settings.currentEnvironment}`));
     });
 }

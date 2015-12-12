@@ -81,9 +81,8 @@ export function route() {
         await services.seed.init();
     })();
 
-    let api = settings.api.get(settings.currentEnvironment);
-    let server = app.listen(api.port, api.host, () => {
-        console.log(libs.colors.green(`Server is listening: ${settings.getApi()} and in ${settings.currentEnvironment}`));
+    let server = app.listen(settings.apiPort, "localhost", () => {
+        console.log(libs.colors.green(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`));
     });
 
     services.push.connect(server);

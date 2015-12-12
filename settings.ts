@@ -21,51 +21,44 @@ mongodb.set("test", {
     url: "mongodb://127.0.0.1:27017/log_db_test"
 });
 
-export let api = new Map<types.Environment, { host: string; port: number; }>();
-
-api.set("test", {
-    host: "localhost",
-    port: 9998,
-});
-
-export function getApi() {
-    let localApi = api.get(currentEnvironment);
-    if (localApi.port === 80) {
-        return `http://${localApi.host}`;
-    }
-    return `http://${localApi.host}:${localApi.port}`;
-}
+export let api = new Map<types.Environment, string>();
+let api0 = "http://localhost:9998";
+let api1 = "https://yorkyao.xyz";
+api.set("development", api0);
+api.set("test", api0);
+api.set("production", api1);
 
 export let urls = {
     login: "/login_with_authentication_credential"
 };
 
-export let imageUploader = new Map<types.Environment, { host: string; port: number; }>();
-
-imageUploader.set("test", {
-    host: "localhost",
-    port: 9999,
-});
-
-export function getImageUploader() {
-    let localImageUploader = imageUploader.get(currentEnvironment);
-    if (localImageUploader.port === 80) {
-        return `http://${localImageUploader.host}`;
-    }
-    return `http://${localImageUploader.host}:${localImageUploader.port}`;
-}
+export let imageUploader = new Map<types.Environment, string>();
+let imageUploader0 = "http://localhost:9999";
+let imageUploader1 = "https://yorkyao.xyz:9999";
+imageUploader.set("development", imageUploader0);
+imageUploader.set("test", imageUploader0);
+imageUploader.set("production", imageUploader1);
 
 export let documentServer = new Map<types.Environment, string>();
-
-documentServer.set("test", "http://localhost:9997");
+let documentServer0 = "http://localhost:9997";
+let documentServer1 = "https://yorkyao.xyz:9997";
+documentServer.set("development", documentServer0);
+documentServer.set("test", documentServer0);
+documentServer.set("production", documentServer1);
 
 export let imageServer = new Map<types.Environment, string>();
-
-imageServer.set("test", "http://localhost:7777");
+let imageServer0 = "http://localhost:7777";
+let imageServer1 = "https://yorkyao.xyz:7777";
+imageServer.set("development", imageServer0);
+imageServer.set("test", imageServer0);
+imageServer.set("production", imageServer1);
 
 export let frontendsServer = new Map<types.Environment, string>();
-
-frontendsServer.set("test", "http://115.29.42.125");
+let frontendsServer0 = "https://yorkyao.xyz";
+let frontendsServer1 = "http://localhost:8888";
+frontendsServer.set("development", frontendsServer1);
+frontendsServer.set("test", frontendsServer0);
+frontendsServer.set("production", frontendsServer0);
 
 export let maxOrganizationNumberUserCanCreate = 3;
 
@@ -148,6 +141,9 @@ export let scopes: types.Scope[] = [
     { name: "write:access_token", description: "create, update an access token" },
     { name: "delete:access_token", description: "delete an access token" },
 ];
+
+export let apiPort = 9998;
+export let imageUploaderPort = 9999;
 
 try {
     let secret = require("./secret");

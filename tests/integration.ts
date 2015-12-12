@@ -8,9 +8,9 @@ settings.currentEnvironment = types.environment.test;
 
 import * as services from "../services";
 
-let apiUrl = settings.getApi();
+let apiUrl = settings.api.get(settings.currentEnvironment);
 let imageServer = settings.imageServer.get(settings.currentEnvironment);
-let imageUploader = settings.getImageUploader();
+let imageUploader = settings.imageUploader.get(settings.currentEnvironment);
 
 let jar = libs.request.jar();
 
