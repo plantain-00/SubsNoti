@@ -34,7 +34,7 @@ export let urls = {
 
 export let imageUploader = new Map<types.Environment, string>();
 let imageUploader0 = "http://localhost:9999";
-let imageUploader1 = "https://yorkyao.xyz:9999";
+let imageUploader1 = "https://yorkyao.xyz:7777";
 imageUploader.set("development", imageUploader0);
 imageUploader.set("test", imageUploader0);
 imageUploader.set("production", imageUploader1);
