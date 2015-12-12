@@ -32,12 +32,7 @@ export let urls = {
     login: "/login_with_authentication_credential"
 };
 
-export let imageUploader = new Map<types.Environment, string>();
-let imageUploader0 = "http://localhost:9999";
-let imageUploader1 = "https://yorkyao.xyz:7777";
-imageUploader.set("development", imageUploader0);
-imageUploader.set("test", imageUploader0);
-imageUploader.set("production", imageUploader1);
+export let imageUploader = "http://localhost:9999";
 
 export let documentServer = new Map<types.Environment, string>();
 let documentServer0 = "http://localhost:9997";

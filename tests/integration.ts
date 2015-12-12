@@ -10,7 +10,7 @@ import * as services from "../services";
 
 let apiUrl = settings.api.get(settings.currentEnvironment);
 let imageServer = settings.imageServer.get(settings.currentEnvironment);
-let imageUploader = settings.imageUploader.get(settings.currentEnvironment);
+let imageUploader = settings.imageUploader;
 
 let jar = libs.request.jar();
 
