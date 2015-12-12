@@ -148,9 +148,9 @@ export let imageUploaderPort = 9999;
 export let host = new Map<types.Environment, string>();
 let host0 = "localhost";
 let host1 = "yorkyao.xyz";
-imageUploader.set("development", host0);
-imageUploader.set("test", host0);
-imageUploader.set("production", host1);
+host.set("development", host0);
+host.set("test", host0);
+host.set("production", host1);
 
 try {
     let secret = require("./secret");

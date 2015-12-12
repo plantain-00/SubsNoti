@@ -21,6 +21,7 @@ integration.operate = (caseName, body) => {
 integration.run().then(() => {
     console.log(libs.colors.green("all test cases are passed!"));
 }).catch(error => {
-    console.log(libs.colors.red(error));
+    console.log(libs.colors.red("error:"));
+    console.log(error);
     exit(1);
 });
