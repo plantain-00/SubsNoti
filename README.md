@@ -32,10 +32,6 @@
 
 https://yorkyao.xyz/
 
-## image uploader
-
-https://yorkyao.xyz:9999/
-
-## image server
+## image uploader and server
 
 https://yorkyao.xyz:7777/
