@@ -138,7 +138,9 @@ async function getCurrentUser(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, libs._.omit<any, any>(body, ["id", "avatar"]));
+    let result = libs._.omit<any, any>(body, "user");
+    result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
+    await operate(caseName, result);
 
     return Promise.resolve(body);
 }
@@ -447,7 +449,7 @@ export async function run() {
 
     let client = await getCurrentUser("getCurrentUser-client");
 
-    await getAvatar(client.id, "getAvatar-client");
+    await getAvatar(client.user.id, "getAvatar-client");
 
     let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
 
@@ -464,7 +466,7 @@ export async function run() {
 
     let user = await getCurrentUser("getCurrentUser");
 
-    await getAvatar(user.id, "getAvatar");
+    await getAvatar(user.user.id, "getAvatar");
 
     await createOrganization("createOrganization");
 
@@ -502,7 +504,7 @@ export async function run() {
 
     user = await getCurrentUser("getCurrentUser-afterUpdated");
 
-    await invite("invite", client.email, organizationId);
+    await invite("invite", client.user.email, organizationId);
 
     await logout("logout");
 

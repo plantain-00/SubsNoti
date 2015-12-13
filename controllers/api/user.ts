@@ -23,14 +23,18 @@ export async function get(request: libs.Request, response: libs.Response) {
             .exec();
         let id = request.userId.toHexString();
 
-        services.response.sendSuccess(response, types.StatusCode.OK, {
-            id: id,
-            email: user.email,
-            name: user.name,
-            createdOrganizationCount: user.createdOrganizations.length,
-            joinedOrganizationCount: user.joinedOrganizations.length,
-            avatar: user.avatar || services.avatar.getDefaultName(id),
-        });
+        let result: types.UserResult = {
+            user: {
+                id: id,
+                email: user.email,
+                name: user.name,
+                createdOrganizationCount: user.createdOrganizations.length,
+                joinedOrganizationCount: user.joinedOrganizations.length,
+                avatar: user.avatar || services.avatar.getDefaultName(id),
+            },
+        };
+
+        services.response.sendSuccess(response, types.StatusCode.OK, result);
     } catch (error) {
         services.response.sendError(response, error);
     }

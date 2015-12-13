@@ -17,10 +17,12 @@
     "getCurrentUser-client": {
         "isSuccess": true,
         "statusCode": 200,
-        "email": "torrance.hammes4@hotmail.com",
-        "name": "Mellie.Douglas",
-        "createdOrganizationCount": 0,
-        "joinedOrganizationCount": 0
+        "user": {
+            "email": "torrance.hammes4@hotmail.com",
+            "name": "Mellie.Douglas",
+            "createdOrganizationCount": 0,
+            "joinedOrganizationCount": 0
+        }
     },
     "getAvatar-client": {
         "statusCode": 200
@@ -52,10 +54,12 @@
     "getCurrentUser": {
         "isSuccess": true,
         "statusCode": 200,
-        "email": "diamond_harber@gmail.com",
-        "name": "Maximo_Cronin",
-        "createdOrganizationCount": 0,
-        "joinedOrganizationCount": 0
+        "user": {
+            "email": "diamond_harber@gmail.com",
+            "name": "Maximo_Cronin",
+            "createdOrganizationCount": 0,
+            "joinedOrganizationCount": 0
+        }
     },
     "getAvatar": {
         "statusCode": 200
@@ -222,10 +226,12 @@
     "getCurrentUser-afterUpdated": {
         "isSuccess": true,
         "statusCode": 200,
-        "email": "diamond_harber@gmail.com",
-        "name": "Maybell_Prohaska",
-        "createdOrganizationCount": 1,
-        "joinedOrganizationCount": 1
+        "user": {
+            "email": "diamond_harber@gmail.com",
+            "name": "Maybell_Prohaska",
+            "createdOrganizationCount": 1,
+            "joinedOrganizationCount": 1
+        }
     },
     "invite": {
         "isSuccess": true,
@@ -241,10 +247,12 @@
     "getCurrentUser-client-afterInvited": {
         "isSuccess": true,
         "statusCode": 200,
-        "email": "torrance.hammes4@hotmail.com",
-        "name": "Mellie.Douglas",
-        "createdOrganizationCount": 0,
-        "joinedOrganizationCount": 1
+        "user": {
+            "email": "torrance.hammes4@hotmail.com",
+            "name": "Mellie.Douglas",
+            "createdOrganizationCount": 0,
+            "joinedOrganizationCount": 1
+        }
     },
     "getJoinedOrganizations-client-afterInvited": {
         "isSuccess": true,

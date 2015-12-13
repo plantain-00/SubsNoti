@@ -11,6 +11,8 @@ export let Log: libs.mongoose.Model<libs.mongoose.Document>;
 export let Organization: libs.mongoose.Model<OrganizationDocument>;
 export let User: libs.mongoose.Model<UserDocument>;
 export let Theme: libs.mongoose.Model<ThemeDocument>;
+export let Application: libs.mongoose.Model<ApplicationDocument>;
+export let AccessToken: libs.mongoose.Model<AccessTokenDocument>;
 
 export interface MongooseArray<T> extends Array<T> {
     pull: (T) => void;
@@ -53,6 +55,27 @@ export interface ThemeDocument extends libs.mongoose.Document {
     watchers: Array<UserDocument | libs.ObjectId>;
 
     organization: OrganizationDocument | libs.ObjectId;
+}
+
+export interface ApplicationDocument extends libs.mongoose.Document {
+    name: string;
+    homeUrl: string;
+    description: string;
+    authorizationCallbackUrl: string;
+    clientId: string;
+    clientSecret: string;
+
+    creator: UserDocument | libs.ObjectId;
+}
+
+export interface AccessTokenDocument extends libs.mongoose.Document {
+    description: string;
+    value: string;
+    scopes: string[];
+
+    creator: UserDocument | libs.ObjectId;
+
+    application: ApplicationDocument | libs.ObjectId;
 }
 
 export function connect() {
@@ -103,5 +126,26 @@ export function connect() {
         watchers: [{ type: Schema.Types.ObjectId, ref: "User" }],
 
         organization: { type: Schema.Types.ObjectId, ref: "Organization" },
+    }));
+
+    Application = libs.mongoose.model<ApplicationDocument>("Application", new libs.mongoose.Schema({
+        name: String,
+        homeUrl: String,
+        description: String,
+        authorizationCallbackUrl: String,
+        clientId: String,
+        clientSecret: String,
+
+        creator: { type: Schema.Types.ObjectId, ref: "User" },
+    }));
+
+    AccessToken = libs.mongoose.model<AccessTokenDocument>("AccessToken", new libs.mongoose.Schema({
+        description: String,
+
+        scopes: [String],
+
+        creator: { type: Schema.Types.ObjectId, ref: "User" },
+
+        application: { type: Schema.Types.ObjectId, ref: "Application" },
     }));
 }

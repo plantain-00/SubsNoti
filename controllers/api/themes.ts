@@ -169,6 +169,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         let result = services.theme.convert(theme);
         services.push.emitTheme(types.themePushEvents.themeUpdated, result);
 
+        services.logger.log(documentOfUpdate.url, request);
         services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     } catch (error) {
         services.response.sendError(response, error);
