@@ -36,14 +36,14 @@ export let imageUploader = "http://localhost:9999";
 
 export let documentServer = new Map<types.Environment, string>();
 let documentServer0 = "http://localhost:9997";
-let documentServer1 = "https://yorkyao.xyz:9997";
+let documentServer1 = "https://doc.yorkyao.xyz";
 documentServer.set("development", documentServer0);
 documentServer.set("test", documentServer0);
 documentServer.set("production", documentServer1);
 
 export let imageServer = new Map<types.Environment, string>();
 let imageServer0 = "http://localhost:7777";
-let imageServer1 = "https://yorkyao.xyz:7777";
+let imageServer1 = "https://img.yorkyao.xyz";
 imageServer.set("development", imageServer0);
 imageServer.set("test", imageServer0);
 imageServer.set("production", imageServer1);
