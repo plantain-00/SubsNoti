@@ -19,6 +19,11 @@ import * as captcha from "./controllers/api/captcha";
 import * as html from "./controllers/html";
 import * as version from "./controllers/api/version";
 import * as scopes from "./controllers/api/scopes";
+import * as userRegistered from "./controllers/api/user/registered";
+import * as userAuthorized from "./controllers/api/user/authorized";
+import * as userRegisteredClientSecret from "./controllers/api/user/registered/client_secret";
+import * as userAccessTokens from "./controllers/api/user/access_tokens";
+import * as userAccessTokensValue from "./controllers/api/user/access_tokens/value";
 
 export function route() {
     let app = libs.express();
@@ -70,6 +75,23 @@ export function route() {
     services.router.bind(html.documentOfGithubCode, html.githubCode, app);
 
     services.router.bind(scopes.documentOfGet, scopes.get, app);
+
+    services.router.bind(userRegistered.documentOfGet, userRegistered.get, app);
+    services.router.bind(userRegistered.documentOfCreate, userRegistered.create, app);
+    services.router.bind(userRegistered.documentOfUpdate, userRegistered.update, app);
+    services.router.bind(userRegistered.documentOfRemove, userRegistered.remove, app);
+
+    services.router.bind(userAuthorized.documentOfGet, userAuthorized.get, app);
+    services.router.bind(userAuthorized.documentOfRemove, userAuthorized.remove, app);
+
+    services.router.bind(userRegisteredClientSecret.documentOfReset, userRegisteredClientSecret.reset, app);
+
+    services.router.bind(userAccessTokens.documentOfGet, userAccessTokens.get, app);
+    services.router.bind(userAccessTokens.documentOfCreate, userAccessTokens.create, app);
+    services.router.bind(userAccessTokens.documentOfUpdate, userAccessTokens.update, app);
+    services.router.bind(userAccessTokens.documentOfRemove, userAccessTokens.remove, app);
+
+    services.router.bind(userAccessTokensValue.documentOfRegenerate, userAccessTokensValue.regenerate, app);
 
     services.mongo.connect();
 

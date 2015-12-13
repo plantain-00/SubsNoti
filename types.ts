@@ -54,14 +54,20 @@ export interface Response {
     actualErrorMessage?: string;
 }
 
-export interface CurrentUserResponse extends Response {
+export interface User {
     id: string;
-    email: string;
     name: string;
-    createdOrganizationCount: number;
-    joinedOrganizationCount: number;
+    email?: string;
     avatar: string;
+    createdOrganizationCount?: number;
+    joinedOrganizationCount?: number;
 }
+
+export interface UserResult {
+    user: User;
+}
+
+export interface CurrentUserResponse extends Response, UserResult { }
 
 export interface VersionResult {
     version: string;
@@ -128,13 +134,6 @@ export const themePushEvents = {
     themeUpdated: <ThemePushEvent>"theme updated",
 };
 
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
-}
-
 export interface Theme {
     id: string;
     title: string;
@@ -168,6 +167,42 @@ export interface ScopeResult {
 }
 
 export interface ScopeResponse extends Response, ScopeResult { }
+
+export interface Application {
+    id: string;
+    name: string;
+    homeUrl: string;
+    description: string;
+    authorizationCallbackUrl?: string;
+    clientId?: string;
+    clientSecret?: string;
+    creator?: User;
+    scopes?: Scope[];
+}
+
+export interface ApplicationResult {
+    applications: Application[];
+}
+
+export interface ApplicationResponse extends Response, ApplicationResult { }
+
+export interface AccessToken {
+    id: string;
+    description: string;
+    scopes?: Scope[];
+}
+
+export interface AccessTokenResult {
+    accessTokens: AccessToken[];
+}
+
+export interface AccessTokenResponse extends Response, AccessTokenResult { }
+
+export interface GeneratedAccessTokenResult {
+    accessToken: string;
+}
+
+export interface GeneratedAccessTokenResponse extends Response, GeneratedAccessTokenResult { }
 
 export type ResponseType = "json" | "others";
 
