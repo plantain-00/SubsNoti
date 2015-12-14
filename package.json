@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "1.1.18",
+    "version": "1.1.19",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -40,7 +40,7 @@
         "live-server": "latest",
         "mkdirp": "latest",
         "tslint": "next",
-        "typescript": "next"
+        "typescript": "1.8.0-dev.20151213"
     },
     "engines": {
         "node": "4.x"
