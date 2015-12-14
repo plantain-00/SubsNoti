@@ -1,6 +1,6 @@
 {
     "name": "SubsNoti",
-    "version": "1.1.20",
+    "version": "1.1.21",
     "description": "a subscription and notification website",
     "repository": {
         "type": "git",
@@ -39,8 +39,8 @@
         "gulp-tslint": "^4.2.1",
         "live-server": "^0.9.0",
         "mkdirp": "^0.5.1",
-        "tslint": "^3.2.0-dev.2",
-        "typescript": "1.8.0-dev.20151213"
+        "tslint": "next",
+        "typescript": "^1.8.0-dev.20151213"
     },
     "engines": {
         "node": "4.x"
