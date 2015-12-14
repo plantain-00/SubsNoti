@@ -1,5 +1,3 @@
-"use strict";
-
 import * as faker from "faker";
 
 import * as types from "../types";

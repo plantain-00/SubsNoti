@@ -1,5 +1,3 @@
-"use strict";
-
 import * as error from "./services/error";
 export {error};
 
