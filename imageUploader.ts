@@ -1,5 +1,3 @@
-"use strict";
-
 import * as types from "./types";
 import * as settings from "./settings";
 
