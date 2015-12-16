@@ -78,13 +78,35 @@ export let defaultItemLimit = 10;
 
 export let uploadIPWhiteList = new Map<types.Environment, string[]>();
 
-uploadIPWhiteList.set("test", ["127.0.0.1"]);
+let uploadIPWhiteList1 = ["127.0.0.1"];
+let uploadIPWhiteList2 = ["115.29.42.125", "127.0.0.1"];
+uploadIPWhiteList.set("development", uploadIPWhiteList1);
+uploadIPWhiteList.set("test", uploadIPWhiteList1);
+uploadIPWhiteList.set("production", uploadIPWhiteList2);
 
 export let imagePaths = {
     avatar: "avatar-"
 };
 
 export let cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
+
+let cors1 = {
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+    origin: [
+        "http://localhost:8888"
+    ],
+};
+let cors2 = {
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+    origin: [
+        "https://yorkyao.xyz"
+    ],
+};
+cors.set("development", cors1);
+cors.set("test", cors1);
+cors.set("production", cors2);
 
 cors.set("test", {
     methods: "GET,PUT,POST,DELETE",
