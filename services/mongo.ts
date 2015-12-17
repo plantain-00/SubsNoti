@@ -139,7 +139,7 @@ export function connect() {
 
     AccessToken = libs.mongoose.model<AccessTokenDocument>("AccessToken", new libs.mongoose.Schema({
         description: String,
-
+        value: String,
         scopes: [String],
 
         creator: { type: Schema.Types.ObjectId, ref: "User" },

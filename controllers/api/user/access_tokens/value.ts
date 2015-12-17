@@ -17,9 +17,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
             throw services.error.fromParameterIsInvalidMessage("access_token_id");
         }
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
         let id = new libs.ObjectId(params.access_token_id);
 

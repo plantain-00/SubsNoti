@@ -29,9 +29,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
         let organizationId = new libs.ObjectId(params.organization_id);
         let email = libs.validator.trim(params.user_email).toLowerCase();
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
 
         // the organization should be available.
         let organization = await services.mongo.Organization.findOne({ _id: organizationId })

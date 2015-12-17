@@ -37,7 +37,7 @@ export function fromThemeIsNotYoursMessage(): types.E {
 }
 
 export function fromUnauthorized(): types.E {
-    return fromMessage("the authentication credential is missed, out of date or invalid", types.StatusCode.unauthorized);
+    return fromMessage("the authentication credential is missed, out of date or invalid, or the access token is missed, invalid or out of scope.", types.StatusCode.unauthorized);
 }
 
 export function fromInvalidIP(ip): types.E {

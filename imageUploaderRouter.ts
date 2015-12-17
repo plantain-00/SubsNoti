@@ -84,9 +84,8 @@ export function route() {
         });
     };
 
-    services.rateLimit.route(app);
-
     services.version.route(app);
+    services.rateLimit.route(app);
 
     let uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
 
@@ -108,8 +107,7 @@ export function route() {
 
     async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
         try {
-            let userId = request.userId;
-            if (!userId) {
+            if (!request.userId) {
                 throw services.error.fromUnauthorized();
             }
 

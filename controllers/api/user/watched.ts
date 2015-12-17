@@ -23,9 +23,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
         let themeId = new libs.ObjectId(params.theme_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })
@@ -86,9 +84,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
         let themeId = new libs.ObjectId(params.theme_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
         // the theme should be available.
         let theme = await services.mongo.Theme.findOne({ _id: themeId })

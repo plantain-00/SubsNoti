@@ -11,9 +11,7 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readOrganization);
 
         let user = await services.mongo.User.findOne({ _id: request.userId })
             .populate("createdOrganizations")

@@ -27,7 +27,8 @@ api.set("test", api0);
 api.set("production", api1);
 
 export let urls = {
-    login: "/login_with_authentication_credential"
+    login: "/login_with_authentication_credential",
+    version: "/api/version",
 };
 
 export let imageUploader = "http://localhost:9999";
@@ -140,21 +141,22 @@ export let headerNames = {
         remain: "X-RateLimit-Remain",
         resetMoment: "X-RateLimit-ResetMoment",
     },
+    authorization: "Authorization",
 };
 
 export let scopes: types.Scope[] = [
-    { name: "read:user", description: "get current user" },
-    { name: "write:user", description: "update current user" },
-    { name: "read:organization", description: "get joined or created organizations" },
-    { name: "write:organization", description: "create an organization; invite an user" },
-    { name: "read:theme", description: "get themes of an organization" },
-    { name: "write:theme", description: "create, update, watch, unwatch a theme" },
-    { name: "read:application", description: "get registered or authorized applications" },
-    { name: "write:application", description: "register, update, revoke an application, reset client secret" },
-    { name: "delete:application", description: "delete an application" },
-    { name: "read:access_token", description: "get access tokens" },
-    { name: "write:access_token", description: "create, update an access token" },
-    { name: "delete:access_token", description: "delete an access token" },
+    { name: types.scopeNames.readUser, description: "get current user" },
+    { name: types.scopeNames.writeUser, description: "update current user" },
+    { name: types.scopeNames.readOrganization, description: "get joined or created organizations" },
+    { name: types.scopeNames.writeOrganization, description: "create an organization; invite an user" },
+    { name: types.scopeNames.readTheme, description: "get themes of an organization" },
+    { name: types.scopeNames.writeTheme, description: "create, update, watch, unwatch a theme" },
+    { name: types.scopeNames.readApplication, description: "get registered or authorized applications" },
+    { name: types.scopeNames.writeApplication, description: "register, update, revoke an application, reset client secret" },
+    { name: types.scopeNames.deleteApplication, description: "delete an application" },
+    { name: types.scopeNames.readAccessToken, description: "get access tokens" },
+    { name: types.scopeNames.writeAccessToken, description: "create, update an access token" },
+    { name: types.scopeNames.deleteAccessToken, description: "delete an access token" },
 ];
 
 export let apiPort = 9998;

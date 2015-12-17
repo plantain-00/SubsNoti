@@ -11,9 +11,7 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readUser);
 
         let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("email name createdOrganizations joinedOrganizations avatar")
@@ -55,9 +53,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         let name = libs.validator.trim(body.name);
         let avatarFileName = libs.validator.trim(body.avatarFileName);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeUser);
 
         let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("name avatar")

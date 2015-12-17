@@ -11,9 +11,7 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
 
         let applications = await services.mongo.Application.find({ creator: request.userId })
             .exec();
@@ -72,9 +70,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         }
         let authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
         let application = await services.mongo.Application.create({
             name: name,
@@ -130,9 +126,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.application_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
         // the application should be available.
         let application = await services.mongo.Application.findOne({ _id: id })
@@ -171,9 +165,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.application_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteApplication);
 
         // the application should be available.
         let application = await services.mongo.Application.findOne({ _id: id })

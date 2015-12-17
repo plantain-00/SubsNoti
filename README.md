@@ -34,4 +34,4 @@ https://yorkyao.xyz/
 
 ## image uploader and server
 
-https://yorkyao.xyz:7777/
+https://img.yorkyao.xyz/
