@@ -11,11 +11,9 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readAccessToken);
 
-        let accessTokens = await services.mongo.AccessToken.find({ application: null })
+        let accessTokens = await services.mongo.AccessToken.find({ application: null, creator: request.userId })
             .exec();
 
         let result: types.AccessTokenResult = {
@@ -56,9 +54,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let scopes = body.scopes;
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
         let value = libs.generateUuid();
         let accessToken = await services.mongo.AccessToken.create({
@@ -104,9 +100,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         let scopes = body.scopes;
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
         let id = new libs.ObjectId(params.access_token_id);
 
@@ -145,9 +139,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.access_token_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteAccessToken);
 
         // the access token should be available.
         let accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })

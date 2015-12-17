@@ -37,12 +37,10 @@ export function route() {
 
     app.use(libs.cors(settings.cors.get(settings.currentEnvironment)));
 
+    services.version.route(app);
     services.rateLimit.route(app);
 
-    // this should be before the `version` route
     services.router.bind(version.documentOfGet, version.get, app);
-
-    services.version.route(app);
 
     services.router.bind(user.documentOfGet, user.get, app);
     services.router.bind(user.documentOfUpdate, user.update, app);

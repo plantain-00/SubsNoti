@@ -57,3 +57,6 @@ export {rateLimit};
 
 import * as tokens from "./services/tokens";
 export {tokens};
+
+import * as scope from "./services/scope";
+export {scope};

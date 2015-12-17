@@ -18,9 +18,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             throw services.error.fromParameterIsMissedMessage("organizationName");
         }
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
 
         // the name should not be used by other organizations.
         if (organizationName === services.seed.publicOrganizationName) {

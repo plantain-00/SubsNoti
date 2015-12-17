@@ -13,7 +13,8 @@ export async function get(request: libs.Request, response: libs.Response) {
     try {
         let result: types.OrganizationResult;
 
-        if (request.userId) {
+        if (request.userId
+            && services.scope.contain(request, types.scopeNames.readOrganization)) {
             let user = await services.mongo.User.findOne({ _id: request.userId })
                 .populate("joinedOrganizations")
                 .select("joinedOrganizations")

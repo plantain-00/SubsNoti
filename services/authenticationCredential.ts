@@ -11,8 +11,28 @@ export function create(userId: string, salt: string): string {
 /**
  * identify current user.
  */
-export async function authenticate(request: libs.Request): Promise<libs.ObjectId> {
-    return authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
+export async function authenticate(request: libs.Request): Promise<void> {
+    let userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
+    if (userId) {
+        request.userId = userId;
+        return Promise.resolve();
+    }
+
+    let authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
+    let tokenHead = "token ";
+    if (authorization && authorization.length > tokenHead.length && authorization.startsWith(tokenHead)) {
+        let token = authorization.substring(tokenHead.length);
+        let accessToken = await services.mongo.AccessToken.findOne({ value: token })
+            .exec();
+        if (accessToken) {
+            request.scopes = accessToken.scopes;
+            request.application = <libs.ObjectId>accessToken.application;
+            request.userId = <libs.ObjectId>accessToken.creator;
+            return Promise.resolve();
+        }
+    }
+
+    return Promise.resolve();
 }
 
 /**

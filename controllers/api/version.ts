@@ -4,7 +4,7 @@ import * as settings from "../../settings";
 import * as services from "../../services";
 
 export let documentOfGet: types.Document = {
-    url: "/api/version",
+    url: settings.urls.version,
     method: "get",
     documentUrl: "/api/version.html",
 };

@@ -23,9 +23,7 @@ export async function reset(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.application_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
         // the application should be available.
         let application = await services.mongo.Application.findOne({ _id: id })

@@ -12,9 +12,7 @@ let documentUrl = "/api/response.html";
 
 export function route(app: libs.express.Application) {
     app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
-        let userId = await services.authenticationCredential.authenticate(request);
-
-        request.userId = userId;
+        await services.authenticationCredential.authenticate(request);
 
         if (request.method === "GET") {
             response.setHeader("Last-Modified", new Date().toUTCString());
@@ -26,13 +24,13 @@ export function route(app: libs.express.Application) {
             let errorMessage: string;
             let limit: number;
 
-            if (userId) {
+            if (request.userId) {
                 if (request.method === "POST") {
-                    key = settings.cacheKeys.rateLimit.contentCreation + userId.toHexString();
+                    key = settings.cacheKeys.rateLimit.contentCreation + request.userId.toHexString();
                     errorMessage = "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.";
                     limit = settings.rateLimit.contentCreation;
                 } else {
-                    key = settings.cacheKeys.rateLimit.userId + userId.toHexString();
+                    key = settings.cacheKeys.rateLimit.userId + request.userId.toHexString();
                     errorMessage = "API rate limit exceeded for current user.";
                     limit = settings.rateLimit.user;
                 }

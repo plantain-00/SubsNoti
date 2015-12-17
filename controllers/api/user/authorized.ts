@@ -11,9 +11,7 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
 
         let accessTokens = await services.mongo.AccessToken.find({ creator: request.userId })
             .populate("application application.creator")
@@ -61,9 +59,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.application_id);
 
-        if (!request.userId) {
-            throw services.error.fromUnauthorized();
-        }
+        services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteApplication);
 
         // the application should be available.
         let application = await services.mongo.Application.findOne({ _id: id })

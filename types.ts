@@ -157,8 +157,29 @@ export interface TemperaryResponse extends Response {
     names: string[];
 }
 
+export type ScopeName = "read:user" | "write:user"
+    | "read:organization" | "write:organization"
+    | "read:theme" | "write:theme"
+    | "read:application" | "write:application" | "delete:application"
+    | "read:access_token" | "write:access_token" | "delete:access_token";
+
+export const scopeNames = {
+    readUser: <ScopeName>"read:user",
+    writeUser: <ScopeName>"write:user",
+    readOrganization: <ScopeName>"read:organization",
+    writeOrganization: <ScopeName>"write:organization",
+    readTheme: <ScopeName>"read:theme",
+    writeTheme: <ScopeName>"write:theme",
+    readApplication: <ScopeName>"read:application",
+    writeApplication: <ScopeName>"write:application",
+    deleteApplication: <ScopeName>"delete:application",
+    readAccessToken: <ScopeName>"read:access_token",
+    writeAccessToken: <ScopeName>"write:access_token",
+    deleteAccessToken: <ScopeName>"delete:access_token",
+};
+
 export interface Scope {
-    name: string;
+    name: ScopeName;
     description: string;
 }
 

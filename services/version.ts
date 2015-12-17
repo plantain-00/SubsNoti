@@ -7,15 +7,17 @@ let documentUrl = "/api/request/parameters.html";
 
 export function route(app: libs.express.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
-        let v = libs.validator.trim(request.header(settings.headerNames.version));
-        if (request.path === settings.urls.login && request.method === "GET") {
+        if (request.path === settings.urls.version && request.method === "GET") {
             next();
-        } else if (v === "") {
+            return;
+        }
+        request.v = libs.validator.trim(request.header(settings.headerNames.version));
+
+        if (request.v === "") {
             services.response.sendError(response, services.error.fromParameterIsMissedMessage(settings.headerNames.version), documentUrl);
-        } else if (!libs.semver.valid(v)) {
+        } else if (!libs.semver.valid(request.v)) {
             services.response.sendError(response, services.error.fromParameterIsInvalidMessage(settings.headerNames.version), documentUrl);
         } else {
-            request.v = v;
             next();
         }
     });
