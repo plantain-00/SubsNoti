@@ -71,6 +71,7 @@ export let cacheKeys = {
         userCaptcha: "rateLimit_userCaptcha_",
     },
     githubLoginCode: "github_login_",
+    oauthLoginCode: "oauth_login_",
 };
 
 export let defaultItemLimit = 10;

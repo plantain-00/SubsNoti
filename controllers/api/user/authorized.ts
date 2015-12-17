@@ -14,8 +14,12 @@ export async function get(request: libs.Request, response: libs.Response) {
         services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
 
         let accessTokens = await services.mongo.AccessToken.find({ creator: request.userId })
-            .populate("application application.creator")
+            .populate("application")
             .exec();
+
+        for (let accessToken of accessTokens) {
+            await services.mongo.User.populate(accessToken.application, "creator");
+        }
 
         let result: types.ApplicationResult = {
             applications: libs._.map(libs._.filter(accessTokens, ac => ac.application), ac => {

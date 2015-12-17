@@ -11,13 +11,7 @@ export function create(userId: string, salt: string): string {
 /**
  * identify current user.
  */
-export async function authenticate(request: libs.Request): Promise<void> {
-    let userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
-    if (userId) {
-        request.userId = userId;
-        return Promise.resolve();
-    }
-
+export async function authenticateHeader(request: libs.Request): Promise<void> {
     let authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
     let tokenHead = "token ";
     if (authorization && authorization.length > tokenHead.length && authorization.startsWith(tokenHead)) {
@@ -32,6 +26,14 @@ export async function authenticate(request: libs.Request): Promise<void> {
         }
     }
 
+    return Promise.resolve();
+}
+/**
+ * identify current user.
+ */
+export async function authenticate(request: libs.Request): Promise<void> {
+    let userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
+    request.userId = userId;
     return Promise.resolve();
 }
 

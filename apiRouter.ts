@@ -22,6 +22,8 @@ import * as userAuthorized from "./controllers/api/user/authorized";
 import * as userRegisteredClientSecret from "./controllers/api/user/registered/client_secret";
 import * as userAccessTokens from "./controllers/api/user/access_tokens";
 import * as userAccessTokensValue from "./controllers/api/user/access_tokens/value";
+import * as accessTokens from "./controllers/api/access_tokens";
+import * as userAccessTokenCode from "./controllers/api/user/access_tokens/code";
 
 export function route() {
     let app = libs.express();
@@ -69,6 +71,7 @@ export function route() {
     services.router.bind(html.documentOfLogin, html.login, app);
     services.router.bind(html.documentOfLoginWithGithub, html.loginWithGithub, app);
     services.router.bind(html.documentOfGithubCode, html.githubCode, app);
+    services.router.bind(html.documentOfAuthorize, html.authorize, app);
 
     services.router.bind(scopes.documentOfGet, scopes.get, app);
 
@@ -88,6 +91,10 @@ export function route() {
     services.router.bind(userAccessTokens.documentOfRemove, userAccessTokens.remove, app);
 
     services.router.bind(userAccessTokensValue.documentOfRegenerate, userAccessTokensValue.regenerate, app);
+
+    services.router.bind(accessTokens.documentOfCreate, accessTokens.create, app);
+
+    services.router.bind(userAccessTokenCode.documentOfConfirm, userAccessTokenCode.confirm, app);
 
     services.mongo.connect();
 

@@ -14,6 +14,10 @@ export function route(app: libs.express.Application) {
     app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
         await services.authenticationCredential.authenticate(request);
 
+        if (!request.userId) {
+            await services.authenticationCredential.authenticateHeader(request);
+        }
+
         if (request.method === "GET") {
             response.setHeader("Last-Modified", new Date().toUTCString());
         }
