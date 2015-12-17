@@ -18,12 +18,16 @@ export const enum StatusCode {
     internalServerError = 500
 }
 
+function stringEnumify<T extends { [prop: string]: "" | string }>(obj: T) {
+    return obj;
+}
+
 export type ThemeOrderType = "newest" | "recently updated";
 
-export const themeOrder = {
-    newest: <ThemeOrderType>"newest",
-    recentlyUpdated: <ThemeOrderType>"recently updated",
-};
+export const themeOrder = stringEnumify({
+    newest: "newest",
+    recentlyUpdated: "recently updated",
+});
 
 export const enum ThemeStatus {
     open,
@@ -32,10 +36,10 @@ export const enum ThemeStatus {
 
 export type ThemeStatusType = "open" | "closed";
 
-export const themeStatus = {
-    open: <ThemeStatusType>"open",
-    closed: <ThemeStatusType>"closed",
-};
+export const themeStatus = stringEnumify({
+    open: "open",
+    closed: "closed",
+});
 
 export const enum UserStatus {
     normal
@@ -101,12 +105,12 @@ export interface OrganizationResponse extends Response, OrganizationResult { }
 
 export type HttpMethod = "get" | "post" | "put" | "delete";
 
-export const httpMethod = {
-    get: <HttpMethod>"get",
-    post: <HttpMethod>"post",
-    put: <HttpMethod>"put",
-    delete: <HttpMethod>"delete",
-};
+export const httpMethod = stringEnumify({
+    get: "get",
+    post: "post",
+    put: "put",
+    delete: "delete",
+});
 
 export interface Document {
     url: string;
@@ -121,18 +125,18 @@ export interface ObsoleteDocument extends Document {
 
 export type Environment = "development" | "test" | "production";
 
-export const environment = {
-    development: <Environment>"development",
-    test: <Environment>"test",
-    production: <Environment>"production",
-};
+export const environment = stringEnumify({
+    development: "development",
+    test: "test",
+    production: "production",
+});
 
 export type ThemePushEvent = "theme created" | "theme updated";
 
-export const themePushEvents = {
-    themeCreated: <ThemePushEvent>"theme created",
-    themeUpdated: <ThemePushEvent>"theme updated",
-};
+export const themePushEvents = stringEnumify({
+    themeCreated: "theme created",
+    themeUpdated: "theme updated",
+});
 
 export interface Theme {
     id: string;
@@ -163,20 +167,20 @@ export type ScopeName = "read:user" | "write:user"
     | "read:application" | "write:application" | "delete:application"
     | "read:access_token" | "write:access_token" | "delete:access_token";
 
-export const scopeNames = {
-    readUser: <ScopeName>"read:user",
-    writeUser: <ScopeName>"write:user",
-    readOrganization: <ScopeName>"read:organization",
-    writeOrganization: <ScopeName>"write:organization",
-    readTheme: <ScopeName>"read:theme",
-    writeTheme: <ScopeName>"write:theme",
-    readApplication: <ScopeName>"read:application",
-    writeApplication: <ScopeName>"write:application",
-    deleteApplication: <ScopeName>"delete:application",
-    readAccessToken: <ScopeName>"read:access_token",
-    writeAccessToken: <ScopeName>"write:access_token",
-    deleteAccessToken: <ScopeName>"delete:access_token",
-};
+export const scopeNames = stringEnumify({
+    readUser: "read:user",
+    writeUser: "write:user",
+    readOrganization: "read:organization",
+    writeOrganization: "write:organization",
+    readTheme: "read:theme",
+    writeTheme: "write:theme",
+    readApplication: "read:application",
+    writeApplication: "write:application",
+    deleteApplication: "delete:application",
+    readAccessToken: "read:access_token",
+    writeAccessToken: "write:access_token",
+    deleteAccessToken: "delete:access_token",
+});
 
 export interface Scope {
     name: ScopeName;
@@ -227,10 +231,10 @@ export interface GeneratedAccessTokenResponse extends Response, GeneratedAccessT
 
 export type ResponseType = "json" | "others";
 
-export const responseType = {
-    json: <ResponseType>"json",
-    others: <ResponseType>"others",
-};
+export const responseType = stringEnumify({
+    json: "json",
+    others: "others",
+});
 
 export interface TestSeed {
     email: string;
@@ -247,3 +251,11 @@ export interface TestSeed {
 
 export const yes = "√";
 export const no = "X";
+
+export interface OAuthCodeValue {
+    scopes: string[];
+    creator: string;
+    application: string;
+    state: string;
+    confirmed: boolean;
+}

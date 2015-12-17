@@ -16,6 +16,7 @@ export async function create(request: libs.Request, response: libs.Response) {
             name: string;
             code: string;
             guid: string;
+            redirectUrl: string;
         }
 
         let body: Body = request.body;
@@ -28,6 +29,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let name = libs.validator.trim(body.name);
         let code = libs.validator.trim(body.code);
         let guid = libs.validator.trim(body.guid);
+        let redirectUrl = libs.validator.trim(body.redirectUrl);
         if (code === "" || guid === "") {
             throw services.error.fromParameterIsInvalidMessage("code or guid");
         }
@@ -36,7 +38,10 @@ export async function create(request: libs.Request, response: libs.Response) {
 
         let token = await services.tokens.create(email, documentOfCreate.url, request, name);
 
-        let url = `${settings.api.get(settings.currentEnvironment)}${settings.urls.login}?authentication_credential=${token}`;
+        let url = `${settings.api.get(settings.currentEnvironment)}${settings.urls.login}?` + libs.qs.stringify({
+            authentication_credential: token,
+            redirect_url: redirectUrl,
+        });
 
         let result: types.TokenResult;
         if (settings.currentEnvironment === types.environment.test) {

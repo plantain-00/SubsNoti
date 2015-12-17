@@ -9,7 +9,7 @@ function redirectToErrorPage(response: libs.Response, message: string) {
     response.redirect(frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
 }
 
-function setCookie(request: libs.Request, response: libs.Response, token: string) {
+function setCookie(request: libs.Request, response: libs.Response, token: string, redirectUrl?: string) {
     if (!token) {
         response.redirect(frontendsServer + "/success.html");
     } else {
@@ -18,7 +18,10 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
             httpOnly: true,
         });
 
-        response.redirect(frontendsServer + "/success.html?clear_previous_status=" + types.yes);
+        response.redirect(frontendsServer + "/success.html?" + libs.qs.stringify({
+            clear_previous_status: types.yes,
+            redirect_url: redirectUrl,
+        }));
     }
 }
 
@@ -29,7 +32,7 @@ export let documentOfLogin: types.Document = {
 };
 
 export function login(request: libs.Request, response: libs.Response) {
-    setCookie(request, response, request.query.authentication_credential);
+    setCookie(request, response, request.query.authentication_credential, request.query.redirect_url);
 }
 
 export let documentOfLoginWithGithub: types.Document = {
@@ -44,10 +47,8 @@ export function loginWithGithub(request: libs.Request, response: libs.Response) 
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.login.github.clientId}&scope=user:email&state=${state}`);
 }
 
-let githubCodeUrl = "/github_code";
-
 export let documentOfGithubCode: types.Document = {
-    url: githubCodeUrl,
+    url: "/github_code",
     method: "get",
     documentUrl: "/html.html",
 };
@@ -108,9 +109,115 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         }
 
         let verifiedEmail = email.email.toLowerCase();
-        let token = await services.tokens.create(verifiedEmail, githubCodeUrl, request, verifiedEmail.split("@")[0]);
+        let token = await services.tokens.create(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);
+    } catch (error) {
+        redirectToErrorPage(response, error.message);
+    }
+}
+
+export let documentOfAuthorize: types.Document = {
+    url: "/oauth/authorize",
+    method: "get",
+    documentUrl: "/html.html",
+};
+
+export async function authorize(request: libs.Request, response: libs.Response) {
+    interface Query {
+        client_id: string;
+        scopes: string;
+        state: string;
+        code: string;
+    }
+
+    try {
+        let query: Query = request.query;
+
+        let clientId = libs.validator.trim(query.client_id);
+        let scopes = libs.validator.trim(query.scopes);
+        let state = libs.validator.trim(query.state);
+
+        if (clientId === "") {
+            throw new Error("missed parameter:clientId");
+        }
+
+        if (state === "") {
+            throw new Error("missed parameter:state");
+        }
+
+        await services.authenticationCredential.authenticate(request);
+
+        // if not logged in, redirected to login page
+        if (!request.userId) {
+            response.redirect("/login.html?" + libs.qs.stringify({
+                redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query)
+            }));
+            return;
+        }
+
+        let application = await services.mongo.Application.findOne({ clientId: clientId })
+            .exec();
+        if (!application) {
+            throw new Error("invalid client id");
+        }
+
+        let accessToken = await services.mongo.AccessToken.findOne({
+            creator: request.userId,
+            application: application._id,
+        }).exec();
+
+        let scopeArray = scopes.split(",");
+
+        // if access token was generated, just use it
+        if (accessToken) {
+            // check whether the application need more scopes or not
+            let newScopes = libs._.difference(scopeArray, accessToken.scopes);
+            if (newScopes.length === 0) {
+                let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + query.code);
+                let json: types.OAuthCodeValue = JSON.parse(value);
+
+                if (json.confirmed) {
+                    response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
+                        code: query.code,
+                        state: state,
+                    }));
+                    return;
+                }
+            }
+        }
+
+        // if there is a code, check the status
+        if (query.code) {
+            let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + query.code);
+            let json: types.OAuthCodeValue = JSON.parse(value);
+
+            if (json.confirmed) {
+                response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
+                    code: query.code,
+                    state: state,
+                }));
+                return;
+            }
+        }
+
+
+        query.code = libs.generateUuid();
+        let value: types.OAuthCodeValue = {
+            scopes: scopeArray,
+            creator: request.userId.toHexString(),
+            application: application._id.toHexString(),
+            state: state,
+            confirmed: false,
+        };
+        services.cache.setString(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
+
+        // if not authorized, redirected to authorization page
+        response.redirect("/authorization.html?" + libs.qs.stringify({
+            redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query),
+            scopes: scopes,
+            code: query.code,
+        }));
     } catch (error) {
         redirectToErrorPage(response, error.message);
     }
