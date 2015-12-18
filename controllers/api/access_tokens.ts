@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfCreate: types.Document = {
     url: "/api/access_tokens",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/access token/create an access token for application.html",
 };
 

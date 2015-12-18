@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/organizations/:organization_id/themes",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/theme/get themes of an organization.html",
 };
 

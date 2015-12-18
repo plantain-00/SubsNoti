@@ -232,7 +232,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
 
     await operate(caseName, result);
 
-    return Promise.resolve(body);
+    return Promise.resolve(body.themes);
 }
 
 async function createTheme(organizationId: string, caseName: string) {
@@ -424,6 +424,120 @@ async function getAvatar(uid: string, caseName: string) {
     return Promise.resolve();
 }
 
+async function getScopes(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/scopes`,
+        headers: headers,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ScopesResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function getRegisteredApplications(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationsResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "applications");
+    result.applications = libs._.map(body.applications, (application: types.Application) => {
+        return {
+            name: application.name,
+            homeUrl: application.homeUrl,
+            description: application.description,
+            authorizationCallbackUrl: application.authorizationCallbackUrl,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.applications);
+}
+
+async function registerApplication(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+        form: {
+            name: seeds.applicationName,
+            homeUrl: seeds.applicationHomeUrl,
+            description: seeds.applicationDescription,
+            authorizationCallbackUrl: seeds.applicationAuthorizationCallbackUrl,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function updateApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+        form: {
+            name: seeds.newApplicationName,
+            homeUrl: seeds.newApplicationHomeUrl,
+            description: seeds.newApplicationDescription,
+            authorizationCallbackUrl: seeds.newApplicationAuthorizationCallbackUrl,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function deleteApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -434,84 +548,79 @@ export async function run() {
     await services.mongo.User.remove({}).exec();
     await services.mongo.Organization.remove({}).exec();
     await services.mongo.Theme.remove({}).exec();
+    await services.mongo.AccessToken.remove({}).exec();
+    await services.mongo.Application.remove({}).exec();
     libs.mongoose.disconnect();
 
 
     let clientGuid = libs.generateUuid();
-
     let clientCode = await createCaptcha(clientGuid, "createCaptcha-client");
-
     let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientEmail, seeds.clientName);
-
     await login(clientUrl, "login-client");
-
     let client = await getCurrentUser("getCurrentUser-client");
-
     await getAvatar(client.user.id, "getAvatar-client");
-
     let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
-
     await logout("logout-client");
 
 
     let guid = libs.generateUuid();
-
     let code = await createCaptcha(guid, "createCaptcha");
-
     let url = await createToken(guid, code, "createToken", seeds.email, seeds.name);
-
     await login(url, "login");
-
     let user = await getCurrentUser("getCurrentUser");
-
     await getAvatar(user.user.id, "getAvatar");
-
     await createOrganization("createOrganization");
-
     await getCreatedOrganizations("getCreatedOrganizations");
-
     let organizations = await getJoinedOrganizations("getJoinedOrganizations");
-
     let organizationId = organizations[0].id;
     if (!organizationId) {
         throw organizations;
     }
 
+    await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
     await createTheme(organizationId, "createTheme");
-
-    let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
-
-    let themeId = themes.themes[0].id;
-    if (!themeId) {
-        throw themes.themes;
+    let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterCreated");
+    if (themes.length === 0) {
+        throw themes;
     }
-
+    let themeId = themes[0].id;
+    if (!themeId) {
+        throw themes;
+    }
     await unwatch(themeId, "unwatch");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUnwatched");
-
     await watch(themeId, "watch");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterWatched");
-
     await updateTheme(themeId, "updateTheme");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUpdated");
 
     await updateUser("updateUser");
-
     user = await getCurrentUser("getCurrentUser-afterUpdated");
 
     await invite("invite", client.user.email, organizationId);
+
+    await getScopes("getScopes");
+
+    let applications = await getRegisteredApplications("getRegisteredApplications");
+    await registerApplication("registerApplication");
+    applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
+    if (applications.length === 0) {
+        throw applications;
+    }
+    let applicationId = applications[0].id;
+    if (!applicationId) {
+        throw applications;
+    }
+    await updateApplication("updateApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
+    await deleteApplication("deleteApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
 
     await logout("logout");
 
 
     await login(clientUrl, "login-client-afterInvited");
-
     client = await getCurrentUser("getCurrentUser-client-afterInvited");
-
     clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
-
     await logout("logout-client-afterInvited");
 }

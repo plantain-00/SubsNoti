@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user/authorized",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/application/get authorized applications.html",
 };
 
@@ -50,7 +50,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
 export let documentOfRemove: types.Document = {
     url: "/api/user/authorized/:application_id",
-    method: "delete",
+    method: types.httpMethod.delete,
     documentUrl: "/api/application/revoke an application.html",
 };
 

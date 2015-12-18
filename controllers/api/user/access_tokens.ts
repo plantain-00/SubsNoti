@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user/access_tokens",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/access token/get access tokens.html",
 };
 
@@ -40,7 +40,7 @@ interface Body {
 
 export let documentOfCreate: types.Document = {
     url: "/api/user/access_tokens",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/access token/create an access token.html",
 };
 
@@ -80,7 +80,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
 export let documentOfUpdate: types.Document = {
     url: "/api/user/access_tokens/:access_token_id",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/access token/update an access token.html",
 };
 
@@ -126,7 +126,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
 export let documentOfRemove: types.Document = {
     url: "/api/user/access_tokens/:access_token_id",
-    method: "delete",
+    method: types.httpMethod.delete,
     documentUrl: "/api/access token/delete an access token.html",
 };
 

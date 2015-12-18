@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfCreate: types.Document = {
     url: "/api/organizations",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/organization/create an organization.html",
 };
 

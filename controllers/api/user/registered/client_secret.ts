@@ -5,7 +5,7 @@ import * as services from "../../../../services";
 
 export let documentOfReset: types.Document = {
     url: "/api/user/registered/:application_id/client_secret",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/application/reset client secret.html",
 };
 

@@ -36,6 +36,32 @@ if (!seeds.clientName) {
     seeds.clientName = faker.internet.userName();
 }
 
+if (!seeds.applicationName) {
+    seeds.applicationName = faker.internet.userName();
+}
+if (!seeds.applicationHomeUrl) {
+    seeds.applicationHomeUrl = faker.internet.url();
+}
+if (!seeds.applicationDescription) {
+    seeds.applicationDescription = faker.lorem.sentence();
+}
+if (!seeds.applicationAuthorizationCallbackUrl) {
+    seeds.applicationAuthorizationCallbackUrl = faker.internet.url();
+}
+
+if (!seeds.newApplicationName) {
+    seeds.newApplicationName = faker.internet.userName();
+}
+if (!seeds.newApplicationHomeUrl) {
+    seeds.newApplicationHomeUrl = faker.internet.url();
+}
+if (!seeds.newApplicationDescription) {
+    seeds.newApplicationDescription = faker.lorem.sentence();
+}
+if (!seeds.newApplicationAuthorizationCallbackUrl) {
+    seeds.newApplicationAuthorizationCallbackUrl = faker.internet.url();
+}
+
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
         console.log(libs.colors.red(<any>error));

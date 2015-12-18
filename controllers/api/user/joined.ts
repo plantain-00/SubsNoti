@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user/joined",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/organization/get joined organizations.html",
 };
 

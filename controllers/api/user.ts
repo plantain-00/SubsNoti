@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/user/get current user.html",
 };
 
@@ -37,7 +37,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
 export let documentOfUpdate: types.Document = {
     url: "/api/user",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/user/update current user.html",
 };
 

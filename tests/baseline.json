@@ -89,11 +89,17 @@
             }
         ]
     },
+    "getThemesOfOrganization": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "totalCount": 0,
+        "themes": []
+    },
     "createTheme": {
         "isSuccess": true,
         "statusCode": 201
     },
-    "getThemesOfOrganization": {
+    "getThemesOfOrganization-afterCreated": {
         "isSuccess": true,
         "statusCode": 200,
         "totalCount": 1,
@@ -236,6 +242,106 @@
     "invite": {
         "isSuccess": true,
         "statusCode": 201
+    },
+    "getScopes": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "scopes": [
+            {
+                "name": "read:user",
+                "description": "get current user"
+            },
+            {
+                "name": "write:user",
+                "description": "update current user"
+            },
+            {
+                "name": "read:organization",
+                "description": "get joined or created organizations"
+            },
+            {
+                "name": "write:organization",
+                "description": "create an organization; invite an user"
+            },
+            {
+                "name": "read:theme",
+                "description": "get themes of an organization"
+            },
+            {
+                "name": "write:theme",
+                "description": "create, update, watch, unwatch a theme"
+            },
+            {
+                "name": "read:application",
+                "description": "get registered or authorized applications"
+            },
+            {
+                "name": "write:application",
+                "description": "register, update, revoke an application, reset client secret"
+            },
+            {
+                "name": "delete:application",
+                "description": "delete an application"
+            },
+            {
+                "name": "read:access_token",
+                "description": "get access tokens"
+            },
+            {
+                "name": "write:access_token",
+                "description": "create, update an access token"
+            },
+            {
+                "name": "delete:access_token",
+                "description": "delete an access token"
+            }
+        ]
+    },
+    "getRegisteredApplications": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": []
+    },
+    "registerApplication": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getRegisteredApplications-afterRegistered": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": [
+            {
+                "name": "Ardella_Fahey19",
+                "homeUrl": "https://herminia.com",
+                "description": "Earum deserunt dicta perspiciatis dolorem rerum.",
+                "authorizationCallbackUrl": "https://ona.org"
+            }
+        ]
+    },
+    "updateApplication": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getRegisteredApplications-afterUpdated": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": [
+            {
+                "name": "Roma.Cormier89",
+                "homeUrl": "https://keegan.name",
+                "description": "Laudantium voluptas tempore soluta dolor nesciunt.",
+                "authorizationCallbackUrl": "https://dina.biz"
+            }
+        ]
+    },
+    "deleteApplication": {
+        "isSuccess": true,
+        "statusCode": 204
+    },
+    "getRegisteredApplications-afterDeleted": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": []
     },
     "logout": {
         "isSuccess": true,

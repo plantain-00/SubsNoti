@@ -21,19 +21,19 @@ export function route() {
 
     let documentOfUploadPersistentImages: types.Document = {
         url: "/api/persistent",
-        method: "post",
+        method: types.httpMethod.post,
         documentUrl: "/api/image/upload images to persistent directory.html",
     };
 
     let documentOfUploadTemperaryImages: types.Document = {
         url: "/api/temperary",
-        method: "post",
+        method: types.httpMethod.post,
         documentUrl: "/api/image/upload images to temperary directory.html",
     };
 
     let documentOfMoveImage: types.Document = {
         url: "/api/persistence",
-        method: "post",
+        method: types.httpMethod.post,
         documentUrl: "/api/image/move image from temperary directory to persistent directory.html",
     };
 

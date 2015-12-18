@@ -27,7 +27,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
 
 export let documentOfLogin: types.Document = {
     url: settings.urls.login,
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -37,7 +37,7 @@ export function login(request: libs.Request, response: libs.Response) {
 
 export let documentOfLoginWithGithub: types.Document = {
     url: "/login_with_github",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -49,7 +49,7 @@ export function loginWithGithub(request: libs.Request, response: libs.Response) 
 
 export let documentOfGithubCode: types.Document = {
     url: "/github_code",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -119,7 +119,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
 export let documentOfAuthorize: types.Document = {
     url: "/oauth/authorize",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 

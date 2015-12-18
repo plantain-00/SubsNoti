@@ -5,7 +5,7 @@ import * as services from "../../../../services";
 
 export let documentOfConfirm: types.Document = {
     url: "/api/user/access_tokens/:code",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/access token/confirm.html",
 };
 
