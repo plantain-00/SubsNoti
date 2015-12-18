@@ -334,6 +334,34 @@
             }
         ]
     },
+    "resetClientSecret": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getRegisteredApplications-afterClientSecretReset": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": [
+            {
+                "name": "Roma.Cormier89",
+                "homeUrl": "https://keegan.name",
+                "description": "Laudantium voluptas tempore soluta dolor nesciunt.",
+                "authorizationCallbackUrl": "https://dina.biz"
+            }
+        ]
+    },
+    "getApplication": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "application": {
+            "name": "Roma.Cormier89",
+            "homeUrl": "https://keegan.name",
+            "description": "Laudantium voluptas tempore soluta dolor nesciunt.",
+            "creator": {
+                "name": "Maybell_Prohaska"
+            }
+        }
+    },
     "deleteApplication": {
         "isSuccess": true,
         "statusCode": 204

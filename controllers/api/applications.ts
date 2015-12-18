@@ -19,8 +19,6 @@ export async function get(request: libs.Request, response: libs.Response) {
 
         let id = new libs.ObjectId(params.id);
 
-        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
-
         let application = await services.mongo.Application.findOne({ _id: id })
             .populate("creator")
             .exec();

@@ -538,6 +538,52 @@ async function deleteApplication(caseName: string, applicationId: string) {
     return Promise.resolve();
 }
 
+async function resetClientSecret(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}/client_secret`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function getApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/applications/${applicationId}`,
+        headers: headers,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "application");
+    result.application = {
+        name: body.application.name,
+        homeUrl: body.application.homeUrl,
+        description: body.application.description,
+        creator: {
+            name: body.application.creator.name
+        },
+    };
+
+    await operate(caseName, result);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -613,6 +659,9 @@ export async function run() {
     }
     await updateApplication("updateApplication", applicationId);
     applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
+    await resetClientSecret("resetClientSecret", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
+    await getApplication("getApplication", applicationId);
     await deleteApplication("deleteApplication", applicationId);
     applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
 
