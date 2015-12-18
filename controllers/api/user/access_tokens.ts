@@ -16,12 +16,13 @@ export async function get(request: libs.Request, response: libs.Response) {
         let accessTokens = await services.mongo.AccessToken.find({ application: null, creator: request.userId })
             .exec();
 
-        let result: types.AccessTokenResult = {
+        let result: types.AccessTokensResult = {
             accessTokens: libs._.map(accessTokens, a => {
                 return {
                     id: a._id.toHexString(),
                     description: a.description,
                     scopes: libs._.filter(settings.scopes, s => libs._.any(a.scopes, sc => sc === s.name)),
+                    lastUsed: a.lastUsed ? a.lastUsed.toISOString() : null,
                 };
             }),
         };

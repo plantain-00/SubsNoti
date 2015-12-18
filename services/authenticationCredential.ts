@@ -22,6 +22,10 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
             request.scopes = accessToken.scopes;
             request.application = <libs.ObjectId>accessToken.application;
             request.userId = <libs.ObjectId>accessToken.creator;
+
+            accessToken.lastUsed = new Date();
+            accessToken.save();
+
             return Promise.resolve();
         }
     }

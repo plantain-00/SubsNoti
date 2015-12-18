@@ -97,11 +97,11 @@ export interface Organization {
     name: string;
 }
 
-export interface OrganizationResult {
+export interface OrganizationsResult {
     organizations: Organization[];
 }
 
-export interface OrganizationResponse extends Response, OrganizationResult { }
+export interface OrganizationsResponse extends Response, OrganizationsResult { }
 
 export type HttpMethod = "get" | "post" | "put" | "delete";
 
@@ -150,12 +150,12 @@ export interface Theme {
     owners: User[];
     watchers: User[];
 }
-export interface ThemeResult {
+export interface ThemesResult {
     themes: Theme[];
     totalCount: number;
 }
 
-export interface ThemeResponse extends Response, ThemeResult { }
+export interface ThemesResponse extends Response, ThemesResult { }
 
 export interface TemperaryResponse extends Response {
     names: string[];
@@ -187,11 +187,11 @@ export interface Scope {
     description: string;
 }
 
-export interface ScopeResult {
+export interface ScopesResult {
     scopes: Scope[];
 }
 
-export interface ScopeResponse extends Response, ScopeResult { }
+export interface ScopesResponse extends Response, ScopesResult { }
 
 export interface Application {
     id: string;
@@ -203,10 +203,17 @@ export interface Application {
     clientSecret?: string;
     creator?: User;
     scopes?: Scope[];
+    lastUsed?: string;
 }
 
-export interface ApplicationResult {
+export interface ApplicationsResult {
     applications: Application[];
+}
+
+export interface ApplicationsResponse extends Response, ApplicationsResult { }
+
+export interface ApplicationResult {
+    application: Application;
 }
 
 export interface ApplicationResponse extends Response, ApplicationResult { }
@@ -215,13 +222,14 @@ export interface AccessToken {
     id: string;
     description: string;
     scopes?: Scope[];
+    lastUsed: string;
 }
 
-export interface AccessTokenResult {
+export interface AccessTokensResult {
     accessTokens: AccessToken[];
 }
 
-export interface AccessTokenResponse extends Response, AccessTokenResult { }
+export interface AccessTokensResponse extends Response, AccessTokensResult { }
 
 export interface GeneratedAccessTokenResult {
     accessToken: string;

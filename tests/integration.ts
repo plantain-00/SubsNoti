@@ -173,7 +173,7 @@ async function getCreatedOrganizations(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let body: types.OrganizationResponse = response.body;
+    let body: types.OrganizationsResponse = response.body;
     if (!body.isSuccess || !body.organizations) {
         throw body;
     }
@@ -193,7 +193,7 @@ async function getJoinedOrganizations(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let body: types.OrganizationResponse = response.body;
+    let body: types.OrganizationsResponse = response.body;
     if (!body.isSuccess || !body.organizations) {
         throw body;
     }
@@ -216,7 +216,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     };
     let response = await services.request.request(options);
 
-    let body: types.ThemeResponse = response.body;
+    let body: types.ThemesResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
