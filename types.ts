@@ -245,31 +245,40 @@ export const responseType = stringEnumify({
 });
 
 export interface TestSeed {
-    email: string;
-    name: string;
-
-    organizationName: string;
-
-    themeTitle: string;
-    themeDetail: string;
-
-    newThemeTitle: string;
-    newThemeDetail: string;
-
-    newName: string;
-
-    clientName: string;
-    clientEmail: string;
-
-    applicationName: string;
-    applicationHomeUrl: string;
-    applicationDescription: string;
-    applicationAuthorizationCallbackUrl: string;
-
-    newApplicationName: string;
-    newApplicationHomeUrl: string;
-    newApplicationDescription: string;
-    newApplicationAuthorizationCallbackUrl: string;
+    user: {
+        email: string;
+        name: string;
+    };
+    organization: {
+        name: string;
+    };
+    theme: {
+        title: string;
+        detail: string;
+    };
+    newTheme: {
+        title: string;
+        detail: string;
+    };
+    newUser: {
+        name: string;
+    };
+    clientUser: {
+        email: string;
+        name: string;
+    };
+    application: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    };
+    newApplication: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    };
 }
 
 export const yes = "√";

@@ -1,20 +1,36 @@
 {
-    "email": "Diamond_Harber@gmail.com",
-    "name": "Maximo_Cronin",
-    "organizationName": "Welch, Harris and Williamson",
-    "themeTitle": "Direct Metrics Architect",
-    "themeDetail": "Enim ratione ut.\nLibero consequatur et culpa incidunt fugit necessitatibus.\nUnde aperiam ratione illum.\nUt et neque magnam illo est libero autem cupiditate.\nSoluta quia expedita deleniti non alias.\nAlias aperiam et vel quas id sequi eaque.",
-    "newThemeTitle": "Direct Factors Associate",
-    "newThemeDetail": "Illo magnam enim accusamus et cupiditate dolor odit.\nFacilis voluptates aliquam minima cumque.\nDolorem voluptatem voluptatem omnis sunt est architecto quam.\nDignissimos rerum incidunt maxime dolores quam omnis et.",
-    "newName": "Maybell_Prohaska",
-    "clientEmail": "Torrance.Hammes4@hotmail.com",
-    "clientName": "Mellie.Douglas",
-    "applicationName": "Ardella_Fahey19",
-    "applicationHomeUrl": "https://herminia.com",
-    "applicationDescription": "Earum deserunt dicta perspiciatis dolorem rerum.",
-    "applicationAuthorizationCallbackUrl": "https://ona.org",
-    "newApplicationName": "Roma.Cormier89",
-    "newApplicationHomeUrl": "https://keegan.name",
-    "newApplicationDescription": "Laudantium voluptas tempore soluta dolor nesciunt.",
-    "newApplicationAuthorizationCallbackUrl": "https://dina.biz"
+    "user": {
+        "email": "Diamond_Harber@gmail.com",
+        "name": "Maximo_Cronin"
+    },
+    "organization": {
+        "name": "Welch, Harris and Williamson"
+    },
+    "theme": {
+        "title": "Direct Metrics Architect",
+        "detail": "Enim ratione ut.\nLibero consequatur et culpa incidunt fugit necessitatibus.\nUnde aperiam ratione illum.\nUt et neque magnam illo est libero autem cupiditate.\nSoluta quia expedita deleniti non alias.\nAlias aperiam et vel quas id sequi eaque."
+    },
+    "newTheme": {
+        "title": "Direct Factors Associate",
+        "detail": "Illo magnam enim accusamus et cupiditate dolor odit.\nFacilis voluptates aliquam minima cumque.\nDolorem voluptatem voluptatem omnis sunt est architecto quam.\nDignissimos rerum incidunt maxime dolores quam omnis et."
+    },
+    "newUser": {
+        "name": "Maybell_Prohaska"
+    },
+    "clientUser": {
+        "email": "Torrance.Hammes4@hotmail.com",
+        "name": "Mellie.Douglas"
+    },
+    "application": {
+        "name": "Ardella_Fahey19",
+        "homeUrl": "https://herminia.com",
+        "description": "Earum deserunt dicta perspiciatis dolorem rerum.",
+        "authorizationCallbackUrl": "https://ona.org"
+    },
+    "newApplication": {
+        "name": "Roma.Cormier89",
+        "homeUrl": "https://keegan.name",
+        "description": "Laudantium voluptas tempore soluta dolor nesciunt.",
+        "authorizationCallbackUrl": "https://dina.biz"
+    }
 }

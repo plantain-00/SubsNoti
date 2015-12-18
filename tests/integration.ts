@@ -150,7 +150,7 @@ async function createOrganization(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            organizationName: seeds.organizationName
+            organizationName: seeds.organization.name
         },
     };
     let response = await services.request.request(options);
@@ -242,8 +242,8 @@ async function createTheme(organizationId: string, caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            themeTitle: seeds.themeTitle,
-            themeDetail: seeds.themeDetail,
+            themeTitle: seeds.theme.title,
+            themeDetail: seeds.theme.detail,
             organizationId: organizationId,
         },
     };
@@ -304,8 +304,8 @@ async function updateTheme(themeId: string, caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            title: seeds.newThemeTitle,
-            detail: seeds.newThemeDetail,
+            title: seeds.newTheme.title,
+            detail: seeds.newTheme.detail,
             status: types.themeStatus.closed,
         },
     };
@@ -376,7 +376,7 @@ async function updateUser(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            name: seeds.newName,
+            name: seeds.newUser.name,
             avatarFileName: name,
         },
     };
@@ -476,10 +476,10 @@ async function registerApplication(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            name: seeds.applicationName,
-            homeUrl: seeds.applicationHomeUrl,
-            description: seeds.applicationDescription,
-            authorizationCallbackUrl: seeds.applicationAuthorizationCallbackUrl,
+            name: seeds.application.name,
+            homeUrl: seeds.application.homeUrl,
+            description: seeds.application.description,
+            authorizationCallbackUrl: seeds.application.authorizationCallbackUrl,
         },
     };
     let response = await services.request.request(options);
@@ -501,10 +501,10 @@ async function updateApplication(caseName: string, applicationId: string) {
         headers: headers,
         jar: jar,
         form: {
-            name: seeds.newApplicationName,
-            homeUrl: seeds.newApplicationHomeUrl,
-            description: seeds.newApplicationDescription,
-            authorizationCallbackUrl: seeds.newApplicationAuthorizationCallbackUrl,
+            name: seeds.newApplication.name,
+            homeUrl: seeds.newApplication.homeUrl,
+            description: seeds.newApplication.description,
+            authorizationCallbackUrl: seeds.newApplication.authorizationCallbackUrl,
         },
     };
     let response = await services.request.request(options);
@@ -555,7 +555,7 @@ export async function run() {
 
     let clientGuid = libs.generateUuid();
     let clientCode = await createCaptcha(clientGuid, "createCaptcha-client");
-    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientEmail, seeds.clientName);
+    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientUser.email, seeds.clientUser.name);
     await login(clientUrl, "login-client");
     let client = await getCurrentUser("getCurrentUser-client");
     await getAvatar(client.user.id, "getAvatar-client");
@@ -565,7 +565,7 @@ export async function run() {
 
     let guid = libs.generateUuid();
     let code = await createCaptcha(guid, "createCaptcha");
-    let url = await createToken(guid, code, "createToken", seeds.email, seeds.name);
+    let url = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
     await login(url, "login");
     let user = await getCurrentUser("getCurrentUser");
     await getAvatar(user.user.id, "getAvatar");
