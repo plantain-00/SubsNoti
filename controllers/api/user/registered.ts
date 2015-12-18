@@ -16,7 +16,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let applications = await services.mongo.Application.find({ creator: request.userId })
             .exec();
 
-        let result: types.ApplicationResult = {
+        let result: types.ApplicationsResult = {
             applications: libs._.map(applications, a => {
                 return {
                     id: a._id.toHexString(),
@@ -173,6 +173,8 @@ export async function remove(request: libs.Request, response: libs.Response) {
         if (!application) {
             throw services.error.fromParameterIsInvalidMessage("application_id");
         }
+
+        await services.mongo.AccessToken.remove({ application: application._id }).exec();
 
         application.remove();
 

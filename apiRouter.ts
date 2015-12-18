@@ -24,6 +24,7 @@ import * as userAccessTokens from "./controllers/api/user/access_tokens";
 import * as userAccessTokensValue from "./controllers/api/user/access_tokens/value";
 import * as accessTokens from "./controllers/api/access_tokens";
 import * as userAccessTokenCode from "./controllers/api/user/access_tokens/code";
+import * as applications from "./controllers/api/applications";
 
 export function route() {
     let app = libs.express();
@@ -95,6 +96,8 @@ export function route() {
     services.router.bind(accessTokens.documentOfCreate, accessTokens.create, app);
 
     services.router.bind(userAccessTokenCode.documentOfConfirm, userAccessTokenCode.confirm, app);
+
+    services.router.bind(applications.documentOfGet, applications.get, app);
 
     services.mongo.connect();
 

@@ -70,6 +70,7 @@ export interface AccessTokenDocument extends libs.mongoose.Document {
     description: string;
     value: string;
     scopes: string[];
+    lastUsed: Date;
 
     creator: UserDocument | libs.ObjectId;
 
@@ -141,6 +142,7 @@ export function connect() {
         description: String,
         value: String,
         scopes: [String],
+        lastUsed: { type: Date },
 
         creator: { type: Schema.Types.ObjectId, ref: "User" },
 

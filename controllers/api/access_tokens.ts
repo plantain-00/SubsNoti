@@ -61,7 +61,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         let accessTokenValue = libs.generateUuid();
         let applicationId = new libs.ObjectId(json.application);
 
-        // remove old access token
+        // remove old access token, the old one may have smaller scopes
         await services.mongo.AccessToken.remove({
             creator: creator,
             application: applicationId,

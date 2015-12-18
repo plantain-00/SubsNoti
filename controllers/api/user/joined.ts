@@ -11,7 +11,7 @@ export let documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     try {
-        let result: types.OrganizationResult;
+        let result: types.OrganizationsResult;
 
         if (request.userId
             && services.scope.contain(request, types.scopeNames.readOrganization)) {

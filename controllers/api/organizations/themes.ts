@@ -81,7 +81,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         let totalCount: any = await countQuery.count()
             .exec();
 
-        let result: types.ThemeResult = {
+        let result: types.ThemesResult = {
             themes: [],
             totalCount: <number>totalCount,
         };

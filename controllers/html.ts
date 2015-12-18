@@ -148,7 +148,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         await services.authenticationCredential.authenticate(request);
 
-        // if not logged in, redirected to login page
+        // if not logged in, redirected to login page, keep `client_id`, `scopes` and `state` as parameters, then retry this.
         if (!request.userId) {
             response.redirect("/login.html?" + libs.qs.stringify({
                 redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query)
@@ -162,21 +162,11 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             throw new Error("invalid client id");
         }
 
-        let accessToken = await services.mongo.AccessToken.findOne({
-            creator: request.userId,
-            application: application._id,
-        }).exec();
-
-        let scopeArray = scopes.split(",");
-
-        // if access token was generated, just use it
-        if (accessToken) {
-            // check whether the application need more scopes or not
-            let newScopes = libs._.difference(scopeArray, accessToken.scopes);
-            if (newScopes.length === 0) {
-                let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + query.code);
+        // after authorized, there is a code in `query`, check that in cache
+        if (query.code) {
+            let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + query.code);
+            if (value) {
                 let json: types.OAuthCodeValue = JSON.parse(value);
-
                 if (json.confirmed) {
                     response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                         code: query.code,
@@ -187,12 +177,29 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             }
         }
 
-        // if there is a code, check the status
-        if (query.code) {
-            let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + query.code);
-            let json: types.OAuthCodeValue = JSON.parse(value);
+        query.code = libs.generateUuid();
 
-            if (json.confirmed) {
+        let accessToken = await services.mongo.AccessToken.findOne({
+            creator: request.userId,
+            application: application._id,
+        }).exec();
+
+        let scopeArray = scopes.split(",");
+
+        if (accessToken) {
+            // if access token was generated, that is, already authorized, check whether the application need more scopes or not
+            let newScopes = libs._.difference(scopeArray, accessToken.scopes);
+            if (newScopes.length === 0) {
+                // if no more scopes, authorization is not needed
+                let value: types.OAuthCodeValue = {
+                    scopes: scopeArray,
+                    creator: request.userId.toHexString(),
+                    application: application._id.toHexString(),
+                    state: state,
+                    confirmed: true,
+                };
+                services.cache.setString(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
+
                 response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                     code: query.code,
                     state: state,
@@ -201,8 +208,6 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             }
         }
 
-
-        query.code = libs.generateUuid();
         let value: types.OAuthCodeValue = {
             scopes: scopeArray,
             creator: request.userId.toHexString(),
@@ -212,11 +217,12 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         };
         services.cache.setString(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
-        // if not authorized, redirected to authorization page
+        // if not confirmed, redirected to authorization page
         response.redirect("/authorization.html?" + libs.qs.stringify({
             redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query),
             scopes: scopes,
             code: query.code,
+            application_id: application._id.toHexString(),
         }));
     } catch (error) {
         redirectToErrorPage(response, error.message);

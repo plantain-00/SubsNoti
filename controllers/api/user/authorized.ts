@@ -21,7 +21,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             await services.mongo.User.populate(accessToken.application, "creator");
         }
 
-        let result: types.ApplicationResult = {
+        let result: types.ApplicationsResult = {
             applications: libs._.map(libs._.filter(accessTokens, ac => ac.application), ac => {
                 let a = <services.mongo.ApplicationDocument>ac.application;
                 let creator = <services.mongo.UserDocument>a.creator;
@@ -37,6 +37,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                         avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
                     },
                     scopes: libs._.filter(settings.scopes, s => libs._.any(ac.scopes, sc => sc === s.name)),
+                    lastUsed: ac.lastUsed ? ac.lastUsed.toISOString() : null,
                 };
             }),
         };
