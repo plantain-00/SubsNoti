@@ -371,6 +371,89 @@
         "statusCode": 200,
         "applications": []
     },
+    "getAccessTokens": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "accessTokens": []
+    },
+    "createAccessToken": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getAccessTokens-afterCreated": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "accessTokens": [
+            {
+                "description": "Customer Metrics Liason",
+                "scopes": [
+                    {
+                        "name": "read:user",
+                        "description": "get current user"
+                    },
+                    {
+                        "name": "read:organization",
+                        "description": "get joined or created organizations"
+                    }
+                ]
+            }
+        ]
+    },
+    "updateAccessToken": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getAccessTokens-afterUpdated": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "accessTokens": [
+            {
+                "description": "Dynamic Markets Coordinator",
+                "scopes": [
+                    {
+                        "name": "read:user",
+                        "description": "get current user"
+                    },
+                    {
+                        "name": "read:application",
+                        "description": "get registered or authorized applications"
+                    }
+                ]
+            }
+        ]
+    },
+    "regenerateAccessToken": {
+        "isSuccess": true,
+        "statusCode": 201
+    },
+    "getAccessTokens-afterRegenerated": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "accessTokens": [
+            {
+                "description": "Dynamic Markets Coordinator",
+                "scopes": [
+                    {
+                        "name": "read:user",
+                        "description": "get current user"
+                    },
+                    {
+                        "name": "read:application",
+                        "description": "get registered or authorized applications"
+                    }
+                ]
+            }
+        ]
+    },
+    "deleteAccessToken": {
+        "isSuccess": true,
+        "statusCode": 204
+    },
+    "getAccessTokens-afterDeleted": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "accessTokens": []
+    },
     "logout": {
         "isSuccess": true,
         "statusCode": 204

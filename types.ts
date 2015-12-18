@@ -279,6 +279,12 @@ export interface TestSeed {
         description: string;
         authorizationCallbackUrl: string;
     };
+    accessToken: {
+        description: string;
+    };
+    newAccessToken: {
+        description: string;
+    };
 }
 
 export const yes = "√";

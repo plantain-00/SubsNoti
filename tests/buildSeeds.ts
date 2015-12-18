@@ -63,6 +63,18 @@ if (!seeds.newApplication) {
     };
 }
 
+if (!seeds.accessToken) {
+    seeds.accessToken = {
+        description: faker.name.title()
+    };
+}
+
+if (!seeds.newAccessToken) {
+    seeds.newAccessToken = {
+        description: faker.name.title()
+    };
+}
+
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
         console.log(libs.colors.red(<any>error));

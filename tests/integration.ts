@@ -584,6 +584,120 @@ async function getApplication(caseName: string, applicationId: string) {
     return Promise.resolve();
 }
 
+async function getAccessTokens(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.AccessTokensResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessTokens");
+    result.accessTokens = libs._.map(body.accessTokens, (accessToken: types.AccessToken) => {
+        return {
+            description: accessToken.description,
+            scopes: accessToken.scopes,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessTokens);
+}
+
+async function createAccessToken(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+        form: {
+            description: seeds.accessToken.description,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readOrganization],
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function updateAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+        form: {
+            description: seeds.newAccessToken.description,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readApplication],
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function regenerateAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}/value`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function deleteAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -664,6 +778,23 @@ export async function run() {
     await getApplication("getApplication", applicationId);
     await deleteApplication("deleteApplication", applicationId);
     applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
+
+    let accessTokens = await getAccessTokens("getAccessTokens");
+    let accessToken = await createAccessToken("createAccessToken");
+    accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
+    if (accessTokens.length === 0) {
+        throw accessTokens;
+    }
+    let accessTokenId = accessTokens[0].id;
+    if (!accessTokenId) {
+        throw accessTokens;
+    }
+    await updateAccessToken("updateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
+    accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
+    await deleteAccessToken("deleteAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterDeleted");
 
     await logout("logout");
 

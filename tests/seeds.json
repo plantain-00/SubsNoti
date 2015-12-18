@@ -32,5 +32,11 @@
         "homeUrl": "https://keegan.name",
         "description": "Laudantium voluptas tempore soluta dolor nesciunt.",
         "authorizationCallbackUrl": "https://dina.biz"
+    },
+    "accessToken": {
+        "description": "Customer Metrics Liason"
+    },
+    "newAccessToken": {
+        "description": "Dynamic Markets Coordinator"
     }
 }
