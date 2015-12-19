@@ -297,3 +297,17 @@ export interface OAuthCodeValue {
     state: string;
     confirmed: boolean;
 }
+
+export type OAuthAuthorization = "login" | "authorization";
+
+export const oauthAuthorization = stringEnumify({
+    login: "login",
+    authorization: "authorization",
+});
+
+export interface OAuthAuthorizationResult {
+    pageName?: OAuthAuthorization;
+    code?: string;
+}
+
+export interface OAuthAuthorizationResponse extends Response, OAuthAuthorizationResult { }

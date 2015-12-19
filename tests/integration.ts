@@ -698,6 +698,122 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
     return Promise.resolve();
 }
 
+async function confirm(caseName: string, code: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${code}`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string) {
+    let options = {
+        url: apiUrl + `/oauth/authorize`,
+        jar: jar,
+        qs: {
+            client_id: clientId,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readTheme],
+            state: state,
+            code: code
+        }
+    };
+    let response = await services.request.request(options);
+
+    let body: types.OAuthAuthorizationResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "code");
+
+    if (body.pageName === types.oauthAuthorization.login) {
+        throw body;
+    }
+    if (body.pageName === types.oauthAuthorization.authorization) {
+        if (!body.code) {
+            throw body;
+        }
+        await confirm("confirm", body.code);
+        return oauthAuthorize(caseName, clientId, state, body.code);
+    }
+
+    if (!body.code) {
+        throw body;
+    }
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.code);
+}
+
+async function createAccessTokenForApplication(caseName: string, clientId: string, clientSecret: string, state: string, code: string) {
+    let options = {
+        url: apiUrl + `/api/access_tokens`,
+        method: types.httpMethod.post,
+        headers: headers,
+        form: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            state: state,
+            code: code,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function getAuthorizedApplications(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/authorized`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationsResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "applications");
+    result.applications = libs._.map(body.applications, (application: types.Application) => {
+        return {
+            name: application.name,
+            homeUrl: application.homeUrl,
+            description: application.description,
+            creator: {
+                name: application.creator.name,
+                avatar: application.creator.email,
+            },
+            scopes: application.scopes,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -720,6 +836,41 @@ export async function run() {
     let client = await getCurrentUser("getCurrentUser-client");
     await getAvatar(client.user.id, "getAvatar-client");
     let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
+
+    await getScopes("getScopes");
+
+    let applications = await getRegisteredApplications("getRegisteredApplications");
+    await registerApplication("registerApplication");
+    applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
+    if (applications.length === 0) {
+        throw applications;
+    }
+    let application = applications[0];
+    let applicationId = application.id;
+    await updateApplication("updateApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
+    await resetClientSecret("resetClientSecret", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
+    await getApplication("getApplication", applicationId);
+
+    application = applications[0];
+    applicationId = application.id;
+
+    let accessTokens = await getAccessTokens("getAccessTokens");
+    let accessToken = await createAccessToken("createAccessToken");
+    accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
+    if (accessTokens.length === 0) {
+        throw accessTokens;
+    }
+    let accessTokenId = accessTokens[0].id;
+    if (!accessTokenId) {
+        throw accessTokens;
+    }
+    await updateAccessToken("updateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
+    accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
+
     await logout("logout-client");
 
 
@@ -759,42 +910,11 @@ export async function run() {
 
     await invite("invite", client.user.email, organizationId);
 
-    await getScopes("getScopes");
-
-    let applications = await getRegisteredApplications("getRegisteredApplications");
-    await registerApplication("registerApplication");
-    applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
-    if (applications.length === 0) {
-        throw applications;
-    }
-    let applicationId = applications[0].id;
-    if (!applicationId) {
-        throw applications;
-    }
-    await updateApplication("updateApplication", applicationId);
-    applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
-    await resetClientSecret("resetClientSecret", applicationId);
-    applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
-    await getApplication("getApplication", applicationId);
-    await deleteApplication("deleteApplication", applicationId);
-    applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
-
-    let accessTokens = await getAccessTokens("getAccessTokens");
-    let accessToken = await createAccessToken("createAccessToken");
-    accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
-    if (accessTokens.length === 0) {
-        throw accessTokens;
-    }
-    let accessTokenId = accessTokens[0].id;
-    if (!accessTokenId) {
-        throw accessTokens;
-    }
-    await updateAccessToken("updateAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
-    accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
-    await deleteAccessToken("deleteAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterDeleted");
+    await getAuthorizedApplications("getAuthorizedApplications");
+    let state = libs.generateUuid();
+    code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
+    accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
+    await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
 
     await logout("logout");
 
@@ -802,5 +922,12 @@ export async function run() {
     await login(clientUrl, "login-client-afterInvited");
     client = await getCurrentUser("getCurrentUser-client-afterInvited");
     clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
+
+    await deleteApplication("deleteApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
+
+    await deleteAccessToken("deleteAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterDeleted");
+
     await logout("logout-client-afterInvited");
 }
