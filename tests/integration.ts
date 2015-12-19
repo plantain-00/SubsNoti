@@ -12,7 +12,8 @@ let imageUploader = settings.imageUploader;
 
 let jar = libs.request.jar();
 
-let headers;
+let headers = {};
+let headersWithAuthorization = {};
 
 export let operate: (caseName: string, body: any) => Promise<void>;
 
@@ -128,6 +129,27 @@ async function getCurrentUser(caseName: string) {
         url: apiUrl + "/api/user",
         headers: headers,
         jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.CurrentUserResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "user");
+    result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
+    await operate(caseName, result);
+
+    return Promise.resolve(body);
+}
+
+async function getCurrentUserWithAccessToken(caseName: string, accessToken: string) {
+    headersWithAuthorization[settings.headerNames.authorization] = "token " + accessToken;
+
+    let options = {
+        url: apiUrl + "/api/user",
+        headers: headersWithAuthorization,
     };
     let response = await services.request.request(options);
 
@@ -836,8 +858,8 @@ async function revokeApplication(caseName: string, applicationId: string) {
 export async function run() {
     let version = await getVersion("getVersion");
 
-    headers = {};
     headers[settings.headerNames.version] = version;
+    headersWithAuthorization[settings.headerNames.version] = version;
 
     services.mongo.connect();
     await services.mongo.User.remove({}).exec();
@@ -889,6 +911,7 @@ export async function run() {
     accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
     accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
     accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
+    await getCurrentUserWithAccessToken("getCurrentUser-client-withPrivateAccessToken", accessToken);
 
     await logout("logout-client");
 
@@ -934,6 +957,7 @@ export async function run() {
     code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
     accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
     await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
+    await getCurrentUserWithAccessToken("getCurrentUser-client-withAccessToken", accessToken);
     await revokeApplication("revokeApplication", applicationId);
     await getAuthorizedApplications("getAuthorizedApplications-afterRevoked");
 

@@ -229,6 +229,16 @@
             }
         ]
     },
+    "getCurrentUser-client-withPrivateAccessToken": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "user": {
+            "email": "torrance.hammes4@hotmail.com",
+            "name": "Mellie.Douglas",
+            "createdOrganizationCount": 0,
+            "joinedOrganizationCount": 0
+        }
+    },
     "logout-client": {
         "isSuccess": true,
         "statusCode": 204
@@ -476,6 +486,16 @@
                 ]
             }
         ]
+    },
+    "getCurrentUser-client-withAccessToken": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "user": {
+            "email": "diamond_harber@gmail.com",
+            "name": "Maybell_Prohaska",
+            "createdOrganizationCount": 1,
+            "joinedOrganizationCount": 1
+        }
     },
     "revokeApplication": {
         "isSuccess": true,
