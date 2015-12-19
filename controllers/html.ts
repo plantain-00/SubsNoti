@@ -242,7 +242,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         if (settings.currentEnvironment === types.environment.test) {
             let result: types.OAuthAuthorizationResult = {
                 pageName: types.oauthAuthorization.authorization,
-                code: query.code
+                code: query.code,
             };
             services.response.sendSuccess(response, types.StatusCode.OK, result);
             return;

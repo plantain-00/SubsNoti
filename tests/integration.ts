@@ -747,8 +747,8 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
             client_id: clientId,
             scopes: [types.scopeNames.readUser, types.scopeNames.readTheme],
             state: state,
-            code: code
-        }
+            code: code,
+        },
     };
     let response = await services.request.request(options);
 

@@ -7,8 +7,7 @@ before_script:
   - npm install -g gulp
   - npm install -g typescript@next
 script:
-  - gulp build
-  - gulp host-api-test &
+  - gulp build && gulp host-api-test &
   - gulp host-imageUploader-test &
   - gulp host-imageServer-test &
   - sleep 15
