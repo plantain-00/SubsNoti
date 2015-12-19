@@ -477,6 +477,15 @@
             }
         ]
     },
+    "revokeApplication": {
+        "isSuccess": true,
+        "statusCode": 204
+    },
+    "getAuthorizedApplications-afterRevoked": {
+        "isSuccess": true,
+        "statusCode": 200,
+        "applications": []
+    },
     "logout": {
         "isSuccess": true,
         "statusCode": 204

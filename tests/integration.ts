@@ -814,6 +814,25 @@ async function getAuthorizedApplications(caseName: string) {
     return Promise.resolve();
 }
 
+async function revokeApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/authorized/${applicationId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
@@ -915,6 +934,8 @@ export async function run() {
     code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
     accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
     await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
+    await revokeApplication("revokeApplication", applicationId);
+    await getAuthorizedApplications("getAuthorizedApplications-afterRevoked");
 
     await logout("logout");
 
