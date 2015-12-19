@@ -94,11 +94,9 @@ async function login(url: string, caseName: string) {
         throw cookies;
     }
 
-    await operate(caseName, {
+    return operate(caseName, {
         statusCode: response.response.statusCode
     });
-
-    return Promise.resolve();
 }
 
 async function logout(caseName: string) {
@@ -121,36 +119,25 @@ async function logout(caseName: string) {
         throw cookies;
     }
 
-    await operate(caseName, response.body);
+    return operate(caseName, body);
 }
 
-async function getCurrentUser(caseName: string) {
-    let options = {
-        url: apiUrl + "/api/user",
-        headers: headers,
-        jar: jar,
-    };
-    let response = await services.request.request(options);
+async function getCurrentUser(caseName: string, accessToken?: string) {
+    let options;
+    if (accessToken) {
+        headersWithAuthorization[settings.headerNames.authorization] = settings.authorizationHeaders.token + accessToken;
 
-    let body: types.CurrentUserResponse = response.body;
-    if (!body.isSuccess) {
-        throw body;
+        options = {
+            url: apiUrl + "/api/user",
+            headers: headersWithAuthorization,
+        };
+    } else {
+        options = {
+            url: apiUrl + "/api/user",
+            headers: headers,
+            jar: jar,
+        };
     }
-
-    let result = libs._.omit<any, any>(body, "user");
-    result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
-    await operate(caseName, result);
-
-    return Promise.resolve(body);
-}
-
-async function getCurrentUserWithAccessToken(caseName: string, accessToken: string) {
-    headersWithAuthorization[settings.headerNames.authorization] = "token " + accessToken;
-
-    let options = {
-        url: apiUrl + "/api/user",
-        headers: headersWithAuthorization,
-    };
     let response = await services.request.request(options);
 
     let body: types.CurrentUserResponse = response.body;
@@ -182,9 +169,7 @@ async function createOrganization(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function getCreatedOrganizations(caseName: string) {
@@ -295,9 +280,7 @@ async function unwatch(themeId: string, caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function watch(themeId: string, caseName: string) {
@@ -314,9 +297,7 @@ async function watch(themeId: string, caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function updateTheme(themeId: string, caseName: string) {
@@ -338,9 +319,7 @@ async function updateTheme(themeId: string, caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function uploadAvatar(caseName: string) {
@@ -379,11 +358,9 @@ async function getTemperaryImage(fileName: string, caseName: string) {
     };
     let response = await services.request.request(options, types.responseType.others);
 
-    await operate(caseName, {
+    return operate(caseName, {
         statusCode: response.response.statusCode
     });
-
-    return Promise.resolve();
 }
 
 async function updateUser(caseName: string) {
@@ -409,9 +386,7 @@ async function updateUser(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function invite(caseName: string, email: string, organizationId: string) {
@@ -428,9 +403,7 @@ async function invite(caseName: string, email: string, organizationId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function getAvatar(uid: string, caseName: string) {
@@ -439,11 +412,9 @@ async function getAvatar(uid: string, caseName: string) {
     };
     let response = await services.request.request(options, types.responseType.others);
 
-    await operate(caseName, {
+    return operate(caseName, {
         statusCode: response.response.statusCode
     });
-
-    return Promise.resolve();
 }
 
 async function getScopes(caseName: string) {
@@ -460,7 +431,7 @@ async function getScopes(caseName: string) {
 
     await operate(caseName, body);
 
-    return Promise.resolve();
+    return Promise.resolve(body.scopes);
 }
 
 async function getRegisteredApplications(caseName: string) {
@@ -511,9 +482,7 @@ async function registerApplication(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function updateApplication(caseName: string, applicationId: string) {
@@ -536,9 +505,7 @@ async function updateApplication(caseName: string, applicationId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function deleteApplication(caseName: string, applicationId: string) {
@@ -555,9 +522,7 @@ async function deleteApplication(caseName: string, applicationId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function resetClientSecret(caseName: string, applicationId: string) {
@@ -574,9 +539,7 @@ async function resetClientSecret(caseName: string, applicationId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function getApplication(caseName: string, applicationId: string) {
@@ -603,7 +566,7 @@ async function getApplication(caseName: string, applicationId: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve();
+    return Promise.resolve(body.application);
 }
 
 async function getAccessTokens(caseName: string) {
@@ -675,9 +638,7 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function regenerateAccessToken(caseName: string, accessTokenId: string) {
@@ -715,9 +676,7 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function confirm(caseName: string, code: string) {
@@ -734,9 +693,7 @@ async function confirm(caseName: string, code: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string) {
@@ -831,9 +788,7 @@ async function getAuthorizedApplications(caseName: string) {
         };
     });
 
-    await operate(caseName, result);
-
-    return Promise.resolve();
+    return operate(caseName, result);
 }
 
 async function revokeApplication(caseName: string, applicationId: string) {
@@ -850,17 +805,18 @@ async function revokeApplication(caseName: string, applicationId: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
-export async function run() {
+
+async function testVersion() {
     let version = await getVersion("getVersion");
 
     headers[settings.headerNames.version] = version;
     headersWithAuthorization[settings.headerNames.version] = version;
+}
 
+async function resetMongodb() {
     services.mongo.connect();
     await services.mongo.User.remove({}).exec();
     await services.mongo.Organization.remove({}).exec();
@@ -868,111 +824,156 @@ export async function run() {
     await services.mongo.AccessToken.remove({}).exec();
     await services.mongo.Application.remove({}).exec();
     libs.mongoose.disconnect();
+}
 
+async function testClientLogin() {
+    let guid = libs.generateUuid();
+    let code = await createCaptcha(guid, "createCaptcha-client");
+    return createToken(guid, code, "createToken-client", seeds.clientUser.email, seeds.clientUser.name);
+}
 
-    let clientGuid = libs.generateUuid();
-    let clientCode = await createCaptcha(clientGuid, "createCaptcha-client");
-    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientUser.email, seeds.clientUser.name);
-    await login(clientUrl, "login-client");
-    let client = await getCurrentUser("getCurrentUser-client");
-    await getAvatar(client.user.id, "getAvatar-client");
-    let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
+async function testLogin() {
+    let guid = libs.generateUuid();
+    let code = await createCaptcha(guid, "createCaptcha");
+    let loginUrl = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
+    return login(loginUrl, "login");
+}
 
-    await getScopes("getScopes");
-
-    let applications = await getRegisteredApplications("getRegisteredApplications");
+async function testRegisteredApplications() {
+    await getRegisteredApplications("getRegisteredApplications");
     await registerApplication("registerApplication");
-    applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
+
+    let applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
     if (applications.length === 0) {
         throw applications;
     }
     let application = applications[0];
-    let applicationId = application.id;
-    await updateApplication("updateApplication", applicationId);
-    applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
-    await resetClientSecret("resetClientSecret", applicationId);
+
+    await updateApplication("updateApplication", application.id);
+    await getRegisteredApplications("getRegisteredApplications-afterUpdated");
+    await resetClientSecret("resetClientSecret", application.id);
+    await getApplication("getApplication", application.id);
+
     applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
-    await getApplication("getApplication", applicationId);
-
+    if (applications.length === 0) {
+        throw applications;
+    }
     application = applications[0];
-    applicationId = application.id;
 
-    let accessTokens = await getAccessTokens("getAccessTokens");
-    let accessToken = await createAccessToken("createAccessToken");
-    accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
+    return Promise.resolve(application);
+}
+
+async function testPrivateAccessToken() {
+    await getAccessTokens("getAccessTokens");
+    await createAccessToken("createAccessToken");
+
+    let accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
     if (accessTokens.length === 0) {
         throw accessTokens;
     }
     let accessTokenId = accessTokens[0].id;
-    if (!accessTokenId) {
-        throw accessTokens;
-    }
+
     await updateAccessToken("updateAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
-    accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
-    await getCurrentUserWithAccessToken("getCurrentUser-client-withPrivateAccessToken", accessToken);
+    await getAccessTokens("getAccessTokens-afterUpdated");
+    let accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
+    await getAccessTokens("getAccessTokens-afterRegenerated");
+    await getCurrentUser("getCurrentUser-client-withPrivateAccessToken", accessToken);
+    return Promise.resolve(accessTokenId);
+}
 
-    await logout("logout-client");
-
-
-    let guid = libs.generateUuid();
-    let code = await createCaptcha(guid, "createCaptcha");
-    let url = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
-    await login(url, "login");
-    let user = await getCurrentUser("getCurrentUser");
-    await getAvatar(user.user.id, "getAvatar");
+async function testOrganization() {
     await createOrganization("createOrganization");
     await getCreatedOrganizations("getCreatedOrganizations");
     let organizations = await getJoinedOrganizations("getJoinedOrganizations");
-    let organizationId = organizations[0].id;
-    if (!organizationId) {
+    if (organizations.length === 0) {
         throw organizations;
     }
+    let organizationId = organizations[0].id;
+    return Promise.resolve(organizationId);
+}
 
+async function testUser() {
+    let user = await getCurrentUser("getCurrentUser");
+    return getAvatar(user.user.id, "getAvatar");
+}
+
+async function testThemes(organizationId: string) {
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
     await createTheme(organizationId, "createTheme");
+
     let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterCreated");
     if (themes.length === 0) {
         throw themes;
     }
     let themeId = themes[0].id;
-    if (!themeId) {
-        throw themes;
-    }
+
     await unwatch(themeId, "unwatch");
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUnwatched");
     await watch(themeId, "watch");
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterWatched");
     await updateTheme(themeId, "updateTheme");
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUpdated");
+}
+
+async function testAccessToken(application: types.Application) {
+    await getAuthorizedApplications("getAuthorizedApplications");
+    let state = libs.generateUuid();
+    let code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
+    let accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
+    await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
+    await getCurrentUser("getCurrentUser-client-withAccessToken", accessToken);
+    await revokeApplication("revokeApplication", application.id);
+    await getAuthorizedApplications("getAuthorizedApplications-afterRevoked");
+}
+
+export async function run() {
+    await testVersion();
+
+    await resetMongodb();
+
+    let clientLoginUrl = await testClientLogin();
+    await login(clientLoginUrl, "login-client");
+
+    let client = await getCurrentUser("getCurrentUser-client");
+    await getAvatar(client.user.id, "getAvatar-client");
+    await getJoinedOrganizations("getJoinedOrganizations-client");
+
+    await getScopes("getScopes");
+
+    let registeredApplication = await testRegisteredApplications();
+
+    let accessTokenId = await testPrivateAccessToken();
+
+    await logout("logout-client");
+
+
+    await testLogin();
+
+    await testUser();
+
+    let organizationId = await testOrganization();
+
+    await testThemes(organizationId);
 
     await updateUser("updateUser");
-    user = await getCurrentUser("getCurrentUser-afterUpdated");
+    await getCurrentUser("getCurrentUser-afterUpdated");
 
     await invite("invite", client.user.email, organizationId);
 
-    await getAuthorizedApplications("getAuthorizedApplications");
-    let state = libs.generateUuid();
-    code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
-    accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
-    await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
-    await getCurrentUserWithAccessToken("getCurrentUser-client-withAccessToken", accessToken);
-    await revokeApplication("revokeApplication", applicationId);
-    await getAuthorizedApplications("getAuthorizedApplications-afterRevoked");
+    await testAccessToken(registeredApplication);
 
     await logout("logout");
 
 
-    await login(clientUrl, "login-client-afterInvited");
-    client = await getCurrentUser("getCurrentUser-client-afterInvited");
-    clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
+    await login(clientLoginUrl, "login-client-afterInvited");
+    await getCurrentUser("getCurrentUser-client-afterInvited");
+    await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
 
-    await deleteApplication("deleteApplication", applicationId);
-    applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
+    await deleteApplication("deleteApplication", registeredApplication.id);
+    await getRegisteredApplications("getRegisteredApplications-afterDeleted");
 
     await deleteAccessToken("deleteAccessToken", accessTokenId);
-    accessTokens = await getAccessTokens("getAccessTokens-afterDeleted");
+    await getAccessTokens("getAccessTokens-afterDeleted");
 
     await logout("logout-client-afterInvited");
 }

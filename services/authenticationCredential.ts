@@ -13,9 +13,8 @@ export function create(userId: string, salt: string): string {
  */
 export async function authenticateHeader(request: libs.Request): Promise<void> {
     let authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
-    let tokenHead = "token ";
-    if (authorization && authorization.length > tokenHead.length && authorization.startsWith(tokenHead)) {
-        let token = authorization.substring(tokenHead.length);
+    if (authorization && authorization.length > settings.authorizationHeaders.token.length && authorization.startsWith(settings.authorizationHeaders.token)) {
+        let token = authorization.substring(settings.authorizationHeaders.token.length);
         let accessToken = await services.mongo.AccessToken.findOne({ value: token })
             .exec();
         if (accessToken) {
