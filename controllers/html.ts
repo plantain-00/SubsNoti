@@ -27,7 +27,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
 
 export let documentOfLogin: types.Document = {
     url: settings.urls.login,
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -37,7 +37,7 @@ export function login(request: libs.Request, response: libs.Response) {
 
 export let documentOfLoginWithGithub: types.Document = {
     url: "/login_with_github",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -49,7 +49,7 @@ export function loginWithGithub(request: libs.Request, response: libs.Response) 
 
 export let documentOfGithubCode: types.Document = {
     url: "/github_code",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -119,7 +119,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
 export let documentOfAuthorize: types.Document = {
     url: "/oauth/authorize",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
@@ -150,6 +150,13 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // if not logged in, redirected to login page, keep `client_id`, `scopes` and `state` as parameters, then retry this.
         if (!request.userId) {
+            if (settings.currentEnvironment === types.environment.test) {
+                let result: types.OAuthAuthorizationResult = {
+                    pageName: types.oauthAuthorization.login
+                };
+                services.response.sendSuccess(response, types.StatusCode.OK, result);
+                return;
+            }
             response.redirect("/login.html?" + libs.qs.stringify({
                 redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query)
             }));
@@ -168,6 +175,13 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             if (value) {
                 let json: types.OAuthCodeValue = JSON.parse(value);
                 if (json.confirmed) {
+                    if (settings.currentEnvironment === types.environment.test) {
+                        let result: types.OAuthAuthorizationResult = {
+                            code: query.code
+                        };
+                        services.response.sendSuccess(response, types.StatusCode.OK, result);
+                        return;
+                    }
                     response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                         code: query.code,
                         state: state,
@@ -200,6 +214,13 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 };
                 services.cache.setString(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
+                if (settings.currentEnvironment === types.environment.test) {
+                    let result: types.OAuthAuthorizationResult = {
+                        code: query.code
+                    };
+                    services.response.sendSuccess(response, types.StatusCode.OK, result);
+                    return;
+                }
                 response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                     code: query.code,
                     state: state,
@@ -218,6 +239,14 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         services.cache.setString(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
         // if not confirmed, redirected to authorization page
+        if (settings.currentEnvironment === types.environment.test) {
+            let result: types.OAuthAuthorizationResult = {
+                pageName: types.oauthAuthorization.authorization,
+                code: query.code,
+            };
+            services.response.sendSuccess(response, types.StatusCode.OK, result);
+            return;
+        }
         response.redirect("/authorization.html?" + libs.qs.stringify({
             redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query),
             scopes: scopes,
@@ -225,6 +254,10 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             application_id: application._id.toHexString(),
         }));
     } catch (error) {
+        if (settings.currentEnvironment === types.environment.test) {
+            services.response.sendError(response, error, documentOfAuthorize.documentUrl);
+            return;
+        }
         redirectToErrorPage(response, error.message);
     }
 }

@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/applications/:id",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/application/get an application.html",
 };
 
@@ -18,8 +18,6 @@ export async function get(request: libs.Request, response: libs.Response) {
         }
 
         let id = new libs.ObjectId(params.id);
-
-        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
 
         let application = await services.mongo.Application.findOne({ _id: id })
             .populate("creator")

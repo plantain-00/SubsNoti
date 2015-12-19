@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfGet: types.Document = {
     url: settings.urls.version,
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/version.html",
 };
 

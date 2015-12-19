@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfDelete: types.Document = {
     url: "/api/user/logged_in",
-    method: "delete",
+    method: types.httpMethod.delete,
     documentUrl: "/api/authentication/log out.html",
 };
 

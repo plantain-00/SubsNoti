@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfGet: types.Document = {
     url: "/api/user/registered",
-    method: "get",
+    method: types.httpMethod.get,
     documentUrl: "/api/application/get registered applications.html",
 };
 
@@ -45,7 +45,7 @@ interface Body {
 
 export let documentOfCreate: types.Document = {
     url: "/api/user/registered",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/application/register an application.html",
 };
 
@@ -93,7 +93,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
 export let documentOfUpdate: types.Document = {
     url: "/api/user/registered/:application_id",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/application/update an application.html",
 };
 
@@ -151,7 +151,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
 export let documentOfRemove: types.Document = {
     url: "/api/user/registered/:application_id",
-    method: "delete",
+    method: types.httpMethod.delete,
     documentUrl: "/api/application/delete an application.html",
 };
 

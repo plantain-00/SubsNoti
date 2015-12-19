@@ -12,7 +12,8 @@ let imageUploader = settings.imageUploader;
 
 let jar = libs.request.jar();
 
-let headers;
+let headers = {};
+let headersWithAuthorization = {};
 
 export let operate: (caseName: string, body: any) => Promise<void>;
 
@@ -143,6 +144,27 @@ async function getCurrentUser(caseName: string) {
     return Promise.resolve(body);
 }
 
+async function getCurrentUserWithAccessToken(caseName: string, accessToken: string) {
+    headersWithAuthorization[settings.headerNames.authorization] = "token " + accessToken;
+
+    let options = {
+        url: apiUrl + "/api/user",
+        headers: headersWithAuthorization,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.CurrentUserResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "user");
+    result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
+    await operate(caseName, result);
+
+    return Promise.resolve(body);
+}
+
 async function createOrganization(caseName: string) {
     let options = {
         url: apiUrl + "/api/organizations",
@@ -150,7 +172,7 @@ async function createOrganization(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            organizationName: seeds.organizationName
+            organizationName: seeds.organization.name
         },
     };
     let response = await services.request.request(options);
@@ -232,7 +254,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
 
     await operate(caseName, result);
 
-    return Promise.resolve(body);
+    return Promise.resolve(body.themes);
 }
 
 async function createTheme(organizationId: string, caseName: string) {
@@ -242,8 +264,8 @@ async function createTheme(organizationId: string, caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            themeTitle: seeds.themeTitle,
-            themeDetail: seeds.themeDetail,
+            themeTitle: seeds.theme.title,
+            themeDetail: seeds.theme.detail,
             organizationId: organizationId,
         },
     };
@@ -304,8 +326,8 @@ async function updateTheme(themeId: string, caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            title: seeds.newThemeTitle,
-            detail: seeds.newThemeDetail,
+            title: seeds.newTheme.title,
+            detail: seeds.newTheme.detail,
             status: types.themeStatus.closed,
         },
     };
@@ -376,7 +398,7 @@ async function updateUser(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            name: seeds.newName,
+            name: seeds.newUser.name,
             avatarFileName: name,
         },
     };
@@ -424,94 +446,533 @@ async function getAvatar(uid: string, caseName: string) {
     return Promise.resolve();
 }
 
+async function getScopes(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/scopes`,
+        headers: headers,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ScopesResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function getRegisteredApplications(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationsResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "applications");
+    result.applications = libs._.map(body.applications, (application: types.Application) => {
+        return {
+            name: application.name,
+            homeUrl: application.homeUrl,
+            description: application.description,
+            authorizationCallbackUrl: application.authorizationCallbackUrl,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.applications);
+}
+
+async function registerApplication(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+        form: {
+            name: seeds.application.name,
+            homeUrl: seeds.application.homeUrl,
+            description: seeds.application.description,
+            authorizationCallbackUrl: seeds.application.authorizationCallbackUrl,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function updateApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+        form: {
+            name: seeds.newApplication.name,
+            homeUrl: seeds.newApplication.homeUrl,
+            description: seeds.newApplication.description,
+            authorizationCallbackUrl: seeds.newApplication.authorizationCallbackUrl,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function deleteApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function resetClientSecret(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/registered/${applicationId}/client_secret`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function getApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/applications/${applicationId}`,
+        headers: headers,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "application");
+    result.application = {
+        name: body.application.name,
+        homeUrl: body.application.homeUrl,
+        description: body.application.description,
+        creator: {
+            name: body.application.creator.name
+        },
+    };
+
+    await operate(caseName, result);
+
+    return Promise.resolve();
+}
+
+async function getAccessTokens(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.AccessTokensResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessTokens");
+    result.accessTokens = libs._.map(body.accessTokens, (accessToken: types.AccessToken) => {
+        return {
+            description: accessToken.description,
+            scopes: accessToken.scopes,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessTokens);
+}
+
+async function createAccessToken(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+        form: {
+            description: seeds.accessToken.description,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readOrganization],
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function updateAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+        form: {
+            description: seeds.newAccessToken.description,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readApplication],
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function regenerateAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}/value`,
+        method: types.httpMethod.put,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function deleteAccessToken(caseName: string, accessTokenId: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function confirm(caseName: string, code: string) {
+    let options = {
+        url: apiUrl + `/api/user/access_tokens/${code}`,
+        method: types.httpMethod.post,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
+async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string) {
+    let options = {
+        url: apiUrl + `/oauth/authorize`,
+        jar: jar,
+        qs: {
+            client_id: clientId,
+            scopes: [types.scopeNames.readUser, types.scopeNames.readTheme],
+            state: state,
+            code: code,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.OAuthAuthorizationResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "code");
+
+    if (body.pageName === types.oauthAuthorization.login) {
+        throw body;
+    }
+    if (body.pageName === types.oauthAuthorization.authorization) {
+        if (!body.code) {
+            throw body;
+        }
+        await confirm("confirm", body.code);
+        return oauthAuthorize(caseName, clientId, state, body.code);
+    }
+
+    if (!body.code) {
+        throw body;
+    }
+
+    await operate(caseName, result);
+
+    return Promise.resolve(body.code);
+}
+
+async function createAccessTokenForApplication(caseName: string, clientId: string, clientSecret: string, state: string, code: string) {
+    let options = {
+        url: apiUrl + `/api/access_tokens`,
+        method: types.httpMethod.post,
+        headers: headers,
+        form: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            state: state,
+            code: code,
+        },
+    };
+    let response = await services.request.request(options);
+
+    let body: types.GeneratedAccessTokenResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "accessToken");
+    await operate(caseName, result);
+
+    return Promise.resolve(body.accessToken);
+}
+
+async function getAuthorizedApplications(caseName: string) {
+    let options = {
+        url: apiUrl + `/api/user/authorized`,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.ApplicationsResponse = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    let result = libs._.omit<any, any>(body, "applications");
+    result.applications = libs._.map(body.applications, (application: types.Application) => {
+        return {
+            name: application.name,
+            homeUrl: application.homeUrl,
+            description: application.description,
+            creator: {
+                name: application.creator.name,
+                avatar: application.creator.email,
+            },
+            scopes: application.scopes,
+        };
+    });
+
+    await operate(caseName, result);
+
+    return Promise.resolve();
+}
+
+async function revokeApplication(caseName: string, applicationId: string) {
+    let options = {
+        url: apiUrl + `/api/user/authorized/${applicationId}`,
+        method: types.httpMethod.delete,
+        headers: headers,
+        jar: jar,
+    };
+    let response = await services.request.request(options);
+
+    let body: types.Response = response.body;
+    if (!body.isSuccess) {
+        throw body;
+    }
+
+    await operate(caseName, body);
+
+    return Promise.resolve();
+}
+
 export async function run() {
     let version = await getVersion("getVersion");
 
-    headers = {};
     headers[settings.headerNames.version] = version;
+    headersWithAuthorization[settings.headerNames.version] = version;
 
     services.mongo.connect();
     await services.mongo.User.remove({}).exec();
     await services.mongo.Organization.remove({}).exec();
     await services.mongo.Theme.remove({}).exec();
+    await services.mongo.AccessToken.remove({}).exec();
+    await services.mongo.Application.remove({}).exec();
     libs.mongoose.disconnect();
 
 
     let clientGuid = libs.generateUuid();
-
     let clientCode = await createCaptcha(clientGuid, "createCaptcha-client");
-
-    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientEmail, seeds.clientName);
-
+    let clientUrl = await createToken(clientGuid, clientCode, "createToken-client", seeds.clientUser.email, seeds.clientUser.name);
     await login(clientUrl, "login-client");
-
     let client = await getCurrentUser("getCurrentUser-client");
-
     await getAvatar(client.user.id, "getAvatar-client");
-
     let clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client");
+
+    await getScopes("getScopes");
+
+    let applications = await getRegisteredApplications("getRegisteredApplications");
+    await registerApplication("registerApplication");
+    applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
+    if (applications.length === 0) {
+        throw applications;
+    }
+    let application = applications[0];
+    let applicationId = application.id;
+    await updateApplication("updateApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterUpdated");
+    await resetClientSecret("resetClientSecret", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
+    await getApplication("getApplication", applicationId);
+
+    application = applications[0];
+    applicationId = application.id;
+
+    let accessTokens = await getAccessTokens("getAccessTokens");
+    let accessToken = await createAccessToken("createAccessToken");
+    accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
+    if (accessTokens.length === 0) {
+        throw accessTokens;
+    }
+    let accessTokenId = accessTokens[0].id;
+    if (!accessTokenId) {
+        throw accessTokens;
+    }
+    await updateAccessToken("updateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterUpdated");
+    accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterRegenerated");
+    await getCurrentUserWithAccessToken("getCurrentUser-client-withPrivateAccessToken", accessToken);
 
     await logout("logout-client");
 
 
     let guid = libs.generateUuid();
-
     let code = await createCaptcha(guid, "createCaptcha");
-
-    let url = await createToken(guid, code, "createToken", seeds.email, seeds.name);
-
+    let url = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
     await login(url, "login");
-
     let user = await getCurrentUser("getCurrentUser");
-
     await getAvatar(user.user.id, "getAvatar");
-
     await createOrganization("createOrganization");
-
     await getCreatedOrganizations("getCreatedOrganizations");
-
     let organizations = await getJoinedOrganizations("getJoinedOrganizations");
-
     let organizationId = organizations[0].id;
     if (!organizationId) {
         throw organizations;
     }
 
+    await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
     await createTheme(organizationId, "createTheme");
-
-    let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization");
-
-    let themeId = themes.themes[0].id;
-    if (!themeId) {
-        throw themes.themes;
+    let themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterCreated");
+    if (themes.length === 0) {
+        throw themes;
     }
-
+    let themeId = themes[0].id;
+    if (!themeId) {
+        throw themes;
+    }
     await unwatch(themeId, "unwatch");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUnwatched");
-
     await watch(themeId, "watch");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterWatched");
-
     await updateTheme(themeId, "updateTheme");
-
     await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterUpdated");
 
     await updateUser("updateUser");
-
     user = await getCurrentUser("getCurrentUser-afterUpdated");
 
     await invite("invite", client.user.email, organizationId);
+
+    await getAuthorizedApplications("getAuthorizedApplications");
+    let state = libs.generateUuid();
+    code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
+    accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
+    await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
+    await getCurrentUserWithAccessToken("getCurrentUser-client-withAccessToken", accessToken);
+    await revokeApplication("revokeApplication", applicationId);
+    await getAuthorizedApplications("getAuthorizedApplications-afterRevoked");
 
     await logout("logout");
 
 
     await login(clientUrl, "login-client-afterInvited");
-
     client = await getCurrentUser("getCurrentUser-client-afterInvited");
-
     clientOrganizations = await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
+
+    await deleteApplication("deleteApplication", applicationId);
+    applications = await getRegisteredApplications("getRegisteredApplications-afterDeleted");
+
+    await deleteAccessToken("deleteAccessToken", accessTokenId);
+    accessTokens = await getAccessTokens("getAccessTokens-afterDeleted");
 
     await logout("logout-client-afterInvited");
 }

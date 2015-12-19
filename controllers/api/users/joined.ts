@@ -5,7 +5,7 @@ import * as services from "../../../services";
 
 export let documentOfInvite: types.Document = {
     url: "/api/users/:user_email/joined/:organization_id",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/organization/invite an user.html",
 };
 

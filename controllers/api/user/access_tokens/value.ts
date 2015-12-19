@@ -5,7 +5,7 @@ import * as services from "../../../../services";
 
 export let documentOfRegenerate: types.Document = {
     url: "/api/user/access_tokens/:access_token_id/value",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/access token/update an access token.html",
 };
 

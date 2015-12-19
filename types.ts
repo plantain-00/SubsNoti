@@ -245,16 +245,46 @@ export const responseType = stringEnumify({
 });
 
 export interface TestSeed {
-    email: string;
-    name: string;
-    organizationName: string;
-    themeTitle: string;
-    themeDetail: string;
-    newThemeTitle: string;
-    newThemeDetail: string;
-    newName: string;
-    clientName: string;
-    clientEmail: string;
+    user: {
+        email: string;
+        name: string;
+    };
+    organization: {
+        name: string;
+    };
+    theme: {
+        title: string;
+        detail: string;
+    };
+    newTheme: {
+        title: string;
+        detail: string;
+    };
+    newUser: {
+        name: string;
+    };
+    clientUser: {
+        email: string;
+        name: string;
+    };
+    application: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    };
+    newApplication: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    };
+    accessToken: {
+        description: string;
+    };
+    newAccessToken: {
+        description: string;
+    };
 }
 
 export const yes = "√";
@@ -267,3 +297,17 @@ export interface OAuthCodeValue {
     state: string;
     confirmed: boolean;
 }
+
+export type OAuthAuthorization = "login" | "authorization";
+
+export const oauthAuthorization = stringEnumify({
+    login: "login",
+    authorization: "authorization",
+});
+
+export interface OAuthAuthorizationResult {
+    pageName?: OAuthAuthorization;
+    code?: string;
+}
+
+export interface OAuthAuthorizationResponse extends Response, OAuthAuthorizationResult { }

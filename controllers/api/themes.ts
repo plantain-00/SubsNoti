@@ -5,7 +5,7 @@ import * as services from "../../services";
 
 export let documentOfCreate: types.Document = {
     url: "/api/themes",
-    method: "post",
+    method: types.httpMethod.post,
     documentUrl: "/api/theme/create a theme.html",
 };
 
@@ -97,7 +97,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
 export let documentOfUpdate: types.Document = {
     url: "/api/themes/:theme_id",
-    method: "put",
+    method: types.httpMethod.put,
     documentUrl: "/api/theme/update a theme.html",
 };
 
