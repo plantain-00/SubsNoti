@@ -76,6 +76,10 @@ export let cacheKeys = {
 
 export let defaultItemLimit = 10;
 
+export let authorizationHeaders = {
+    token: "token "
+};
+
 export let uploadIPWhiteList = new Map<types.Environment, string[]>();
 
 let uploadIPWhiteList1 = ["127.0.0.1"];
