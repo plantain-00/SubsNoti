@@ -10,17 +10,20 @@ integration.operate = (caseName, body) => {
     return Promise.resolve();
 };
 
-integration.run().then(() => {
-    libs.fs.writeFile("./tests/baseline.json", JSON.stringify(responses, null, "    "), error => {
-        if (error) {
-            console.log(libs.colors.red("error:"));
-            console.log(error);
-        } else {
-            console.log(libs.colors.green("all test cases are rebuilt!"));
-        }
-    });
-}).catch(error => {
-    console.log(libs.colors.red("error:"));
-    console.log(error);
-    exit(1);
-});
+(async () => {
+    try {
+        await integration.run();
+        libs.fs.writeFile("./tests/baseline.json", JSON.stringify(responses, null, "    "), error => {
+            if (error) {
+                console.log(libs.colors.red("error:"));
+                console.log(error);
+            } else {
+                console.log(libs.colors.green("all test cases are rebuilt!"));
+            }
+        });
+    } catch (error) {
+        console.log(libs.colors.red("error:"));
+        console.log(error);
+        exit(1);
+    }
+})();
