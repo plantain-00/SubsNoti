@@ -10,24 +10,20 @@ export let documentOfGet: types.Document = {
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    try {
-        services.scope.shouldValidateAndContainScope(request, types.scopeNames.readOrganization);
+    services.scope.shouldValidateAndContainScope(request, types.scopeNames.readOrganization);
 
-        let user = await services.mongo.User.findOne({ _id: request.userId })
-            .populate("createdOrganizations")
-            .select("createdOrganizations")
-            .exec();
-        let result: types.OrganizationsResult = {
-            organizations: libs._.map(user.createdOrganizations, (o: services.mongo.OrganizationDocument) => {
-                return {
-                    id: o._id.toHexString(),
-                    name: o.name,
-                };
-            }),
-        };
+    let user = await services.mongo.User.findOne({ _id: request.userId })
+        .populate("createdOrganizations")
+        .select("createdOrganizations")
+        .exec();
+    let result: types.OrganizationsResult = {
+        organizations: libs._.map(user.createdOrganizations, (o: services.mongo.OrganizationDocument) => {
+            return {
+                id: o._id.toHexString(),
+                name: o.name,
+            };
+        }),
+    };
 
-        services.response.sendSuccess(response, types.StatusCode.OK, result);
-    } catch (error) {
-        services.response.sendError(response, error);
-    }
+    services.response.sendSuccess(response, types.StatusCode.OK, result);
 }

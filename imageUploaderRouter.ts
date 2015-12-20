@@ -90,62 +90,50 @@ export function route() {
     let uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
 
     async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-        try {
-            if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
-                throw services.error.fromInvalidIP(request.ip);
-            }
-
-            await uploadAsync(request, response);
-
-            services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-                names: libs._.map(request.files, (f: any) => f.filename)
-            });
-        } catch (error) {
-            services.response.sendError(response, error);
+        if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
+            throw services.error.fromInvalidIP(request.ip);
         }
+
+        await uploadAsync(request, response);
+
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+            names: libs._.map(request.files, (f: any) => f.filename)
+        });
     }
 
     async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
-        try {
-            if (!request.userId) {
-                throw services.error.fromUnauthorized();
-            }
-
-            await uploadAsync(request, response);
-
-            services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-                names: libs._.map(request.files, (f: any) => f.filename)
-            });
-        } catch (error) {
-            services.response.sendError(response, error);
+        if (!request.userId) {
+            throw services.error.fromUnauthorized();
         }
+
+        await uploadAsync(request, response);
+
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+            names: libs._.map(request.files, (f: any) => f.filename)
+        });
     }
 
     async function moveImage(request: libs.Request, response: libs.Response) {
-        try {
-            let name = libs.validator.trim(request.body.name);
-            let newName = libs.validator.trim(request.body.newName);
+        let name = libs.validator.trim(request.body.name);
+        let newName = libs.validator.trim(request.body.newName);
 
-            if (!name) {
-                throw services.error.fromParameterIsMissedMessage("name");
-            }
-
-            if (!newName) {
-                throw services.error.fromParameterIsMissedMessage("newName");
-            }
-
-            if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
-                throw services.error.fromInvalidIP(request.ip);
-            }
-
-            let path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
-
-            await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
-
-            services.response.sendSuccess(response, types.StatusCode.createdOrModified);
-        } catch (error) {
-            services.response.sendError(response, error);
+        if (!name) {
+            throw services.error.fromParameterIsMissedMessage("name");
         }
+
+        if (!newName) {
+            throw services.error.fromParameterIsMissedMessage("newName");
+        }
+
+        if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
+            throw services.error.fromInvalidIP(request.ip);
+        }
+
+        let path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
+
+        await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
+
+        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
     }
 
     services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, app);
