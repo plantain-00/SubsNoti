@@ -22,8 +22,8 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     let result: types.ApplicationsResult = {
         applications: libs._.map(libs._.filter(accessTokens, ac => ac.application), ac => {
-            let a = <services.mongo.ApplicationDocument>ac.application;
-            let creator = <services.mongo.UserDocument>a.creator;
+            let a = ac.application as services.mongo.ApplicationDocument;
+            let creator = a.creator as services.mongo.UserDocument;
             let creatorId = creator._id.toHexString();
             return {
                 id: a._id.toHexString(),

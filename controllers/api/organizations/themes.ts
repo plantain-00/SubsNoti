@@ -82,7 +82,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     let result: types.ThemesResult = {
         themes: [],
-        totalCount: <number>totalCount,
+        totalCount: totalCount as number,
     };
 
     libs._.each(themes, (theme: services.mongo.ThemeDocument) => {

@@ -34,7 +34,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
     }
 
     // current user should be the member of the organization that the theme in, or the organization is public.
-    let organization = <services.mongo.OrganizationDocument>theme.organization;
+    let organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
         && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
@@ -91,7 +91,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     }
 
     // current user should be the member of the organization that the theme in, or the organization is public.
-    let organization = <services.mongo.OrganizationDocument>theme.organization;
+    let organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
         && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
@@ -103,8 +103,8 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
             .select("watchedThemes")
             .exec();
 
-        (<services.mongo.MongooseArray<libs.ObjectId>>user.watchedThemes).pull(themeId);
-        (<services.mongo.MongooseArray<libs.ObjectId>>theme.watchers).pull(request.userId);
+        (user.watchedThemes as services.mongo.MongooseArray<libs.ObjectId>).pull(themeId);
+        (theme.watchers as services.mongo.MongooseArray<libs.ObjectId>).pull(request.userId);
         theme.updateTime = new Date();
 
         user.save();

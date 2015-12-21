@@ -4,13 +4,13 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export function convert(theme: services.mongo.ThemeDocument): types.Theme {
-    let creator = <services.mongo.UserDocument>theme.creator;
+    let creator = theme.creator as services.mongo.UserDocument;
     let creatorId = creator._id.toHexString();
     let result: types.Theme = {
         id: theme._id.toHexString(),
         title: theme.title,
         detail: theme.detail,
-        organizationId: (<libs.ObjectId>theme.organization).toHexString(),
+        organizationId: (theme.organization as libs.ObjectId).toHexString(),
         createTime: theme.createTime.toISOString(),
         updateTime: theme.updateTime ? theme.updateTime.toISOString() : undefined,
         status: services.themeStatus.getType(theme.status),
@@ -20,7 +20,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
             email: creator.email,
             avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
         },
-        owners: libs._.map(<services.mongo.UserDocument[]>theme.owners, o => {
+        owners: libs._.map(theme.owners as services.mongo.UserDocument[], o => {
             let id = o._id.toHexString();
             return {
                 id: id,
@@ -29,7 +29,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
                 avatar: o.avatar || services.avatar.getDefaultName(id),
             };
         }),
-        watchers: libs._.map(<services.mongo.UserDocument[]>theme.watchers, w => {
+        watchers: libs._.map(theme.watchers as services.mongo.UserDocument[], w => {
             let id = w._id.toHexString();
             return {
                 id: id,

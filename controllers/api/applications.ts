@@ -26,7 +26,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         throw services.error.fromParameterIsInvalidMessage("id");
     }
 
-    let creator = <services.mongo.UserDocument>application.creator;
+    let creator = application.creator as services.mongo.UserDocument;
     let creatorId = creator._id.toHexString();
     let result: types.ApplicationResult = {
         application: {
