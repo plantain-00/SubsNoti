@@ -90,14 +90,14 @@ export function route() {
     let uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
 
     async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-        if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
+        if (!uploadIPWhiteList.find(i => i === request.ip)) {
             throw services.error.fromInvalidIP(request.ip);
         }
 
         await uploadAsync(request, response);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-            names: libs._.map(request.files, (f: any) => f.filename)
+            names: request.files.map(f => f.filename)
         });
     }
 
@@ -109,7 +109,7 @@ export function route() {
         await uploadAsync(request, response);
 
         services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-            names: libs._.map(request.files, (f: any) => f.filename)
+            names: request.files.map(f => f.filename)
         });
     }
 
@@ -125,7 +125,7 @@ export function route() {
             throw services.error.fromParameterIsMissedMessage("newName");
         }
 
-        if (!libs._.find(uploadIPWhiteList, i => i === request.ip)) {
+        if (!uploadIPWhiteList.find(i => i === request.ip)) {
             throw services.error.fromInvalidIP(request.ip);
         }
 

@@ -42,7 +42,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("joinedOrganizations")
             .exec();
 
-        if (!libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
+        if (!user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
             throw services.error.fromOrganizationIsPrivateMessage();
         }
     }
@@ -85,9 +85,9 @@ export async function get(request: libs.Request, response: libs.Response) {
         totalCount: totalCount as number,
     };
 
-    libs._.each(themes, (theme: services.mongo.ThemeDocument) => {
+    for (let theme of themes) {
         result.themes.push(services.theme.convert(theme));
-    });
+    }
 
     services.response.sendSuccess(response, types.StatusCode.OK, result);
 }

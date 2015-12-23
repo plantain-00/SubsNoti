@@ -19,7 +19,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("joinedOrganizations")
             .exec();
         result = {
-            organizations: libs._.map(user.joinedOrganizations, (o: services.mongo.OrganizationDocument) => {
+            organizations: user.joinedOrganizations.map((o: services.mongo.OrganizationDocument) => {
                 return {
                     id: o._id.toHexString(),
                     name: o.name,

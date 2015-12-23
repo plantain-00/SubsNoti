@@ -20,7 +20,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
             email: creator.email,
             avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
         },
-        owners: libs._.map(theme.owners as services.mongo.UserDocument[], o => {
+        owners: (theme.owners as services.mongo.UserDocument[]).map(o => {
             let id = o._id.toHexString();
             return {
                 id: id,
@@ -29,7 +29,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
                 avatar: o.avatar || services.avatar.getDefaultName(id),
             };
         }),
-        watchers: libs._.map(theme.watchers as services.mongo.UserDocument[], w => {
+        watchers: (theme.watchers as services.mongo.UserDocument[]).map(w => {
             let id = w._id.toHexString();
             return {
                 id: id,

@@ -37,7 +37,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     let user = await services.mongo.User.findOne({ _id: request.userId })
         .exec();
     if (!organizationId.equals(services.seed.publicOrganizationId)
-        && !libs._.find(user.joinedOrganizations, (o: libs.ObjectId) => o.equals(organizationId))) {
+        && !user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
     }
 
@@ -136,7 +136,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     }
 
     // current user should be one of the theme's owners.
-    if (!libs._.find(theme.owners, (o: libs.ObjectId) => o.equals(request.userId))) {
+    if (!theme.owners.find((o: libs.ObjectId) => o.equals(request.userId))) {
         throw services.error.fromThemeIsNotYoursMessage();
     }
 
