@@ -16,11 +16,11 @@ export async function get(request: libs.Request, response: libs.Response) {
         .exec();
 
     let result: types.AccessTokensResult = {
-        accessTokens: libs._.map(accessTokens, a => {
+        accessTokens: accessTokens.map(a => {
             return {
                 id: a._id.toHexString(),
                 description: a.description,
-                scopes: libs._.filter(settings.scopes, s => libs._.any(a.scopes, sc => sc === s.name)),
+                scopes: settings.scopes.filter(s => a.scopes.some(sc => sc === s.name)),
                 lastUsed: a.lastUsed ? a.lastUsed.toISOString() : null,
             };
         }),

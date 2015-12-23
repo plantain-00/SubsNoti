@@ -47,12 +47,12 @@ export async function invite(request: libs.Request, response: libs.Response) {
     }
 
     // current user should be a member of the organization
-    if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+    if (!organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
     }
 
     // if the user is already a member, do nothing.
-    if (!libs._.find(organization.members, (m: libs.ObjectId) => m.equals(user._id))) {
+    if (!organization.members.find((m: libs.ObjectId) => m.equals(user._id))) {
         user.joinedOrganizations.push(organizationId);
         organization.members.push(user._id);
 

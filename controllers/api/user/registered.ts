@@ -16,7 +16,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         .exec();
 
     let result: types.ApplicationsResult = {
-        applications: libs._.map(applications, a => {
+        applications: applications.map(a => {
             return {
                 id: a._id.toHexString(),
                 name: a.name,

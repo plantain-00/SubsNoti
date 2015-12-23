@@ -17,7 +17,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         .select("createdOrganizations")
         .exec();
     let result: types.OrganizationsResult = {
-        organizations: libs._.map(user.createdOrganizations, (o: services.mongo.OrganizationDocument) => {
+        organizations: user.createdOrganizations.map((o: services.mongo.OrganizationDocument) => {
             return {
                 id: o._id.toHexString(),
                 name: o.name,

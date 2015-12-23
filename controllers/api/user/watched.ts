@@ -36,12 +36,12 @@ export async function watch(request: libs.Request, response: libs.Response) {
     // current user should be the member of the organization that the theme in, or the organization is public.
     let organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
-        && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+        && !organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
     }
 
     // if current user already watched the theme, then do nothing.
-    if (!libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(request.userId))) {
+    if (!theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId))) {
         let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("watchedThemes")
             .exec();
@@ -93,12 +93,12 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
     // current user should be the member of the organization that the theme in, or the organization is public.
     let organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
-        && !libs._.find(organization.members, (m: libs.ObjectId) => m.equals(request.userId))) {
+        && !organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
     }
 
     // if current user already unwatched the theme, then do nothing.
-    if (libs._.find(theme.watchers, (w: libs.ObjectId) => w.equals(request.userId))) {
+    if (theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId))) {
         let user = await services.mongo.User.findOne({ _id: request.userId })
             .select("watchedThemes")
             .exec();

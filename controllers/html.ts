@@ -101,7 +101,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             },
         });
 
-        let email = libs._.find(emailsResponse.body, b => {
+        let email = emailsResponse.body.find(b => {
             return b.verified && b.primary;
         });
         if (!email) {

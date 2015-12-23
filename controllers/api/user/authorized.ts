@@ -21,7 +21,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     }
 
     let result: types.ApplicationsResult = {
-        applications: libs._.map(libs._.filter(accessTokens, ac => ac.application), ac => {
+        applications: accessTokens.filter(ac => !!ac.application).map(ac => {
             let a = ac.application as services.mongo.ApplicationDocument;
             let creator = a.creator as services.mongo.UserDocument;
             let creatorId = creator._id.toHexString();
@@ -35,7 +35,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                     name: creator.name,
                     avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
                 },
-                scopes: libs._.filter(settings.scopes, s => libs._.any(ac.scopes, sc => sc === s.name)),
+                scopes: settings.scopes.filter(s => ac.scopes.some(sc => sc === s.name)),
                 lastUsed: ac.lastUsed ? ac.lastUsed.toISOString() : null,
             };
         }),

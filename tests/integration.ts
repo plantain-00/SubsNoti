@@ -186,7 +186,7 @@ async function getCreatedOrganizations(caseName: string) {
     }
 
     let result = libs._.omit<any, any>(body, "organizations");
-    result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
+    result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
     return Promise.resolve(body.organizations);
@@ -206,7 +206,7 @@ async function getJoinedOrganizations(caseName: string) {
     }
 
     let result = libs._.omit<any, any>(body, "organizations");
-    result["organizations"] = libs._.map(body.organizations, organization => libs._.omit<any, any>(organization, "id"));
+    result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
     return Promise.resolve(body.organizations);
@@ -229,11 +229,11 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     }
 
     let result = libs._.omit<any, any>(body, "themes");
-    result.themes = libs._.map(body.themes, (theme: types.Theme) => {
+    result.themes = body.themes.map(theme => {
         let t = libs._.pick<any, any>(theme, "title", "detail", "status");
         t.creator = libs._.pick<any, any>(theme.creator, "name", "email");
-        t.owners = libs._.map(theme.owners, owner => libs._.pick<any, any>(owner, "name", "email"));
-        t.watchers = libs._.map(theme.watchers, watcher => libs._.pick<any, any>(watcher, "name", "email"));
+        t.owners = theme.owners.map(owner => libs._.pick<any, any>(owner, "name", "email"));
+        t.watchers = theme.watchers.map(watcher => libs._.pick<any, any>(watcher, "name", "email"));
         return t;
     });
 
@@ -448,7 +448,7 @@ async function getRegisteredApplications(caseName: string) {
     }
 
     let result = libs._.omit<any, any>(body, "applications");
-    result.applications = libs._.map(body.applications, (application: types.Application) => {
+    result.applications = body.applications.map(application => {
         return {
             name: application.name,
             homeUrl: application.homeUrl,
@@ -583,7 +583,7 @@ async function getAccessTokens(caseName: string) {
     }
 
     let result = libs._.omit<any, any>(body, "accessTokens");
-    result.accessTokens = libs._.map(body.accessTokens, (accessToken: types.AccessToken) => {
+    result.accessTokens = body.accessTokens.map(accessToken => {
         return {
             description: accessToken.description,
             scopes: accessToken.scopes,
@@ -775,7 +775,7 @@ async function getAuthorizedApplications(caseName: string) {
     }
 
     let result = libs._.omit<any, any>(body, "applications");
-    result.applications = libs._.map(body.applications, (application: types.Application) => {
+    result.applications = body.applications.map(application => {
         return {
             name: application.name,
             homeUrl: application.homeUrl,
