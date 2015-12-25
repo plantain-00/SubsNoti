@@ -1,4 +1,4 @@
-import * as types from "../../types";
+import * as types from "../../share/types";
 import * as libs from "../../libs";
 import * as settings from "../../settings";
 import * as services from "../../services";
@@ -77,7 +77,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     services.logger.log(documentOfCreate.url, request);
 
-    let result: types.GeneratedAccessTokenResult = {
+    let result: types.AccessTokenResult = {
         accessToken: accessTokenValue
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);

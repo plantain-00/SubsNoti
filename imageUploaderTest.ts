@@ -1,4 +1,4 @@
-import * as types from "./types";
+import * as types from "./share/types";
 import * as settings from "./settings";
 
 settings.currentEnvironment = types.environment.test;

@@ -1,4 +1,4 @@
-import * as types from "../types";
+import * as types from "../share/types";
 import * as libs from "../libs";
 import * as settings from "../settings";
 
@@ -608,7 +608,7 @@ async function createAccessToken(caseName: string) {
     };
     let response = await services.request.request(options);
 
-    let body: types.GeneratedAccessTokenResponse = response.body;
+    let body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -650,7 +650,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
     };
     let response = await services.request.request(options);
 
-    let body: types.GeneratedAccessTokenResponse = response.body;
+    let body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -750,7 +750,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
     };
     let response = await services.request.request(options);
 
-    let body: types.GeneratedAccessTokenResponse = response.body;
+    let body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
