@@ -1,4 +1,4 @@
-import * as types from "../../../../types";
+import * as types from "../../../../share/types";
 import * as libs from "../../../../libs";
 import * as settings from "../../../../settings";
 import * as services from "../../../../services";
@@ -31,7 +31,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
 
     accessToken.save();
 
-    let result: types.GeneratedAccessTokenResult = {
+    let result: types.AccessTokenResult = {
         accessToken: accessToken.value
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);

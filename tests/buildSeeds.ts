@@ -1,6 +1,6 @@
 import * as faker from "faker";
 
-import * as types from "../types";
+import * as types from "../share/types";
 import * as libs from "../libs";
 
 let seeds: types.TestSeed = require("./seeds.json");
