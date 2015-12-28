@@ -9,7 +9,7 @@ export let documentOfGet: types.Document = {
     documentUrl: "/api/version.html",
 };
 
-export function get(request: libs.Request, response: libs.Response) {
+export async function get(request: libs.Request, response: libs.Response) {
     let result: types.VersionResult = {
         version: settings.version
     };

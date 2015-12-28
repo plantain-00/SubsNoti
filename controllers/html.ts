@@ -31,7 +31,7 @@ export let documentOfLogin: types.Document = {
     documentUrl: "/html.html",
 };
 
-export function login(request: libs.Request, response: libs.Response) {
+export async function login(request: libs.Request, response: libs.Response) {
     setCookie(request, response, request.query.authentication_credential, request.query.redirect_url);
 }
 
@@ -41,7 +41,7 @@ export let documentOfLoginWithGithub: types.Document = {
     documentUrl: "/html.html",
 };
 
-export function loginWithGithub(request: libs.Request, response: libs.Response) {
+export async function loginWithGithub(request: libs.Request, response: libs.Response) {
     let state = libs.generateUuid();
     services.cache.setString(settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.login.github.clientId}&scope=user:email&state=${state}`);

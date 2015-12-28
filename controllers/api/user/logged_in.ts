@@ -9,7 +9,7 @@ export let documentOfDelete: types.Document = {
     documentUrl: "/api/authentication/log out.html",
 };
 
-export function deleteThis(request: libs.Request, response: libs.Response): void {
+export async function deleteThis(request: libs.Request, response: libs.Response) {
     response.clearCookie(settings.cookieKeys.authenticationCredential);
 
     services.response.sendSuccess(response, types.StatusCode.deleted);
