@@ -14,6 +14,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         organizationId: string;
         themeTitle: string;
         themeDetail: string;
+        imageNames: string[];
     }
 
     let body: Body = request.body;
@@ -65,6 +66,21 @@ export async function create(request: libs.Request, response: libs.Response) {
     user.save();
     organization.save();
 
+    let imageNames = body.imageNames;
+    if (imageNames && imageNames.length && imageNames.length > 0 && themeDetail) {
+        for (let imageName of imageNames) {
+            if (themeDetail.indexOf(imageName) > -1) {
+                let json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
+                    name: imageName,
+                    newName: imageName,
+                });
+                if (json.response.statusCode >= 300) {
+                    throw services.error.fromMessage(JSON.stringify(json.body), types.StatusCode.internalServerError);
+                }
+            }
+        }
+    }
+
     // push the new theme.
     let creatorId = user._id.toHexString();
     let creator = {
@@ -108,6 +124,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         title: string;
         detail: string;
         status: types.ThemeStatusType;
+        imageNames: string[];
     }
 
     let body: Body = request.body;
@@ -153,6 +170,21 @@ export async function update(request: libs.Request, response: libs.Response) {
     }
 
     theme.save();
+
+    let imageNames = body.imageNames;
+    if (imageNames && imageNames.length && imageNames.length > 0 && detail) {
+        for (let imageName of imageNames) {
+            if (detail.indexOf(imageName) > -1) {
+                let json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
+                    name: imageName,
+                    newName: imageName,
+                });
+                if (json.response.statusCode >= 300) {
+                    throw services.error.fromMessage(JSON.stringify(json.body), types.StatusCode.internalServerError);
+                }
+            }
+        }
+    }
 
     // push the modified theme.
     let result = services.theme.convert(theme);

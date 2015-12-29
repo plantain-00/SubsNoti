@@ -31,11 +31,11 @@ gulp.task("tslint", () => {
         .pipe(tslint.report("prose", { emitError: true }));
 });
 
-gulp.task("host", shell.task("node apiDevelopment.js"));
+gulp.task("host", shell.task("node apiDevelop.js"));
 
 gulp.task("host-api-test", shell.task("node apiTest.js"));
 
-gulp.task("host-imageUploader", shell.task("node imageUploader.js"));
+gulp.task("host-imageUploader", shell.task("node imageUploaderDevelop.js"));
 
 gulp.task("host-imageUploader-test", shell.task("node imageUploaderTest.js"));
 
