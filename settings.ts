@@ -90,7 +90,7 @@ uploadIPWhiteList.set("production", uploadIPWhiteList2);
 
 export let cookieDomains = new Map<types.Environment, string>();
 
-let cookieDomain1 = "localhost";
+let cookieDomain1 = undefined;
 let cookieDomain2 = ".yorkyao.xyz";
 cookieDomains.set("development", cookieDomain1);
 cookieDomains.set("test", cookieDomain1);
