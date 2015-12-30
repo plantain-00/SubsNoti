@@ -16,6 +16,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
         response.cookie(settings.cookieKeys.authenticationCredential, token, {
             expires: libs.moment().clone().add(1, "months").toDate(),
             httpOnly: true,
+            domain: settings.cookieDomains.get(settings.currentEnvironment),
         });
 
         response.redirect(frontendsServer + "/success.html?" + libs.qs.stringify({

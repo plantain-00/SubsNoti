@@ -88,6 +88,14 @@ uploadIPWhiteList.set("development", uploadIPWhiteList1);
 uploadIPWhiteList.set("test", uploadIPWhiteList1);
 uploadIPWhiteList.set("production", uploadIPWhiteList2);
 
+export let cookieDomains = new Map<types.Environment, string>();
+
+let cookieDomain1 = undefined;
+let cookieDomain2 = ".yorkyao.xyz";
+cookieDomains.set("development", cookieDomain1);
+cookieDomains.set("test", cookieDomain1);
+cookieDomains.set("production", cookieDomain2);
+
 export let imagePaths = {
     avatar: "avatar-"
 };
