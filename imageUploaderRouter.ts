@@ -39,6 +39,10 @@ export function route() {
 
     let storage = libs.multer.diskStorage({
         destination: function(request: libs.Request, file, next) {
+            let mimeType: string = file.mimetype;
+            if (!mimeType.startsWith("image/")) {
+                next(new Error("not image"));
+            }
             if (request.path === documentOfUploadPersistentImages.url
                 || request.path === "/api/persistent/images") {
                 if (settings.currentEnvironment === types.environment.test) {
@@ -58,12 +62,16 @@ export function route() {
             }
         },
         filename: function(request: libs.Request, file, next) {
+            let mimeType: string = file.mimetype;
+            if (!mimeType.startsWith("image/")) {
+                next(new Error("not image"));
+            }
             if (request.path === documentOfUploadPersistentImages.url
                 || request.path === "/api/persistent/images") {
                 next(null, file.fieldname);
             } else if (request.path === documentOfUploadTemperaryImages.url
                 || request.path === "/api/temperary/images") {
-                next(null, libs.generateUuid() + libs.path.extname(file.originalname));
+                next(null, libs.generateUuid() + "." + libs.mime.extension(file.mimetype));
             } else {
                 next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
             }
