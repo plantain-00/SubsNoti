@@ -75,10 +75,14 @@ export let cors = require("cors");
 import * as colors from "colors";
 export {colors};
 
+import * as mime from "mime";
+export {mime};
+
 export interface Request extends express.Request {
     // version
     v: string;
     // files upload
+    file: any;
     files: any[];
     // user's id for validation in cookies or headers
     userId: ObjectId;
