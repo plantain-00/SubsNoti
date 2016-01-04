@@ -70,7 +70,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     if (imageNames && imageNames.length && imageNames.length > 0 && themeDetail) {
         for (let imageName of imageNames) {
             if (themeDetail.indexOf(imageName) > -1) {
-                let json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
+                let json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
                     name: imageName,
                     newName: imageName,
                 });
@@ -175,7 +175,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     if (imageNames && imageNames.length && imageNames.length > 0 && detail) {
         for (let imageName of imageNames) {
             if (detail.indexOf(imageName) > -1) {
-                let json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
+                let json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
                     name: imageName,
                     newName: imageName,
                 });
