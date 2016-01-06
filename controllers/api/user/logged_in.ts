@@ -10,7 +10,9 @@ export let documentOfDelete: types.Document = {
 };
 
 export async function deleteThis(request: libs.Request, response: libs.Response) {
-    response.clearCookie(settings.cookieKeys.authenticationCredential);
+    response.clearCookie(settings.cookieKeys.authenticationCredential, {
+        domain: settings.cookieDomains.get(settings.currentEnvironment)
+    });
 
     services.response.sendSuccess(response, types.StatusCode.deleted);
 }
