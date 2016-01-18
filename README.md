@@ -32,6 +32,10 @@
 
 https://yorkyao.xyz/
 
-## image uploader and server
+## image server
 
 https://img.yorkyao.xyz/
+
+## image uploader
+
+https://upload.yorkyao.xyz/
