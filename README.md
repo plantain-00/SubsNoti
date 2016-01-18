@@ -39,3 +39,71 @@ https://img.yorkyao.xyz/
 ## image uploader
 
 https://upload.yorkyao.xyz/
+
+# secure
+
+create a file of `secret.ts`, like:
+
+```typescript
+import * as types from "./share/types";
+import * as settings from "./settings";
+
+export function load() {
+    let db1 = {
+        host: "",
+        user: "",
+        password: "",
+        database: "",
+    };
+    settings.db.set("development", db1);
+    settings.db.set("test", db1);
+    settings.db.set("production", db1);
+
+    let smtp1 = {
+        host: "",
+        auth: {
+            user: "",
+            pass: "",
+        },
+    };
+    settings.smtp.set("development", smtp1);
+    settings.smtp.set("test", smtp1);
+    settings.smtp.set("production", smtp1);
+
+    let redis1 = {
+        host: "",
+        port: 6379,
+        options: {
+            auth_pass: ""
+        },
+    };
+    settings.redis.set("development", redis1);
+    settings.redis.set("test", redis1);
+    settings.redis.set("production", redis1);
+
+    let mongodb1 = {
+        url: "",
+        options: {
+            user: "",
+            pass: "",
+        },
+    };
+    let mongodb2 = {
+        url: "",
+        options: {
+            user: "",
+            pass: "",
+        },
+    };
+    settings.mongodb.set("development", mongodb1);
+    settings.mongodb.set("test", mongodb2);
+    settings.mongodb.set("production", mongodb1);
+
+    settings.login = {
+        github: {
+            clientId: "",
+            clientSecret: "",
+        },
+    };
+}
+```
