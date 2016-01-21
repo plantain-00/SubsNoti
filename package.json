@@ -40,7 +40,7 @@
         "gulp-tslint": "^4.2.1",
         "live-server": "^0.9.0",
         "mkdirp": "^0.5.1",
-        "tslint": "^3.2.0-dev.2",
+        "tslint": "3.2.0-dev.2",
         "typescript": "^1.8.0-dev.20151213"
     },
     "engines": {
