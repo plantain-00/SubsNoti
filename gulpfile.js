@@ -1,11 +1,11 @@
 "use strict";
 
-let gulp = require("gulp");
-let shell = require("gulp-shell");
-let tslint = require("gulp-tslint");
-let liveServer = require("live-server");
-let mkdirp = require("mkdirp");
-let colors = require("colors");
+const gulp = require("gulp");
+const shell = require("gulp-shell");
+const tslint = require("gulp-tslint");
+const liveServer = require("live-server");
+const mkdirp = require("mkdirp");
+const colors = require("colors");
 
 mkdirp("images/tmp", error => {
     if (error) {

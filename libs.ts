@@ -9,12 +9,12 @@ export {cookieParser};
 import * as cookie from "cookie";
 export {cookie};
 
-export let bodyParser = require("body-parser");
+export const bodyParser = require("body-parser");
 
-export let compression = require("compression");
+export const compression = require("compression");
 
-export let Canvas = require("canvas");
-export let Image = Canvas.Image;
+export const Canvas = require("canvas");
+export const Image = Canvas.Image;
 
 import * as path from "path";
 export {path};
@@ -34,7 +34,7 @@ export {nodemailer};
 import * as mysql from "mysql";
 export {mysql};
 
-export let md5 = require("md5");
+export const md5 = require("md5");
 
 import * as uuid from "node-uuid";
 
@@ -59,7 +59,7 @@ export {mongoose};
 import * as semver from "semver";
 export {semver};
 
-export let multer = require("multer");
+export const multer = require("multer");
 
 import * as request from "request";
 export {request};
@@ -70,7 +70,7 @@ export {qs};
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
-export let cors = require("cors");
+export const cors = require("cors");
 
 import * as colors from "colors";
 export {colors};
@@ -103,7 +103,7 @@ export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }
 
-export let renameAsync = (oldPath: string, newPath: string) => {
+export const renameAsync = (oldPath: string, newPath: string) => {
     return new Promise((resolve, reject) => {
         fs.rename(oldPath, newPath, error => {
             if (error) {

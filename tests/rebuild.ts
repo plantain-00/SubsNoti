@@ -1,4 +1,4 @@
-let exit = require("exit");
+const exit = require("exit");
 import * as libs from "../libs";
 import * as integration from "./integration";
 
