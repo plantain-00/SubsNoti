@@ -36,7 +36,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         throw services.error.fromParameterIsMissedMessage("code");
     }
 
-    let value = await services.cache.getStringAsync(settings.cacheKeys.oauthLoginCode + code);
+    let value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + code);
     if (!value) {
         throw services.error.fromMessage("code is invalid or expired", types.StatusCode.unauthorized);
     }
