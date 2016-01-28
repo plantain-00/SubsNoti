@@ -13,8 +13,8 @@ export function connect() {
     });
 }
 
-export function getStringAsync(key: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+export function getAsync(key: string) {
+    return new Promise<any>((resolve, reject) => {
         client.get(key, (error: Error, reply) => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.internalServerError));
@@ -25,21 +25,21 @@ export function getStringAsync(key: string): Promise<string> {
     });
 }
 
-export function setString(key: string, value: string, seconds?: number) {
+export function set(key: string, value: any, seconds?: number) {
     client.set(key, value);
     if (seconds) {
         client.expire(key, seconds);
     }
 }
 
-function set(key: string, value: any, seconds?: number) {
-    client.hmset(key, value);
+function hmset(key: string, values: any[], seconds?: number) {
+    client.hmset(key, values);
     if (seconds) {
         client.expire(key, seconds);
     }
 }
 
-function getAsync(key: string, field: string): Promise<any> {
+function hmgetAsync(key: string, field: string) {
     return new Promise<any>((resolve, reject) => {
         client.hmget(key, field, (error: Error, reply) => {
             if (error) {

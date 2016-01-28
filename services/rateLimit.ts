@@ -8,7 +8,11 @@ interface Rate {
     resetMoment: string;
 }
 
-let documentUrl = "/api/response.html";
+const fields = {
+    remain: "remain_",
+    resetMoment: "resetMoment_",
+};
+const documentUrl = "/api/response.html";
 
 export function route(app: libs.express.Application) {
     app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
@@ -24,51 +28,57 @@ export function route(app: libs.express.Application) {
 
         // no rate limit for ip in the white list.
         if (!settings.uploadIPWhiteList.get(settings.currentEnvironment).find(i => i === request.ip)) {
-            let key: string;
+            let remainKey: string;
+            let resetMomentKey: string;
             let errorMessage: string;
             let limit: number;
 
+            // get key, error message and total limit for current request
             if (request.userId) {
                 if (request.method === "POST") {
-                    key = settings.cacheKeys.rateLimit.contentCreation + request.userId.toHexString();
+                    remainKey = settings.cacheKeys.rateLimit.contentCreation + fields.remain + request.userId.toHexString();
+                    resetMomentKey = settings.cacheKeys.rateLimit.contentCreation + fields.resetMoment + request.userId.toHexString();
                     errorMessage = "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.";
                     limit = settings.rateLimit.contentCreation;
                 } else {
-                    key = settings.cacheKeys.rateLimit.userId + request.userId.toHexString();
+                    remainKey = settings.cacheKeys.rateLimit.userId + fields.remain + request.userId.toHexString();
+                    resetMomentKey = settings.cacheKeys.rateLimit.userId + fields.resetMoment + request.userId.toHexString();
                     errorMessage = "API rate limit exceeded for current user.";
                     limit = settings.rateLimit.user;
                 }
             } else {
-                key = settings.cacheKeys.rateLimit.ip + request.ip;
+                remainKey = settings.cacheKeys.rateLimit.ip + fields.remain + request.ip;
+                resetMomentKey = settings.cacheKeys.rateLimit.ip + fields.resetMoment + request.ip;
                 errorMessage = `API rate limit exceeded for ${request.ip}, you can login to get a higher rate limit.`;
                 limit = settings.rateLimit.ip;
             }
 
-            let value = await services.cache.getStringAsync(key);
+            let remain: number = await services.cache.getAsync(remainKey);
+            let resetMoment: string;
 
-            let rate: Rate;
-            if (value) {
-                rate = JSON.parse(value);
-                if (rate.remain <= 0) {
-                    response.setHeader(settings.headerNames.rateLimit.limit, limit.toString());
-                    response.setHeader(settings.headerNames.rateLimit.remain, rate.remain.toString());
-                    response.setHeader(settings.headerNames.rateLimit.resetMoment, rate.resetMoment);
+            function setHeaders() {
+                response.setHeader(settings.headerNames.rateLimit.limit, limit.toString());
+                response.setHeader(settings.headerNames.rateLimit.remain, remain.toString());
+                response.setHeader(settings.headerNames.rateLimit.resetMoment, resetMoment);
+            }
+
+            if (remain !== null) {
+                resetMoment = await services.cache.getAsync(resetMomentKey);
+                if (remain <= 0) {
+                    setHeaders();
                     services.response.sendError(response, services.error.fromMessage(errorMessage, types.StatusCode.tooManyRequest), documentUrl);
                     return;
                 }
-                rate.remain--;
-                services.cache.setString(key, JSON.stringify(rate));
+                remain--;
+                services.cache.client.decr(remainKey);
             } else {
-                rate = {
-                    remain: limit - 1,
-                    resetMoment: libs.moment().clone().add(1, "hours").toISOString(),
-                };
-                services.cache.setString(key, JSON.stringify(rate), 60 * 60);
+                remain = limit - 1;
+                resetMoment = libs.moment().clone().add(1, "hours").toISOString();
+                services.cache.set(remainKey, remain, 60 * 60);
+                services.cache.set(resetMomentKey, resetMoment, 60 * 60);
             }
 
-            response.setHeader(settings.headerNames.rateLimit.limit, limit.toString());
-            response.setHeader(settings.headerNames.rateLimit.remain, rate.remain.toString());
-            response.setHeader(settings.headerNames.rateLimit.resetMoment, rate.resetMoment);
+            setHeaders();
         }
 
         next();

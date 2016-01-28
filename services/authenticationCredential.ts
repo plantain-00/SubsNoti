@@ -45,7 +45,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
     }
 
     // may be it is already in cache.
-    let reply = await services.cache.getStringAsync(settings.cacheKeys.user + authenticationCredential);
+    let reply = await services.cache.getAsync(settings.cacheKeys.user + authenticationCredential);
     if (reply) {
         return new libs.ObjectId(reply);
     }
@@ -76,7 +76,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
 
     // should be verified.
     if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
-        services.cache.setString(settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
+        services.cache.set(settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return id;
     } else {
