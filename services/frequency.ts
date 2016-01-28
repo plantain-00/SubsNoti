@@ -19,7 +19,7 @@ export async function limitCaptcha(key: string): Promise<void> {
 
 async function limit(key: string, seconds: number, keyPrefix: string): Promise<void> {
     if (settings.currentEnvironment === types.environment.test) {
-        return Promise.resolve();
+        return;
     }
     let frequencyKey = keyPrefix + key;
     let value = await services.cache.getStringAsync(frequencyKey);
@@ -31,5 +31,4 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
     }
 
     services.cache.setString(frequencyKey, "1", seconds);
-    return Promise.resolve();
 }

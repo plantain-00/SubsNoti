@@ -30,5 +30,5 @@ export async function create(email: string, url: string, request: libs.Request, 
 
     let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
 
-    return Promise.resolve(token);
+    return token;
 }

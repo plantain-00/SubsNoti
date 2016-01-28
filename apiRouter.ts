@@ -26,7 +26,7 @@ import * as accessTokens from "./controllers/api/access_tokens";
 import * as userAccessTokenCode from "./controllers/api/user/access_tokens/code";
 import * as applications from "./controllers/api/applications";
 
-export function route() {
+export async function route() {
     let app = libs.express();
 
     app.settings.env = settings.currentEnvironment;
@@ -105,9 +105,7 @@ export function route() {
 
     services.email.connect();
 
-    (async () => {
-        await services.seed.init();
-    })();
+    await services.seed.init();
 
     let server = app.listen(settings.apiPort, "localhost", () => {
         console.log(libs.colors.green(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`));
