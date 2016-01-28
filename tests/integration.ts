@@ -32,7 +32,7 @@ async function getVersion(caseName: string) {
 
     await operate(caseName, libs._.omit<any, any>(body, ["version"]));
 
-    return Promise.resolve(body.version);
+    return body.version;
 }
 
 async function createCaptcha(guid: string, caseName: string) {
@@ -53,7 +53,7 @@ async function createCaptcha(guid: string, caseName: string) {
 
     await operate(caseName, libs._.omit<any, any>(body, ["url", "code"]));
 
-    return Promise.resolve(body.code);
+    return body.code;
 }
 
 async function createToken(guid: string, code: string, caseName: string, email: string, name: string) {
@@ -77,7 +77,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
 
     await operate(caseName, libs._.omit<any, any>(body, ["url"]));
 
-    return Promise.resolve(body.url);
+    return body.url;
 }
 
 async function login(url: string, caseName: string) {
@@ -149,7 +149,7 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
     result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
     await operate(caseName, result);
 
-    return Promise.resolve(body);
+    return body;
 }
 
 async function createOrganization(caseName: string) {
@@ -189,7 +189,7 @@ async function getCreatedOrganizations(caseName: string) {
     result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
-    return Promise.resolve(body.organizations);
+    return body.organizations;
 }
 
 async function getJoinedOrganizations(caseName: string) {
@@ -209,7 +209,7 @@ async function getJoinedOrganizations(caseName: string) {
     result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
     await operate(caseName, result);
 
-    return Promise.resolve(body.organizations);
+    return body.organizations;
 }
 
 async function getThemesOfOrganization(organizationId: string, caseName: string) {
@@ -239,7 +239,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.themes);
+    return body.themes;
 }
 
 async function createTheme(organizationId: string, caseName: string) {
@@ -261,9 +261,7 @@ async function createTheme(organizationId: string, caseName: string) {
         throw body;
     }
 
-    await operate(caseName, body);
-
-    return Promise.resolve();
+    return operate(caseName, body);
 }
 
 async function unwatch(themeId: string, caseName: string) {
@@ -349,7 +347,7 @@ async function uploadAvatar(caseName: string) {
 
     await operate(caseName, libs._.omit<any, any>(body, ["names"]));
 
-    return Promise.resolve(body.names);
+    return body.names;
 }
 
 async function getTemperaryImage(fileName: string, caseName: string) {
@@ -431,7 +429,7 @@ async function getScopes(caseName: string) {
 
     await operate(caseName, body);
 
-    return Promise.resolve(body.scopes);
+    return body.scopes;
 }
 
 async function getRegisteredApplications(caseName: string) {
@@ -459,7 +457,7 @@ async function getRegisteredApplications(caseName: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.applications);
+    return body.applications;
 }
 
 async function registerApplication(caseName: string) {
@@ -566,7 +564,7 @@ async function getApplication(caseName: string, applicationId: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.application);
+    return body.application;
 }
 
 async function getAccessTokens(caseName: string) {
@@ -592,7 +590,7 @@ async function getAccessTokens(caseName: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.accessTokens);
+    return body.accessTokens;
 }
 
 async function createAccessToken(caseName: string) {
@@ -617,7 +615,7 @@ async function createAccessToken(caseName: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.accessToken);
+    return body.accessToken;
 }
 
 async function updateAccessToken(caseName: string, accessTokenId: string) {
@@ -659,7 +657,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.accessToken);
+    return body.accessToken;
 }
 
 async function deleteAccessToken(caseName: string, accessTokenId: string) {
@@ -733,7 +731,7 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
 
     await operate(caseName, result);
 
-    return Promise.resolve(body.code);
+    return body.code;
 }
 
 async function createAccessTokenForApplication(caseName: string, clientId: string, clientSecret: string, state: string, code: string) {
@@ -758,7 +756,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
     let result = libs._.omit<any, any>(body, "accessToken");
     await operate(caseName, result);
 
-    return Promise.resolve(body.accessToken);
+    return body.accessToken;
 }
 
 async function getAuthorizedApplications(caseName: string) {
@@ -860,7 +858,7 @@ async function testRegisteredApplications() {
     }
     application = applications[0];
 
-    return Promise.resolve(application);
+    return application;
 }
 
 async function testPrivateAccessToken() {
@@ -878,7 +876,7 @@ async function testPrivateAccessToken() {
     let accessToken = await regenerateAccessToken("regenerateAccessToken", accessTokenId);
     await getAccessTokens("getAccessTokens-afterRegenerated");
     await getCurrentUser("getCurrentUser-client-withPrivateAccessToken", accessToken);
-    return Promise.resolve(accessTokenId);
+    return accessTokenId;
 }
 
 async function testOrganization() {
@@ -888,8 +886,7 @@ async function testOrganization() {
     if (organizations.length === 0) {
         throw organizations;
     }
-    let organizationId = organizations[0].id;
-    return Promise.resolve(organizationId);
+    return organizations[0].id;
 }
 
 async function testUser() {

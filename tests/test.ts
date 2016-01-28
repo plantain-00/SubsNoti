@@ -6,14 +6,13 @@ let baseline: any[] = require("./baseline.json");
 
 let index = 1;
 
-integration.operate = (caseName, body) => {
+integration.operate = async (caseName, body) => {
     let expected = JSON.stringify(baseline[caseName]);
     let actually = JSON.stringify(body);
     if (expected !== actually) {
         throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     }
     console.log(libs.colors.green(`${index++}: case "${caseName}" is passed.`));
-    return Promise.resolve();
 };
 
 (async () => {

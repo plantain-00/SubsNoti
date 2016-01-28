@@ -25,10 +25,10 @@ export async function create(id: string): Promise<{ url: string; code: string; }
     context.font = "30px Georgia";
     context.fillText(code, 10, height - 10);
 
-    return Promise.resolve({
+    return {
         url: canvas.toDataURL(),
         code: code,
-    });
+    };
 }
 
 /**
@@ -40,9 +40,7 @@ export async function validate(id: string, code: string): Promise<void> {
 
     await services.cache.deleteKeyAsync(key);
 
-    if (code.toUpperCase() === targetCode) {
-        return Promise.resolve();
+    if (code.toUpperCase() !== targetCode) {
+        throw services.error.fromMessage("the code is invalid or expired now.", types.StatusCode.invalidRequest);
     }
-
-    return Promise.reject<void>(services.error.fromMessage("the code is invalid or expired now.", types.StatusCode.invalidRequest));
 }

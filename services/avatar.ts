@@ -18,7 +18,6 @@ export async function createIfNotExistsAsync(id: string): Promise<void> {
         let creationResponse = await createAsync(seed, fileName);
         console.log(creationResponse.body);
     }
-    return Promise.resolve();
 }
 
 function createAsync(seed: string, fileName: string) {

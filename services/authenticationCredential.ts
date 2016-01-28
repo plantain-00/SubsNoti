@@ -24,12 +24,8 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
 
             accessToken.lastUsed = new Date();
             accessToken.save();
-
-            return Promise.resolve();
         }
     }
-
-    return Promise.resolve();
 }
 /**
  * identify current user.
@@ -37,7 +33,6 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
 export async function authenticate(request: libs.Request): Promise<void> {
     let userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
     request.userId = userId;
-    return Promise.resolve();
 }
 
 /**
@@ -46,18 +41,18 @@ export async function authenticate(request: libs.Request): Promise<void> {
 export async function authenticateCookie(cookie: string): Promise<libs.ObjectId> {
     let authenticationCredential = libs.validator.trim(cookie);
     if (!authenticationCredential) {
-        return Promise.resolve(null);
+        return null;
     }
 
     // may be it is already in cache.
     let reply = await services.cache.getStringAsync(settings.cacheKeys.user + authenticationCredential);
     if (reply) {
-        return Promise.resolve(new libs.ObjectId(reply));
+        return new libs.ObjectId(reply);
     }
 
     let tmp = authenticationCredential.split("g");
     if (tmp.length !== 3) {
-        return Promise.resolve(null);
+        return null;
     }
 
     let milliseconds = parseInt(tmp[1], 16);
@@ -68,7 +63,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
     // should not expire.
     if (now < milliseconds
         || now > milliseconds + 1000 * 60 * 60 * 24 * 30) {
-        return Promise.resolve(null);
+        return null;
     }
 
     // should be a valid user.
@@ -76,15 +71,15 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
         .select("salt")
         .exec();
     if (!user) {
-        return Promise.resolve(null);
+        return null;
     }
 
     // should be verified.
     if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
         services.cache.setString(settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
-        return Promise.resolve(id);
+        return id;
     } else {
-        return Promise.resolve(null);
+        return null;
     }
 }
