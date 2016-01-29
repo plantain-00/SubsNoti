@@ -23,7 +23,7 @@ export async function create(email: string, url: string, request: libs.Request, 
         });
         await services.avatar.createIfNotExistsAsync(user._id.toHexString());
 
-        services.logger.log(url, request);
+        services.logger.logRequest(url, request);
     }
 
     await services.frequency.limitEmail(email);

@@ -12,7 +12,7 @@ services.mongo.connect();
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
         }
     } catch (error) {
-        console.log(libs.colors.red(error));
+        services.logger.logError(error);
     }
 
     libs.mongoose.disconnect();

@@ -49,6 +49,6 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     user.save();
 
-    services.logger.log(documentOfCreate.url, request);
+    services.logger.logRequest(documentOfCreate.url, request);
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }

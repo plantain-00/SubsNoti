@@ -19,6 +19,8 @@ export function route() {
 
     services.cache.connect();
 
+    services.mongo.connect();
+
     let documentOfUploadPersistentImages: types.Document = {
         url: "/api/persistent",
         method: types.httpMethod.post,
@@ -149,6 +151,6 @@ export function route() {
     services.router.bind(documentOfMoveImage, moveImage, app);
 
     app.listen(settings.imageUploaderPort, "localhost", () => {
-        console.log(libs.colors.green(`Image uploader is listening: ${settings.imageUploaderPort} and in ${settings.currentEnvironment}`));
+        services.logger.logInfo(`Image uploader is listening: ${settings.imageUploaderPort} and in ${settings.currentEnvironment}`);
     });
 }

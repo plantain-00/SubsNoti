@@ -75,7 +75,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     accessToken.save();
 
-    services.logger.log(documentOfCreate.url, request);
+    services.logger.logRequest(documentOfCreate.url, request);
 
     let result: types.AccessTokenResult = {
         accessToken: accessTokenValue

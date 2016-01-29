@@ -62,7 +62,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     accessToken.save();
 
-    services.logger.log(documentOfCreate.url, request);
+    services.logger.logRequest(documentOfCreate.url, request);
 
     let result: types.AccessTokenResult = {
         accessToken: value
@@ -108,7 +108,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     accessToken.save();
 
-    services.logger.log(documentOfUpdate.url, request);
+    services.logger.logRequest(documentOfUpdate.url, request);
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }
 
@@ -138,6 +138,6 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
     accessToken.remove();
 
-    services.logger.log(documentOfRemove.url, request);
+    services.logger.logRequest(documentOfRemove.url, request);
     services.response.sendSuccess(response, types.StatusCode.deleted);
 }

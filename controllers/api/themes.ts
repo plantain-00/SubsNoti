@@ -103,7 +103,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     };
     services.push.emitTheme(types.themePushEvents.themeCreated, newTheme);
 
-    services.logger.log(documentOfCreate.url, request);
+    services.logger.logRequest(documentOfCreate.url, request);
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }
 
@@ -190,6 +190,6 @@ export async function update(request: libs.Request, response: libs.Response) {
     let result = services.theme.convert(theme);
     services.push.emitTheme(types.themePushEvents.themeUpdated, result);
 
-    services.logger.log(documentOfUpdate.url, request);
+    services.logger.logRequest(documentOfUpdate.url, request);
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }

@@ -11,12 +11,12 @@ export async function createIfNotExistsAsync(id: string): Promise<void> {
     let fileName = getDefaultName(id);
     let existResponse = await services.request.getAsync(`${settings.imageServer.get(settings.currentEnvironment)}/${fileName}`, types.responseType.others);
     if (existResponse.response.statusCode === types.StatusCode.OK) {
-        console.log("exists:" + fileName);
+        services.logger.logInfo("exists:" + fileName);
     } else {
-        console.log("statusCode:" + existResponse.response.statusCode);
-        console.log("creating:" + fileName);
+        services.logger.logInfo("statusCode:" + existResponse.response.statusCode);
+        services.logger.logInfo("creating:" + fileName);
         let creationResponse = await createAsync(seed, fileName);
-        console.log(creationResponse.body);
+        services.logger.logInfo(JSON.stringify(creationResponse.body));
     }
 }
 
