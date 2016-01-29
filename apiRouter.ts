@@ -108,7 +108,7 @@ export async function route() {
     await services.seed.init();
 
     let server = app.listen(settings.apiPort, "localhost", () => {
-        console.log(libs.colors.green(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`));
+        services.logger.logInfo(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`);
     });
 
     services.push.connect(server);

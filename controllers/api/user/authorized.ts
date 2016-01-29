@@ -71,6 +71,6 @@ export async function remove(request: libs.Request, response: libs.Response) {
     await services.mongo.AccessToken.findOneAndRemove({ creator: request.userId, application: id })
         .exec();
 
-    services.logger.log(documentOfRemove.url, request);
+    services.logger.logRequest(documentOfRemove.url, request);
     services.response.sendSuccess(response, types.StatusCode.deleted);
 }

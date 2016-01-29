@@ -34,5 +34,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         baseResponse.stack = error.stack;
     }
 
+    services.logger.logError(error);
+
     response.status(types.StatusCode.OK).json(baseResponse);
 }

@@ -35,6 +35,6 @@ export async function reset(request: libs.Request, response: libs.Response) {
 
     application.save();
 
-    services.logger.log(documentOfReset.url, request);
+    services.logger.logRequest(documentOfReset.url, request);
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }
