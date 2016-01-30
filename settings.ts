@@ -2,6 +2,10 @@ import * as types from "./share/types";
 
 export let currentEnvironment: types.Environment;
 
+export function setEnvironment(environment: types.Environment) {
+    currentEnvironment = environment;
+}
+
 export let db = new Map<types.Environment, { host: string; user: string; password: string; database: string; }>();
 
 export let smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
