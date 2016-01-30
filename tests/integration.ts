@@ -2,7 +2,7 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as settings from "../settings";
 
-settings.currentEnvironment = types.environment.test;
+settings.setEnvironment(types.environment.test);
 
 import * as services from "../services";
 
@@ -15,7 +15,11 @@ let jar = libs.request.jar();
 let headers = {};
 let headersWithAuthorization = {};
 
-export let operate: (caseName: string, body: any) => Promise<void>;
+let operate: (caseName: string, body: any) => Promise<void>;
+
+export function setOperation(operation: (caseName: string, body: any) => Promise<void>) {
+    operate = operation;
+}
 
 let seeds: types.TestSeed = require("./seeds.json");
 

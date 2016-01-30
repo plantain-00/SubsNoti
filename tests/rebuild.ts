@@ -4,10 +4,10 @@ import * as integration from "./integration";
 
 let responses = {};
 
-integration.operate = async (caseName, body) => {
+integration.setOperation(async (caseName, body) => {
     responses[caseName] = body;
     console.log(libs.colors.green(`case "${caseName}" is done.`));
-};
+});
 
 (async () => {
     try {
