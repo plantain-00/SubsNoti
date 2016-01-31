@@ -6,7 +6,7 @@ import * as services from "../services";
 export let client: libs.redis.RedisClient;
 
 export function connect() {
-    let redis = settings.redis.get(settings.currentEnvironment);
+    const redis = settings.redis.get(settings.currentEnvironment);
     client = libs.redis.createClient(redis.port, redis.host, redis.options);
     client.on("error", error => {
         services.logger.logError(error);

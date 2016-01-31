@@ -3,7 +3,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let frontendsServer = settings.frontendsServer.get(settings.currentEnvironment);
+const frontendsServer = settings.frontendsServer.get(settings.currentEnvironment);
 
 function redirectToErrorPage(response: libs.Response, message: string) {
     response.redirect(frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
@@ -27,7 +27,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
     }
 }
 
-export let documentOfLogin: types.Document = {
+export const documentOfLogin: types.Document = {
     url: settings.urls.login,
     method: types.httpMethod.get,
     documentUrl: "/html.html",
@@ -37,19 +37,19 @@ export async function login(request: libs.Request, response: libs.Response) {
     setCookie(request, response, request.query.authentication_credential, request.query.redirect_url);
 }
 
-export let documentOfLoginWithGithub: types.Document = {
+export const documentOfLoginWithGithub: types.Document = {
     url: "/login_with_github",
     method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
 
 export async function loginWithGithub(request: libs.Request, response: libs.Response) {
-    let state = libs.generateUuid();
+    const state = libs.generateUuid();
     services.cache.set(settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.login.github.clientId}&scope=user:email&state=${state}`);
 }
 
-export let documentOfGithubCode: types.Document = {
+export const documentOfGithubCode: types.Document = {
     url: "/github_code",
     method: types.httpMethod.get,
     documentUrl: "/html.html",
@@ -62,10 +62,10 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             code: string;
         }
 
-        let query: Query = request.query;
+        const query: Query = request.query;
 
-        let state = libs.validator.trim(query.state);
-        let code = libs.validator.trim(query.code);
+        const state = libs.validator.trim(query.state);
+        const code = libs.validator.trim(query.code);
 
         if (state === "") {
             throw new Error("missed parameter:state");
@@ -75,12 +75,12 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             throw new Error("missed parameter:code");
         }
 
-        let value = await services.cache.getAsync(settings.cacheKeys.githubLoginCode + state);
+        const value = await services.cache.getAsync(settings.cacheKeys.githubLoginCode + state);
         if (!value) {
             throw new Error("invalid parameter:state");
         }
 
-        let accessTokenResponse = await services.request.post<{ access_token: string; scope: string; token_type: string; }>({
+        const accessTokenResponse = await services.request.post<{ access_token: string; scope: string; token_type: string; }>({
             url: "https://github.com/login/oauth/access_token",
             headers: {
                 Accept: "application/json"
@@ -93,9 +93,9 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             },
         });
 
-        let accessToken = accessTokenResponse.body.access_token;
+        const accessToken = accessTokenResponse.body.access_token;
 
-        let emailsResponse = await services.request.get<{ email: string; verified: boolean; primary: boolean; }[]>({
+        const emailsResponse = await services.request.get<{ email: string; verified: boolean; primary: boolean; }[]>({
             url: "https://api.github.com/user/emails",
             headers: {
                 Authorization: `token ${accessToken}`,
@@ -103,15 +103,15 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             },
         });
 
-        let email = emailsResponse.body.find(b => {
+        const email = emailsResponse.body.find(b => {
             return b.verified && b.primary;
         });
         if (!email) {
             throw new Error("no verified email");
         }
 
-        let verifiedEmail = email.email.toLowerCase();
-        let token = await services.tokens.create(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
+        const verifiedEmail = email.email.toLowerCase();
+        const token = await services.tokens.create(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);
     } catch (error) {
@@ -119,7 +119,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
     }
 }
 
-export let documentOfAuthorize: types.Document = {
+export const documentOfAuthorize: types.Document = {
     url: "/oauth/authorize",
     method: types.httpMethod.get,
     documentUrl: "/html.html",
@@ -134,11 +134,11 @@ export async function authorize(request: libs.Request, response: libs.Response) 
     }
 
     try {
-        let query: Query = request.query;
+        const query: Query = request.query;
 
-        let clientId = libs.validator.trim(query.client_id);
-        let scopes = libs.validator.trim(query.scopes);
-        let state = libs.validator.trim(query.state);
+        const clientId = libs.validator.trim(query.client_id);
+        const scopes = libs.validator.trim(query.scopes);
+        const state = libs.validator.trim(query.state);
 
         if (clientId === "") {
             throw new Error("missed parameter:clientId");
@@ -153,7 +153,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         // if not logged in, redirected to login page, keep `client_id`, `scopes` and `state` as parameters, then retry this.
         if (!request.userId) {
             if (settings.currentEnvironment === types.environment.test) {
-                let result: types.OAuthAuthorizationResult = {
+                const result: types.OAuthAuthorizationResult = {
                     pageName: types.oauthAuthorization.login
                 };
                 services.response.sendSuccess(response, types.StatusCode.OK, result);
@@ -165,7 +165,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             return;
         }
 
-        let application = await services.mongo.Application.findOne({ clientId: clientId })
+        const application = await services.mongo.Application.findOne({ clientId: clientId })
             .exec();
         if (!application) {
             throw new Error("invalid client id");
@@ -173,12 +173,12 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // after authorized, there is a code in `query`, check that in cache
         if (query.code) {
-            let value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + query.code);
+            const value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + query.code);
             if (value) {
-                let json: types.OAuthCodeValue = JSON.parse(value);
+                const json: types.OAuthCodeValue = JSON.parse(value);
                 if (json.confirmed) {
                     if (settings.currentEnvironment === types.environment.test) {
-                        let result: types.OAuthAuthorizationResult = {
+                        const result: types.OAuthAuthorizationResult = {
                             code: query.code
                         };
                         services.response.sendSuccess(response, types.StatusCode.OK, result);
@@ -195,19 +195,19 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         query.code = libs.generateUuid();
 
-        let accessToken = await services.mongo.AccessToken.findOne({
+        const accessToken = await services.mongo.AccessToken.findOne({
             creator: request.userId,
             application: application._id,
         }).exec();
 
-        let scopeArray = scopes.split(",");
+        const scopeArray = scopes.split(",");
 
         if (accessToken) {
             // if access token was generated, that is, already authorized, check whether the application need more scopes or not
-            let newScopes = libs._.difference(scopeArray, accessToken.scopes);
+            const newScopes = libs._.difference(scopeArray, accessToken.scopes);
             if (newScopes.length === 0) {
                 // if no more scopes, authorization is not needed
-                let value: types.OAuthCodeValue = {
+                const value: types.OAuthCodeValue = {
                     scopes: scopeArray,
                     creator: request.userId.toHexString(),
                     application: application._id.toHexString(),
@@ -217,7 +217,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 services.cache.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
                 if (settings.currentEnvironment === types.environment.test) {
-                    let result: types.OAuthAuthorizationResult = {
+                    const result: types.OAuthAuthorizationResult = {
                         code: query.code
                     };
                     services.response.sendSuccess(response, types.StatusCode.OK, result);
@@ -231,7 +231,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             }
         }
 
-        let value: types.OAuthCodeValue = {
+        const value: types.OAuthCodeValue = {
             scopes: scopeArray,
             creator: request.userId.toHexString(),
             application: application._id.toHexString(),
@@ -242,7 +242,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // if not confirmed, redirected to authorization page
         if (settings.currentEnvironment === types.environment.test) {
-            let result: types.OAuthAuthorizationResult = {
+            const result: types.OAuthAuthorizationResult = {
                 pageName: types.oauthAuthorization.authorization,
                 code: query.code,
             };

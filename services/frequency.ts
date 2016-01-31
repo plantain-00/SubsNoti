@@ -21,11 +21,11 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
     if (settings.currentEnvironment === types.environment.test) {
         return;
     }
-    let frequencyKey = keyPrefix + key;
-    let value = await services.cache.getAsync(frequencyKey);
+    const frequencyKey = keyPrefix + key;
+    const value = await services.cache.getAsync(frequencyKey);
 
     if (value) {
-        let reply = await services.cache.ttlAsync(frequencyKey);
+        const reply = await services.cache.ttlAsync(frequencyKey);
 
         return Promise.reject(services.error.fromMessage(`do it later after ${reply} seconds`, types.StatusCode.tooManyRequest));
     }

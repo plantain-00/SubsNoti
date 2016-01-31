@@ -27,7 +27,7 @@ import * as userAccessTokenCode from "./controllers/api/user/access_tokens/code"
 import * as applications from "./controllers/api/applications";
 
 export async function route() {
-    let app = libs.express();
+    const app = libs.express();
 
     app.settings.env = settings.currentEnvironment;
 
@@ -107,7 +107,7 @@ export async function route() {
 
     await services.seed.init();
 
-    let server = app.listen(settings.apiPort, "localhost", () => {
+    const server = app.listen(settings.apiPort, "localhost", () => {
         services.logger.logInfo(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`);
     });
 

@@ -24,7 +24,7 @@ export function post<T>(options: libs.request.Options): Promise<Response<T>> {
 }
 
 export function postAsync<T>(url: string, form): Promise<Response<T>> {
-    let options = {
+    const options = {
         url: url,
         form: form,
         headers: {},
@@ -36,7 +36,7 @@ export function postAsync<T>(url: string, form): Promise<Response<T>> {
 }
 
 export function postMultipartAsync<T>(url: string, formData: any): Promise<Response<T>> {
-    let options = {
+    const options = {
         url: url,
         formData: formData,
         headers: {},

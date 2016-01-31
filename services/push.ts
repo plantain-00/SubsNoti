@@ -15,14 +15,14 @@ export function connect(server: libs.http.Server) {
     themes = io.of("/themes");
 
     themes.on("connection", socket => {
-        let cookie = libs.validator.trim(socket.handshake.headers.cookie);
-        let cookies = libs.cookie.parse(cookie);
+        const cookie = libs.validator.trim(socket.handshake.headers.cookie);
+        const cookies = libs.cookie.parse(cookie);
         services.authenticationCredential.authenticateCookie(cookies[settings.cookieKeys.authenticationCredential]).then(userId => {
             if (!userId) {
                 socket.disconnect(true);
             } else {
                 socket.on("change organization", (data: { to: string; }) => {
-                    for (let room of socket.rooms) {
+                    for (const room of socket.rooms) {
                         socket.leave(room);
                     }
                     socket.join(data.to);

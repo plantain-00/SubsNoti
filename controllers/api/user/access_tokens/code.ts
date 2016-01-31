@@ -3,19 +3,19 @@ import * as libs from "../../../../libs";
 import * as settings from "../../../../settings";
 import * as services from "../../../../services";
 
-export let documentOfConfirm: types.Document = {
+export const documentOfConfirm: types.Document = {
     url: "/api/user/access_tokens/:code",
     method: types.httpMethod.post,
     documentUrl: "/api/access token/confirm.html",
 };
 
 export async function confirm(request: libs.Request, response: libs.Response) {
-    let code: string = request.params.code;
+    const code: string = request.params.code;
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    let value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + code);
-    let json: types.OAuthCodeValue = JSON.parse(value);
+    const value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + code);
+    const json: types.OAuthCodeValue = JSON.parse(value);
 
     json.confirmed = true;
 

@@ -3,7 +3,7 @@ import * as libs from "../../libs";
 import * as settings from "../../settings";
 import * as services from "../../services";
 
-export let documentOfCreate: types.Document = {
+export const documentOfCreate: types.Document = {
     url: "/api/themes",
     method: types.httpMethod.post,
     documentUrl: "/api/theme/create a theme.html",
@@ -17,36 +17,36 @@ export async function create(request: libs.Request, response: libs.Response) {
         imageNames: string[];
     }
 
-    let body: Body = request.body;
+    const body: Body = request.body;
 
     if (!libs.validator.isMongoId(body.organizationId)) {
         throw services.error.fromParameterIsInvalidMessage("organizationId");
     }
 
-    let organizationId = new libs.ObjectId(body.organizationId);
+    const organizationId = new libs.ObjectId(body.organizationId);
 
-    let themeTitle = libs.validator.trim(body.themeTitle);
+    const themeTitle = libs.validator.trim(body.themeTitle);
     if (themeTitle === "") {
         throw services.error.fromParameterIsMissedMessage("themeTitle");
     }
 
-    let themeDetail = libs.validator.trim(body.themeDetail);
+    const themeDetail = libs.validator.trim(body.themeDetail);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
     // the organization should be public organization, or current user should join in it.
-    let user = await services.mongo.User.findOne({ _id: request.userId })
+    const user = await services.mongo.User.findOne({ _id: request.userId })
         .exec();
     if (!organizationId.equals(services.seed.publicOrganizationId)
         && !user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
         throw services.error.fromOrganizationIsPrivateMessage();
     }
 
-    let organization = await services.mongo.Organization.findOne({ _id: organizationId })
+    const organization = await services.mongo.Organization.findOne({ _id: organizationId })
         .select("themes")
         .exec();
 
-    let theme = await services.mongo.Theme.create({
+    const theme = await services.mongo.Theme.create({
         title: themeTitle,
         detail: themeDetail,
         status: types.ThemeStatus.open,
@@ -66,11 +66,11 @@ export async function create(request: libs.Request, response: libs.Response) {
     user.save();
     organization.save();
 
-    let imageNames = body.imageNames;
+    const imageNames = body.imageNames;
     if (imageNames && imageNames.length && imageNames.length > 0 && themeDetail) {
-        for (let imageName of imageNames) {
+        for (const imageName of imageNames) {
             if (themeDetail.indexOf(imageName) > -1) {
-                let json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
+                const json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
                     name: imageName,
                     newName: imageName,
                 });
@@ -82,14 +82,14 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     // push the new theme.
-    let creatorId = user._id.toHexString();
-    let creator = {
+    const creatorId = user._id.toHexString();
+    const creator = {
         id: creatorId,
         name: user.name,
         email: user.email,
         avatar: user.avatar || services.avatar.getDefaultName(creatorId),
     };
-    let newTheme: types.Theme = {
+    const newTheme: types.Theme = {
         id: theme._id.toHexString(),
         title: theme.title,
         detail: theme.detail,
@@ -107,14 +107,14 @@ export async function create(request: libs.Request, response: libs.Response) {
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }
 
-export let documentOfUpdate: types.Document = {
+export const documentOfUpdate: types.Document = {
     url: "/api/themes/:theme_id",
     method: types.httpMethod.put,
     documentUrl: "/api/theme/update a theme.html",
 };
 
 export async function update(request: libs.Request, response: libs.Response) {
-    let params: { theme_id: string; } = request.params;
+    const params: { theme_id: string; } = request.params;
 
     if (!libs.validator.isMongoId(params.theme_id)) {
         throw services.error.fromParameterIsInvalidMessage("theme_id");
@@ -127,10 +127,10 @@ export async function update(request: libs.Request, response: libs.Response) {
         imageNames: string[];
     }
 
-    let body: Body = request.body;
+    const body: Body = request.body;
 
-    let title = libs.validator.trim(body.title);
-    let detail = libs.validator.trim(body.detail);
+    const title = libs.validator.trim(body.title);
+    const detail = libs.validator.trim(body.detail);
     let status: types.ThemeStatus = null;
 
     if (body.status === types.themeStatus.open) {
@@ -140,12 +140,12 @@ export async function update(request: libs.Request, response: libs.Response) {
         status = types.ThemeStatus.closed;
     }
 
-    let id = new libs.ObjectId(params.theme_id);
+    const id = new libs.ObjectId(params.theme_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
     // the theme should be available.
-    let theme = await services.mongo.Theme.findOne({ _id: id })
+    const theme = await services.mongo.Theme.findOne({ _id: id })
         .populate("creator owners watchers")
         .exec();
     if (!theme) {
@@ -171,11 +171,11 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     theme.save();
 
-    let imageNames = body.imageNames;
+    const imageNames = body.imageNames;
     if (imageNames && imageNames.length && imageNames.length > 0 && detail) {
-        for (let imageName of imageNames) {
+        for (const imageName of imageNames) {
             if (detail.indexOf(imageName) > -1) {
-                let json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
+                const json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
                     name: imageName,
                     newName: imageName,
                 });
@@ -187,7 +187,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     }
 
     // push the modified theme.
-    let result = services.theme.convert(theme);
+    const result = services.theme.convert(theme);
     services.push.emitTheme(types.themePushEvents.themeUpdated, result);
 
     services.logger.logRequest(documentOfUpdate.url, request);

@@ -7,8 +7,8 @@ services.mongo.connect();
 
 (async () => {
     try {
-        let users = await services.mongo.User.find({}).exec();
-        for (let user of users) {
+        const users = await services.mongo.User.find({}).exec();
+        for (const user of users) {
             await services.avatar.createIfNotExistsAsync(user._id.toHexString());
         }
     } catch (error) {

@@ -49,7 +49,7 @@ import * as types from "./share/types";
 const settings = require("./settings");
 
 export function load() {
-    let db1 = {
+    const db1 = {
         host: "",
         user: "",
         password: "",
@@ -59,7 +59,7 @@ export function load() {
     settings.db.set("test", db1);
     settings.db.set("production", db1);
 
-    let smtp1 = {
+    const smtp1 = {
         host: "",
         auth: {
             user: "",
@@ -70,7 +70,7 @@ export function load() {
     settings.smtp.set("test", smtp1);
     settings.smtp.set("production", smtp1);
 
-    let redis1 = {
+    const redis1 = {
         host: "",
         port: 6379,
         options: {
@@ -81,14 +81,14 @@ export function load() {
     settings.redis.set("test", redis1);
     settings.redis.set("production", redis1);
 
-    let mongodb1 = {
+    const mongodb1 = {
         url: "",
         options: {
             user: "",
             pass: "",
         },
     };
-    let mongodb2 = {
+    const mongodb2 = {
         url: "",
         options: {
             user: "",

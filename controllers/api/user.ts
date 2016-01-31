@@ -3,7 +3,7 @@ import * as libs from "../../libs";
 import * as settings from "../../settings";
 import * as services from "../../services";
 
-export let documentOfGet: types.Document = {
+export const documentOfGet: types.Document = {
     url: "/api/user",
     method: types.httpMethod.get,
     documentUrl: "/api/user/get current user.html",
@@ -12,12 +12,12 @@ export let documentOfGet: types.Document = {
 export async function get(request: libs.Request, response: libs.Response) {
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.readUser);
 
-    let user = await services.mongo.User.findOne({ _id: request.userId })
+    const user = await services.mongo.User.findOne({ _id: request.userId })
         .select("email name createdOrganizations joinedOrganizations avatar")
         .exec();
-    let id = request.userId.toHexString();
+    const id = request.userId.toHexString();
 
-    let result: types.UserResult = {
+    const result: types.UserResult = {
         user: {
             id: id,
             email: user.email,
@@ -31,7 +31,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     services.response.sendSuccess(response, types.StatusCode.OK, result);
 }
 
-export let documentOfUpdate: types.Document = {
+export const documentOfUpdate: types.Document = {
     url: "/api/user",
     method: types.httpMethod.put,
     documentUrl: "/api/user/update current user.html",
@@ -43,14 +43,14 @@ export async function update(request: libs.Request, response: libs.Response) {
         avatarFileName: string;
     }
 
-    let body: Body = request.body;
+    const body: Body = request.body;
 
-    let name = libs.validator.trim(body.name);
-    let avatarFileName = libs.validator.trim(body.avatarFileName);
+    const name = libs.validator.trim(body.name);
+    const avatarFileName = libs.validator.trim(body.avatarFileName);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeUser);
 
-    let user = await services.mongo.User.findOne({ _id: request.userId })
+    const user = await services.mongo.User.findOne({ _id: request.userId })
         .select("name avatar")
         .exec();
 
@@ -62,9 +62,9 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     // if change avatar, then move image.
     if (avatarFileName) {
-        let newName = settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
+        const newName = settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
 
-        let json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
+        const json = await services.request.postAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistence`, {
             name: avatarFileName,
             newName: newName,
         });

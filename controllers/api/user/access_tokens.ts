@@ -3,7 +3,7 @@ import * as libs from "../../../libs";
 import * as settings from "../../../settings";
 import * as services from "../../../services";
 
-export let documentOfGet: types.Document = {
+export const documentOfGet: types.Document = {
     url: "/api/user/access_tokens",
     method: types.httpMethod.get,
     documentUrl: "/api/access token/get access tokens.html",
@@ -12,10 +12,10 @@ export let documentOfGet: types.Document = {
 export async function get(request: libs.Request, response: libs.Response) {
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.readAccessToken);
 
-    let accessTokens = await services.mongo.AccessToken.find({ application: null, creator: request.userId })
+    const accessTokens = await services.mongo.AccessToken.find({ application: null, creator: request.userId })
         .exec();
 
-    let result: types.AccessTokensResult = {
+    const result: types.AccessTokensResult = {
         accessTokens: accessTokens.map(a => {
             return {
                 id: a._id.toHexString(),
@@ -34,26 +34,26 @@ interface Body {
     scopes: string[];
 }
 
-export let documentOfCreate: types.Document = {
+export const documentOfCreate: types.Document = {
     url: "/api/user/access_tokens",
     method: types.httpMethod.post,
     documentUrl: "/api/access token/create an access token.html",
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    let body: Body = request.body;
+    const body: Body = request.body;
 
-    let description = libs.validator.trim(body.description);
+    const description = libs.validator.trim(body.description);
     if (description === "") {
         throw services.error.fromParameterIsMissedMessage("description");
     }
 
-    let scopes = body.scopes;
+    const scopes = body.scopes;
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    let value = libs.generateUuid();
-    let accessToken = await services.mongo.AccessToken.create({
+    const value = libs.generateUuid();
+    const accessToken = await services.mongo.AccessToken.create({
         description: description,
         value: value,
         scopes: scopes,
@@ -64,40 +64,40 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     services.logger.logRequest(documentOfCreate.url, request);
 
-    let result: types.AccessTokenResult = {
+    const result: types.AccessTokenResult = {
         accessToken: value
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
 }
 
-export let documentOfUpdate: types.Document = {
+export const documentOfUpdate: types.Document = {
     url: "/api/user/access_tokens/:access_token_id",
     method: types.httpMethod.put,
     documentUrl: "/api/access token/update an access token.html",
 };
 
 export async function update(request: libs.Request, response: libs.Response) {
-    let params: { access_token_id: string; } = request.params;
+    const params: { access_token_id: string; } = request.params;
 
     if (!libs.validator.isMongoId(params.access_token_id)) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
     }
 
-    let body: Body = request.body;
+    const body: Body = request.body;
 
-    let description = libs.validator.trim(body.description);
+    const description = libs.validator.trim(body.description);
     if (description === "") {
         throw services.error.fromParameterIsMissedMessage("description");
     }
 
-    let scopes = body.scopes;
+    const scopes = body.scopes;
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    let id = new libs.ObjectId(params.access_token_id);
+    const id = new libs.ObjectId(params.access_token_id);
 
     // the sccess token should be available.
-    let accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
+    const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
     if (!accessToken) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
@@ -112,25 +112,25 @@ export async function update(request: libs.Request, response: libs.Response) {
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 }
 
-export let documentOfRemove: types.Document = {
+export const documentOfRemove: types.Document = {
     url: "/api/user/access_tokens/:access_token_id",
     method: types.httpMethod.delete,
     documentUrl: "/api/access token/delete an access token.html",
 };
 
 export async function remove(request: libs.Request, response: libs.Response) {
-    let params: { access_token_id: string; } = request.params;
+    const params: { access_token_id: string; } = request.params;
 
     if (!libs.validator.isMongoId(params.access_token_id)) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
     }
 
-    let id = new libs.ObjectId(params.access_token_id);
+    const id = new libs.ObjectId(params.access_token_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteAccessToken);
 
     // the access token should be available.
-    let accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
+    const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
     if (!accessToken) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");

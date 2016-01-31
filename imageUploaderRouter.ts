@@ -4,7 +4,7 @@ import * as settings from "./settings";
 import * as services from "./services";
 
 export function route() {
-    let app = libs.express();
+    const app = libs.express();
 
     app.settings.env = settings.currentEnvironment;
 
@@ -21,27 +21,27 @@ export function route() {
 
     services.mongo.connect();
 
-    let documentOfUploadPersistentImages: types.Document = {
+    const documentOfUploadPersistentImages: types.Document = {
         url: "/api/persistent",
         method: types.httpMethod.post,
         documentUrl: "/api/image/upload images to persistent directory.html",
     };
 
-    let documentOfUploadTemperaryImages: types.Document = {
+    const documentOfUploadTemperaryImages: types.Document = {
         url: "/api/temperary",
         method: types.httpMethod.post,
         documentUrl: "/api/image/upload images to temperary directory.html",
     };
 
-    let documentOfMoveImage: types.Document = {
+    const documentOfMoveImage: types.Document = {
         url: "/api/persistence",
         method: types.httpMethod.post,
         documentUrl: "/api/image/move image from temperary directory to persistent directory.html",
     };
 
-    let storage = libs.multer.diskStorage({
+    const storage = libs.multer.diskStorage({
         destination: function(request: libs.Request, file, next) {
-            let mimeType: string = file.mimetype;
+            const mimeType: string = file.mimetype;
             if (!mimeType.startsWith("image/")) {
                 next(new Error("not image"));
             }
@@ -64,7 +64,7 @@ export function route() {
             }
         },
         filename: function(request: libs.Request, file, next) {
-            let mimeType: string = file.mimetype;
+            const mimeType: string = file.mimetype;
             if (!mimeType.startsWith("image/")) {
                 next(new Error("not image"));
             }
@@ -80,9 +80,9 @@ export function route() {
         },
     });
 
-    let upload = libs.multer({ storage: storage }).any();
+    const upload = libs.multer({ storage: storage }).any();
 
-    let uploadAsync = (request: libs.Request, response: libs.Response) => {
+    const uploadAsync = (request: libs.Request, response: libs.Response) => {
         return new Promise((resolve, reject) => {
             upload(request, response, error => {
                 if (error) {
@@ -97,7 +97,7 @@ export function route() {
     services.version.route(app);
     services.rateLimit.route(app);
 
-    let uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
+    const uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
 
     async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
         if (!uploadIPWhiteList.find(i => i === request.ip)) {
@@ -124,8 +124,8 @@ export function route() {
     }
 
     async function moveImage(request: libs.Request, response: libs.Response) {
-        let name = libs.validator.trim(request.body.name);
-        let newName = libs.validator.trim(request.body.newName);
+        const name = libs.validator.trim(request.body.name);
+        const newName = libs.validator.trim(request.body.newName);
 
         if (!name) {
             throw services.error.fromParameterIsMissedMessage("name");
@@ -139,7 +139,7 @@ export function route() {
             throw services.error.fromInvalidIP(request.ip);
         }
 
-        let path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
+        const path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
 
         await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
 

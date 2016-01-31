@@ -10,15 +10,15 @@ export async function create(id: string): Promise<{ url: string; code: string; }
     await services.frequency.limitCaptcha(id);
 
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.
-    let code = Math.round((Math.random() * 35 + 1) * 60466176).toString(36).toUpperCase();
+    const code = Math.round((Math.random() * 35 + 1) * 60466176).toString(36).toUpperCase();
 
     services.cache.set(settings.cacheKeys.userCaptcha + id, code, 60);
 
-    let width = 140;
-    let height = 45;
+    const width = 140;
+    const height = 45;
 
-    let canvas = new libs.Canvas(width, 50);
-    let context: CanvasRenderingContext2D = canvas.getContext("2d");
+    const canvas = new libs.Canvas(width, 50);
+    const context: CanvasRenderingContext2D = canvas.getContext("2d");
     context.fillStyle = "#F0F0F0";
     context.fillRect(0, 0, width, 50);
     context.fillStyle = "#000";
@@ -35,8 +35,8 @@ export async function create(id: string): Promise<{ url: string; code: string; }
  * validate the code matched the one from the cache.
  */
 export async function validate(id: string, code: string): Promise<void> {
-    let key = settings.cacheKeys.userCaptcha + id;
-    let targetCode = await services.cache.getAsync(key);
+    const key = settings.cacheKeys.userCaptcha + id;
+    const targetCode = await services.cache.getAsync(key);
 
     await services.cache.deleteKeyAsync(key);
 

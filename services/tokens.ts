@@ -14,7 +14,7 @@ export async function create(email: string, url: string, request: libs.Request, 
     let user = await services.mongo.User.findOne({ email: email })
         .exec();
     if (!user) {
-        let salt = libs.generateUuid();
+        const salt = libs.generateUuid();
         user = await services.mongo.User.create({
             email: email,
             name: name,
@@ -28,7 +28,7 @@ export async function create(email: string, url: string, request: libs.Request, 
 
     await services.frequency.limitEmail(email);
 
-    let token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
+    const token = services.authenticationCredential.create(user._id.toHexString(), user.salt);
 
     return token;
 }
