@@ -4,7 +4,7 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export function logRequest(url: string, request: libs.Request) {
-    let data: any = {
+    const data: any = {
         time: new Date(),
         content: {
             url: url
@@ -21,12 +21,12 @@ export function logRequest(url: string, request: libs.Request) {
         data.content.query = request.query;
     }
 
-    let log = new services.mongo.Log(data);
+    const log = new services.mongo.Log(data);
     log.save();
 }
 
 export function logError(error: types.E) {
-    let data = {
+    const data = {
         time: new Date(),
         content: {
             name: error.name,
@@ -39,12 +39,12 @@ export function logError(error: types.E) {
     // show the error in pm2 logs
     console.log(libs.colors.red(JSON.stringify(data, null, "  ")));
 
-    let log = new services.mongo.Log(data);
+    const log = new services.mongo.Log(data);
     log.save();
 }
 
 export function logInfo(info: string) {
-    let data = {
+    const data = {
         time: new Date(),
         content: {
             info: info
@@ -54,6 +54,6 @@ export function logInfo(info: string) {
     // show the info in pm2 logs
     console.log(libs.colors.green(JSON.stringify(data, null, "  ")));
 
-    let log = new services.mongo.Log(data);
+    const log = new services.mongo.Log(data);
     log.save();
 }

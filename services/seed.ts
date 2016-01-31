@@ -4,22 +4,22 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export let publicOrganizationId: libs.ObjectId;
-export let publicOrganizationName = "public";
+export const publicOrganizationName = "public";
 
 export async function init() {
-    let organization = await services.mongo.Organization.findOne({ name: publicOrganizationName })
+    const organization = await services.mongo.Organization.findOne({ name: publicOrganizationName })
         .select("_id")
         .exec();
     if (organization) {
         publicOrganizationId = organization._id;
     } else {
-        organization = await services.mongo.Organization.create({
+        const newOrganization = await services.mongo.Organization.create({
             name: publicOrganizationName,
             status: types.OrganizationStatus.normal,
 
             themes: [],
         });
 
-        publicOrganizationId = organization._id;
+        publicOrganizationId = newOrganization._id;
     }
 }

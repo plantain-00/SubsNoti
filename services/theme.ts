@@ -4,9 +4,9 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export function convert(theme: services.mongo.ThemeDocument): types.Theme {
-    let creator = theme.creator as services.mongo.UserDocument;
-    let creatorId = creator._id.toHexString();
-    let result: types.Theme = {
+    const creator = theme.creator as services.mongo.UserDocument;
+    const creatorId = creator._id.toHexString();
+    const result: types.Theme = {
         id: theme._id.toHexString(),
         title: theme.title,
         detail: theme.detail,
@@ -21,7 +21,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
             avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
         },
         owners: (theme.owners as services.mongo.UserDocument[]).map(o => {
-            let id = o._id.toHexString();
+            const id = o._id.toHexString();
             return {
                 id: id,
                 name: o.name,
@@ -30,7 +30,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
             };
         }),
         watchers: (theme.watchers as services.mongo.UserDocument[]).map(w => {
-            let id = w._id.toHexString();
+            const id = w._id.toHexString();
             return {
                 id: id,
                 name: w.name,

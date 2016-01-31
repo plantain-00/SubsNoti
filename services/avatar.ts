@@ -7,29 +7,29 @@ import * as services from "../services";
  * if exists, do nothing, otherwise create one and save it.
  */
 export async function createIfNotExistsAsync(id: string): Promise<void> {
-    let seed: string = libs.md5(id);
-    let fileName = getDefaultName(id);
-    let existResponse = await services.request.getAsync(`${settings.imageServer.get(settings.currentEnvironment)}/${fileName}`, types.responseType.others);
+    const seed: string = libs.md5(id);
+    const fileName = getDefaultName(id);
+    const existResponse = await services.request.getAsync(`${settings.imageServer.get(settings.currentEnvironment)}/${fileName}`, types.responseType.others);
     if (existResponse.response.statusCode === types.StatusCode.OK) {
         services.logger.logInfo("exists:" + fileName);
     } else {
         services.logger.logInfo("statusCode:" + existResponse.response.statusCode);
         services.logger.logInfo("creating:" + fileName);
-        let creationResponse = await createAsync(seed, fileName);
+        const creationResponse = await createAsync(seed, fileName);
         services.logger.logInfo(JSON.stringify(creationResponse.body));
     }
 }
 
 function createAsync(seed: string, fileName: string) {
-    let red = seed.substr(0, 2);
-    let blue = seed.substr(2, 2);
-    let green = seed.substr(4, 2);
-    let color = "#" + red + blue + green;
+    const red = seed.substr(0, 2);
+    const blue = seed.substr(2, 2);
+    const green = seed.substr(4, 2);
+    const color = "#" + red + blue + green;
 
     let points = parseInt(seed.substr(6, 4), 16);
 
-    let canvas = new libs.Canvas(420, 420);
-    let context: CanvasRenderingContext2D = canvas.getContext("2d");
+    const canvas = new libs.Canvas(420, 420);
+    const context: CanvasRenderingContext2D = canvas.getContext("2d");
     context.fillStyle = "#F0F0F0";
     context.fillRect(0, 0, 420, 420);
 
@@ -56,7 +56,7 @@ function createAsync(seed: string, fileName: string) {
 
         });
     }).then(buf => {
-        let formData = {};
+        const formData = {};
         formData[fileName] = {
             value: buf,
             options: {

@@ -4,7 +4,7 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export function create(userId: string, salt: string): string {
-    let milliseconds = new Date().getTime();
+    const milliseconds = new Date().getTime();
     return `${libs.md5(salt + milliseconds + userId)}g${milliseconds.toString(16)}g${userId}`;
 }
 
@@ -12,10 +12,10 @@ export function create(userId: string, salt: string): string {
  * identify current user.
  */
 export async function authenticateHeader(request: libs.Request): Promise<void> {
-    let authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
+    const authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
     if (authorization && authorization.length > settings.authorizationHeaders.token.length && authorization.startsWith(settings.authorizationHeaders.token)) {
-        let token = authorization.substring(settings.authorizationHeaders.token.length);
-        let accessToken = await services.mongo.AccessToken.findOne({ value: token })
+        const token = authorization.substring(settings.authorizationHeaders.token.length);
+        const accessToken = await services.mongo.AccessToken.findOne({ value: token })
             .exec();
         if (accessToken) {
             request.scopes = accessToken.scopes;
@@ -31,7 +31,7 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
  * identify current user.
  */
 export async function authenticate(request: libs.Request): Promise<void> {
-    let userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
+    const userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
     request.userId = userId;
 }
 
@@ -39,26 +39,26 @@ export async function authenticate(request: libs.Request): Promise<void> {
  * identify current user.
  */
 export async function authenticateCookie(cookie: string): Promise<libs.ObjectId> {
-    let authenticationCredential = libs.validator.trim(cookie);
+    const authenticationCredential = libs.validator.trim(cookie);
     if (!authenticationCredential) {
         return null;
     }
 
     // may be it is already in cache.
-    let reply = await services.cache.getAsync(settings.cacheKeys.user + authenticationCredential);
+    const reply = await services.cache.getAsync(settings.cacheKeys.user + authenticationCredential);
     if (reply) {
         return new libs.ObjectId(reply);
     }
 
-    let tmp = authenticationCredential.split("g");
+    const tmp = authenticationCredential.split("g");
     if (tmp.length !== 3) {
         return null;
     }
 
-    let milliseconds = parseInt(tmp[1], 16);
-    let userId = tmp[2];
-    let id = new libs.ObjectId(userId);
-    let now = new Date().getTime();
+    const milliseconds = parseInt(tmp[1], 16);
+    const userId = tmp[2];
+    const id = new libs.ObjectId(userId);
+    const now = new Date().getTime();
 
     // should not expire.
     if (now < milliseconds
@@ -67,7 +67,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
     }
 
     // should be a valid user.
-    let user = await services.mongo.User.findOne({ _id: id })
+    const user = await services.mongo.User.findOne({ _id: id })
         .select("salt")
         .exec();
     if (!user) {

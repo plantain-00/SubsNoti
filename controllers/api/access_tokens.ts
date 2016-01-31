@@ -3,7 +3,7 @@ import * as libs from "../../libs";
 import * as settings from "../../settings";
 import * as services from "../../services";
 
-export let documentOfCreate: types.Document = {
+export const documentOfCreate: types.Document = {
     url: "/api/access_tokens",
     method: types.httpMethod.post,
     documentUrl: "/api/access token/create an access token for application.html",
@@ -17,37 +17,37 @@ export async function create(request: libs.Request, response: libs.Response) {
         code: string;
     }
 
-    let body: Body = request.body;
+    const body: Body = request.body;
 
-    let clientId = libs.validator.trim(body.clientId);
+    const clientId = libs.validator.trim(body.clientId);
     if (clientId === "") {
         throw services.error.fromParameterIsMissedMessage("clientId");
     }
-    let clientSecret = libs.validator.trim(body.clientSecret);
+    const clientSecret = libs.validator.trim(body.clientSecret);
     if (clientSecret === "") {
         throw services.error.fromParameterIsMissedMessage("clientSecret");
     }
-    let state = libs.validator.trim(body.state);
+    const state = libs.validator.trim(body.state);
     if (state === "") {
         throw services.error.fromParameterIsMissedMessage("state");
     }
-    let code = libs.validator.trim(body.code);
+    const code = libs.validator.trim(body.code);
     if (code === "") {
         throw services.error.fromParameterIsMissedMessage("code");
     }
 
-    let value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + code);
+    const value = await services.cache.getAsync(settings.cacheKeys.oauthLoginCode + code);
     if (!value) {
         throw services.error.fromMessage("code is invalid or expired", types.StatusCode.unauthorized);
     }
 
-    let json: types.OAuthCodeValue = JSON.parse(value);
+    const json: types.OAuthCodeValue = JSON.parse(value);
 
     if (state !== json.state) {
         throw services.error.fromMessage("state is invalid", types.StatusCode.unauthorized);
     }
 
-    let application = await services.mongo.Application.findOne({
+    const application = await services.mongo.Application.findOne({
         clientId: clientId,
         clientSecret: clientSecret,
     }).exec();
@@ -55,10 +55,10 @@ export async function create(request: libs.Request, response: libs.Response) {
         throw services.error.fromMessage("client id or client secret is invalid", types.StatusCode.unauthorized);
     }
 
-    let creator = new libs.ObjectId(json.creator);
+    const creator = new libs.ObjectId(json.creator);
 
-    let accessTokenValue = libs.generateUuid();
-    let applicationId = new libs.ObjectId(json.application);
+    const accessTokenValue = libs.generateUuid();
+    const applicationId = new libs.ObjectId(json.application);
 
     // remove old access token, the old one may have smaller scopes
     await services.mongo.AccessToken.remove({
@@ -66,7 +66,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         application: applicationId,
     }).exec();
 
-    let accessToken = await services.mongo.AccessToken.create({
+    const accessToken = await services.mongo.AccessToken.create({
         value: accessTokenValue,
         scopes: json.scopes,
         creator: creator,
@@ -77,7 +77,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     services.logger.logRequest(documentOfCreate.url, request);
 
-    let result: types.AccessTokenResult = {
+    const result: types.AccessTokenResult = {
         accessToken: accessTokenValue
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);

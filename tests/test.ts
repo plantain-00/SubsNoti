@@ -2,13 +2,13 @@ const exit = require("exit");
 import * as libs from "../libs";
 import * as integration from "./integration";
 
-let baseline: any[] = require("./baseline.json");
+const baseline: any[] = require("./baseline.json");
 
 let index = 1;
 
 integration.setOperation(async (caseName, body) => {
-    let expected = JSON.stringify(baseline[caseName]);
-    let actually = JSON.stringify(body);
+    const expected = JSON.stringify(baseline[caseName]);
+    const actually = JSON.stringify(body);
     if (expected !== actually) {
         throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     }

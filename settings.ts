@@ -6,70 +6,70 @@ export function setEnvironment(environment: types.Environment) {
     currentEnvironment = environment;
 }
 
-export let db = new Map<types.Environment, { host: string; user: string; password: string; database: string; }>();
+export const db = new Map<types.Environment, { host: string; user: string; password: string; database: string; }>();
 
-export let smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
+export const smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
 
-export let redis = new Map<types.Environment, { host: string; port: number; options?: { auth_pass: string; }; }>();
+export const redis = new Map<types.Environment, { host: string; port: number; options?: { auth_pass: string; }; }>();
 
 redis.set("test", {
     host: "localhost",
     port: 6379,
 });
 
-export let mongodb = new Map<types.Environment, { url: string; options?: { user: string; pass: string; } }>();
+export const mongodb = new Map<types.Environment, { url: string; options?: { user: string; pass: string; } }>();
 
 mongodb.set("test", {
     url: "mongodb://127.0.0.1:27017/log_db_test"
 });
 
-export let api = new Map<types.Environment, string>();
-let api0 = "http://localhost:9998";
-let api1 = "https://yorkyao.xyz";
+export const api = new Map<types.Environment, string>();
+const api0 = "http://localhost:9998";
+const api1 = "https://yorkyao.xyz";
 api.set("development", api0);
 api.set("test", api0);
 api.set("production", api1);
 
-export let urls = {
+export const urls = {
     login: "/login_with_authentication_credential",
     version: "/api/version",
 };
 
-export let imageUploader = new Map<types.Environment, string>();
-let imageUploader0 = "http://localhost:9999";
-let imageUploader1 = "https://upload.yorkyao.xyz";
+export const imageUploader = new Map<types.Environment, string>();
+const imageUploader0 = "http://localhost:9999";
+const imageUploader1 = "https://upload.yorkyao.xyz";
 imageUploader.set("development", imageUploader0);
 imageUploader.set("test", imageUploader0);
 imageUploader.set("production", imageUploader1);
 
-export let documentServer = new Map<types.Environment, string>();
-let documentServer0 = "http://localhost:9997";
-let documentServer1 = "https://doc.yorkyao.xyz";
+export const documentServer = new Map<types.Environment, string>();
+const documentServer0 = "http://localhost:9997";
+const documentServer1 = "https://doc.yorkyao.xyz";
 documentServer.set("development", documentServer0);
 documentServer.set("test", documentServer0);
 documentServer.set("production", documentServer1);
 
-export let imageServer = new Map<types.Environment, string>();
-let imageServer0 = "http://localhost:7777";
-let imageServer1 = "https://img.yorkyao.xyz";
+export const imageServer = new Map<types.Environment, string>();
+const imageServer0 = "http://localhost:7777";
+const imageServer1 = "https://img.yorkyao.xyz";
 imageServer.set("development", imageServer0);
 imageServer.set("test", imageServer0);
 imageServer.set("production", imageServer1);
 
-export let frontendsServer = new Map<types.Environment, string>();
-let frontendsServer0 = "https://yorkyao.xyz";
-let frontendsServer1 = "http://localhost:8888";
+export const frontendsServer = new Map<types.Environment, string>();
+const frontendsServer0 = "https://yorkyao.xyz";
+const frontendsServer1 = "http://localhost:8888";
 frontendsServer.set("development", frontendsServer1);
 frontendsServer.set("test", frontendsServer0);
 frontendsServer.set("production", frontendsServer0);
 
-export let maxOrganizationNumberUserCanCreate = 3;
+export const maxOrganizationNumberUserCanCreate = 3;
 
-export let cookieKeys = {
+export const cookieKeys = {
     authenticationCredential: "authentication_credential"
 };
 
-export let cacheKeys = {
+export const cacheKeys = {
     user: "user_",
     userCaptcha: "user_captcha_",
     rateLimit: {
@@ -83,42 +83,42 @@ export let cacheKeys = {
     oauthLoginCode: "oauth_login_",
 };
 
-export let defaultItemLimit = 10;
+export const defaultItemLimit = 10;
 
-export let authorizationHeaders = {
+export const authorizationHeaders = {
     token: "token "
 };
 
-export let uploadIPWhiteList = new Map<types.Environment, string[]>();
+export const uploadIPWhiteList = new Map<types.Environment, string[]>();
 
-let uploadIPWhiteList1 = ["127.0.0.1"];
-let uploadIPWhiteList2 = ["115.29.42.125", "127.0.0.1"];
+const uploadIPWhiteList1 = ["127.0.0.1"];
+const uploadIPWhiteList2 = ["115.29.42.125", "127.0.0.1"];
 uploadIPWhiteList.set("development", uploadIPWhiteList1);
 uploadIPWhiteList.set("test", uploadIPWhiteList1);
 uploadIPWhiteList.set("production", uploadIPWhiteList2);
 
-export let cookieDomains = new Map<types.Environment, string>();
+export const cookieDomains = new Map<types.Environment, string>();
 
-let cookieDomain1 = undefined;
-let cookieDomain2 = ".yorkyao.xyz";
+const cookieDomain1 = undefined;
+const cookieDomain2 = ".yorkyao.xyz";
 cookieDomains.set("development", cookieDomain1);
 cookieDomains.set("test", cookieDomain1);
 cookieDomains.set("production", cookieDomain2);
 
-export let imagePaths = {
+export const imagePaths = {
     avatar: "avatar-"
 };
 
-export let cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
+export const cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
 
-let cors1 = {
+const cors1 = {
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     origin: [
         "http://localhost:8888"
     ],
 };
-let cors2 = {
+const cors2 = {
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     origin: [
@@ -137,7 +137,7 @@ cors.set("test", {
     ],
 });
 
-export let rateLimit = {
+export const rateLimit = {
     user: 5000,
     ip: 600,
     contentCreation: 10,
@@ -145,18 +145,18 @@ export let rateLimit = {
     userCaptcha: 1,
 };
 
-export let login = {
+export const login = {
     github: {
         clientId: "",
         clientSecret: "",
     },
 };
 
-let pjson = require("./package.json");
+const pjson = require("./package.json");
 
-export let version = pjson.version;
+export const version = pjson.version;
 
-export let headerNames = {
+export const headerNames = {
     version: "X-Version",
     rateLimit: {
         limit: "X-RateLimit-Limit",
@@ -166,7 +166,7 @@ export let headerNames = {
     authorization: "Authorization",
 };
 
-export let scopes: types.Scope[] = [
+export const scopes: types.Scope[] = [
     { name: types.scopeNames.readUser, description: "get current user" },
     { name: types.scopeNames.writeUser, description: "update current user" },
     { name: types.scopeNames.readOrganization, description: "get joined or created organizations" },
@@ -181,11 +181,11 @@ export let scopes: types.Scope[] = [
     { name: types.scopeNames.deleteAccessToken, description: "delete an access token" },
 ];
 
-export let apiPort = 9998;
-export let imageUploaderPort = 9999;
+export const apiPort = 9998;
+export const imageUploaderPort = 9999;
 
 try {
-    let secret = require("./secret");
+    const secret = require("./secret");
     secret.load();
 } catch (e) {
     console.log(e);

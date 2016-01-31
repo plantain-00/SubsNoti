@@ -38,9 +38,9 @@ function accessAsync<T>(sql: string, parameters: any[]): Promise<T> {
     });
 }
 
-export let queryAsync: (sql: string, parameters: any[]) => Promise<any[]> = accessAsync;
+export const queryAsync: (sql: string, parameters: any[]) => Promise<any[]> = accessAsync;
 
-export let insertAsync: (sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessAsync;
+export const insertAsync: (sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessAsync;
 
 export function beginTransactionAsync(): Promise<MysqlConnection> {
     return getConnection().then(connection => {
@@ -73,9 +73,9 @@ function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, p
     });
 }
 
-export let queryInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<any[]> = accessInTransactionAsync;
+export const queryInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<any[]> = accessInTransactionAsync;
 
-export let insertInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessInTransactionAsync;
+export const insertInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessInTransactionAsync;
 
 export function rollbackAsync(connection: MysqlConnection): Promise<void> {
     return new Promise<void>((resolve, reject) => {

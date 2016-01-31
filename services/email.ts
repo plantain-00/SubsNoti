@@ -10,7 +10,7 @@ export function connect() {
 }
 
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
-    let mailOptions = {
+    const mailOptions = {
         from: settings.smtp.get(settings.currentEnvironment).auth.user,
         to: to,
         subject: subject,

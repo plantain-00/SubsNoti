@@ -8,7 +8,7 @@ export function sendSuccess(response: libs.Response, statusCode: types.StatusCod
         result = {};
     }
 
-    let baseResponse: types.Response = {
+    const baseResponse: types.Response = {
         isSuccess: true,
         statusCode: statusCode,
     };
@@ -17,9 +17,9 @@ export function sendSuccess(response: libs.Response, statusCode: types.StatusCod
 }
 
 export function sendError(response: libs.Response, error: types.E, documentUrl?: string) {
-    let isE = error.statusCode;
+    const isE = error.statusCode;
 
-    let baseResponse: types.Response = {
+    const baseResponse: types.Response = {
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",

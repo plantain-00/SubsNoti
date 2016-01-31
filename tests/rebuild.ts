@@ -2,7 +2,7 @@ const exit = require("exit");
 import * as libs from "../libs";
 import * as integration from "./integration";
 
-let responses = {};
+const responses = {};
 
 integration.setOperation(async (caseName, body) => {
     responses[caseName] = body;

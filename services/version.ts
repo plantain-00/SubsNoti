@@ -3,7 +3,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-let documentUrl = "/api/request/parameters.html";
+const documentUrl = "/api/request/parameters.html";
 
 export function route(app: libs.express.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {

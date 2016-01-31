@@ -3,7 +3,7 @@ import * as libs from "../../../libs";
 import * as settings from "../../../settings";
 import * as services from "../../../services";
 
-export let documentOfGet: types.Document = {
+export const documentOfGet: types.Document = {
     url: "/api/organizations/:organization_id/themes",
     method: types.httpMethod.get,
     documentUrl: "/api/theme/get themes of an organization.html",
@@ -19,26 +19,26 @@ export async function get(request: libs.Request, response: libs.Response) {
         order: string;
     }
 
-    let params: { organization_id: string } = request.params;
+    const params: { organization_id: string } = request.params;
     if (!libs.validator.isMongoId(request.params.organization_id)) {
         throw services.error.fromParameterIsInvalidMessage("organization_id");
     }
 
-    let query: Query = request.query;
+    const query: Query = request.query;
 
-    let organizationId = new libs.ObjectId(params.organization_id);
-    let page = libs.validator.isNumeric(query.page) ? libs.validator.toInt(query.page) : 1;
-    let limit = libs.validator.isNumeric(query.limit) ? libs.validator.toInt(query.limit) : settings.defaultItemLimit;
-    let q = libs.validator.trim(query.q);
-    let isOpen = libs.validator.trim(query.isOpen) !== types.no;
-    let isClosed = libs.validator.trim(query.isClosed) === types.yes;
+    const organizationId = new libs.ObjectId(params.organization_id);
+    const page = libs.validator.isNumeric(query.page) ? libs.validator.toInt(query.page) : 1;
+    const limit = libs.validator.isNumeric(query.limit) ? libs.validator.toInt(query.limit) : settings.defaultItemLimit;
+    const q = libs.validator.trim(query.q);
+    const isOpen = libs.validator.trim(query.isOpen) !== types.no;
+    const isClosed = libs.validator.trim(query.isClosed) === types.yes;
 
     // the organization should be public organization, or current user should join in it.
     if (!organizationId.equals(services.seed.publicOrganizationId)) {
         // identify current user.
         services.scope.shouldValidateAndContainScope(request, types.scopeNames.readTheme);
 
-        let user = await services.mongo.User.findOne({ _id: request.userId })
+        const user = await services.mongo.User.findOne({ _id: request.userId })
             .select("joinedOrganizations")
             .exec();
 
@@ -68,24 +68,24 @@ export async function get(request: libs.Request, response: libs.Response) {
         countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
     }
 
-    let order = libs.validator.trim(query.order);
-    let sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
+    const order = libs.validator.trim(query.order);
+    const sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
 
-    let themes = await themesQuery.skip((page - 1) * limit)
+    const themes = await themesQuery.skip((page - 1) * limit)
         .limit(limit)
         .sort(sort)
         .populate("creator owners watchers")
         .exec();
 
-    let totalCount: any = await countQuery.count()
+    const totalCount: any = await countQuery.count()
         .exec();
 
-    let result: types.ThemesResult = {
+    const result: types.ThemesResult = {
         themes: [],
         totalCount: totalCount as number,
     };
 
-    for (let theme of themes) {
+    for (const theme of themes) {
         result.themes.push(services.theme.convert(theme));
     }
 

@@ -3,7 +3,7 @@ import * as libs from "../../../libs";
 import * as settings from "../../../settings";
 import * as services from "../../../services";
 
-export let documentOfGet: types.Document = {
+export const documentOfGet: types.Document = {
     url: "/api/user/joined",
     method: types.httpMethod.get,
     documentUrl: "/api/organization/get joined organizations.html",
@@ -14,7 +14,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     if (request.userId
         && services.scope.contain(request, types.scopeNames.readOrganization)) {
-        let user = await services.mongo.User.findOne({ _id: request.userId })
+        const user = await services.mongo.User.findOne({ _id: request.userId })
             .populate("joinedOrganizations")
             .select("joinedOrganizations")
             .exec();

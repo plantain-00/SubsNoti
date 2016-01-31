@@ -3,22 +3,22 @@ import * as libs from "../../libs";
 import * as settings from "../../settings";
 import * as services from "../../services";
 
-export let documentOfGet: types.Document = {
+export const documentOfGet: types.Document = {
     url: "/api/applications/:id",
     method: types.httpMethod.get,
     documentUrl: "/api/application/get an application.html",
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    let params: { id: string; } = request.params;
+    const params: { id: string; } = request.params;
 
     if (!libs.validator.isMongoId(params.id)) {
         throw services.error.fromParameterIsInvalidMessage("id");
     }
 
-    let id = new libs.ObjectId(params.id);
+    const id = new libs.ObjectId(params.id);
 
-    let application = await services.mongo.Application.findOne({ _id: id })
+    const application = await services.mongo.Application.findOne({ _id: id })
         .populate("creator")
         .exec();
 
@@ -26,9 +26,9 @@ export async function get(request: libs.Request, response: libs.Response) {
         throw services.error.fromParameterIsInvalidMessage("id");
     }
 
-    let creator = application.creator as services.mongo.UserDocument;
-    let creatorId = creator._id.toHexString();
-    let result: types.ApplicationResult = {
+    const creator = application.creator as services.mongo.UserDocument;
+    const creatorId = creator._id.toHexString();
+    const result: types.ApplicationResult = {
         application: {
             id: application._id.toHexString(),
             name: application.name,

@@ -3,7 +3,7 @@ import * as libs from "../../../libs";
 import * as settings from "../../../settings";
 import * as services from "../../../services";
 
-export let documentOfDelete: types.Document = {
+export const documentOfDelete: types.Document = {
     url: "/api/user/logged_in",
     method: types.httpMethod.delete,
     documentUrl: "/api/authentication/log out.html",
