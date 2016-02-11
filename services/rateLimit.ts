@@ -51,32 +51,30 @@ export function route(app: libs.express.Application) {
             limit = settings.rateLimit.ip;
         }
 
-        let remain: number = await services.cache.getAsync(remainKey);
-        let resetMoment: string;
-
-        function setHeaders() {
+        function setHeaders(remain: number, resetMoment: string) {
             response.setHeader(settings.headerNames.rateLimit.limit, limit.toString());
             response.setHeader(settings.headerNames.rateLimit.remain, remain.toString());
             response.setHeader(settings.headerNames.rateLimit.resetMoment, resetMoment);
         }
 
-        if (remain !== null) {
-            resetMoment = await services.cache.getAsync(resetMomentKey);
+        let remainString: string = await services.cache.getAsync(remainKey);
+
+        if (remainString !== null) {
+            let remain = +remainString;
+            let resetMoment = await services.cache.getAsync(resetMomentKey);
             if (remain <= 0) {
-                setHeaders();
+                setHeaders(remain, resetMoment);
                 services.response.sendError(response, services.error.fromMessage(errorMessage, types.StatusCode.tooManyRequest), documentUrl);
                 return;
             }
-            remain--;
             services.cache.client.decr(remainKey);
+            setHeaders(remain - 1, resetMoment);
         } else {
-            remain = limit - 1;
-            resetMoment = libs.moment().clone().add(1, "hours").toISOString();
-            services.cache.set(remainKey, remain, 60 * 60);
+            let resetMoment = libs.moment().clone().add(1, "hours").toISOString();
+            services.cache.set(remainKey, limit - 1, 60 * 60);
             services.cache.set(resetMomentKey, resetMoment, 60 * 60);
+            setHeaders(limit - 1, resetMoment);
         }
-
-        setHeaders();
 
         next();
     });
