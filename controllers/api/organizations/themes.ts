@@ -39,7 +39,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     let limit = settings.defaultItemLimit;
     if (typeof query.limit === "string"
         && libs.validator.isNumeric(query.limit)) {
-        page = libs.validator.toInt(query.limit);
+        limit = libs.validator.toInt(query.limit);
     }
 
     const q = typeof query.q === "string" ? libs.validator.trim(query.q) : "";
