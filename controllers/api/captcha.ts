@@ -12,7 +12,7 @@ export const documentOfCreate: types.Document = {
 export async function create(request: libs.Request, response: libs.Response) {
     const body: { id: string; } = request.body;
 
-    const id = libs.validator.trim(body.id);
+    const id = typeof body.id === "string" ? libs.validator.trim(body.id) : "";
 
     if (id === "") {
         throw services.error.fromParameterIsMissedMessage("id");

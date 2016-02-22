@@ -48,19 +48,21 @@ export const documentOfCreate: types.Document = {
 export async function create(request: libs.Request, response: libs.Response) {
     const body: Body = request.body;
 
-    const name = libs.validator.trim(body.name);
+    const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     if (name === "") {
         throw services.error.fromParameterIsMissedMessage("name");
     }
 
-    if (!libs.validator.isURL(body.homeUrl)) {
+    if (typeof body.homeUrl !== "string"
+        || !libs.validator.isURL(body.homeUrl)) {
         throw services.error.fromParameterIsInvalidMessage("homeUrl");
     }
     const homeUrl = libs.validator.trim(body.homeUrl);
 
-    const description = libs.validator.trim(body.description);
+    const description = typeof body.description === "string" ? libs.validator.trim(body.description) : "";
 
-    if (!libs.validator.isURL(body.authorizationCallbackUrl)) {
+    if (typeof body.authorizationCallbackUrl !== "string"
+        || !libs.validator.isURL(body.authorizationCallbackUrl)) {
         throw services.error.fromParameterIsInvalidMessage("authorizationCallbackUrl");
     }
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
@@ -92,25 +94,28 @@ export const documentOfUpdate: types.Document = {
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.application_id)) {
+    if (typeof params.application_id !== "string"
+        || !libs.validator.isMongoId(params.application_id)) {
         throw services.error.fromParameterIsInvalidMessage("application_id");
     }
 
     const body: Body = request.body;
 
-    const name = libs.validator.trim(body.name);
+    const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     if (name === "") {
         throw services.error.fromParameterIsMissedMessage("name");
     }
 
-    if (!libs.validator.isURL(body.homeUrl)) {
+    if (typeof body.homeUrl !== "string"
+        || !libs.validator.isURL(body.homeUrl)) {
         throw services.error.fromParameterIsInvalidMessage("homeUrl");
     }
     const homeUrl = libs.validator.trim(body.homeUrl);
 
-    const description = libs.validator.trim(body.description);
+    const description = typeof body.description === "string" ? libs.validator.trim(body.description) : "";
 
-    if (!libs.validator.isURL(body.authorizationCallbackUrl)) {
+    if (typeof body.authorizationCallbackUrl !== "string"
+        || !libs.validator.isURL(body.authorizationCallbackUrl)) {
         throw services.error.fromParameterIsInvalidMessage("authorizationCallbackUrl");
     }
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
@@ -146,7 +151,8 @@ export const documentOfRemove: types.Document = {
 export async function remove(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.application_id)) {
+    if (typeof params.application_id !== "string"
+        || !libs.validator.isMongoId(params.application_id)) {
         throw services.error.fromParameterIsInvalidMessage("application_id");
     }
 

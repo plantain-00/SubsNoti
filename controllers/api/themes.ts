@@ -19,18 +19,19 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const body: Body = request.body;
 
-    if (!libs.validator.isMongoId(body.organizationId)) {
+    if (typeof body.organizationId !== "string"
+        || !libs.validator.isMongoId(body.organizationId)) {
         throw services.error.fromParameterIsInvalidMessage("organizationId");
     }
 
     const organizationId = new libs.ObjectId(body.organizationId);
 
-    const themeTitle = libs.validator.trim(body.themeTitle);
+    const themeTitle = typeof body.themeTitle === "string" ? libs.validator.trim(body.themeTitle) : "";
     if (themeTitle === "") {
         throw services.error.fromParameterIsMissedMessage("themeTitle");
     }
 
-    const themeDetail = libs.validator.trim(body.themeDetail);
+    const themeDetail = typeof body.themeDetail === "string" ? libs.validator.trim(body.themeDetail) : "";
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
@@ -116,7 +117,8 @@ export const documentOfUpdate: types.Document = {
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { theme_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.theme_id)) {
+    if (typeof params.theme_id !== "string"
+        || !libs.validator.isMongoId(params.theme_id)) {
         throw services.error.fromParameterIsInvalidMessage("theme_id");
     }
 
@@ -129,8 +131,8 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     const body: Body = request.body;
 
-    const title = libs.validator.trim(body.title);
-    const detail = libs.validator.trim(body.detail);
+    const title = typeof body.title === "string" ? libs.validator.trim(body.title) : "";
+    const detail = typeof body.detail === "string" ? libs.validator.trim(body.detail) : "";
     let status: types.ThemeStatus = null;
 
     if (body.status === types.themeStatus.open) {

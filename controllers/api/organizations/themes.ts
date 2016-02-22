@@ -20,18 +20,31 @@ export async function get(request: libs.Request, response: libs.Response) {
     }
 
     const params: { organization_id: string } = request.params;
-    if (!libs.validator.isMongoId(request.params.organization_id)) {
+
+    if (typeof params.organization_id !== "string"
+        || !libs.validator.isMongoId(params.organization_id)) {
         throw services.error.fromParameterIsInvalidMessage("organization_id");
     }
 
     const query: Query = request.query;
 
     const organizationId = new libs.ObjectId(params.organization_id);
-    const page = libs.validator.isNumeric(query.page) ? libs.validator.toInt(query.page) : 1;
-    const limit = libs.validator.isNumeric(query.limit) ? libs.validator.toInt(query.limit) : settings.defaultItemLimit;
-    const q = libs.validator.trim(query.q);
-    const isOpen = libs.validator.trim(query.isOpen) !== types.no;
-    const isClosed = libs.validator.trim(query.isClosed) === types.yes;
+
+    let page = 1;
+    if (typeof query.page === "string"
+        && libs.validator.isNumeric(query.page)) {
+        page = libs.validator.toInt(query.page);
+    }
+
+    let limit = settings.defaultItemLimit;
+    if (typeof query.limit === "string"
+        && libs.validator.isNumeric(query.limit)) {
+        page = libs.validator.toInt(query.limit);
+    }
+
+    const q = typeof query.q === "string" ? libs.validator.trim(query.q) : "";
+    const isOpen = query.isOpen !== types.no;
+    const isClosed = query.isClosed === types.yes;
 
     // the organization should be public organization, or current user should join in it.
     if (!organizationId.equals(services.seed.publicOrganizationId)) {
@@ -68,7 +81,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         countQuery = countQuery.or([{ title: new RegExp(q, "i") }, { detail: new RegExp(q, "i") }]);
     }
 
-    const order = libs.validator.trim(query.order);
+    const order = typeof query.order === "string" ? libs.validator.trim(query.order) : "";
     const sort = order === types.themeOrder.recentlyUpdated ? { updateTime: -1 } : { createTime: -1 };
 
     const themes = await themesQuery.skip((page - 1) * limit)

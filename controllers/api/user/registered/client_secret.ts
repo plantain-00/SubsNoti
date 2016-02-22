@@ -16,7 +16,8 @@ export async function reset(request: libs.Request, response: libs.Response) {
 
     const params: Params = request.params;
 
-    if (!libs.validator.isMongoId(params.application_id)) {
+    if (typeof params.application_id !== "string"
+        || !libs.validator.isMongoId(params.application_id)) {
         throw services.error.fromParameterIsInvalidMessage("application_id");
     }
 

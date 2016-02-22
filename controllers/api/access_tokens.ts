@@ -19,19 +19,19 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const body: Body = request.body;
 
-    const clientId = libs.validator.trim(body.clientId);
+    const clientId = typeof body.clientId === "string" ? libs.validator.trim(body.clientId) : "";
     if (clientId === "") {
         throw services.error.fromParameterIsMissedMessage("clientId");
     }
-    const clientSecret = libs.validator.trim(body.clientSecret);
+    const clientSecret = typeof body.clientSecret === "string" ? libs.validator.trim(body.clientSecret) : "";
     if (clientSecret === "") {
         throw services.error.fromParameterIsMissedMessage("clientSecret");
     }
-    const state = libs.validator.trim(body.state);
+    const state = typeof body.state === "string" ? libs.validator.trim(body.state) : "";
     if (state === "") {
         throw services.error.fromParameterIsMissedMessage("state");
     }
-    const code = libs.validator.trim(body.code);
+    const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
     if (code === "") {
         throw services.error.fromParameterIsMissedMessage("code");
     }

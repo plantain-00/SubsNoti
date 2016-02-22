@@ -64,8 +64,8 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         const query: Query = request.query;
 
-        const state = libs.validator.trim(query.state);
-        const code = libs.validator.trim(query.code);
+        const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
+        const code = typeof query.code === "string" ? libs.validator.trim(query.code) : "";
 
         if (state === "") {
             throw new Error("missed parameter:state");
@@ -136,9 +136,9 @@ export async function authorize(request: libs.Request, response: libs.Response) 
     try {
         const query: Query = request.query;
 
-        const clientId = libs.validator.trim(query.client_id);
-        const scopes = libs.validator.trim(query.scopes);
-        const state = libs.validator.trim(query.state);
+        const clientId = typeof query.client_id === "string" ? libs.validator.trim(query.client_id) : "";
+        const scopes = typeof query.scopes === "string" ? libs.validator.trim(query.scopes) : "";
+        const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
 
         if (clientId === "") {
             throw new Error("missed parameter:clientId");

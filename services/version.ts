@@ -11,7 +11,8 @@ export function route(app: libs.express.Application) {
             next();
             return;
         }
-        request.v = libs.validator.trim(request.header(settings.headerNames.version));
+        const version = request.header(settings.headerNames.version);
+        request.v = typeof version === "string" ? libs.validator.trim(version) : "";
 
         if (request.v === "") {
             services.response.sendError(response, services.error.fromParameterIsMissedMessage(settings.headerNames.version), documentUrl);

@@ -16,7 +16,8 @@ interface Params {
 export async function watch(request: libs.Request, response: libs.Response) {
     const params: Params = request.params;
 
-    if (!libs.validator.isMongoId(params.theme_id)) {
+    if (typeof params.theme_id !== "string"
+        || !libs.validator.isMongoId(params.theme_id)) {
         throw services.error.fromParameterIsInvalidMessage("theme_id");
     }
 
@@ -73,7 +74,8 @@ export const documentOfUnwatch: types.Document = {
 export async function unwatch(request: libs.Request, response: libs.Response) {
     const params: Params = request.params;
 
-    if (!libs.validator.isMongoId(params.theme_id)) {
+    if (typeof params.theme_id !== "string"
+        || !libs.validator.isMongoId(params.theme_id)) {
         throw services.error.fromParameterIsInvalidMessage("theme_id");
     }
 

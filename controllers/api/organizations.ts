@@ -12,7 +12,7 @@ export const documentOfCreate: types.Document = {
 export async function create(request: libs.Request, response: libs.Response) {
     const body: { organizationName: string; } = request.body;
 
-    const organizationName = libs.validator.trim(body.organizationName);
+    const organizationName = typeof body.organizationName === "string" ? libs.validator.trim(body.organizationName) : "";
     if (organizationName === "") {
         throw services.error.fromParameterIsMissedMessage("organizationName");
     }

@@ -15,7 +15,7 @@ export function connect(server: libs.http.Server) {
     themes = io.of("/themes");
 
     themes.on("connection", socket => {
-        const cookie = libs.validator.trim(socket.handshake.headers.cookie);
+        const cookie = typeof socket.handshake.headers.cookie === "string" ? libs.validator.trim(socket.handshake.headers.cookie) : "";
         const cookies = libs.cookie.parse(cookie);
         services.authenticationCredential.authenticateCookie(cookies[settings.cookieKeys.authenticationCredential]).then(userId => {
             if (!userId) {

@@ -12,8 +12,10 @@ export function create(userId: string, salt: string): string {
  * identify current user.
  */
 export async function authenticateHeader(request: libs.Request): Promise<void> {
-    const authorization = libs.validator.trim(request.header(settings.headerNames.authorization));
-    if (authorization && authorization.length > settings.authorizationHeaders.token.length && authorization.startsWith(settings.authorizationHeaders.token)) {
+    const authorization = request.header(settings.headerNames.authorization);
+    if (typeof authorization === "string"
+        && authorization.length > settings.authorizationHeaders.token.length
+        && authorization.startsWith(settings.authorizationHeaders.token)) {
         const token = authorization.substring(settings.authorizationHeaders.token.length);
         const accessToken = await services.mongo.AccessToken.findOne({ value: token })
             .exec();
@@ -39,10 +41,11 @@ export async function authenticate(request: libs.Request): Promise<void> {
  * identify current user.
  */
 export async function authenticateCookie(cookie: string): Promise<libs.ObjectId> {
-    const authenticationCredential = libs.validator.trim(cookie);
-    if (!authenticationCredential) {
+    if (typeof cookie !== "string") {
         return null;
     }
+
+    const authenticationCredential = cookie.trim();
 
     // may be it is already in cache.
     const reply = await services.cache.getAsync(settings.cacheKeys.user + authenticationCredential);

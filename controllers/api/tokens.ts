@@ -20,15 +20,16 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const body: Body = request.body;
 
-    if (!libs.validator.isEmail(body.email)) {
+    if (typeof body.email !== "string"
+        || !libs.validator.isEmail(body.email)) {
         throw services.error.fromParameterIsInvalidMessage("email");
     }
 
-    const email = libs.validator.trim(body.email).toLowerCase();
-    const name = libs.validator.trim(body.name);
-    const code = libs.validator.trim(body.code);
-    const guid = libs.validator.trim(body.guid);
-    const redirectUrl = libs.validator.trim(body.redirectUrl);
+    const email = typeof body.email === "string" ? libs.validator.trim(body.email).toLowerCase() : "";
+    const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
+    const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
+    const guid = typeof body.guid === "string" ? libs.validator.trim(body.guid) : "";
+    const redirectUrl = typeof body.redirectUrl === "string" ? libs.validator.trim(body.redirectUrl) : "";
     if (code === "" || guid === "") {
         throw services.error.fromParameterIsInvalidMessage("code or guid");
     }
