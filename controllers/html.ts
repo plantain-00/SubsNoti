@@ -200,7 +200,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             application: application._id,
         }).exec();
 
-        const scopeArray = scopes.split(",");
+        const scopeArray = scopes === "" ? [] : scopes.split(",");
 
         if (accessToken) {
             // if access token was generated, that is, already authorized, check whether the application need more scopes or not
