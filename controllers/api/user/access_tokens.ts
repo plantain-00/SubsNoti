@@ -43,7 +43,10 @@ export const documentOfCreate: types.Document = {
 export async function create(request: libs.Request, response: libs.Response) {
     const body: Body = request.body;
 
-    const description = libs.validator.trim(body.description);
+    let description = "";
+    if (typeof body.description === "string") {
+        description = libs.validator.trim(body.description);
+    }
     if (description === "") {
         throw services.error.fromParameterIsMissedMessage("description");
     }
@@ -79,13 +82,17 @@ export const documentOfUpdate: types.Document = {
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.access_token_id)) {
+    if (typeof params.access_token_id !== "string"
+        || !libs.validator.isMongoId(params.access_token_id)) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
     }
 
     const body: Body = request.body;
 
-    const description = libs.validator.trim(body.description);
+    let description = libs.validator.trim(body.description);
+    if (typeof body.description === "string") {
+        description = libs.validator.trim(body.description);
+    }
     if (description === "") {
         throw services.error.fromParameterIsMissedMessage("description");
     }
@@ -121,7 +128,8 @@ export const documentOfRemove: types.Document = {
 export async function remove(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.access_token_id)) {
+    if (typeof params.access_token_id !== "string"
+        || !libs.validator.isMongoId(params.access_token_id)) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
     }
 

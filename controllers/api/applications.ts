@@ -12,7 +12,8 @@ export const documentOfGet: types.Document = {
 export async function get(request: libs.Request, response: libs.Response) {
     const params: { id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.id)) {
+    if (typeof params.id !== "string"
+        || !libs.validator.isMongoId(params.id)) {
         throw services.error.fromParameterIsInvalidMessage("id");
     }
 

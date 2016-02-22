@@ -26,6 +26,12 @@ export function route(app: libs.express.Application) {
             response.setHeader("Last-Modified", new Date().toUTCString());
         }
 
+        // do not limit rate when in test environment
+        if (settings.currentEnvironment === types.environment.test) {
+            next();
+            return;
+        }
+
         let remainKey: string;
         let resetMomentKey: string;
         let errorMessage: string;

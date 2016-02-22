@@ -17,11 +17,13 @@ export async function invite(request: libs.Request, response: libs.Response) {
 
     const params: Params = request.params;
 
-    if (!libs.validator.isMongoId(params.organization_id)) {
+    if (typeof params.organization_id !== "string"
+        || !libs.validator.isMongoId(params.organization_id)) {
         throw services.error.fromParameterIsInvalidMessage("organization_id");
     }
 
-    if (!libs.validator.isEmail(params.user_email)) {
+    if (typeof params.user_email !== "string"
+        || !libs.validator.isEmail(params.user_email)) {
         throw services.error.fromParameterIsInvalidMessage("user_email");
     }
 

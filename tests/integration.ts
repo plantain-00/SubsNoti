@@ -704,7 +704,7 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
         jar: jar,
         qs: {
             client_id: clientId,
-            scopes: [types.scopeNames.readUser, types.scopeNames.readTheme],
+            scopes: [types.scopeNames.readUser, types.scopeNames.readTheme].join(),
             state: state,
             code: code,
         },

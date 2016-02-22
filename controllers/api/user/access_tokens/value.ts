@@ -12,7 +12,8 @@ export const documentOfRegenerate: types.Document = {
 export async function regenerate(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
 
-    if (!libs.validator.isMongoId(params.access_token_id)) {
+    if (typeof params.access_token_id !== "string"
+        || !libs.validator.isMongoId(params.access_token_id)) {
         throw services.error.fromParameterIsInvalidMessage("access_token_id");
     }
 

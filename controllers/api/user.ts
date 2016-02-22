@@ -45,8 +45,8 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     const body: Body = request.body;
 
-    const name = libs.validator.trim(body.name);
-    const avatarFileName = libs.validator.trim(body.avatarFileName);
+    const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
+    const avatarFileName = typeof body.avatarFileName === "string" ? libs.validator.trim(body.avatarFileName) : "";
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeUser);
 

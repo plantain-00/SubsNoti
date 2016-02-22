@@ -124,8 +124,8 @@ export function route() {
     }
 
     async function moveImage(request: libs.Request, response: libs.Response) {
-        const name = libs.validator.trim(request.body.name);
-        const newName = libs.validator.trim(request.body.newName);
+        const name = typeof request.body.name === "string" ? libs.validator.trim(request.body.name) : "";
+        const newName = typeof request.body.newName === "string" ? libs.validator.trim(request.body.newName) : "";
 
         if (!name) {
             throw services.error.fromParameterIsMissedMessage("name");
