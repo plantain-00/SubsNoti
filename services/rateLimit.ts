@@ -51,9 +51,10 @@ export function route(app: libs.express.Application) {
                 limit = settings.rateLimit.user;
             }
         } else {
-            remainKey = settings.cacheKeys.rateLimit.ip + fields.remain + request.ip;
-            resetMomentKey = settings.cacheKeys.rateLimit.ip + fields.resetMoment + request.ip;
-            errorMessage = `API rate limit exceeded for ${request.ip}, you can login to get a higher rate limit.`;
+            const ip = request.header("X-Real-IP");
+            remainKey = settings.cacheKeys.rateLimit.ip + fields.remain + ip;
+            resetMomentKey = settings.cacheKeys.rateLimit.ip + fields.resetMoment + ip;
+            errorMessage = `API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`;
             limit = settings.rateLimit.ip;
         }
 
