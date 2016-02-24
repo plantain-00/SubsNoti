@@ -66,8 +66,17 @@ export function route(app: libs.express.Application) {
         let remainString: string = await services.cache.getAsync(remainKey);
 
         if (remainString !== null) {
+            // just string to number
             let remain = +remainString;
             let resetMoment = await services.cache.getAsync(resetMomentKey);
+
+            // if no `resetMoment`, set a new one
+            if (!resetMoment) {
+                resetMoment = libs.moment().clone().add(1, "hours").toISOString();
+                services.cache.set(resetMomentKey, resetMoment, 60 * 60);
+                services.cache.client.expire(remainKey, 60 * 60);
+            }
+
             if (remain <= 0) {
                 setHeaders(remain, resetMoment);
                 services.response.sendError(response, services.error.fromMessage(errorMessage, types.StatusCode.tooManyRequest), documentUrl);
