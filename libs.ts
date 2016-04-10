@@ -44,8 +44,8 @@ export {moment};
 import * as _ from "lodash";
 export {_};
 
-import * as redis from "redis";
-export {redis};
+import * as Redis from "ioredis";
+export {Redis};
 
 import * as fs from "fs";
 export {fs};
