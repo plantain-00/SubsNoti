@@ -10,7 +10,7 @@ export const db = new Map<types.Environment, { host: string; user: string; passw
 
 export const smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
 
-export const redis = new Map<types.Environment, { host: string; port: number; options?: { auth_pass: string; }; }>();
+export const redis = new Map<types.Environment, { host: string; port: number; options?: IORedis.RedisOptions; }>();
 
 redis.set("test", {
     host: "localhost",

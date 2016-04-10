@@ -12,7 +12,7 @@ export async function create(id: string): Promise<{ url: string; code: string; }
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.
     const code = Math.round((Math.random() * 35 + 1) * 60466176).toString(36).toUpperCase();
 
-    services.cache.set(settings.cacheKeys.userCaptcha + id, code, 60);
+    services.cache.client.set(settings.cacheKeys.userCaptcha + id, code, "EX", 60);
 
     const width = 140;
     const height = 45;
@@ -36,9 +36,9 @@ export async function create(id: string): Promise<{ url: string; code: string; }
  */
 export async function validate(id: string, code: string): Promise<void> {
     const key = settings.cacheKeys.userCaptcha + id;
-    const targetCode = await services.cache.getAsync(key);
+    const targetCode = await services.cache.client.get(key);
 
-    await services.cache.deleteKeyAsync(key);
+    await services.cache.client.del(key);
 
     if (code.toUpperCase() !== targetCode) {
         throw services.error.fromMessage("the code is invalid or expired now.", types.StatusCode.invalidRequest);

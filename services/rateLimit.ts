@@ -64,17 +64,17 @@ export function route(app: libs.express.Application) {
             response.setHeader(settings.headerNames.rateLimit.resetMoment, resetMoment);
         }
 
-        let remainString: string = await services.cache.getAsync(remainKey);
+        let remainString: string = await services.cache.client.get(remainKey);
 
         if (remainString !== null) {
             // just string to number
             let remain = +remainString;
-            let resetMoment = await services.cache.getAsync(resetMomentKey);
+            let resetMoment = await services.cache.client.get(resetMomentKey);
 
             // if no `resetMoment`, set a new one
             if (!resetMoment) {
                 resetMoment = libs.moment().clone().add(1, "hours").toISOString();
-                services.cache.set(resetMomentKey, resetMoment, 60 * 60);
+                services.cache.client.set(resetMomentKey, resetMoment, "EX", 60 * 60);
                 services.cache.client.expire(remainKey, 60 * 60);
             }
 
@@ -87,8 +87,8 @@ export function route(app: libs.express.Application) {
             setHeaders(remain - 1, resetMoment);
         } else {
             let resetMoment = libs.moment().clone().add(1, "hours").toISOString();
-            services.cache.set(remainKey, limit - 1, 60 * 60);
-            services.cache.set(resetMomentKey, resetMoment, 60 * 60);
+            services.cache.client.set(remainKey, limit - 1, "EX", 60 * 60);
+            services.cache.client.set(resetMomentKey, resetMoment, "EX", 60 * 60);
             setHeaders(limit - 1, resetMoment);
         }
 
