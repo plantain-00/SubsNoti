@@ -52,7 +52,7 @@ export function logInfo(info: string) {
     };
 
     // show the info in pm2 logs
-    console.log(libs.colors.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`)));
+    console.log(libs.colors.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`));
 
     const log = new services.mongo.Log(data);
     log.save();
