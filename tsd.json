@@ -6,7 +6,7 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "node/node.d.ts": {
-            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
+            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         },
         "serve-static/serve-static.d.ts": {
             "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
@@ -91,6 +91,9 @@
         },
         "colors/colors.d.ts": {
             "commit": "220716d99a77df1654fb4f6cd760dc134ffa8e89"
+        },
+        "ioredis/ioredis.d.ts": {
+            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         }
     }
 }
