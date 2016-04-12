@@ -69,13 +69,13 @@
             "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
         },
         "request/request.d.ts": {
-            "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
+            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         },
         "form-data/form-data.d.ts": {
-            "commit": "ac5cd185d007f6aacd6eeaaecfb75dae3ff59553"
+            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         },
         "socket.io/socket.io.d.ts": {
-            "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
+            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         },
         "cookie-parser/cookie-parser.d.ts": {
             "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
