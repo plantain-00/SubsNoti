@@ -37,7 +37,7 @@ export function logError(error: types.E) {
     };
 
     // show the error in pm2 logs
-    console.log(libs.colors.red(JSON.stringify(data, null, "  ")));
+    console.log(libs.colors.red(`${new Date()}: ${JSON.stringify(data, null, "  ")}`));
 
     const log = new services.mongo.Log(data);
     log.save();
@@ -52,7 +52,7 @@ export function logInfo(info: string) {
     };
 
     // show the info in pm2 logs
-    console.log(libs.colors.green(JSON.stringify(data, null, "  ")));
+    console.log(libs.colors.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`));
 
     const log = new services.mongo.Log(data);
     log.save();
