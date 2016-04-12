@@ -49,16 +49,6 @@ import * as types from "./share/types";
 const settings = require("./settings");
 
 export function load() {
-    const db1 = {
-        host: "",
-        user: "",
-        password: "",
-        database: "",
-    };
-    settings.db.set("development", db1);
-    settings.db.set("test", db1);
-    settings.db.set("production", db1);
-
     const smtp1 = {
         host: "",
         auth: {
