@@ -36,7 +36,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         throw services.error.fromParameterIsMissedMessage("code");
     }
 
-    const value = await services.cache.client.get(settings.cacheKeys.oauthLoginCode + code);
+    const value = await services.cache.get(settings.cacheKeys.oauthLoginCode + code);
     if (!value) {
         throw services.error.fromMessage("code is invalid or expired", types.StatusCode.unauthorized);
     }

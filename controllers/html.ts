@@ -45,7 +45,7 @@ export const documentOfLoginWithGithub: types.Document = {
 
 export async function loginWithGithub(request: libs.Request, response: libs.Response) {
     const state = libs.generateUuid();
-    services.cache.client.set(settings.cacheKeys.githubLoginCode + state, "1", "EX", 10 * 60);
+    services.cache.set(settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.login.github.clientId}&scope=user:email&state=${state}`);
 }
 
@@ -75,7 +75,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             throw new Error("missed parameter:code");
         }
 
-        const value = await services.cache.client.get(settings.cacheKeys.githubLoginCode + state);
+        const value = await services.cache.get(settings.cacheKeys.githubLoginCode + state);
         if (!value) {
             throw new Error("invalid parameter:state");
         }
@@ -173,7 +173,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // after authorized, there is a code in `query`, check that in cache
         if (query.code) {
-            const value = await services.cache.client.get(settings.cacheKeys.oauthLoginCode + query.code);
+            const value = await services.cache.get(settings.cacheKeys.oauthLoginCode + query.code);
             if (value) {
                 const json: types.OAuthCodeValue = JSON.parse(value);
                 if (json.confirmed) {
@@ -214,7 +214,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                     state: state,
                     confirmed: true,
                 };
-                services.cache.client.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), "EX", 30 * 60);
+                services.cache.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
                 if (settings.currentEnvironment === types.environment.test) {
                     const result: types.OAuthAuthorizationResult = {
@@ -238,7 +238,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             state: state,
             confirmed: false,
         };
-        services.cache.client.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), "EX", 30 * 60);
+        services.cache.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
         // if not confirmed, redirected to authorization page
         if (settings.currentEnvironment === types.environment.test) {
