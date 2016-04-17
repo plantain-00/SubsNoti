@@ -7,13 +7,12 @@ before_script:
   - npm install -g gulp
   - npm install -g typescript
 script:
-  - export NODE_ENV=test
   - gulp build
-  - node api.js &
-  - gulp imageUploader.js &
-  - gulp host-imageServer-test &
+  - export NODE_ENV=test && node api.js &
+  - export NODE_ENV=test && gulp imageUploader.js &
+  - export NODE_ENV=test && gulp host-imageServer-test &
   - sleep 15
-  - node tests/test.js
+  - export NODE_ENV=test && node tests/test.js
 services:
   - mongodb
   - redis-server
