@@ -1,10 +1,6 @@
 import * as types from "./share/types";
 
-export let currentEnvironment: types.Environment;
-
-export function setEnvironment(environment: types.Environment) {
-    currentEnvironment = environment;
-}
+export let currentEnvironment: types.Environment = process.env.NODE_ENV || types.environment.production;
 
 export const db: { host: string; user: string; password: string; database: string; } = undefined;
 

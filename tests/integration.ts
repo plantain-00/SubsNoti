@@ -2,8 +2,6 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as settings from "../settings";
 
-settings.setEnvironment(types.environment.test);
-
 import * as services from "../services";
 
 const apiUrl = settings.api.get(settings.currentEnvironment);
