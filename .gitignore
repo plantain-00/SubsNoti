@@ -1,6 +1,13 @@
 node_modules/
-secret.ts
 images/
-**/*.js
-!gulpfile.js
+**/*.ts
+gulpfile.js
 test_images/
+.vscode
+typings
+tsconfig.json
+tsd.json
+tslint.json
+*.yml
+jsconfig.json
+tests
