@@ -14,12 +14,12 @@ export async function confirm(request: libs.Request, response: libs.Response) {
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    const value = await services.cache.get(settings.cacheKeys.oauthLoginCode + code);
+    const value = await services.redis.get(settings.cacheKeys.oauthLoginCode + code);
     const json: types.OAuthCodeValue = JSON.parse(value);
 
     json.confirmed = true;
 
-    services.cache.set(settings.cacheKeys.oauthLoginCode + code, JSON.stringify(json));
+    services.redis.set(settings.cacheKeys.oauthLoginCode + code, JSON.stringify(json));
 
     services.response.sendSuccess(response, types.StatusCode.createdOrModified);
 };

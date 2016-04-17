@@ -15,9 +15,9 @@ export function route() {
     app.use(libs.bodyParser.json());
     app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-    app.use(libs.cors(settings.cors.get(settings.currentEnvironment)));
+    app.use(libs.cors(settings.cors));
 
-    services.cache.connect();
+    services.redis.connect();
 
     services.mongo.connect();
 

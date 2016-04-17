@@ -38,7 +38,7 @@ export async function route() {
     app.use(libs.bodyParser.json());
     app.use(libs.bodyParser.urlencoded({ extended: true }));
 
-    app.use(libs.cors(settings.cors.get(settings.currentEnvironment)));
+    app.use(libs.cors(settings.cors));
 
     services.version.route(app);
     services.rateLimit.route(app);
@@ -101,7 +101,7 @@ export async function route() {
 
     services.mongo.connect();
 
-    services.cache.connect();
+    services.redis.connect();
 
     services.email.connect();
 

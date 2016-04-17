@@ -6,12 +6,12 @@ import * as services from "../services";
 let transporter: libs.nodemailer.Transporter;
 
 export function connect() {
-    transporter = libs.nodemailer.createTransport(settings.smtp.get(settings.currentEnvironment));
+    transporter = libs.nodemailer.createTransport(settings.smtp);
 }
 
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     const mailOptions = {
-        from: settings.smtp.get(settings.currentEnvironment).auth.user,
+        from: settings.smtp.auth.user,
         to: to,
         subject: subject,
         html: html,

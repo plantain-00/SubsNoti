@@ -10,8 +10,8 @@ export {response};
 import * as db from "./services/db";
 export {db};
 
-import * as cache from "./services/cache";
-export {cache};
+import * as redis from "./services/redis";
+export {redis};
 
 import * as logger from "./services/logger";
 export {logger};

@@ -22,13 +22,13 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
         return;
     }
     const frequencyKey = keyPrefix + key;
-    const value = await services.cache.get(frequencyKey);
+    const value = await services.redis.get(frequencyKey);
 
     if (value) {
-        const reply = await services.cache.ttl(frequencyKey);
+        const reply = await services.redis.ttl(frequencyKey);
 
         return Promise.reject(services.error.fromMessage(`do it later after ${reply} seconds`, types.StatusCode.tooManyRequest));
     }
 
-    services.cache.set(frequencyKey, "1", seconds);
+    services.redis.set(frequencyKey, "1", seconds);
 }

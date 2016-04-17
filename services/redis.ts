@@ -6,8 +6,7 @@ import * as services from "../services";
 let client: IORedis.Redis;
 
 export function connect() {
-    const redis = settings.redis.get(settings.currentEnvironment);
-    client = new libs.Redis(redis.port, redis.host, redis.options);
+    client = new libs.Redis(settings.redis.port, settings.redis.host, settings.redis.options);
     client.on("error", error => {
         services.logger.logError(error);
     });
@@ -93,4 +92,10 @@ export function zrangebyscore(key: string | number, withScores: boolean, offset:
         return client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
     }
     return client.zrangebyscore(key, "-inf", "+inf", "LIMIT", offset, count);
+}
+
+// list
+
+export function lrange(key: string | number, start: number, stop: number): Promise<string[]> {
+    return client.lrange(key, start, stop);
 }

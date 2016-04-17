@@ -6,62 +6,46 @@ export function setEnvironment(environment: types.Environment) {
     currentEnvironment = environment;
 }
 
-export const db = new Map<types.Environment, { host: string; user: string; password: string; database: string; }>();
+export const db: { host: string; user: string; password: string; database: string; } = undefined;
 
-export const smtp = new Map<types.Environment, { host: string; auth: { user: string; pass: string; }; }>();
+export const smtp = {
+    host: process.env.SUBS_NOTI_SMTP_HOST,
+    auth: {
+        user: process.env.SUBS_NOTI_SMTP_USER,
+        pass: process.env.SUBS_NOTI_SMTP_PASSWORD,
+    },
+};
 
-export const redis = new Map<types.Environment, { host: string; port: number; options?: IORedis.RedisOptions; }>();
+export const redis = {
+    host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
+    port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
+    options: {
+        pass: process.env.SUBS_NOTI_REDIS_PASSWORD
+    },
+};
 
-redis.set("test", {
-    host: "localhost",
-    port: 6379,
-});
+export const mongodb = {
+    url: process.env.SUBS_NOTI_MONGODB_URL,
+    options: {
+        user: process.env.SUBS_NOTI_MONGODB_USER,
+        pass: process.env.SUBS_NOTI_MONGODB_PASSWORD,
+    },
+};
 
-export const mongodb = new Map<types.Environment, { url: string; options?: { user: string; pass: string; } }>();
-
-mongodb.set("test", {
-    url: "mongodb://127.0.0.1:27017/log_db_test"
-});
-
-export const api = new Map<types.Environment, string>();
-const api0 = "http://localhost:9998";
-const api1 = "https://yorkyao.xyz";
-api.set("development", api0);
-api.set("test", api0);
-api.set("production", api1);
+export const api = process.env.SUBS_NOTI_API_URL || "http://localhost:9998";
 
 export const urls = {
     login: "/login_with_authentication_credential",
     version: "/api/version",
 };
 
-export const imageUploader = new Map<types.Environment, string>();
-const imageUploader0 = "http://localhost:9999";
-const imageUploader1 = "https://upload.yorkyao.xyz";
-imageUploader.set("development", imageUploader0);
-imageUploader.set("test", imageUploader0);
-imageUploader.set("production", imageUploader1);
+export const imageUploader = process.env.SUBS_NOTI_IMAGE_UPLOADER_URL || "http://localhost:9999";
 
-export const documentServer = new Map<types.Environment, string>();
-const documentServer0 = "http://localhost:9997";
-const documentServer1 = "https://doc.yorkyao.xyz";
-documentServer.set("development", documentServer0);
-documentServer.set("test", documentServer0);
-documentServer.set("production", documentServer1);
+export const documentServer = process.env.SUBS_NOTI_DOCUMENT_URL || "http://localhost:9997";
 
-export const imageServer = new Map<types.Environment, string>();
-const imageServer0 = "http://localhost:7777";
-const imageServer1 = "https://img.yorkyao.xyz";
-imageServer.set("development", imageServer0);
-imageServer.set("test", imageServer0);
-imageServer.set("production", imageServer1);
+export const imageServer = process.env.SUBS_NOTI_IMAGE_SERVER_URL || "http://localhost:7777";
 
-export const frontendsServer = new Map<types.Environment, string>();
-const frontendsServer0 = "https://yorkyao.xyz";
-const frontendsServer1 = "http://localhost:8888";
-frontendsServer.set("development", frontendsServer1);
-frontendsServer.set("test", frontendsServer0);
-frontendsServer.set("production", frontendsServer0);
+export const frontendsServer = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
 
 export const maxOrganizationNumberUserCanCreate = 3;
 
@@ -91,51 +75,21 @@ export const authorizationHeaders = {
 
 export const uploadIPWhiteList = new Map<types.Environment, string[]>();
 
-const uploadIPWhiteList1 = ["127.0.0.1"];
-const uploadIPWhiteList2 = ["115.29.42.125", "127.0.0.1"];
-uploadIPWhiteList.set("development", uploadIPWhiteList1);
-uploadIPWhiteList.set("test", uploadIPWhiteList1);
-uploadIPWhiteList.set("production", uploadIPWhiteList2);
+const uploadIPWhiteList1 = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
 
 export const cookieDomains = new Map<types.Environment, string>();
 
-const cookieDomain1 = undefined;
-const cookieDomain2 = ".yorkyao.xyz";
-cookieDomains.set("development", cookieDomain1);
-cookieDomains.set("test", cookieDomain1);
-cookieDomains.set("production", cookieDomain2);
+const cookieDomain1 = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
 
 export const imagePaths = {
     avatar: "avatar-"
 };
 
-export const cors = new Map<types.Environment, { methods: string; credentials: boolean, origin: string[]; }>();
-
-const cors1 = {
+export const cors = {
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
-    origin: [
-        "http://localhost:8888"
-    ],
+    origin: (process.env.SUBS_NOTI_CORS_ORIGIN as string || "http://localhost:8888").split(","),
 };
-const cors2 = {
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
-    origin: [
-        "https://yorkyao.xyz"
-    ],
-};
-cors.set("development", cors1);
-cors.set("test", cors1);
-cors.set("production", cors2);
-
-cors.set("test", {
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
-    origin: [
-        "http://localhost:8888"
-    ],
-});
 
 export const rateLimit = {
     user: 5000,
@@ -183,10 +137,3 @@ export const scopes: types.Scope[] = [
 
 export const apiPort = 9998;
 export const imageUploaderPort = 9999;
-
-try {
-    const secret = require("./secret");
-    secret.load();
-} catch (e) {
-    console.log(e);
-}

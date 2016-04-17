@@ -78,8 +78,7 @@ export interface AccessTokenDocument extends libs.mongoose.Document {
 }
 
 export function connect() {
-    const mongodb = settings.mongodb.get(settings.currentEnvironment);
-    libs.mongoose.connect(mongodb.url, mongodb.options);
+    libs.mongoose.connect(settings.mongodb.url, settings.mongodb.options);
 
     libs.mongoose.connection.on("error", console.error.bind(console, "connection error:"));
 
