@@ -1,3 +1,4 @@
 [submodule "share"]
 	path = share
 	url = https://github.com/plantain-00/SubsNoti-share
+	branch = release
