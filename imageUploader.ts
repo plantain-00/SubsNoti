@@ -5,8 +5,6 @@ import * as services from "./services";
 
 const app = libs.express();
 
-app.settings.env = settings.currentEnvironment;
-
 app.use(libs.compression());
 
 app.use(libs.cookieParser());
@@ -96,7 +94,7 @@ const uploadAsync = (request: libs.Request, response: libs.Response) => {
 services.version.route(app);
 services.rateLimit.route(app);
 
-const uploadIPWhiteList = settings.uploadIPWhiteList.get(settings.currentEnvironment);
+const uploadIPWhiteList = settings.uploadIPWhiteList;
 
 async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
     if (!uploadIPWhiteList.find(i => i === request.ip)) {

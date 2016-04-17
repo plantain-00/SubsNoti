@@ -38,7 +38,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const token = await services.tokens.create(email, documentOfCreate.url, request, name);
 
-    const url = `${settings.api.get(settings.currentEnvironment)}${settings.urls.login}?` + libs.qs.stringify({
+    const url = `${settings.api}${settings.urls.login}?` + libs.qs.stringify({
         authentication_credential: token,
         redirect_url: redirectUrl,
     });

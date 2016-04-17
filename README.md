@@ -5,7 +5,7 @@
 # tools and global npm packages
 
 + node.js >=4.0(for ES6 support)
-+ typescript@next(for ES6 and ES7 async function support)
++ typescript(for ES6 and ES7 async function support)
 + gulp
 + mongodb
 + redis
@@ -25,17 +25,3 @@
 
 + `gulp deploy`
 + `pm2 restart all`
-
-# demo
-
-## api
-
-https://yorkyao.xyz/
-
-## image server
-
-https://img.yorkyao.xyz/
-
-## image uploader
-
-https://upload.yorkyao.xyz/

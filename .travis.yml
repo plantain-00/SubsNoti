@@ -1,15 +1,16 @@
 language: node_js
 node_js:
-  - "4.1"
+  - "4.4"
 before_install:
   - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 before_script:
   - npm install -g gulp
-  - npm install -g typescript@next
+  - npm install -g typescript
 script:
+  - export NODE_ENV=test
   - gulp build
-  - gulp host-api-test &
-  - gulp host-imageUploader-test &
+  - node api.js &
+  - gulp imageUploader.js &
   - gulp host-imageServer-test &
   - sleep 15
   - node tests/test.js

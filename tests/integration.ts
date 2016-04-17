@@ -4,9 +4,9 @@ import * as settings from "../settings";
 
 import * as services from "../services";
 
-const apiUrl = settings.api.get(settings.currentEnvironment);
-const imageServer = settings.imageServer.get(settings.currentEnvironment);
-const imageUploader = settings.imageUploader.get(settings.currentEnvironment);
+const apiUrl = settings.api;
+const imageServer = settings.imageServer;
+const imageUploader = settings.imageUploader;
 
 const jar = libs.request.jar();
 

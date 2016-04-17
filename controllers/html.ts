@@ -3,24 +3,22 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-const frontendsServer = settings.frontendsServer.get(settings.currentEnvironment);
-
 function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect(frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
+    response.redirect(settings.frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
 }
 
 function setCookie(request: libs.Request, response: libs.Response, token: string, redirectUrl?: string) {
     if (!token) {
-        response.redirect(frontendsServer + "/success.html");
+        response.redirect(settings.frontendsServer + "/success.html");
     } else {
         response.cookie(settings.cookieKeys.authenticationCredential, token, {
             expires: libs.moment().clone().add(1, "months").toDate(),
             httpOnly: true,
-            domain: settings.cookieDomains.get(settings.currentEnvironment),
+            domain: settings.cookieDomains,
             secure: settings.currentEnvironment === types.environment.production,
         });
 
-        response.redirect(frontendsServer + "/success.html?" + libs.qs.stringify({
+        response.redirect(settings.frontendsServer + "/success.html?" + libs.qs.stringify({
             clear_previous_status: types.yes,
             redirect_url: redirectUrl,
         }));

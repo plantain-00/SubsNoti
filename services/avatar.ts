@@ -9,7 +9,7 @@ import * as services from "../services";
 export async function createIfNotExistsAsync(id: string): Promise<void> {
     const seed: string = libs.md5(id);
     const fileName = getDefaultName(id);
-    const existResponse = await services.request.getAsync(`${settings.imageServer.get(settings.currentEnvironment)}/${fileName}`, types.responseType.others);
+    const existResponse = await services.request.getAsync(`${settings.imageServer}/${fileName}`, types.responseType.others);
     if (existResponse.response.statusCode === types.StatusCode.OK) {
         services.logger.logInfo("exists:" + fileName);
     } else {
@@ -65,7 +65,7 @@ function createAsync(seed: string, fileName: string) {
             },
         };
 
-        return services.request.postMultipartAsync(`${settings.imageUploader.get(settings.currentEnvironment)}/api/persistent`, formData);
+        return services.request.postMultipartAsync(`${settings.imageUploader}/api/persistent`, formData);
     });
 }
 

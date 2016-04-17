@@ -28,20 +28,20 @@ export const mongodb = {
     },
 };
 
-export const api = process.env.SUBS_NOTI_API_URL || "http://localhost:9998";
+export const api: string = process.env.SUBS_NOTI_API_URL || "http://localhost:9998";
 
 export const urls = {
     login: "/login_with_authentication_credential",
     version: "/api/version",
 };
 
-export const imageUploader = process.env.SUBS_NOTI_IMAGE_UPLOADER_URL || "http://localhost:9999";
+export const imageUploader: string = process.env.SUBS_NOTI_IMAGE_UPLOADER_URL || "http://localhost:9999";
 
-export const documentServer = process.env.SUBS_NOTI_DOCUMENT_URL || "http://localhost:9997";
+export const documentServer: string = process.env.SUBS_NOTI_DOCUMENT_URL || "http://localhost:9997";
 
-export const imageServer = process.env.SUBS_NOTI_IMAGE_SERVER_URL || "http://localhost:7777";
+export const imageServer: string = process.env.SUBS_NOTI_IMAGE_SERVER_URL || "http://localhost:7777";
 
-export const frontendsServer = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
+export const frontendsServer: string = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
 
 export const maxOrganizationNumberUserCanCreate = 3;
 
@@ -69,13 +69,9 @@ export const authorizationHeaders = {
     token: "token "
 };
 
-export const uploadIPWhiteList = new Map<types.Environment, string[]>();
+export const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
 
-const uploadIPWhiteList1 = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
-
-export const cookieDomains = new Map<types.Environment, string>();
-
-const cookieDomain1 = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
+export const cookieDomains: string = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
 
 export const imagePaths = {
     avatar: "avatar-"
@@ -97,8 +93,8 @@ export const rateLimit = {
 
 export const login = {
     github: {
-        clientId: "",
-        clientSecret: "",
+        clientId: process.env.SUBS_NOTI_GITHUB_CLIENT_ID,
+        clientSecret: process.env.SUBS_NOTI_GITHUB_CLIENT_SECRET,
     },
 };
 

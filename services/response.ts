@@ -23,7 +23,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: settings.documentServer.get(settings.currentEnvironment) + (documentUrl ? documentUrl : response.documentUrl),
+        documentUrl: settings.documentServer + (documentUrl ? documentUrl : response.documentUrl),
     };
 
     if (!isE) {

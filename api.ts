@@ -28,8 +28,6 @@ import * as applications from "./controllers/api/applications";
 
 const app = libs.express();
 
-app.settings.env = settings.currentEnvironment;
-
 app.use(libs.compression());
 
 app.use(libs.cookieParser());
