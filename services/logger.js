@@ -32,7 +32,7 @@ function logError(error) {
         },
     };
     // show the error in pm2 logs
-    console.log(libs.colors.red(`${new Date()}: ${JSON.stringify(data, null, "  ")}`));
+    libs.red(`${new Date()}: ${JSON.stringify(data, null, "  ")}`);
     const log = new services.mongo.Log(data);
     log.save();
 }
@@ -45,7 +45,7 @@ function logInfo(info) {
         },
     };
     // show the info in pm2 logs
-    console.log(libs.colors.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`));
+    libs.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`);
     const log = new services.mongo.Log(data);
     log.save();
 }

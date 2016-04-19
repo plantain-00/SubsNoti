@@ -47,7 +47,14 @@ var ObjectId = mongoose.Types.ObjectId;
 exports.ObjectId = ObjectId;
 exports.cors = require("cors");
 const colors = require("colors");
-exports.colors = colors;
+function green(message) {
+    console.log(green(message));
+}
+exports.green = green;
+function red(message) {
+    console.log(red(message));
+}
+exports.red = red;
 const mime = require("mime");
 exports.mime = mime;
 const socket = require("socket.io");
