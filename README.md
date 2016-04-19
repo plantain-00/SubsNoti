@@ -12,10 +12,12 @@
 + node-gyp build environment
 + node-canvas environment
 + pm2(host api and image uploader)
++ tsd
 
 # development
 
 + `npm install`
++ `tsd install`
 + `gulp build`
 + `gulp host`
 + `gulp host-imageUploader`

@@ -3,3 +3,5 @@ images/
 **/*.js
 !gulpfile.js
 test_images/
+typings
+.vscode

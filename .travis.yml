@@ -4,8 +4,8 @@ node_js:
 before_install:
   - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 before_script:
-  - npm install -g gulp
-  - npm install -g typescript
+  - npm install -g gulp typescript tsd
+  - tsd install
 script:
   - gulp build
 env:
