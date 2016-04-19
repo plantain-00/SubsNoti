@@ -72,8 +72,15 @@ export {ObjectId};
 
 export const cors = require("cors");
 
-import * as colors from "colors";
-export {colors};
+const colors = require("colors");
+
+export function green(message: string) {
+    console.log(green(message));
+}
+
+export function red(message: string) {
+    console.log(red(message));
+}
 
 import * as mime from "mime";
 export {mime};

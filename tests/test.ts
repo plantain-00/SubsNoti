@@ -12,15 +12,15 @@ integration.setOperation(async (caseName, body) => {
     if (expected !== actually) {
         throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     }
-    console.log(libs.colors.green(`${index++}: case "${caseName}" is passed.`));
+    libs.green(`${index++}: case "${caseName}" is passed.`);
 });
 
 (async () => {
     try {
         await integration.run();
-        console.log(libs.colors.green("all test cases are passed!"));
+        libs.green("all test cases are passed!");
     } catch (error) {
-        console.log(libs.colors.red("error:"));
+        libs.red("error:");
         console.log(error);
         exit(1);
     }

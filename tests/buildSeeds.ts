@@ -77,6 +77,6 @@ if (!seeds.newAccessToken) {
 
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
-        console.log(libs.colors.red(error as any));
+        libs.red(error as any);
     }
 });

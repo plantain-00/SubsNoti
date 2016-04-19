@@ -6,7 +6,7 @@ const responses = {};
 
 integration.setOperation(async (caseName, body) => {
     responses[caseName] = body;
-    console.log(libs.colors.green(`case "${caseName}" is done.`));
+    libs.green(`case "${caseName}" is done.`);
 });
 
 (async () => {
@@ -14,14 +14,14 @@ integration.setOperation(async (caseName, body) => {
         await integration.run();
         libs.fs.writeFile("./tests/baseline.json", JSON.stringify(responses, null, "    "), error => {
             if (error) {
-                console.log(libs.colors.red("error:"));
+                libs.red("error:");
                 console.log(error);
             } else {
-                console.log(libs.colors.green("all test cases are rebuilt!"));
+                libs.green("all test cases are rebuilt!");
             }
         });
     } catch (error) {
-        console.log(libs.colors.red("error:"));
+        libs.red("error:");
         console.log(error);
         exit(1);
     }
