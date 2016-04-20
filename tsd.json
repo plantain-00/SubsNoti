@@ -89,9 +89,6 @@
         "qs/qs.d.ts": {
             "commit": "78d36dd49b6b55b9fdfe61776a12bf05c8b07777"
         },
-        "colors/colors.d.ts": {
-            "commit": "220716d99a77df1654fb4f6cd760dc134ffa8e89"
-        },
         "ioredis/ioredis.d.ts": {
             "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
         }
