@@ -63,6 +63,9 @@ export function hget(key: string | number, field: string | number): Promise<stri
 export function hgetall<T>(key: string | number): Promise<T> {
     return client.hgetall(key);
 }
+export function hmget(key: string | number, fields: (string | number)[]): Promise<string[]> {
+    return client.hmget(key, fields);
+}
 
 // set
 
