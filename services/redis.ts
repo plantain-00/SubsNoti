@@ -60,7 +60,7 @@ export function hincrby(key: string | number, field: string | number, increment:
 export function hget(key: string | number, field: string | number): Promise<string> {
     return client.hget(key, field);
 }
-export function hgetall<T>(key: string | number): Promise<T> {
+export function hgetall(key: string | number): Promise<{ [field: string]: string }> {
     return client.hgetall(key);
 }
 export function hmget(key: string | number, fields: (string | number)[]): Promise<string[]> {
@@ -90,11 +90,19 @@ export function zrem(key: string | number, member: string | number) {
 export function zscore(key: string | number, member: string | number): Promise<number> {
     return client.zscore(key, member);
 }
-export function zrangebyscore(key: string | number, withScores: boolean, offset: number, count: number): Promise<string[]> {
-    if (withScores) {
-        return client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
-    }
+export function zrangebyscore(key: string | number, offset: number, count: number): Promise<string[]> {
     return client.zrangebyscore(key, "-inf", "+inf", "LIMIT", offset, count);
+}
+export async function zrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
+    const raw: string[] = await client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
+    const result: { member: string, score: number }[] = [];
+    for (let i = 0; i < raw.length; i += 2) {
+        result.push({
+            member: raw[i],
+            score: +raw[i + 1],
+        });
+    }
+    return result;
 }
 
 // list
