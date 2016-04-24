@@ -8,13 +8,13 @@ function logRequest(url, request) {
             url: url
         },
     };
-    if (!libs._.isEmpty(request.params)) {
+    if (!libs.isEmpty(request.params)) {
         data.content.params = request.params;
     }
-    if (!libs._.isEmpty(request.body)) {
+    if (!libs.isEmpty(request.body)) {
         data.content.body = request.body;
     }
-    if (!libs._.isEmpty(request.query)) {
+    if (!libs.isEmpty(request.query)) {
         data.content.query = request.query;
     }
     const log = new services.mongo.Log(data);

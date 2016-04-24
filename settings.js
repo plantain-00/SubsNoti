@@ -17,7 +17,7 @@ exports.redis = {
     },
 };
 exports.mongodb = {
-    url: process.env.SUBS_NOTI_MONGODB_URL,
+    url: process.env.SUBS_NOTI_MONGODB_URL || "mongodb://127.0.0.1:27017/log_db_test",
     options: {
         user: process.env.SUBS_NOTI_MONGODB_USER,
         pass: process.env.SUBS_NOTI_MONGODB_PASSWORD,

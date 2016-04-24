@@ -1,6 +1,5 @@
 "use strict";
 const types = require("../share/types");
-const libs = require("../libs");
 const settings = require("../settings");
 const services = require("../services");
 function sendSuccess(response, statusCode, result) {
@@ -11,7 +10,7 @@ function sendSuccess(response, statusCode, result) {
         isSuccess: true,
         statusCode: statusCode,
     };
-    response.status(200 /* OK */).json(libs._.extend(baseResponse, result));
+    response.status(200 /* OK */).json(Object.assign(baseResponse, result));
 }
 exports.sendSuccess = sendSuccess;
 function sendError(response, error, documentUrl) {

@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
 const libs = require("../libs");
 const settings = require("../settings");
 const services = require("../services");
@@ -67,6 +75,10 @@ function hgetall(key) {
     return client.hgetall(key);
 }
 exports.hgetall = hgetall;
+function hmget(key, fields) {
+    return client.hmget(key, fields);
+}
+exports.hmget = hmget;
 // set
 function sismember(key, member) {
     return client.sismember(key, member);
@@ -93,13 +105,24 @@ function zscore(key, member) {
     return client.zscore(key, member);
 }
 exports.zscore = zscore;
-function zrangebyscore(key, withScores, offset, count) {
-    if (withScores) {
-        return client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
-    }
+function zrangebyscore(key, offset, count) {
     return client.zrangebyscore(key, "-inf", "+inf", "LIMIT", offset, count);
 }
 exports.zrangebyscore = zrangebyscore;
+function zrangebyscoreWithScores(key, offset, count) {
+    return __awaiter(this, void 0, Promise, function* () {
+        const raw = yield client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
+        const result = [];
+        for (let i = 0; i < raw.length; i += 2) {
+            result.push({
+                member: raw[i],
+                score: +raw[i + 1],
+            });
+        }
+        return result;
+    });
+}
+exports.zrangebyscoreWithScores = zrangebyscoreWithScores;
 // list
 function lrange(key, start, stop) {
     return client.lrange(key, start, stop);

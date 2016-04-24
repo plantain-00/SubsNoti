@@ -26,8 +26,6 @@ exports.md5 = require("md5");
 const uuid = require("node-uuid");
 const moment = require("moment");
 exports.moment = moment;
-const _ = require("lodash");
-exports._ = _;
 const Redis = require("ioredis");
 exports.Redis = Redis;
 const fs = require("fs");
@@ -75,3 +73,7 @@ exports.renameAsync = (oldPath, newPath) => {
         });
     });
 };
+exports.difference = require("lodash.difference");
+exports.isEmpty = require("lodash.isempty");
+exports.omit = require("lodash.omit");
+exports.pick = require("lodash.pick");

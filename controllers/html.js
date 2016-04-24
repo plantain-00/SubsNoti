@@ -179,7 +179,7 @@ function authorize(request, response) {
             const scopeArray = scopes === "" ? [] : scopes.split(",");
             if (accessToken) {
                 // if access token was generated, that is, already authorized, check whether the application need more scopes or not
-                const newScopes = libs._.difference(scopeArray, accessToken.scopes);
+                const newScopes = libs.difference(scopeArray, accessToken.scopes);
                 if (newScopes.length === 0) {
                     // if no more scopes, authorization is not needed
                     const value = {
