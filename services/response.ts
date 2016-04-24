@@ -13,7 +13,7 @@ export function sendSuccess(response: libs.Response, statusCode: types.StatusCod
         statusCode: statusCode,
     };
 
-    response.status(types.StatusCode.OK).json(libs._.extend(baseResponse, result));
+    response.status(types.StatusCode.OK).json(Object.assign(baseResponse, result));
 }
 
 export function sendError(response: libs.Response, error: types.E, documentUrl?: string) {

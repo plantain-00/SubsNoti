@@ -32,7 +32,7 @@ async function getVersion(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, libs._.omit<any, any>(body, ["version"]));
+    await operate(caseName, libs.omit(body, ["version"]));
 
     return body.version;
 }
@@ -53,7 +53,7 @@ async function createCaptcha(guid: string, caseName: string) {
         throw body;
     }
 
-    await operate(caseName, libs._.omit<any, any>(body, ["url", "code"]));
+    await operate(caseName, libs.omit(body, ["url", "code"]));
 
     return body.code;
 }
@@ -77,7 +77,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
         throw body;
     }
 
-    await operate(caseName, libs._.omit<any, any>(body, ["url"]));
+    await operate(caseName, libs.omit(body, ["url"]));
 
     return body.url;
 }
@@ -147,8 +147,8 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "user");
-    result["user"] = libs._.omit<any, any>(body.user, ["id", "avatar"]);
+    const result = libs.omit(body, "user");
+    result["user"] = libs.omit(body.user, ["id", "avatar"]);
     await operate(caseName, result);
 
     return body;
@@ -187,8 +187,8 @@ async function getCreatedOrganizations(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "organizations");
-    result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
+    const result = libs.omit(body, "organizations");
+    result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
     await operate(caseName, result);
 
     return body.organizations;
@@ -207,8 +207,8 @@ async function getJoinedOrganizations(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "organizations");
-    result["organizations"] = body.organizations.map(organization => libs._.omit<any, any>(organization, "id"));
+    const result = libs.omit(body, "organizations");
+    result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
     await operate(caseName, result);
 
     return body.organizations;
@@ -230,12 +230,12 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "themes");
+    const result = libs.omit(body, "themes");
     result.themes = body.themes.map(theme => {
-        const t = libs._.pick<any, any>(theme, "title", "detail", "status");
-        t.creator = libs._.pick<any, any>(theme.creator, "name", "email");
-        t.owners = theme.owners.map(owner => libs._.pick<any, any>(owner, "name", "email"));
-        t.watchers = theme.watchers.map(watcher => libs._.pick<any, any>(watcher, "name", "email"));
+        const t = libs.pick(theme, "title", "detail", "status");
+        t.creator = libs.pick(theme.creator, "name", "email");
+        t.owners = theme.owners.map(owner => libs.pick(owner, "name", "email"));
+        t.watchers = theme.watchers.map(watcher => libs.pick(watcher, "name", "email"));
         return t;
     });
 
@@ -347,7 +347,7 @@ async function uploadAvatar(caseName: string) {
         throw body;
     }
 
-    await operate(caseName, libs._.omit<any, any>(body, ["names"]));
+    await operate(caseName, libs.omit(body, ["names"]));
 
     return body.names;
 }
@@ -447,7 +447,7 @@ async function getRegisteredApplications(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "applications");
+    const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
         return {
             name: application.name,
@@ -554,7 +554,7 @@ async function getApplication(caseName: string, applicationId: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "application");
+    const result = libs.omit(body, "application");
     result.application = {
         name: body.application.name,
         homeUrl: body.application.homeUrl,
@@ -582,7 +582,7 @@ async function getAccessTokens(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "accessTokens");
+    const result = libs.omit(body, "accessTokens");
     result.accessTokens = body.accessTokens.map(accessToken => {
         return {
             description: accessToken.description,
@@ -613,7 +613,7 @@ async function createAccessToken(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "accessToken");
+    const result = libs.omit(body, "accessToken");
 
     await operate(caseName, result);
 
@@ -655,7 +655,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "accessToken");
+    const result = libs.omit(body, "accessToken");
 
     await operate(caseName, result);
 
@@ -714,7 +714,7 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "code");
+    const result = libs.omit(body, "code");
 
     if (body.pageName === types.oauthAuthorization.login) {
         throw body;
@@ -755,7 +755,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "accessToken");
+    const result = libs.omit(body, "accessToken");
     await operate(caseName, result);
 
     return body.accessToken;
@@ -774,7 +774,7 @@ async function getAuthorizedApplications(caseName: string) {
         throw body;
     }
 
-    const result = libs._.omit<any, any>(body, "applications");
+    const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
         return {
             name: application.name,

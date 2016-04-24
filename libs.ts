@@ -41,9 +41,6 @@ import * as uuid from "node-uuid";
 import * as moment from "moment";
 export {moment};
 
-import * as _ from "lodash";
-export {_};
-
 import * as Redis from "ioredis";
 export {Redis};
 
@@ -121,3 +118,8 @@ export const renameAsync = (oldPath: string, newPath: string) => {
         });
     });
 };
+
+export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.difference");
+export const isEmpty: (value: any) => boolean = require("lodash.isempty");
+export const omit: (object: {}, props: string | string[]) => any = require("lodash.omit");
+export const pick: (object: {}, ...props: string[]) => any = require("lodash.pick");
