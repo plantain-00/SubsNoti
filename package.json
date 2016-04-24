@@ -37,9 +37,9 @@
     "gulp": "^3.9.0",
     "gulp-shell": "^0.5.1",
     "gulp-tslint": "^4.3.5",
-    "live-server": "^0.9.0",
+    "live-server": "^1.0.0",
     "mkdirp": "^0.5.1",
-    "tslint": "3.2.0-dev.2",
+    "tslint": "^3.8.0",
     "typescript": "^1.8.10"
   },
   "engines": {
