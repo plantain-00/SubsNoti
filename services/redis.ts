@@ -39,6 +39,9 @@ export function expire(key: string | number, seconds: number): Promise<number> {
 export function decr(key: string | number): Promise<number> {
     return client.decr(key);
 }
+export function incrby(key: string | number, increment: number) {
+    client.incrby(key, increment);
+}
 
 // sub/pub
 
@@ -109,4 +112,14 @@ export async function zrangebyscoreWithScores(key: string | number, offset: numb
 
 export function lrange(key: string | number, start: number, stop: number): Promise<string[]> {
     return client.lrange(key, start, stop);
+}
+export async function llen(key: string | number): Promise<number> {
+    const length = await client.llen(key);
+    return +length;
+}
+export function lpush(key: string | number, value: string | number) {
+    client.lpush(key, value);
+}
+export function rpop(key: string | number): Promise<string> {
+    return client.rpop(key);
 }
