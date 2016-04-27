@@ -11,7 +11,7 @@ export const documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     const result: types.VersionResult = {
-        version: settings.version
+        version: settings.version,
     };
 
     services.response.sendSuccess(response, types.StatusCode.OK, result);

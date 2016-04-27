@@ -81,7 +81,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         const accessTokenResponse = await services.request.post<{ access_token: string; scope: string; token_type: string; }>({
             url: "https://github.com/login/oauth/access_token",
             headers: {
-                Accept: "application/json"
+                Accept: "application/json",
             },
             form: {
                 client_id: settings.login.github.clientId,
@@ -152,13 +152,13 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         if (!request.userId) {
             if (settings.currentEnvironment === types.environment.test) {
                 const result: types.OAuthAuthorizationResult = {
-                    pageName: types.oauthAuthorization.login
+                    pageName: types.oauthAuthorization.login,
                 };
                 services.response.sendSuccess(response, types.StatusCode.OK, result);
                 return;
             }
             response.redirect("/login.html?" + libs.qs.stringify({
-                redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query)
+                redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query),
             }));
             return;
         }
@@ -177,7 +177,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 if (json.confirmed) {
                     if (settings.currentEnvironment === types.environment.test) {
                         const result: types.OAuthAuthorizationResult = {
-                            code: query.code
+                            code: query.code,
                         };
                         services.response.sendSuccess(response, types.StatusCode.OK, result);
                         return;
@@ -216,7 +216,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
                 if (settings.currentEnvironment === types.environment.test) {
                     const result: types.OAuthAuthorizationResult = {
-                        code: query.code
+                        code: query.code,
                     };
                     services.response.sendSuccess(response, types.StatusCode.OK, result);
                     return;

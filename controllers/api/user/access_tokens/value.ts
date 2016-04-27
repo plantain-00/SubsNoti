@@ -33,7 +33,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
     accessToken.save();
 
     const result: types.AccessTokenResult = {
-        accessToken: accessToken.value
+        accessToken: accessToken.value,
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
 }

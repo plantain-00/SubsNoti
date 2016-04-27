@@ -46,7 +46,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     let result: types.TokenResult;
     if (settings.currentEnvironment === types.environment.test) {
         result = {
-            url: url
+            url: url,
         };
     } else {
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);

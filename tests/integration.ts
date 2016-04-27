@@ -23,11 +23,10 @@ const seeds: types.TestSeed = require("./seeds.json");
 
 async function getVersion(caseName: string) {
     const options = {
-        url: apiUrl + "/api/version"
+        url: apiUrl + "/api/version",
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.VersionResponse>(options);
 
-    const body: types.VersionResponse = response.body;
     if (!body.isSuccess || body.version !== settings.version) {
         throw body;
     }
@@ -43,12 +42,11 @@ async function createCaptcha(guid: string, caseName: string) {
         headers: headers,
         method: types.httpMethod.post,
         form: {
-            id: guid
+            id: guid,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.CaptchaResponse>(options);
 
-    const body: types.CaptchaResponse = response.body;
     if (!body.isSuccess || !body.code) {
         throw body;
     }
@@ -70,9 +68,8 @@ async function createToken(guid: string, code: string, caseName: string, email: 
             code: code,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.TokenResponse>(options);
 
-    const body: types.TokenResponse = response.body;
     if (!body.isSuccess || !body.url) {
         throw body;
     }
@@ -88,7 +85,7 @@ async function login(url: string, caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options, types.responseType.others);
+    const [response, body] = await services.request.request(options, types.responseType.others);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
@@ -97,7 +94,7 @@ async function login(url: string, caseName: string) {
     }
 
     return operate(caseName, {
-        statusCode: response.response.statusCode
+        statusCode: response.statusCode,
     });
 }
 
@@ -108,9 +105,7 @@ async function logout(caseName: string) {
         method: types.httpMethod.delete,
         jar: jar,
     };
-    const response = await services.request.request(options);
-
-    const body: types.Response = response.body;
+    const [response, body] = await services.request.request<types.Response>(options);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
@@ -140,9 +135,8 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
             jar: jar,
         };
     }
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.CurrentUserResponse>(options);
 
-    const body: types.CurrentUserResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -161,12 +155,11 @@ async function createOrganization(caseName: string) {
         headers: headers,
         jar: jar,
         form: {
-            organizationName: seeds.organization.name
+            organizationName: seeds.organization.name,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -180,9 +173,8 @@ async function getCreatedOrganizations(caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
 
-    const body: types.OrganizationsResponse = response.body;
     if (!body.isSuccess || !body.organizations) {
         throw body;
     }
@@ -200,9 +192,8 @@ async function getJoinedOrganizations(caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
 
-    const body: types.OrganizationsResponse = response.body;
     if (!body.isSuccess || !body.organizations) {
         throw body;
     }
@@ -220,12 +211,11 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
         headers: headers,
         jar: jar,
         qs: {
-            isClosed: types.yes
+            isClosed: types.yes,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.ThemesResponse>(options);
 
-    const body: types.ThemesResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -256,9 +246,8 @@ async function createTheme(organizationId: string, caseName: string) {
             organizationId: organizationId,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -273,9 +262,8 @@ async function unwatch(themeId: string, caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -290,9 +278,8 @@ async function watch(themeId: string, caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -312,9 +299,8 @@ async function updateTheme(themeId: string, caseName: string) {
             status: types.themeStatus.closed,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -340,9 +326,8 @@ async function uploadAvatar(caseName: string) {
         jar: jar,
         formData: formData,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.TemperaryResponse>(options);
 
-    const body: types.TemperaryResponse = response.body;
     if (!body.isSuccess || body.names.length !== 1) {
         throw body;
     }
@@ -354,12 +339,12 @@ async function uploadAvatar(caseName: string) {
 
 async function getTemperaryImage(fileName: string, caseName: string) {
     const options = {
-        url: imageServer + `/tmp/${fileName}`
+        url: imageServer + `/tmp/${fileName}`,
     };
-    const response = await services.request.request(options, types.responseType.others);
+    const [response, body] = await services.request.request(options, types.responseType.others);
 
     return operate(caseName, {
-        statusCode: response.response.statusCode
+        statusCode: response.statusCode,
     });
 }
 
@@ -379,9 +364,8 @@ async function updateUser(caseName: string) {
             avatarFileName: name,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -396,9 +380,8 @@ async function invite(caseName: string, email: string, organizationId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -408,12 +391,12 @@ async function invite(caseName: string, email: string, organizationId: string) {
 
 async function getAvatar(uid: string, caseName: string) {
     const options = {
-        url: imageServer + `/avatar-${uid}.png`
+        url: imageServer + `/avatar-${uid}.png`,
     };
-    const response = await services.request.request(options, types.responseType.others);
+    const [response, body] = await services.request.request(options, types.responseType.others);
 
     return operate(caseName, {
-        statusCode: response.response.statusCode
+        statusCode: response.statusCode,
     });
 }
 
@@ -422,9 +405,8 @@ async function getScopes(caseName: string) {
         url: apiUrl + `/api/scopes`,
         headers: headers,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.ScopesResponse>(options);
 
-    const body: types.ScopesResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -440,9 +422,8 @@ async function getRegisteredApplications(caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
 
-    const body: types.ApplicationsResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -475,9 +456,8 @@ async function registerApplication(caseName: string) {
             authorizationCallbackUrl: seeds.application.authorizationCallbackUrl,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -498,9 +478,8 @@ async function updateApplication(caseName: string, applicationId: string) {
             authorizationCallbackUrl: seeds.newApplication.authorizationCallbackUrl,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -515,9 +494,8 @@ async function deleteApplication(caseName: string, applicationId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -532,9 +510,8 @@ async function resetClientSecret(caseName: string, applicationId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -547,9 +524,8 @@ async function getApplication(caseName: string, applicationId: string) {
         url: apiUrl + `/api/applications/${applicationId}`,
         headers: headers,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.ApplicationResponse>(options);
 
-    const body: types.ApplicationResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -560,7 +536,7 @@ async function getApplication(caseName: string, applicationId: string) {
         homeUrl: body.application.homeUrl,
         description: body.application.description,
         creator: {
-            name: body.application.creator.name
+            name: body.application.creator.name,
         },
     };
 
@@ -575,9 +551,8 @@ async function getAccessTokens(caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.AccessTokensResponse>(options);
 
-    const body: types.AccessTokensResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -606,9 +581,8 @@ async function createAccessToken(caseName: string) {
             scopes: [types.scopeNames.readUser, types.scopeNames.readOrganization],
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    const body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -631,9 +605,8 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
             scopes: [types.scopeNames.readUser, types.scopeNames.readApplication],
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -648,9 +621,8 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    const body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -669,9 +641,8 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -686,9 +657,8 @@ async function confirm(caseName: string, code: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -707,9 +677,8 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
             code: code,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
 
-    const body: types.OAuthAuthorizationResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -748,9 +717,8 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
             code: code,
         },
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    const body: types.AccessTokenResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -767,9 +735,8 @@ async function getAuthorizedApplications(caseName: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
 
-    const body: types.ApplicationsResponse = response.body;
     if (!body.isSuccess) {
         throw body;
     }
@@ -798,9 +765,8 @@ async function revokeApplication(caseName: string, applicationId: string) {
         headers: headers,
         jar: jar,
     };
-    const response = await services.request.request(options);
+    const [response, body] = await services.request.request<types.Response>(options);
 
-    const body: types.Response = response.body;
     if (!body.isSuccess) {
         throw body;
     }

@@ -67,24 +67,21 @@ export function get<T>(options: libs.request.Options, type?: types.ResponseType)
 
 export function getAsync<T>(url: string, type?: types.ResponseType): Promise<Response<T>> {
     return get<T>({
-        url: url
+        url: url,
     }, type);
 }
 
-export function request(options: libs.request.Options, type?: types.ResponseType): Promise<{ response: libs.http.IncomingMessage; body: any; }> {
+export function request<T>(options: libs.request.Options, type?: types.ResponseType) {
     if (!type) {
         type = types.responseType.json;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<[libs.http.IncomingMessage, T]>((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
                 reject(error);
             } else {
-                resolve({
-                    response: response,
-                    body: type === types.responseType.json ? JSON.parse(body) : body,
-                });
+                resolve([response, type === types.responseType.json ? JSON.parse(body) : body]);
             }
         });
     });

@@ -14,7 +14,7 @@ if (!seeds.user) {
 
 if (!seeds.organization) {
     seeds.organization = {
-        name: faker.company.companyName()
+        name: faker.company.companyName(),
     };
 }
 
@@ -34,7 +34,7 @@ if (!seeds.newTheme) {
 
 if (!seeds.newUser) {
     seeds.newUser = {
-        name: faker.internet.userName()
+        name: faker.internet.userName(),
     };
 }
 
@@ -65,13 +65,13 @@ if (!seeds.newApplication) {
 
 if (!seeds.accessToken) {
     seeds.accessToken = {
-        description: faker.name.title()
+        description: faker.name.title(),
     };
 }
 
 if (!seeds.newAccessToken) {
     seeds.newAccessToken = {
-        description: faker.name.title()
+        description: faker.name.title(),
     };
 }
 

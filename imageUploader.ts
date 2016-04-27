@@ -104,7 +104,7 @@ async function uploadPersistentImages(request: libs.Request, response: libs.Resp
     await uploadAsync(request, response);
 
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-        names: request.files.map(f => f.filename)
+        names: request.files.map(f => f.filename),
     });
 }
 
@@ -116,7 +116,7 @@ async function uploadTemperaryImages(request: libs.Request, response: libs.Respo
     await uploadAsync(request, response);
 
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
-        names: request.files.map(f => f.filename)
+        names: request.files.map(f => f.filename),
     });
 }
 

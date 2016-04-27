@@ -16,7 +16,7 @@ export const redis = {
     host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
     port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
     options: {
-        pass: process.env.SUBS_NOTI_REDIS_PASSWORD
+        pass: process.env.SUBS_NOTI_REDIS_PASSWORD,
     },
 };
 
@@ -46,7 +46,7 @@ export const frontendsServer: string = process.env.SUBS_NOTI_FRONTEND_SERVER || 
 export const maxOrganizationNumberUserCanCreate = 3;
 
 export const cookieKeys = {
-    authenticationCredential: "authentication_credential"
+    authenticationCredential: "authentication_credential",
 };
 
 export const cacheKeys = {
@@ -66,7 +66,7 @@ export const cacheKeys = {
 export const defaultItemLimit = 10;
 
 export const authorizationHeaders = {
-    token: "token "
+    token: "token ",
 };
 
 export const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
@@ -74,7 +74,7 @@ export const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHIT
 export const cookieDomains: string = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
 
 export const imagePaths = {
-    avatar: "avatar-"
+    avatar: "avatar-",
 };
 
 export const cors = {

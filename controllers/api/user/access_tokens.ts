@@ -68,7 +68,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     services.logger.logRequest(documentOfCreate.url, request);
 
     const result: types.AccessTokenResult = {
-        accessToken: value
+        accessToken: value,
     };
     services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
 }

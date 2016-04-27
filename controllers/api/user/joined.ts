@@ -28,7 +28,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         };
     } else {
         result = {
-            organizations: []
+            organizations: [],
         };
     }
 

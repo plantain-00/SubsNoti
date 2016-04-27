@@ -7,7 +7,7 @@ export function logRequest(url: string, request: libs.Request) {
     const data: any = {
         time: new Date(),
         content: {
-            url: url
+            url: url,
         },
     };
 
@@ -47,7 +47,7 @@ export function logInfo(info: string) {
     const data = {
         time: new Date(),
         content: {
-            info: info
+            info: info,
         },
     };
 

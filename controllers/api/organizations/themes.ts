@@ -61,10 +61,10 @@ export async function get(request: libs.Request, response: libs.Response) {
     }
 
     let themesQuery = services.mongo.Theme.find({
-        organization: organizationId
+        organization: organizationId,
     });
     let countQuery = services.mongo.Theme.find({
-        organization: organizationId
+        organization: organizationId,
     });
 
     if (isOpen && !isClosed) {
