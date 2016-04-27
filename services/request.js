@@ -59,7 +59,7 @@ function get(options, type) {
 exports.get = get;
 function getAsync(url, type) {
     return get({
-        url: url
+        url: url,
     }, type);
 }
 exports.getAsync = getAsync;
@@ -73,10 +73,7 @@ function request(options, type) {
                 reject(error);
             }
             else {
-                resolve({
-                    response: response,
-                    body: type === types.responseType.json ? JSON.parse(body) : body,
-                });
+                resolve([response, type === types.responseType.json ? JSON.parse(body) : body]);
             }
         });
     });

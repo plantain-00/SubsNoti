@@ -103,7 +103,7 @@ function uploadPersistentImages(request, response) {
         }
         yield uploadAsync(request, response);
         services.response.sendSuccess(response, 201 /* createdOrModified */, {
-            names: request.files.map(f => f.filename)
+            names: request.files.map(f => f.filename),
         });
     });
 }
@@ -114,7 +114,7 @@ function uploadTemperaryImages(request, response) {
         }
         yield uploadAsync(request, response);
         services.response.sendSuccess(response, 201 /* createdOrModified */, {
-            names: request.files.map(f => f.filename)
+            names: request.files.map(f => f.filename),
         });
     });
 }

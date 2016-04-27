@@ -11,3 +11,4 @@ tslint.json
 *.yml
 jsconfig.json
 tests
+README.md

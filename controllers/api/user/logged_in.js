@@ -18,7 +18,7 @@ exports.documentOfDelete = {
 function deleteThis(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         response.clearCookie(settings.cookieKeys.authenticationCredential, {
-            domain: settings.cookieDomains
+            domain: settings.cookieDomains,
         });
         services.response.sendSuccess(response, 204 /* deleted */);
     });

@@ -33,7 +33,7 @@ function regenerate(request, response) {
         accessToken.value = libs.generateUuid();
         accessToken.save();
         const result = {
-            accessToken: accessToken.value
+            accessToken: accessToken.value,
         };
         services.response.sendSuccess(response, 201 /* createdOrModified */, result);
     });

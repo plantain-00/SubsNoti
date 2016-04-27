@@ -18,7 +18,7 @@ exports.documentOfGet = {
 function get(request, response) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = {
-            scopes: settings.scopes
+            scopes: settings.scopes,
         };
         services.response.sendSuccess(response, 200 /* OK */, result);
     });

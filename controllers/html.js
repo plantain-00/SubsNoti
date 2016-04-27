@@ -79,7 +79,7 @@ function githubCode(request, response) {
             const accessTokenResponse = yield services.request.post({
                 url: "https://github.com/login/oauth/access_token",
                 headers: {
-                    Accept: "application/json"
+                    Accept: "application/json",
                 },
                 form: {
                     client_id: settings.login.github.clientId,
@@ -135,13 +135,13 @@ function authorize(request, response) {
             if (!request.userId) {
                 if (settings.currentEnvironment === types.environment.test) {
                     const result = {
-                        pageName: types.oauthAuthorization.login
+                        pageName: types.oauthAuthorization.login,
                     };
                     services.response.sendSuccess(response, 200 /* OK */, result);
                     return;
                 }
                 response.redirect("/login.html?" + libs.qs.stringify({
-                    redirect_url: exports.documentOfAuthorize.url + "?" + libs.qs.stringify(query)
+                    redirect_url: exports.documentOfAuthorize.url + "?" + libs.qs.stringify(query),
                 }));
                 return;
             }
@@ -158,7 +158,7 @@ function authorize(request, response) {
                     if (json.confirmed) {
                         if (settings.currentEnvironment === types.environment.test) {
                             const result = {
-                                code: query.code
+                                code: query.code,
                             };
                             services.response.sendSuccess(response, 200 /* OK */, result);
                             return;
@@ -192,7 +192,7 @@ function authorize(request, response) {
                     services.redis.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
                     if (settings.currentEnvironment === types.environment.test) {
                         const result = {
-                            code: query.code
+                            code: query.code,
                         };
                         services.response.sendSuccess(response, 200 /* OK */, result);
                         return;

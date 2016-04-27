@@ -62,7 +62,7 @@ function create(request, response) {
         accessToken.save();
         services.logger.logRequest(exports.documentOfCreate.url, request);
         const result = {
-            accessToken: value
+            accessToken: value,
         };
         services.response.sendSuccess(response, 201 /* createdOrModified */, result);
     });

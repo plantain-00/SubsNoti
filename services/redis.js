@@ -52,6 +52,10 @@ function decr(key) {
     return client.decr(key);
 }
 exports.decr = decr;
+function incrby(key, increment) {
+    client.incrby(key, increment);
+}
+exports.incrby = incrby;
 // sub/pub
 // export function subscribe(channel: string | number) {
 //     subClient.subscribe(channel);
@@ -128,3 +132,18 @@ function lrange(key, start, stop) {
     return client.lrange(key, start, stop);
 }
 exports.lrange = lrange;
+function llen(key) {
+    return __awaiter(this, void 0, Promise, function* () {
+        const length = yield client.llen(key);
+        return +length;
+    });
+}
+exports.llen = llen;
+function lpush(key, value) {
+    client.lpush(key, value);
+}
+exports.lpush = lpush;
+function rpop(key) {
+    return client.rpop(key);
+}
+exports.rpop = rpop;

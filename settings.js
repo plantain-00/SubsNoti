@@ -13,7 +13,7 @@ exports.redis = {
     host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
     port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
     options: {
-        pass: process.env.SUBS_NOTI_REDIS_PASSWORD
+        pass: process.env.SUBS_NOTI_REDIS_PASSWORD,
     },
 };
 exports.mongodb = {
@@ -34,7 +34,7 @@ exports.imageServer = process.env.SUBS_NOTI_IMAGE_SERVER_URL || "http://localhos
 exports.frontendsServer = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
 exports.maxOrganizationNumberUserCanCreate = 3;
 exports.cookieKeys = {
-    authenticationCredential: "authentication_credential"
+    authenticationCredential: "authentication_credential",
 };
 exports.cacheKeys = {
     user: "user_",
@@ -51,12 +51,12 @@ exports.cacheKeys = {
 };
 exports.defaultItemLimit = 10;
 exports.authorizationHeaders = {
-    token: "token "
+    token: "token ",
 };
 exports.uploadIPWhiteList = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST || "127.0.0.1").split(",");
 exports.cookieDomains = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
 exports.imagePaths = {
-    avatar: "avatar-"
+    avatar: "avatar-",
 };
 exports.cors = {
     methods: "GET,PUT,POST,DELETE",

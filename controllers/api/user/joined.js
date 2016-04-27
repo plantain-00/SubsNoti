@@ -34,7 +34,7 @@ function get(request, response) {
         }
         else {
             result = {
-                organizations: []
+                organizations: [],
             };
         }
         // public organization is also available.

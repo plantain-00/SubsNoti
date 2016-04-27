@@ -5,7 +5,7 @@ function logRequest(url, request) {
     const data = {
         time: new Date(),
         content: {
-            url: url
+            url: url,
         },
     };
     if (!libs.isEmpty(request.params)) {
@@ -41,7 +41,7 @@ function logInfo(info) {
     const data = {
         time: new Date(),
         content: {
-            info: info
+            info: info,
         },
     };
     // show the info in pm2 logs

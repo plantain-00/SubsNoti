@@ -40,7 +40,7 @@ function create(request, response) {
         let result;
         if (settings.currentEnvironment === types.environment.test) {
             result = {
-                url: url
+                url: url,
             };
         }
         else {
