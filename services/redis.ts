@@ -17,11 +17,20 @@ export function connect() {
 export function exists(key: string | number): Promise<boolean> {
     return client.exists(key);
 }
-export function get(key: string | number): Promise<string> {
-    return client.get(key);
+export function expire(key: string | number, seconds: number): Promise<number> {
+    return client.expire(key, seconds);
+}
+export function del(key: string | number): Promise<number> {
+    return client.del(key);
 }
 export function ttl(key: string | number): Promise<number> {
     return client.ttl(key);
+}
+
+// string
+
+export function get(key: string | number): Promise<string> {
+    return client.get(key);
 }
 export function set(key: string | number, value: string | number, expire?: number) {
     if (expire) {
@@ -30,17 +39,14 @@ export function set(key: string | number, value: string | number, expire?: numbe
         client.set(key, value);
     }
 }
-export function del(key: string | number): Promise<number> {
-    return client.del(key);
-}
-export function expire(key: string | number, seconds: number): Promise<number> {
-    return client.expire(key, seconds);
-}
 export function decr(key: string | number): Promise<number> {
     return client.decr(key);
 }
 export function incrby(key: string | number, increment: number) {
     client.incrby(key, increment);
+}
+export async function incr(key: string | number): Promise<number> {
+    return +(await client.incr(key));
 }
 
 // sub/pub

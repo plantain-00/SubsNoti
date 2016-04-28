@@ -8,10 +8,6 @@ interface Rate {
     resetMoment: string;
 }
 
-const fields = {
-    remain: "remain_",
-    resetMoment: "resetMoment_",
-};
 const documentUrl = "/api/response.html";
 
 export function route(app: libs.express.Application) {
@@ -32,64 +28,39 @@ export function route(app: libs.express.Application) {
             return;
         }
 
-        let remainKey: string;
-        let resetMomentKey: string;
-        let errorMessage: string;
-        let limit: number;
-
-        // get key, error message and total limit for current request
         if (request.userId) {
             if (request.method === "POST") {
-                remainKey = settings.cacheKeys.rateLimit.contentCreation + fields.remain + request.userId.toHexString();
-                resetMomentKey = settings.cacheKeys.rateLimit.contentCreation + fields.resetMoment + request.userId.toHexString();
-                errorMessage = "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.";
-                limit = settings.rateLimit.contentCreation;
+                const key = settings.cacheKeys.rateLimit.contentCreation + request.userId.toHexString();
+                const count = await services.redis.incr(key);
+                response.setHeader("X-Count", count.toString());
+                if (count === 1) {
+                    services.redis.expire(key, 60 * 60);
+                } else if (count > settings.rateLimit.contentCreation) {
+                    services.response.sendError(response, services.error.fromMessage("You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.", types.StatusCode.tooManyRequest), documentUrl);
+                    return;
+                }
             } else {
-                remainKey = settings.cacheKeys.rateLimit.userId + fields.remain + request.userId.toHexString();
-                resetMomentKey = settings.cacheKeys.rateLimit.userId + fields.resetMoment + request.userId.toHexString();
-                errorMessage = "API rate limit exceeded for current user.";
-                limit = settings.rateLimit.user;
+                const key = settings.cacheKeys.rateLimit.userId + request.userId.toHexString();
+                const count = await services.redis.incr(key);
+                response.setHeader("X-Count", count.toString());
+                if (count === 1) {
+                    services.redis.expire(key, 60 * 60);
+                } else if (count > settings.rateLimit.user) {
+                    services.response.sendError(response, services.error.fromMessage("API rate limit exceeded for current user.", types.StatusCode.tooManyRequest), documentUrl);
+                    return;
+                }
             }
         } else {
             const ip = request.header("X-Real-IP");
-            remainKey = settings.cacheKeys.rateLimit.ip + fields.remain + ip;
-            resetMomentKey = settings.cacheKeys.rateLimit.ip + fields.resetMoment + ip;
-            errorMessage = `API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`;
-            limit = settings.rateLimit.ip;
-        }
-
-        function setHeaders(remain: number, resetMoment: string) {
-            response.setHeader(settings.headerNames.rateLimit.limit, limit.toString());
-            response.setHeader(settings.headerNames.rateLimit.remain, remain.toString());
-            response.setHeader(settings.headerNames.rateLimit.resetMoment, resetMoment);
-        }
-
-        let remainString: string = await services.redis.get(remainKey);
-
-        if (remainString !== null) {
-            // just string to number
-            let remain = +remainString;
-            let resetMoment = await services.redis.get(resetMomentKey);
-
-            // if no `resetMoment`, set a new one
-            if (!resetMoment) {
-                resetMoment = libs.moment().clone().add(1, "hours").toISOString();
-                services.redis.set(resetMomentKey, resetMoment, 60 * 60);
-                services.redis.expire(remainKey, 60 * 60);
-            }
-
-            if (remain <= 0) {
-                setHeaders(remain, resetMoment);
-                services.response.sendError(response, services.error.fromMessage(errorMessage, types.StatusCode.tooManyRequest), documentUrl);
+            const key = settings.cacheKeys.rateLimit.ip + ip;
+            const count = await services.redis.incr(key);
+            response.setHeader("X-Count", count.toString());
+            if (count === 1) {
+                services.redis.expire(key, 60 * 60);
+            } else if (count > settings.rateLimit.ip) {
+                services.response.sendError(response, services.error.fromMessage(`API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`, types.StatusCode.tooManyRequest), documentUrl);
                 return;
             }
-            services.redis.decr(remainKey);
-            setHeaders(remain - 1, resetMoment);
-        } else {
-            let resetMoment = libs.moment().clone().add(1, "hours").toISOString();
-            services.redis.set(remainKey, limit - 1, 60 * 60);
-            services.redis.set(resetMomentKey, resetMoment, 60 * 60);
-            setHeaders(limit - 1, resetMoment);
         }
 
         next();
