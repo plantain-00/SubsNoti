@@ -113,6 +113,20 @@ export async function zrangebyscoreWithScores(key: string | number, offset: numb
     }
     return result;
 }
+export function zrevrangebyscore(key: string | number, offset: number, count: number): Promise<string[]> {
+    return client.zrevrangebyscore(key, "+inf", "-inf", "LIMIT", offset, count);
+}
+export async function zrevrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
+    const raw: string[] = await client.zrevrangebyscore(key, "+inf", "-inf", "WITHSCORES", "LIMIT", offset, count);
+    const result: { member: string, score: number }[] = [];
+    for (let i = 0; i < raw.length; i += 2) {
+        result.push({
+            member: raw[i],
+            score: +raw[i + 1],
+        });
+    }
+    return result;
+}
 
 // list
 

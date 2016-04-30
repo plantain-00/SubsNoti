@@ -127,5 +127,5 @@ export const scopes: types.Scope[] = [
     { name: types.scopeNames.deleteAccessToken, description: "delete an access token" },
 ];
 
-export const apiPort = 9998;
-export const imageUploaderPort = 9999;
+export const apiPort = process.env.API_PORT || 9998;
+export const imageUploaderPort = process.env.IMAGE_UPLOADER_PORT || 9999;
