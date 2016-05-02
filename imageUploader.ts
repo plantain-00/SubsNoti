@@ -147,6 +147,10 @@ services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, a
 services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app);
 services.router.bind(documentOfMoveImage, moveImage, app);
 
-app.listen(settings.imageUploaderPort, "localhost", () => {
-    services.logger.logInfo(`Image uploader is listening: ${settings.imageUploaderPort} and in ${settings.currentEnvironment}`);
+const argv = libs.minimist(process.argv.slice(2));
+const port = argv.p || 9999;
+const host = argv.h || "localhost";
+
+app.listen(port, host, () => {
+    services.logger.logInfo(`Image uploader is listening: ${host}:${port} and in ${settings.currentEnvironment}`);
 });

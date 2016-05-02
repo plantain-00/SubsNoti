@@ -1,4 +1,5 @@
 import * as types from "./share/types";
+import * as libs from "./libs";
 
 export let currentEnvironment: types.Environment = process.env.NODE_ENV || types.environment.production;
 
@@ -126,6 +127,3 @@ export const scopes: types.Scope[] = [
     { name: types.scopeNames.writeAccessToken, description: "create, update an access token" },
     { name: types.scopeNames.deleteAccessToken, description: "delete an access token" },
 ];
-
-export const apiPort = process.env.API_PORT || 9998;
-export const imageUploaderPort = process.env.IMAGE_UPLOADER_PORT || 9999;

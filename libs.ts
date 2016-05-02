@@ -72,11 +72,11 @@ export const cors = require("cors");
 const colors = require("colors");
 
 export function green(message: string) {
-    console.log(green(message));
+    console.log(colors.green(message));
 }
 
 export function red(message: string) {
-    console.log(red(message));
+    console.log(colors.red(message));
 }
 
 import * as mime from "mime";
@@ -123,3 +123,5 @@ export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.
 export const isEmpty: (value: any) => boolean = require("lodash.isempty");
 export const omit: (object: {}, props: string | string[]) => any = require("lodash.omit");
 export const pick: (object: {}, ...props: string[]) => any = require("lodash.pick");
+
+export const minimist: ((args: string[]) => any) = require("minimist");

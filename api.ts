@@ -106,8 +106,12 @@ services.seed.init().then(() => {
     services.logger.logInfo(`initialize successfully.`);
 });
 
-const server = app.listen(settings.apiPort, "localhost", () => {
-    services.logger.logInfo(`api Server is listening: ${settings.apiPort} and in ${settings.currentEnvironment}`);
+const argv = libs.minimist(process.argv.slice(2));
+const port = argv.p || 9998;
+const host = argv.h || "localhost";
+
+const server = app.listen(port, host, () => {
+    services.logger.logInfo(`api Server is listening: ${host}:${port} and in ${settings.currentEnvironment}`);
 });
 
 services.push.connect(server);
