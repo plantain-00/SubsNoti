@@ -143,3 +143,6 @@ export function lpush(key: string | number, value: string | number) {
 export function rpop(key: string | number): Promise<string> {
     return client.rpop(key);
 }
+export function ltrim(key: string | number, start: number, stop: number) {
+    client.ltrim(key, start, stop);
+}
