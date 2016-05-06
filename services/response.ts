@@ -3,11 +3,7 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-export function sendSuccess(response: libs.Response, statusCode: types.StatusCode, result?: Object) {
-    if (!result) {
-        result = {};
-    }
-
+export function sendSuccess(response: libs.Response, statusCode: types.StatusCode, result: Object = {}) {
     const baseResponse: types.Response = {
         isSuccess: true,
         statusCode: statusCode,
@@ -23,7 +19,7 @@ export function sendError(response: libs.Response, error: types.E, documentUrl?:
         isSuccess: false,
         statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
         errorMessage: isE ? error.message : "something happens unexpectedly.",
-        documentUrl: settings.documentServer + (documentUrl ? documentUrl : response.documentUrl),
+        documentUrl: settings.documentServer + (documentUrl || response.documentUrl),
     };
 
     if (!isE) {

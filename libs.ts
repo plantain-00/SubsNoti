@@ -107,6 +107,9 @@ export function generateUuid() {
     return uuid.v4().replace(/-/g, "");
 }
 
+import * as bluebird from "bluebird";
+global.Promise = bluebird;
+
 export const renameAsync = (oldPath: string, newPath: string) => {
     return new Promise((resolve, reject) => {
         fs.rename(oldPath, newPath, error => {

@@ -47,10 +47,7 @@ export function postMultipartAsync<T>(url: string, formData: any): Promise<Respo
     return post<T>(options);
 }
 
-export function get<T>(options: libs.request.Options, type?: types.ResponseType): Promise<Response<T>> {
-    if (!type) {
-        type = types.responseType.json;
-    }
+export function get<T>(options: libs.request.Options, type: types.ResponseType = types.responseType.json): Promise<Response<T>> {
     return new Promise<Response<T>>((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
@@ -65,17 +62,13 @@ export function get<T>(options: libs.request.Options, type?: types.ResponseType)
     });
 }
 
-export function getAsync<T>(url: string, type?: types.ResponseType): Promise<Response<T>> {
+export function getAsync<T>(url: string, type: types.ResponseType = types.responseType.json): Promise<Response<T>> {
     return get<T>({
         url: url,
     }, type);
 }
 
-export function request<T>(options: libs.request.Options, type?: types.ResponseType) {
-    if (!type) {
-        type = types.responseType.json;
-    }
-
+export function request<T>(options: libs.request.Options, type: types.ResponseType = types.responseType.json) {
     return new Promise<[libs.http.IncomingMessage, T]>((resolve, reject) => {
         libs.request(options, (error, response, body) => {
             if (error) {
