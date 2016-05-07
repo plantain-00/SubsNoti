@@ -4,7 +4,7 @@
 
 # tools and global npm packages
 
-+ `npm i -g typescript tsd tslint pm2 gulp npm-check`
++ `npm i -g typescript tsd tslint pm2 npm-check`
 + mongodb
 + redis
 + node-gyp build environment
@@ -15,11 +15,3 @@
 + `npm i`
 + `tsd install`
 + `tsc --pretty && npm run tslint`
-+ `gulp host`
-+ `gulp host-imageUploader`
-+ `gulp host-imageServer`
-
-# production
-
-+ `gulp deploy`
-+ `pm2 restart all`

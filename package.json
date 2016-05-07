@@ -44,7 +44,6 @@
   "devDependencies": {
     "exit": "^0.1.2",
     "faker": "^3.0.1",
-    "gulp": "^3.9.0",
     "mkdirp": "^0.5.1"
   },
   "engines": {
