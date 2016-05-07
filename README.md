@@ -4,20 +4,17 @@
 
 # tools and global npm packages
 
-+ typescript(for ES6 and ES7 async function support)
-+ gulp
++ `npm i -g typescript tsd tslint pm2 gulp npm-check`
 + mongodb
 + redis
 + node-gyp build environment
 + node-canvas environment
-+ pm2(host api and image uploader)
-+ tsd
 
 # development
 
-+ `npm install`
++ `npm i`
 + `tsd install`
-+ `gulp build`
++ `tsc --pretty && npm run tslint`
 + `gulp host`
 + `gulp host-imageUploader`
 + `gulp host-imageServer`

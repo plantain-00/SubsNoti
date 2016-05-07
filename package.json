@@ -1,5 +1,5 @@
 {
-  "name": "SubsNoti",
+  "name": "subs-noti",
   "version": "2.2.3",
   "description": "a subscription and notification website",
   "repository": {
@@ -7,6 +7,10 @@
     "url": "https://github.com/plantain-00/SubsNoti"
   },
   "license": "MIT",
+  "scripts": {
+    "tslint": "tslint 'controllers/**/*.ts' 'data_maintenances/*.ts' 'services/*.ts' 'tests/*.ts' '*.ts'",
+    "check": "npm-check -u"
+  },
   "dependencies": {
     "bluebird": "^3.3.5",
     "body-parser": "^1.14.1",
@@ -42,11 +46,8 @@
     "faker": "^3.0.1",
     "gulp": "^3.9.0",
     "gulp-shell": "^0.5.1",
-    "gulp-tslint": "^5.0.0",
     "live-server": "^1.0.0",
-    "mkdirp": "^0.5.1",
-    "tslint": "^3.8.0",
-    "typescript": "^1.8.10"
+    "mkdirp": "^0.5.1"
   },
   "engines": {
     "node": ">=6.0.0"
