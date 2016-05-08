@@ -9,7 +9,9 @@
   "license": "MIT",
   "scripts": {
     "tslint": "tslint 'controllers/**/*.ts' 'data_maintenances/*.ts' 'services/*.ts' 'tests/*.ts' '*.ts'",
-    "check": "npm-check -u"
+    "check": "npm-check -u",
+    "init": "npm i -g typescript tsd tslint npm-check",
+    "restore": "tsd install && npm i"
   },
   "dependencies": {
     "bluebird": "^3.3.5",

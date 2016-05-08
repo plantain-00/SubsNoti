@@ -4,7 +4,7 @@
 
 # tools and global npm packages
 
-+ `npm i -g typescript tsd tslint pm2 npm-check`
++ `npm run init`
 + mongodb
 + redis
 + node-gyp build environment
@@ -12,6 +12,6 @@
 
 # development
 
-+ `npm i`
-+ `tsd install`
-+ `tsc --pretty && npm run tslint`
++ `npm run restore`
++ `tsc`
++ `npm run tslint`
