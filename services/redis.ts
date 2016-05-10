@@ -75,6 +75,12 @@ export function hgetall(key: string | number): Promise<{ [field: string]: string
 export function hmget(key: string | number, fields: (string | number)[]): Promise<string[]> {
     return client.hmget(key, fields);
 }
+export function hset(key: string | number, field: string | number, value: string | number) {
+    client.hset(key, field, value);
+}
+export function hdel(key: string | number, field: string | number) {
+    client.hdel(key, field);
+}
 
 // set
 
