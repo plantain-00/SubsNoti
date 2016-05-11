@@ -108,6 +108,9 @@ export function zscore(key: string | number, member: string | number): Promise<n
 export function zrangebyscore(key: string | number, offset: number, count: number): Promise<string[]> {
     return client.zrangebyscore(key, "-inf", "+inf", "LIMIT", offset, count);
 }
+export function zrangebyscoreNoLimit(key: string | number): Promise<string[]> {
+    return client.zrangebyscore(key, "-inf", "+inf");
+}
 export async function zrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
     const raw: string[] = await client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES", "LIMIT", offset, count);
     const result: { member: string, score: number }[] = [];
@@ -121,6 +124,9 @@ export async function zrangebyscoreWithScores(key: string | number, offset: numb
 }
 export function zrevrangebyscore(key: string | number, offset: number, count: number): Promise<string[]> {
     return client.zrevrangebyscore(key, "+inf", "-inf", "LIMIT", offset, count);
+}
+export function zrevrangebyscoreNoLimit(key: string | number): Promise<string[]> {
+    return client.zrevrangebyscore(key, "-inf", "+inf");
 }
 export async function zrevrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
     const raw: string[] = await client.zrevrangebyscore(key, "+inf", "-inf", "WITHSCORES", "LIMIT", offset, count);
