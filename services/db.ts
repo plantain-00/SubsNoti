@@ -23,7 +23,7 @@ function getConnection(): Promise<MysqlConnection> {
     });
 }
 
-function accessAsync<T>(sql: string, parameters: any[]): Promise<T> {
+function accessAsync<T>(sql: string, parameters: (string | number)[]): Promise<T> {
     return getConnection().then(connection => {
         return new Promise<T>((resolve, reject) => {
             connection.query(sql, parameters, (error, rows) => {
@@ -38,9 +38,9 @@ function accessAsync<T>(sql: string, parameters: any[]): Promise<T> {
     });
 }
 
-export const queryAsync: (sql: string, parameters: any[]) => Promise<any[]> = accessAsync;
+export const queryAsync: <T>(sql: string, parameters: (string | number)[]) => Promise<T[]> = accessAsync;
 
-export const insertAsync: (sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessAsync;
+export const insertAsync: (sql: string, parameters: (string | number)[]) => Promise<{ insertId?: number; affectedRows: number; }> = accessAsync;
 
 export function beginTransactionAsync(): Promise<MysqlConnection> {
     return getConnection().then(connection => {
@@ -57,7 +57,7 @@ export function beginTransactionAsync(): Promise<MysqlConnection> {
     });
 }
 
-function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, parameters: any[]): Promise<T> {
+function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, parameters: (string | number)[]): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
@@ -73,9 +73,9 @@ function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, p
     });
 }
 
-export const queryInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<any[]> = accessInTransactionAsync;
+export const queryInTransactionAsync: <T>(connection: MysqlConnection, sql: string, parameters: (string | number)[]) => Promise<T[]> = accessInTransactionAsync;
 
-export const insertInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: any[]) => Promise<{ insertId: number }> = accessInTransactionAsync;
+export const insertInTransactionAsync: (connection: MysqlConnection, sql: string, parameters: (string | number)[]) => Promise<{ insertId?: number; affectedRows: number; }> = accessInTransactionAsync;
 
 export function rollbackAsync(connection: MysqlConnection): Promise<void> {
     return new Promise<void>((resolve, reject) => {
