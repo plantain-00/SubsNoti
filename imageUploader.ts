@@ -41,6 +41,7 @@ const storage = libs.multer.diskStorage({
         const mimeType: string = file.mimetype;
         if (!mimeType.startsWith("image/")) {
             next(new Error("not image"));
+            return;
         }
         if (request.path === documentOfUploadPersistentImages.url
             || request.path === "/api/persistent/images") {
@@ -64,6 +65,7 @@ const storage = libs.multer.diskStorage({
         const mimeType: string = file.mimetype;
         if (!mimeType.startsWith("image/")) {
             next(new Error("not image"));
+            return;
         }
         if (request.path === documentOfUploadPersistentImages.url
             || request.path === "/api/persistent/images") {

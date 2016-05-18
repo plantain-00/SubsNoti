@@ -63,8 +63,11 @@ export async function incr(key: string | number): Promise<number> {
 
 // hash
 
-export function hincrby(key: string | number, field: string | number, increment: number) {
-    client.hincrby(key, field, increment);
+export function hexists(key: string | number, field: string | number): Promise<number> {
+    return client.hexists(key, field);
+}
+export function hincrby(key: string | number, field: string | number, increment: number): Promise<string> {
+    return client.hincrby(key, field, increment);
 }
 export function hget(key: string | number, field: string | number): Promise<string> {
     return client.hget(key, field);
