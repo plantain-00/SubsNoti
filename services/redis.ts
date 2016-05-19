@@ -96,6 +96,9 @@ export function sadd(key: string | number, member: string | number) {
 export function srem(key: string | number, member: string | number) {
     client.srem(key, member);
 }
+export function smembers(key: string | number): Promise<string[]> {
+    return client.smembers(key);
+}
 
 // sorted set
 
@@ -129,7 +132,7 @@ export function zrevrangebyscore(key: string | number, offset: number, count: nu
     return client.zrevrangebyscore(key, "+inf", "-inf", "LIMIT", offset, count);
 }
 export function zrevrangebyscoreNoLimit(key: string | number): Promise<string[]> {
-    return client.zrevrangebyscore(key, "-inf", "+inf");
+    return client.zrevrangebyscore(key, "+inf", "-inf");
 }
 export async function zrevrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
     const raw: string[] = await client.zrevrangebyscore(key, "+inf", "-inf", "WITHSCORES", "LIMIT", offset, count);

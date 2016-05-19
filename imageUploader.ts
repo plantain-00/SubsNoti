@@ -83,6 +83,10 @@ const upload = libs.multer({ storage: storage }).any();
 
 const uploadAsync = (request: libs.Request, response: libs.Response) => {
     return new Promise((resolve, reject) => {
+        if (!request.files) {
+            throw services.error.fromMessage("no file", types.StatusCode.invalidRequest);
+        }
+
         upload(request, response, error => {
             if (error) {
                 reject(services.error.fromError(error, types.StatusCode.invalidRequest));
