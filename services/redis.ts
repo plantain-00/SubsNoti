@@ -26,6 +26,9 @@ export function del(key: string | number): Promise<number> {
 export function ttl(key: string | number): Promise<number> {
     return client.ttl(key);
 }
+export function pexpire(key: string | number, milliseconds: number) {
+    client["pexpire"](key, milliseconds);
+}
 
 // string
 
@@ -47,6 +50,9 @@ export function incrby(key: string | number, increment: number) {
 }
 export async function incr(key: string | number): Promise<number> {
     return +(await client.incr(key));
+}
+export function setPX(key: string | number, value: string | number, pexpire: number) {
+    client.set(key, value, "PX", pexpire);
 }
 
 // sub/pub
