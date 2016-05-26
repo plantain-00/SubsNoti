@@ -6,3 +6,4 @@ export const unauthorized = "the authentication credential is missed, out of dat
 export const invalidIP = "your ip %s in not in the white list.";
 export const theOrganizationNameAlreadyExists = "the organization name already exists.";
 export const noFile = "no file.";
+export const unexpectedError = "something happens unexpectedly.";

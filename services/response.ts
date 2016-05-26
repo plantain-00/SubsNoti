@@ -17,7 +17,7 @@ export function sendError(response: libs.Response, error: Error | string, docume
     if (typeof error === "string") {
         errorMessage = error;
     } else {
-        errorMessage = "something happens unexpectedly.";
+        errorMessage = services.error.unexpectedError;
         stack = error.stack;
     }
     const baseResponse: types.Response = {
