@@ -27,7 +27,7 @@ async function getVersion(caseName: string) {
     };
     const [response, body] = await services.request.request<types.VersionResponse>(options);
 
-    if (!body.isSuccess || body.version !== settings.version) {
+    if (body.status !== 0 || body.version !== settings.version) {
         throw body;
     }
 
@@ -47,7 +47,7 @@ async function createCaptcha(guid: string, caseName: string) {
     };
     const [response, body] = await services.request.request<types.CaptchaResponse>(options);
 
-    if (!body.isSuccess || !body.code) {
+    if (body.status !== 0 || !body.code) {
         throw body;
     }
 
@@ -70,7 +70,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
     };
     const [response, body] = await services.request.request<types.TokenResponse>(options);
 
-    if (!body.isSuccess || !body.url) {
+    if (body.status !== 0 || !body.url) {
         throw body;
     }
 
@@ -109,7 +109,7 @@ async function logout(caseName: string) {
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
     if (authenticationCredential) {
@@ -137,7 +137,7 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
     }
     const [response, body] = await services.request.request<types.CurrentUserResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -160,7 +160,7 @@ async function createOrganization(caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -175,7 +175,7 @@ async function getCreatedOrganizations(caseName: string) {
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
 
-    if (!body.isSuccess || !body.organizations) {
+    if (body.status !== 0 || !body.organizations) {
         throw body;
     }
 
@@ -194,7 +194,7 @@ async function getJoinedOrganizations(caseName: string) {
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
 
-    if (!body.isSuccess || !body.organizations) {
+    if (body.status !== 0 || !body.organizations) {
         throw body;
     }
 
@@ -216,7 +216,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     };
     const [response, body] = await services.request.request<types.ThemesResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -248,7 +248,7 @@ async function createTheme(organizationId: string, caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -264,7 +264,7 @@ async function unwatch(themeId: string, caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -280,7 +280,7 @@ async function watch(themeId: string, caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -301,7 +301,7 @@ async function updateTheme(themeId: string, caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -328,7 +328,7 @@ async function uploadAvatar(caseName: string) {
     };
     const [response, body] = await services.request.request<types.TemperaryResponse>(options);
 
-    if (!body.isSuccess || body.names.length !== 1) {
+    if (body.status !== 0 || body.names.length !== 1) {
         throw body;
     }
 
@@ -366,7 +366,7 @@ async function updateUser(caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -382,7 +382,7 @@ async function invite(caseName: string, email: string, organizationId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -407,7 +407,7 @@ async function getScopes(caseName: string) {
     };
     const [response, body] = await services.request.request<types.ScopesResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -424,7 +424,7 @@ async function getRegisteredApplications(caseName: string) {
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -458,7 +458,7 @@ async function registerApplication(caseName: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -480,7 +480,7 @@ async function updateApplication(caseName: string, applicationId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -496,7 +496,7 @@ async function deleteApplication(caseName: string, applicationId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -512,7 +512,7 @@ async function resetClientSecret(caseName: string, applicationId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -526,7 +526,7 @@ async function getApplication(caseName: string, applicationId: string) {
     };
     const [response, body] = await services.request.request<types.ApplicationResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -553,7 +553,7 @@ async function getAccessTokens(caseName: string) {
     };
     const [response, body] = await services.request.request<types.AccessTokensResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -583,7 +583,7 @@ async function createAccessToken(caseName: string) {
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -607,7 +607,7 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -623,7 +623,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -643,7 +643,7 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -659,7 +659,7 @@ async function confirm(caseName: string, code: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -679,7 +679,7 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
     };
     const [response, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -719,7 +719,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -737,7 +737,7 @@ async function getAuthorizedApplications(caseName: string) {
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 
@@ -767,7 +767,7 @@ async function revokeApplication(caseName: string, applicationId: string) {
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
-    if (!body.isSuccess) {
+    if (body.status !== 0) {
         throw body;
     }
 

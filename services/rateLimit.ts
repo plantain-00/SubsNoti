@@ -36,7 +36,7 @@ export function route(app: libs.express.Application) {
                 if (count === 1) {
                     services.redis.expire(key, 60 * 60);
                 } else if (count > settings.rateLimit.contentCreation) {
-                    services.response.sendError(response, services.error.fromMessage("You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.", types.StatusCode.tooManyRequest), documentUrl);
+                    services.response.sendError(response, "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.", documentUrl);
                     return;
                 }
             } else {
@@ -46,7 +46,7 @@ export function route(app: libs.express.Application) {
                 if (count === 1) {
                     services.redis.expire(key, 60 * 60);
                 } else if (count > settings.rateLimit.user) {
-                    services.response.sendError(response, services.error.fromMessage("API rate limit exceeded for current user.", types.StatusCode.tooManyRequest), documentUrl);
+                    services.response.sendError(response, "API rate limit exceeded for current user.", documentUrl);
                     return;
                 }
             }
@@ -58,7 +58,7 @@ export function route(app: libs.express.Application) {
             if (count === 1) {
                 services.redis.expire(key, 60 * 60);
             } else if (count > settings.rateLimit.ip) {
-                services.response.sendError(response, services.error.fromMessage(`API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`, types.StatusCode.tooManyRequest), documentUrl);
+                services.response.sendError(response, `API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`, documentUrl);
                 return;
             }
         }

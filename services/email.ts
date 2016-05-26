@@ -19,7 +19,7 @@ export function sendAsync(to: string, subject: string, html: string): Promise<vo
     return new Promise<void>((resolve, reject) => {
         transporter.sendMail(mailOptions, error => {
             if (error) {
-                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                reject(error);
             } else {
                 resolve();
             }

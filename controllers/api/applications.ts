@@ -14,7 +14,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     if (typeof params.id !== "string"
         || !libs.validator.isMongoId(params.id)) {
-        throw services.error.fromParameterIsInvalidMessage("id");
+        throw libs.util.format(services.error.parameterIsInvalid, "id");
     }
 
     const id = new libs.ObjectId(params.id);
@@ -24,7 +24,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         .exec();
 
     if (!application) {
-        throw services.error.fromParameterIsInvalidMessage("id");
+        throw libs.util.format(services.error.parameterIsInvalid, "id");
     }
 
     const creator = application.creator as services.mongo.UserDocument;
@@ -43,5 +43,5 @@ export async function get(request: libs.Request, response: libs.Response) {
         },
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }

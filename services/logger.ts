@@ -5,7 +5,8 @@ import * as services from "../services";
 
 export function logRequest(url: string, request: libs.Request) {
     const data: any = {
-        time: new Date(),
+        time: libs.moment().format(),
+        type: "http request",
         content: {
             url: url,
         },
@@ -21,39 +22,25 @@ export function logRequest(url: string, request: libs.Request) {
         data.content.query = request.query;
     }
 
-    const log = new services.mongo.Log(data);
-    log.save();
+    console.log(JSON.stringify(data));
 }
 
-export function logError(error: types.E) {
+export function logError(object: Object) {
     const data = {
-        time: new Date(),
-        content: {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-            statusCode: error.statusCode,
-        },
+        time: libs.moment().format(),
+        type: "error",
+        content: object,
     };
 
-    // show the error in pm2 logs
-    libs.red(`${new Date()}: ${JSON.stringify(data, null, "  ")}`);
-
-    const log = new services.mongo.Log(data);
-    log.save();
+    console.log(JSON.stringify(data));
 }
 
-export function logInfo(info: string) {
+export function logInfo(object: Object) {
     const data = {
-        time: new Date(),
-        content: {
-            info: info,
-        },
+        time: libs.moment().format(),
+        type: "info",
+        content: object,
     };
 
-    // show the info in pm2 logs
-    libs.green(`${new Date()}: ${JSON.stringify(data, null, "  ")}`);
-
-    const log = new services.mongo.Log(data);
-    log.save();
+    console.log(JSON.stringify(data));
 }

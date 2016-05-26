@@ -24,7 +24,7 @@ export function bindObsolete(document: types.ObsoleteDocument, handler: (request
                 services.response.sendError(response, error);
             }
         } else {
-            services.response.sendError(response, services.error.fromMessage("the api of this version is expired", types.StatusCode.notFound), document.documentUrl);
+            services.response.sendError(response, "the api of this version is expired", document.documentUrl);
         }
     });
 }

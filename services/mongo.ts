@@ -5,7 +5,6 @@ import * as services from "../services";
 
 import Schema = libs.mongoose.Schema;
 
-export let Log: libs.mongoose.Model<libs.mongoose.Document>;
 export let Organization: libs.mongoose.Model<OrganizationDocument>;
 export let User: libs.mongoose.Model<UserDocument>;
 export let Theme: libs.mongoose.Model<ThemeDocument>;
@@ -81,11 +80,6 @@ export function connect() {
     libs.mongoose.connect(settings.mongodb.url, settings.mongodb.options);
 
     libs.mongoose.connection.on("error", console.error.bind(console, "connection error:"));
-
-    Log = libs.mongoose.model("Log", new libs.mongoose.Schema({
-        time: Date,
-        content: libs.mongoose.Schema.Types.Mixed,
-    }));
 
     Organization = libs.mongoose.model<OrganizationDocument>("Organization", new libs.mongoose.Schema({
         name: String,

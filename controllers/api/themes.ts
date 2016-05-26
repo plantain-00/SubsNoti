@@ -21,14 +21,14 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     if (typeof body.organizationId !== "string"
         || !libs.validator.isMongoId(body.organizationId)) {
-        throw services.error.fromParameterIsInvalidMessage("organizationId");
+        throw libs.util.format(services.error.parameterIsInvalid, "organizationId");
     }
 
     const organizationId = new libs.ObjectId(body.organizationId);
 
     const themeTitle = typeof body.themeTitle === "string" ? libs.validator.trim(body.themeTitle) : "";
     if (themeTitle === "") {
-        throw services.error.fromParameterIsMissedMessage("themeTitle");
+        throw libs.util.format(services.error.parameterIsMissed, "themeTitle");
     }
 
     const themeDetail = typeof body.themeDetail === "string" ? libs.validator.trim(body.themeDetail) : "";
@@ -40,7 +40,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         .exec();
     if (!organizationId.equals(services.seed.publicOrganizationId)
         && !user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
-        throw services.error.fromOrganizationIsPrivateMessage();
+        throw services.error.theOrganizationIsPrivate;
     }
 
     const organization = await services.mongo.Organization.findOne({ _id: organizationId })
@@ -76,7 +76,7 @@ export async function create(request: libs.Request, response: libs.Response) {
                     newName: imageName,
                 });
                 if (json.response.statusCode >= 300) {
-                    throw services.error.fromMessage(JSON.stringify(json.body), types.StatusCode.internalServerError);
+                    throw JSON.stringify(json.body);
                 }
             }
         }
@@ -105,7 +105,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     services.push.emitTheme(types.themePushEvents.themeCreated, newTheme);
 
     services.logger.logRequest(documentOfCreate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 export const documentOfUpdate: types.Document = {
@@ -119,7 +119,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     if (typeof params.theme_id !== "string"
         || !libs.validator.isMongoId(params.theme_id)) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     interface Body {
@@ -151,12 +151,12 @@ export async function update(request: libs.Request, response: libs.Response) {
         .populate("creator owners watchers")
         .exec();
     if (!theme) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     // current user should be one of the theme's owners.
     if (!theme.owners.find((o: libs.ObjectId) => o.equals(request.userId))) {
-        throw services.error.fromThemeIsNotYoursMessage();
+        throw services.error.theThemeIsNotOwnedByYou;
     }
 
     if (title) {
@@ -182,7 +182,7 @@ export async function update(request: libs.Request, response: libs.Response) {
                     newName: imageName,
                 });
                 if (json.response.statusCode >= 300) {
-                    throw services.error.fromMessage(JSON.stringify(json.body), types.StatusCode.internalServerError);
+                    throw JSON.stringify(json.body);
                 }
             }
         }
@@ -193,5 +193,5 @@ export async function update(request: libs.Request, response: libs.Response) {
     services.push.emitTheme(types.themePushEvents.themeUpdated, result);
 
     services.logger.logRequest(documentOfUpdate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }

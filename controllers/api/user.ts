@@ -28,7 +28,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         },
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }
 
 export const documentOfUpdate: types.Document = {
@@ -75,6 +75,6 @@ export async function update(request: libs.Request, response: libs.Response) {
 
         response.status(json.response.statusCode).json(json.body);
     } else {
-        services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+        services.response.sendSuccess(response);
     }
 }

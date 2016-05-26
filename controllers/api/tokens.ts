@@ -22,7 +22,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     if (typeof body.email !== "string"
         || !libs.validator.isEmail(body.email)) {
-        throw services.error.fromParameterIsInvalidMessage("email");
+        throw libs.util.format(services.error.parameterIsInvalid, "email");
     }
 
     const email = typeof body.email === "string" ? libs.validator.trim(body.email).toLowerCase() : "";
@@ -30,8 +30,11 @@ export async function create(request: libs.Request, response: libs.Response) {
     const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
     const guid = typeof body.guid === "string" ? libs.validator.trim(body.guid) : "";
     const redirectUrl = typeof body.redirectUrl === "string" ? libs.validator.trim(body.redirectUrl) : "";
-    if (code === "" || guid === "") {
-        throw services.error.fromParameterIsInvalidMessage("code or guid");
+    if (code === "") {
+        throw libs.util.format(services.error.parameterIsInvalid, "code");
+    }
+    if (guid === "") {
+        throw libs.util.format(services.error.parameterIsInvalid, "guid");
     }
 
     await services.captcha.validate(guid, code);
@@ -52,5 +55,5 @@ export async function create(request: libs.Request, response: libs.Response) {
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);
         result = {};
     }
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
+    services.response.sendSuccess(response, result);
 }

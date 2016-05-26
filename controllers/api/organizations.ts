@@ -14,19 +14,19 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const organizationName = typeof body.organizationName === "string" ? libs.validator.trim(body.organizationName) : "";
     if (organizationName === "") {
-        throw services.error.fromParameterIsMissedMessage("organizationName");
+        throw libs.util.format(services.error.parameterIsMissed, "organizationName");
     }
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
 
     // the name should not be used by other organizations.
     if (organizationName === services.seed.publicOrganizationName) {
-        throw services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest);
+        throw services.error.theOrganizationNameAlreadyExists;
     }
     const organizationCount = await services.mongo.Organization.count({ name: organizationName })
         .exec();
     if (organizationCount > 0) {
-        throw services.error.fromMessage("the organization name already exists.", types.StatusCode.invalidRequest);
+        throw services.error.theOrganizationNameAlreadyExists;
     }
 
     // current user should not create too many organizations.
@@ -34,7 +34,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         .select("createdOrganizations joinedOrganizations")
         .exec();
     if (user.createdOrganizations.length >= settings.maxOrganizationNumberUserCanCreate) {
-        throw services.error.fromMessage("you already created " + user.createdOrganizations.length + " organizations.", types.StatusCode.invalidRequest);
+        throw `you already created ${user.createdOrganizations.length} organizations.`;
     }
 
     const organization = await services.mongo.Organization.create({
@@ -50,5 +50,5 @@ export async function create(request: libs.Request, response: libs.Response) {
     user.save();
 
     services.logger.logRequest(documentOfCreate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }

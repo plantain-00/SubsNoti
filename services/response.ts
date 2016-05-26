@@ -3,34 +3,34 @@ import * as libs from "../libs";
 import * as settings from "../settings";
 import * as services from "../services";
 
-export function sendSuccess(response: libs.Response, statusCode: types.StatusCode, result: Object = {}) {
+export function sendSuccess(response: libs.Response, result: Object = {}) {
     const baseResponse: types.Response = {
-        isSuccess: true,
-        statusCode: statusCode,
+        status: 0,
     };
 
-    response.status(types.StatusCode.OK).json(Object.assign(baseResponse, result));
+    response.status(200).json(Object.assign(baseResponse, result));
 }
 
-export function sendError(response: libs.Response, error: types.E, documentUrl?: string) {
-    const isE = error.statusCode;
-
+export function sendError(response: libs.Response, error: Error | string, documentUrl?: string) {
+    let errorMessage: string;
+    let stack: string;
+    if (typeof error === "string") {
+        errorMessage = error;
+    } else {
+        errorMessage = "something happens unexpectedly.";
+        stack = error.stack;
+    }
     const baseResponse: types.Response = {
-        isSuccess: false,
-        statusCode: isE ? error.statusCode : types.StatusCode.internalServerError,
-        errorMessage: isE ? error.message : "something happens unexpectedly.",
+        status: 1,
+        errorMessage: errorMessage,
         documentUrl: settings.documentServer + (documentUrl || response.documentUrl),
     };
 
-    if (!isE) {
-        baseResponse.actualErrorMessage = error.message;
-    }
-
     if (settings.currentEnvironment !== types.environment.production) {
-        baseResponse.stack = error.stack;
+        baseResponse.stack = stack;
     }
 
     services.logger.logError(error);
 
-    response.status(types.StatusCode.OK).json(baseResponse);
+    response.status(200).json(baseResponse);
 }

@@ -13,5 +13,5 @@ export async function get(request: libs.Request, response: libs.Response) {
     const result: types.ScopesResult = {
         scopes: settings.scopes,
     };
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response);
 }

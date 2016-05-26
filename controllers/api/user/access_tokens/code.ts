@@ -21,5 +21,5 @@ export async function confirm(request: libs.Request, response: libs.Response) {
 
     services.redis.set(settings.cacheKeys.oauthLoginCode + code, JSON.stringify(json));
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 };

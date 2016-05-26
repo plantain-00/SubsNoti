@@ -1,45 +1,8 @@
-import * as types from "../share/types";
-import * as libs from "../libs";
-import * as settings from "../settings";
-import * as services from "../services";
-
-export function fromError(error: Error, statusCode: types.StatusCode): types.E {
-    if (error) {
-        return {
-            statusCode: statusCode,
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-        };
-    }
-
-    return null;
-}
-
-export function fromMessage(message: string, statusCode: types.StatusCode): types.E {
-    return fromError(new Error(message), statusCode);
-}
-
-export function fromParameterIsMissedMessage(parameter: string): types.E {
-    return fromMessage(`the parameter '${parameter}' is missed.`, types.StatusCode.invalidRequest);
-}
-
-export function fromParameterIsInvalidMessage(parameter: string): types.E {
-    return fromMessage(`the parameter '${parameter}' is invalid.`, types.StatusCode.invalidRequest);
-}
-
-export function fromOrganizationIsPrivateMessage(): types.E {
-    return fromMessage(`the organization is private and only available to its members.`, types.StatusCode.unauthorized);
-}
-
-export function fromThemeIsNotYoursMessage(): types.E {
-    return fromMessage(`the theme is not owned by you.`, types.StatusCode.unauthorized);
-}
-
-export function fromUnauthorized(): types.E {
-    return fromMessage("the authentication credential is missed, out of date or invalid, or the access token is missed, invalid or out of scope.", types.StatusCode.unauthorized);
-}
-
-export function fromInvalidIP(ip): types.E {
-    return fromMessage(`your ip ${ip} in not in the white list.`, types.StatusCode.forbidden);
-}
+export const parameterIsMissed = "the parameter '%s' is missed.";
+export const parameterIsInvalid = "the parameter '%s' is invalid.";
+export const theOrganizationIsPrivate = "the organization is private and only available to its members.";
+export const theThemeIsNotOwnedByYou = "the theme is not owned by you.";
+export const unauthorized = "the authentication credential is missed, out of date or invalid, or the access token is missed, invalid or out of scope.";
+export const invalidIP = "your ip %s in not in the white list.";
+export const theOrganizationNameAlreadyExists = "the organization name already exists.";
+export const noFile = "no file.";

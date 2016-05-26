@@ -26,7 +26,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         }),
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }
 
 interface Body {
@@ -48,7 +48,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         description = libs.validator.trim(body.description);
     }
     if (description === "") {
-        throw services.error.fromParameterIsMissedMessage("description");
+        throw libs.util.format(services.error.parameterIsMissed, "description");
     }
 
     const scopes = body.scopes;
@@ -70,7 +70,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     const result: types.AccessTokenResult = {
         accessToken: value,
     };
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
+    services.response.sendSuccess(response, result);
 }
 
 export const documentOfUpdate: types.Document = {
@@ -84,7 +84,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     if (typeof params.access_token_id !== "string"
         || !libs.validator.isMongoId(params.access_token_id)) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     const body: Body = request.body;
@@ -94,7 +94,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         description = libs.validator.trim(body.description);
     }
     if (description === "") {
-        throw services.error.fromParameterIsMissedMessage("description");
+        throw libs.util.format(services.error.parameterIsInvalid, "description");
     }
 
     const scopes = body.scopes;
@@ -107,7 +107,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
     if (!accessToken) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     accessToken.description = description;
@@ -116,7 +116,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     accessToken.save();
 
     services.logger.logRequest(documentOfUpdate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 export const documentOfRemove: types.Document = {
@@ -130,7 +130,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
     if (typeof params.access_token_id !== "string"
         || !libs.validator.isMongoId(params.access_token_id)) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     const id = new libs.ObjectId(params.access_token_id);
@@ -141,11 +141,11 @@ export async function remove(request: libs.Request, response: libs.Response) {
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
     if (!accessToken) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     accessToken.remove();
 
     services.logger.logRequest(documentOfRemove.url, request);
-    services.response.sendSuccess(response, types.StatusCode.deleted);
+    services.response.sendSuccess(response);
 }

@@ -10,5 +10,5 @@ export function getType(status: types.ThemeStatus): types.ThemeStatusType {
     if (status === types.ThemeStatus.closed) {
         return types.themeStatus.closed;
     }
-    throw services.error.fromMessage("invalid theme status:" + status, types.StatusCode.internalServerError);
+    throw libs.util.format(services.error.parameterIsInvalid, "status");
 }

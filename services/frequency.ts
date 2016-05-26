@@ -27,7 +27,7 @@ async function limit(key: string, seconds: number, keyPrefix: string): Promise<v
     if (value) {
         const reply = await services.redis.ttl(frequencyKey);
 
-        return Promise.reject(services.error.fromMessage(`do it later after ${reply} seconds`, types.StatusCode.tooManyRequest));
+        return Promise.reject(`do it later after ${reply} seconds`);
     }
 
     services.redis.set(frequencyKey, "1", seconds);

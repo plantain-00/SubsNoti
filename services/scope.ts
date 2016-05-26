@@ -5,11 +5,11 @@ import * as services from "../services";
 
 export function shouldValidateAndContainScope(request: libs.Request, scopeName: types.ScopeName) {
     if (!request.userId) {
-        throw services.error.fromUnauthorized();
+        throw services.error.unauthorized;
     }
 
     if (!contain(request, scopeName)) {
-        throw services.error.fromUnauthorized();
+        throw services.error.unauthorized;
     }
 }
 

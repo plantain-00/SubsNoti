@@ -19,12 +19,12 @@ export async function invite(request: libs.Request, response: libs.Response) {
 
     if (typeof params.organization_id !== "string"
         || !libs.validator.isMongoId(params.organization_id)) {
-        throw services.error.fromParameterIsInvalidMessage("organization_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "organization_id");
     }
 
     if (typeof params.user_email !== "string"
         || !libs.validator.isEmail(params.user_email)) {
-        throw services.error.fromParameterIsInvalidMessage("user_email");
+        throw libs.util.format(services.error.parameterIsInvalid, "user_email");
     }
 
     const organizationId = new libs.ObjectId(params.organization_id);
@@ -37,7 +37,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
         .select("members")
         .exec();
     if (!organization) {
-        throw services.error.fromParameterIsInvalidMessage("organization_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "organization_id");
     }
 
     // the email should belong to one of users.
@@ -45,12 +45,12 @@ export async function invite(request: libs.Request, response: libs.Response) {
         .select("_id joinedOrganizations")
         .exec();
     if (!user) {
-        throw services.error.fromParameterIsInvalidMessage("user_email");
+        throw libs.util.format(services.error.parameterIsInvalid, "user_email");
     }
 
     // current user should be a member of the organization
     if (!organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
-        throw services.error.fromOrganizationIsPrivateMessage();
+        throw services.error.theOrganizationIsPrivate;
     }
 
     // if the user is already a member, do nothing.
@@ -62,5 +62,5 @@ export async function invite(request: libs.Request, response: libs.Response) {
         organization.save();
     }
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }

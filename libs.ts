@@ -25,6 +25,10 @@ export {http};
 import * as url from "url";
 export {url};
 
+import * as util from "util";
+export {util};
+
+
 import * as assert from "assert";
 export {assert};
 

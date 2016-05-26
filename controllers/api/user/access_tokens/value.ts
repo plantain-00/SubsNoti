@@ -14,7 +14,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
 
     if (typeof params.access_token_id !== "string"
         || !libs.validator.isMongoId(params.access_token_id)) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
@@ -25,7 +25,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
     if (!accessToken) {
-        throw services.error.fromParameterIsInvalidMessage("access_token_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "access_token_id");
     }
 
     accessToken.value = libs.generateUuid();
@@ -35,5 +35,5 @@ export async function regenerate(request: libs.Request, response: libs.Response)
     const result: types.AccessTokenResult = {
         accessToken: accessToken.value,
     };
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
+    services.response.sendSuccess(response, result);
 }

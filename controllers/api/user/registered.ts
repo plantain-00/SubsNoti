@@ -29,7 +29,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         }),
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }
 
 interface Body {
@@ -50,12 +50,12 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     if (name === "") {
-        throw services.error.fromParameterIsMissedMessage("name");
+        throw libs.util.format(services.error.parameterIsMissed, "name");
     }
 
     if (typeof body.homeUrl !== "string"
         || !libs.validator.isURL(body.homeUrl)) {
-        throw services.error.fromParameterIsInvalidMessage("homeUrl");
+        throw libs.util.format(services.error.parameterIsInvalid, "homeUrl");
     }
     const homeUrl = libs.validator.trim(body.homeUrl);
 
@@ -63,7 +63,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     if (typeof body.authorizationCallbackUrl !== "string"
         || !libs.validator.isURL(body.authorizationCallbackUrl)) {
-        throw services.error.fromParameterIsInvalidMessage("authorizationCallbackUrl");
+        throw libs.util.format(services.error.parameterIsInvalid, "authorizationCallbackUrl");
     }
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
@@ -82,7 +82,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     application.save();
 
     services.logger.logRequest(documentOfCreate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 export const documentOfUpdate: types.Document = {
@@ -96,19 +96,19 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     if (typeof params.application_id !== "string"
         || !libs.validator.isMongoId(params.application_id)) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     const body: Body = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     if (name === "") {
-        throw services.error.fromParameterIsMissedMessage("name");
+        throw libs.util.format(services.error.parameterIsInvalid, "name");
     }
 
     if (typeof body.homeUrl !== "string"
         || !libs.validator.isURL(body.homeUrl)) {
-        throw services.error.fromParameterIsInvalidMessage("homeUrl");
+        throw libs.util.format(services.error.parameterIsInvalid, "homeUrl");
     }
     const homeUrl = libs.validator.trim(body.homeUrl);
 
@@ -116,7 +116,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     if (typeof body.authorizationCallbackUrl !== "string"
         || !libs.validator.isURL(body.authorizationCallbackUrl)) {
-        throw services.error.fromParameterIsInvalidMessage("authorizationCallbackUrl");
+        throw libs.util.format(services.error.parameterIsInvalid, "authorizationCallbackUrl");
     }
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
@@ -128,7 +128,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
     if (!application) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     application.name = name;
@@ -139,7 +139,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     application.save();
 
     services.logger.logRequest(documentOfUpdate.url, request);
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 export const documentOfRemove: types.Document = {
@@ -153,7 +153,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
     if (typeof params.application_id !== "string"
         || !libs.validator.isMongoId(params.application_id)) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     const id = new libs.ObjectId(params.application_id);
@@ -164,7 +164,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
     if (!application) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     await services.mongo.AccessToken.remove({ application: application._id }).exec();
@@ -172,5 +172,5 @@ export async function remove(request: libs.Request, response: libs.Response) {
     application.remove();
 
     services.logger.logRequest(documentOfRemove.url, request);
-    services.response.sendSuccess(response, types.StatusCode.deleted);
+    services.response.sendSuccess(response);
 }

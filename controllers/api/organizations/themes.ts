@@ -23,7 +23,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     if (typeof params.organization_id !== "string"
         || !libs.validator.isMongoId(params.organization_id)) {
-        throw services.error.fromParameterIsInvalidMessage("organization_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "organization_id");
     }
 
     const query: Query = request.query;
@@ -56,7 +56,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .exec();
 
         if (!user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
-            throw services.error.fromOrganizationIsPrivateMessage();
+            throw services.error.theOrganizationIsPrivate;
         }
     }
 
@@ -102,5 +102,5 @@ export async function get(request: libs.Request, response: libs.Response) {
         result.themes.push(services.theme.convert(theme));
     }
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }

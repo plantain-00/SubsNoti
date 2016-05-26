@@ -41,6 +41,6 @@ export async function validate(id: string, code: string): Promise<void> {
     await services.redis.del(key);
 
     if (code.toUpperCase() !== targetCode) {
-        throw services.error.fromMessage("the code is invalid or expired now.", types.StatusCode.invalidRequest);
+        throw libs.util.format(services.error.parameterIsInvalid, "code");
     }
 }

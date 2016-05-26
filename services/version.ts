@@ -15,9 +15,9 @@ export function route(app: libs.express.Application) {
         request.v = typeof version === "string" ? libs.validator.trim(version) : "";
 
         if (request.v === "") {
-            services.response.sendError(response, services.error.fromParameterIsMissedMessage(settings.headerNames.version), documentUrl);
+            services.response.sendError(response, libs.util.format(services.error.parameterIsMissed, settings.headerNames.version), documentUrl);
         } else if (!libs.semver.valid(request.v)) {
-            services.response.sendError(response, services.error.fromParameterIsInvalidMessage(settings.headerNames.version), documentUrl);
+            services.response.sendError(response, libs.util.format(services.error.parameterIsInvalid, settings.headerNames.version), documentUrl);
         } else {
             next();
         }

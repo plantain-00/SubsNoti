@@ -15,7 +15,7 @@ function getConnection(): Promise<MysqlConnection> {
     return new Promise<MysqlConnection>((resolve, reject) => {
         pool.getConnection((error, connection) => {
             if (error) {
-                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                reject(error);
             } else {
                 resolve(connection);
             }
@@ -29,7 +29,7 @@ function accessAsync<T>(sql: string, parameters: (string | number)[]): Promise<T
             connection.query(sql, parameters, (error, rows) => {
                 connection.release();
                 if (error) {
-                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                    reject(error);
                 } else {
                     resolve(rows);
                 }
@@ -48,7 +48,7 @@ export function beginTransactionAsync(): Promise<MysqlConnection> {
             connection.beginTransaction(error => {
                 if (error) {
                     connection.release();
-                    reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                    reject(error);
                 } else {
                     resolve(connection);
                 }
@@ -61,7 +61,7 @@ function accessInTransactionAsync<T>(connection: MysqlConnection, sql: string, p
     return new Promise<T>((resolve, reject) => {
         connection.query(sql, parameters, (error, rows) => {
             if (error) {
-                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                reject(error);
             } else {
                 resolve(rows);
             }
@@ -90,7 +90,7 @@ export function endTransactionAsync(connection: MysqlConnection): Promise<void> 
     return new Promise<void>((resolve, reject) => {
         connection.commit(error => {
             if (error) {
-                reject(services.error.fromError(error, types.StatusCode.internalServerError));
+                reject(error);
             } else {
                 connection.release();
                 resolve();

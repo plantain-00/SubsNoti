@@ -14,5 +14,5 @@ export async function deleteThis(request: libs.Request, response: libs.Response)
         domain: settings.cookieDomains,
     });
 
-    services.response.sendSuccess(response, types.StatusCode.deleted);
+    services.response.sendSuccess(response);
 }

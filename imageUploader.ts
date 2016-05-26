@@ -58,7 +58,7 @@ const storage = libs.multer.diskStorage({
                 next(null, "images/tmp/");
             }
         } else {
-            next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
+            next("can not upload files at this url:" + request.path);
         }
     },
     filename: function (request: libs.Request, file, next) {
@@ -74,7 +74,7 @@ const storage = libs.multer.diskStorage({
             || request.path === "/api/temperary/images") {
             next(null, libs.generateUuid() + "." + libs.mime.extension(file.mimetype));
         } else {
-            next(services.error.fromMessage("can not upload files at this url:" + request.path, types.StatusCode.forbidden));
+            next("can not upload files at this url:" + request.path);
         }
     },
 });
@@ -84,12 +84,12 @@ const upload = libs.multer({ storage: storage }).any();
 const uploadAsync = (request: libs.Request, response: libs.Response) => {
     return new Promise((resolve, reject) => {
         if (!request.files) {
-            throw services.error.fromMessage("no file", types.StatusCode.invalidRequest);
+            throw services.error.noFile;
         }
 
         upload(request, response, error => {
             if (error) {
-                reject(services.error.fromError(error, types.StatusCode.invalidRequest));
+                reject(error);
             } else {
                 resolve();
             }
@@ -104,24 +104,24 @@ const uploadIPWhiteList = settings.uploadIPWhiteList;
 
 async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
     if (!uploadIPWhiteList.find(i => i === request.ip)) {
-        throw services.error.fromInvalidIP(request.ip);
+        throw libs.util.format(services.error.invalidIP, request.ip);
     }
 
     await uploadAsync(request, response);
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+    services.response.sendSuccess(response, {
         names: request.files.map(f => f.filename),
     });
 }
 
 async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
     if (!request.userId) {
-        throw services.error.fromUnauthorized();
+        throw services.error.unauthorized;
     }
 
     await uploadAsync(request, response);
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, {
+    services.response.sendSuccess(response, {
         names: request.files.map(f => f.filename),
     });
 }
@@ -131,22 +131,22 @@ async function moveImage(request: libs.Request, response: libs.Response) {
     const newName = typeof request.body.newName === "string" ? libs.validator.trim(request.body.newName) : "";
 
     if (!name) {
-        throw services.error.fromParameterIsMissedMessage("name");
+        throw libs.util.format(services.error.parameterIsMissed, "name");
     }
 
     if (!newName) {
-        throw services.error.fromParameterIsMissedMessage("newName");
+        throw libs.util.format(services.error.parameterIsMissed, "newName");
     }
 
     if (!uploadIPWhiteList.find(i => i === request.ip)) {
-        throw services.error.fromInvalidIP(request.ip);
+        throw libs.util.format(services.error.invalidIP, request.ip);
     }
 
     const path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
 
     await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 services.router.bind(documentOfUploadPersistentImages, uploadPersistentImages, app);

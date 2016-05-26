@@ -154,7 +154,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 const result: types.OAuthAuthorizationResult = {
                     pageName: types.oauthAuthorization.login,
                 };
-                services.response.sendSuccess(response, types.StatusCode.OK, result);
+                services.response.sendSuccess(response, result);
                 return;
             }
             response.redirect("/login.html?" + libs.qs.stringify({
@@ -179,7 +179,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                         const result: types.OAuthAuthorizationResult = {
                             code: query.code,
                         };
-                        services.response.sendSuccess(response, types.StatusCode.OK, result);
+                        services.response.sendSuccess(response, result);
                         return;
                     }
                     response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
@@ -218,7 +218,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                     const result: types.OAuthAuthorizationResult = {
                         code: query.code,
                     };
-                    services.response.sendSuccess(response, types.StatusCode.OK, result);
+                    services.response.sendSuccess(response, result);
                     return;
                 }
                 response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
@@ -244,7 +244,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 pageName: types.oauthAuthorization.authorization,
                 code: query.code,
             };
-            services.response.sendSuccess(response, types.StatusCode.OK, result);
+            services.response.sendSuccess(response, result);
             return;
         }
         response.redirect("/authorization.html?" + libs.qs.stringify({

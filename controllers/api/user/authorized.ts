@@ -41,7 +41,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         }),
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }
 
 export const documentOfRemove: types.Document = {
@@ -55,7 +55,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
     if (typeof params.application_id !== "string"
         || !libs.validator.isMongoId(params.application_id)) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     const id = new libs.ObjectId(params.application_id);
@@ -66,12 +66,12 @@ export async function remove(request: libs.Request, response: libs.Response) {
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
     if (!application) {
-        throw services.error.fromParameterIsInvalidMessage("application_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
     }
 
     await services.mongo.AccessToken.findOneAndRemove({ creator: request.userId, application: id })
         .exec();
 
     services.logger.logRequest(documentOfRemove.url, request);
-    services.response.sendSuccess(response, types.StatusCode.deleted);
+    services.response.sendSuccess(response);
 }

@@ -38,5 +38,5 @@ export async function get(request: libs.Request, response: libs.Response) {
         name: services.seed.publicOrganizationName,
     });
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }

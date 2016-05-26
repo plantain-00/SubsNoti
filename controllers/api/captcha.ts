@@ -15,7 +15,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     const id = typeof body.id === "string" ? libs.validator.trim(body.id) : "";
 
     if (id === "") {
-        throw services.error.fromParameterIsMissedMessage("id");
+        throw libs.util.format(services.error.parameterIsMissed, "id");
     }
 
     const captcha = await services.captcha.create(id);
@@ -24,5 +24,5 @@ export async function create(request: libs.Request, response: libs.Response) {
         url: captcha.url,
         code: settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
     };
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
+    services.response.sendSuccess(response, result);
 }

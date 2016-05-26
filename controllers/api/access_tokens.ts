@@ -21,30 +21,30 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const clientId = typeof body.clientId === "string" ? libs.validator.trim(body.clientId) : "";
     if (clientId === "") {
-        throw services.error.fromParameterIsMissedMessage("clientId");
+        throw libs.util.format(services.error.parameterIsMissed, "clientId");
     }
     const clientSecret = typeof body.clientSecret === "string" ? libs.validator.trim(body.clientSecret) : "";
     if (clientSecret === "") {
-        throw services.error.fromParameterIsMissedMessage("clientSecret");
+        throw libs.util.format(services.error.parameterIsMissed, "clientSecret");
     }
     const state = typeof body.state === "string" ? libs.validator.trim(body.state) : "";
     if (state === "") {
-        throw services.error.fromParameterIsMissedMessage("state");
+        throw libs.util.format(services.error.parameterIsMissed, "state");
     }
     const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
     if (code === "") {
-        throw services.error.fromParameterIsMissedMessage("code");
+        throw libs.util.format(services.error.parameterIsMissed, "code");
     }
 
     const value = await services.redis.get(settings.cacheKeys.oauthLoginCode + code);
     if (!value) {
-        throw services.error.fromMessage("code is invalid or expired", types.StatusCode.unauthorized);
+        throw libs.util.format(services.error.parameterIsInvalid, "code");
     }
 
     const json: types.OAuthCodeValue = JSON.parse(value);
 
     if (state !== json.state) {
-        throw services.error.fromMessage("state is invalid", types.StatusCode.unauthorized);
+        throw libs.util.format(services.error.parameterIsInvalid, "state");
     }
 
     const application = await services.mongo.Application.findOne({
@@ -52,7 +52,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         clientSecret: clientSecret,
     }).exec();
     if (!application) {
-        throw services.error.fromMessage("client id or client secret is invalid", types.StatusCode.unauthorized);
+        throw libs.util.format(services.error.parameterIsInvalid, "client id or client secret");
     }
 
     const creator = new libs.ObjectId(json.creator);
@@ -80,5 +80,5 @@ export async function create(request: libs.Request, response: libs.Response) {
     const result: types.AccessTokenResult = {
         accessToken: accessTokenValue,
     };
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified, result);
+    services.response.sendSuccess(response, result);
 }

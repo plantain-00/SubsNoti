@@ -18,7 +18,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
     if (typeof params.theme_id !== "string"
         || !libs.validator.isMongoId(params.theme_id)) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     const themeId = new libs.ObjectId(params.theme_id);
@@ -31,14 +31,14 @@ export async function watch(request: libs.Request, response: libs.Response) {
         .select("organization watchers")
         .exec();
     if (!theme) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     // current user should be the member of the organization that the theme in, or the organization is public.
     const organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
         && !organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
-        throw services.error.fromOrganizationIsPrivateMessage();
+        throw services.error.theOrganizationIsPrivate;
     }
 
     // if current user already watched the theme, then do nothing.
@@ -62,7 +62,7 @@ export async function watch(request: libs.Request, response: libs.Response) {
         services.push.emitTheme(types.themePushEvents.themeUpdated, result);
     }
 
-    services.response.sendSuccess(response, types.StatusCode.createdOrModified);
+    services.response.sendSuccess(response);
 }
 
 export const documentOfUnwatch: types.Document = {
@@ -76,7 +76,7 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
     if (typeof params.theme_id !== "string"
         || !libs.validator.isMongoId(params.theme_id)) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     const themeId = new libs.ObjectId(params.theme_id);
@@ -89,14 +89,14 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
         .select("organization watchers")
         .exec();
     if (!theme) {
-        throw services.error.fromParameterIsInvalidMessage("theme_id");
+        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
     }
 
     // current user should be the member of the organization that the theme in, or the organization is public.
     const organization = theme.organization as services.mongo.OrganizationDocument;
     if (!organization._id.equals(services.seed.publicOrganizationId)
         && !organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
-        throw services.error.fromOrganizationIsPrivateMessage();
+        throw services.error.theOrganizationIsPrivate;
     }
 
     // if current user already unwatched the theme, then do nothing.
@@ -120,5 +120,5 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
         services.push.emitTheme(types.themePushEvents.themeUpdated, result);
     }
 
-    services.response.sendSuccess(response, types.StatusCode.deleted);
+    services.response.sendSuccess(response);
 }

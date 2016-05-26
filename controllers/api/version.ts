@@ -14,5 +14,5 @@ export async function get(request: libs.Request, response: libs.Response) {
         version: settings.version,
     };
 
-    services.response.sendSuccess(response, types.StatusCode.OK, result);
+    services.response.sendSuccess(response, result);
 }
