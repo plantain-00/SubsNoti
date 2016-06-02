@@ -98,6 +98,7 @@ export interface Request extends express.Request {
     scopes: string[];
     // application's id that this access token can be used for
     application: ObjectId;
+    uploadPath: string;
 }
 
 export interface Response extends express.Response {

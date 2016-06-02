@@ -11,6 +11,7 @@ app.use(libs.cookieParser());
 
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
+app.use(libs.bodyParser.text());
 
 app.use(libs.cors(settings.cors));
 
@@ -43,23 +44,7 @@ const storage = libs.multer.diskStorage({
             next(new Error("not image"));
             return;
         }
-        if (request.path === documentOfUploadPersistentImages.url
-            || request.path === "/api/persistent/images") {
-            if (settings.currentEnvironment === types.environment.test) {
-                next(null, "test_images/");
-            } else {
-                next(null, "images/");
-            }
-        } else if (request.path === documentOfUploadTemperaryImages.url
-            || request.path === "/api/temperary/images") {
-            if (settings.currentEnvironment === types.environment.test) {
-                next(null, "test_images/tmp/");
-            } else {
-                next(null, "images/tmp/");
-            }
-        } else {
-            next("can not upload files at this url:" + request.path);
-        }
+        next(null, request.uploadPath);
     },
     filename: function (request: libs.Request, file, next) {
         const mimeType: string = file.mimetype;
@@ -83,17 +68,56 @@ const upload = libs.multer({ storage: storage }).any();
 
 const uploadAsync = (request: libs.Request, response: libs.Response) => {
     return new Promise((resolve, reject) => {
-        if (!request.files) {
-            throw services.error.noFile;
-        }
-
-        upload(request, response, error => {
-            if (error) {
-                reject(error);
+        let uploadPath: string = null;
+        if (request.path === documentOfUploadPersistentImages.url
+            || request.path === "/api/persistent/images") {
+            if (settings.currentEnvironment === types.environment.test) {
+                uploadPath = "test_images/";
             } else {
-                resolve();
+                uploadPath = "images/";
             }
-        });
+        } else if (request.path === documentOfUploadTemperaryImages.url
+            || request.path === "/api/temperary/images") {
+            if (settings.currentEnvironment === types.environment.test) {
+                uploadPath = "test_images/tmp/";
+            } else {
+                uploadPath = "images/tmp/";
+            }
+        } else {
+            reject("can not upload files at this url:" + request.path);
+        }
+        request.uploadPath = uploadPath;
+
+        const contentType = request.get("Content-Type");
+        if (contentType === "text/plain") {
+            const filename = request.query.filename;
+            if (!filename) {
+                reject(libs.util.format(services.error.parameterIsInvalid, "filename"));
+            } else {
+                const base64Data = request.body.replace(/^data:image\/png;base64,/, "");
+                libs.fs.writeFile(uploadPath + filename, base64Data, "base64", error => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+        } else if (contentType === "") {
+            upload(request, response, error => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (!request.files) {
+                        reject(services.error.noFile);
+                    } else {
+                        resolve();
+                    }
+                }
+            });
+        } else {
+            reject(services.error.invalidContentType);
+        }
     });
 };
 
