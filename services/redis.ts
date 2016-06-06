@@ -114,8 +114,17 @@ export function zadd(key: string | number, score: number, member: string | numbe
 export function zrem(key: string | number, member: string | number) {
     client.zrem(key, member);
 }
-export function zscore(key: string | number, member: string | number): Promise<number> {
+export function zscore(key: string | number, member: string | number): Promise<string> {
     return client.zscore(key, member);
+}
+export function zrank(key: string | number, member: string | number): Promise<string> {
+    return client.zrank(key, member);
+}
+export function zrevrank(key: string | number, member: string | number): Promise<string> {
+    return client.zrevrank(key, member);
+}
+export function zincrby(key: string | number, increment: number, member: string | number): Promise<string> {
+    return client.zincrby(key, increment, member);
 }
 export function zrangebyscore(key: string | number, offset: number, count: number): Promise<string[]> {
     return client.zrangebyscore(key, "-inf", "+inf", "LIMIT", offset, count);
