@@ -11,14 +11,14 @@ export async function create(email: string, url: string, request: libs.Request, 
     email = libs.validator.trim(email).toLowerCase();
 
     // find out if the email is someone's. if no, create an account.
-    let user = await services.mongo.User.findOne({ email: email })
+    let user = await services.mongo.User.findOne({ email })
         .exec();
     if (!user) {
         const salt = libs.generateUuid();
         user = await services.mongo.User.create({
-            email: email,
-            name: name,
-            salt: salt,
+            email,
+            name,
+            salt,
             status: types.UserStatus.normal,
         });
         await services.avatar.createIfNotExistsAsync(user._id.toHexString());

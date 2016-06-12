@@ -64,21 +64,13 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
         const code = typeof query.code === "string" ? libs.validator.trim(query.code) : "";
-
-        if (state === "") {
-            throw new Error("missed parameter:state");
-        }
-
-        if (code === "") {
-            throw new Error("missed parameter:code");
-        }
-
+        libs.assert(state !== "", services.error.parameterIsMissed, "state");
+        libs.assert(code !== "", services.error.parameterIsMissed, "code");
         const value = await services.redis.get(settings.cacheKeys.githubLoginCode + state);
-        if (!value) {
-            throw new Error("invalid parameter:state");
-        }
+        libs.assert(value, services.error.parameterIsInvalid, "state");
 
-        const accessTokenResponse = await services.request.post<{ access_token: string; scope: string; token_type: string; }>({
+        const [incomingMessage, json] = await services.request.request<{ access_token: string; scope: string; token_type: string; }>({
+            method: types.httpMethod.post,
             url: "https://github.com/login/oauth/access_token",
             headers: {
                 Accept: "application/json",
@@ -86,34 +78,31 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             form: {
                 client_id: settings.login.github.clientId,
                 client_secret: settings.login.github.clientSecret,
-                code: code,
-                state: state,
+                code,
+                state,
             },
         });
-
-        const accessToken = accessTokenResponse.body.access_token;
-
-        const emailsResponse = await services.request.get<{ email: string; verified: boolean; primary: boolean; }[]>({
+        const accessToken = json.access_token;
+        const [emailIncomingMessage, emailJson] = await services.request.request<{ email: string; verified: boolean; primary: boolean; }[]>({
             url: "https://api.github.com/user/emails",
             headers: {
                 Authorization: `token ${accessToken}`,
                 "User-Agent": "SubsNoti",
             },
+            method: types.httpMethod.get,
         });
 
-        const email = emailsResponse.body.find(b => {
+        const email = emailJson.find(b => {
             return b.verified && b.primary;
         });
-        if (!email) {
-            throw new Error("no verified email");
-        }
+        libs.assert(email, "no verified email");
 
         const verifiedEmail = email.email.toLowerCase();
         const token = await services.tokens.create(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);
     } catch (error) {
-        redirectToErrorPage(response, error.message);
+        redirectToErrorPage(response, error.message ? error.message : error);
     }
 }
 
@@ -137,14 +126,8 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         const clientId = typeof query.client_id === "string" ? libs.validator.trim(query.client_id) : "";
         const scopes = typeof query.scopes === "string" ? libs.validator.trim(query.scopes) : "";
         const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
-
-        if (clientId === "") {
-            throw new Error("missed parameter:clientId");
-        }
-
-        if (state === "") {
-            throw new Error("missed parameter:state");
-        }
+        libs.assert(clientId !== "", services.error.parameterIsMissed, "clientId");
+        libs.assert(state !== "", services.error.parameterIsMissed, "state");
 
         await services.authenticationCredential.authenticate(request);
 
@@ -165,9 +148,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         const application = await services.mongo.Application.findOne({ clientId: clientId })
             .exec();
-        if (!application) {
-            throw new Error("invalid client id");
-        }
+        libs.assert(application, services.error.parameterIsInvalid, "client id");
 
         // after authorized, there is a code in `query`, check that in cache
         if (query.code) {
@@ -184,7 +165,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                     }
                     response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                         code: query.code,
-                        state: state,
+                        state,
                     }));
                     return;
                 }
@@ -209,7 +190,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                     scopes: scopeArray,
                     creator: request.userId.toHexString(),
                     application: application._id.toHexString(),
-                    state: state,
+                    state,
                     confirmed: true,
                 };
                 services.redis.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
@@ -223,7 +204,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                 }
                 response.redirect(application.authorizationCallbackUrl + "?" + libs.qs.stringify({
                     code: query.code,
-                    state: state,
+                    state,
                 }));
                 return;
             }
@@ -233,7 +214,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             scopes: scopeArray,
             creator: request.userId.toHexString(),
             application: application._id.toHexString(),
-            state: state,
+            state,
             confirmed: false,
         };
         services.redis.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
@@ -249,7 +230,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         }
         response.redirect("/authorization.html?" + libs.qs.stringify({
             redirect_url: documentOfAuthorize.url + "?" + libs.qs.stringify(query),
-            scopes: scopes,
+            scopes,
             code: query.code,
             application_id: application._id.toHexString(),
         }));

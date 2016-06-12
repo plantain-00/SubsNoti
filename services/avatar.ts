@@ -9,14 +9,17 @@ import * as services from "../services";
 export async function createIfNotExistsAsync(id: string): Promise<void> {
     const seed: string = libs.md5(id);
     const fileName = getDefaultName(id);
-    const existResponse = await services.request.getAsync(`${settings.imageServer}/${fileName}`, types.responseType.others);
-    if (existResponse.response.statusCode === 200) {
+    const [existResponse] = await services.request.request<string>({
+        method: types.httpMethod.get,
+        url: `${settings.imageServer}/${fileName}`,
+    }, types.responseType.others);
+    if (existResponse.statusCode === 200) {
         services.logger.logInfo("exists:" + fileName);
     } else {
-        services.logger.logInfo("statusCode:" + existResponse.response.statusCode);
+        services.logger.logInfo("statusCode:" + existResponse.statusCode);
         services.logger.logInfo("creating:" + fileName);
-        const creationResponse = await createAsync(seed, fileName);
-        services.logger.logInfo(JSON.stringify(creationResponse.body));
+        const [creationResponse, json] = await createAsync(seed, fileName);
+        services.logger.logInfo(json);
     }
 }
 
@@ -46,7 +49,7 @@ function createAsync(seed: string, fileName: string) {
     }
 
     return new Promise<any>((resolve, reject) => {
-        canvas.toBuffer(function(error, buf) {
+        canvas.toBuffer(function (error, buf) {
             if (error) {
                 reject(error);
             } else {
@@ -65,7 +68,12 @@ function createAsync(seed: string, fileName: string) {
             },
         };
 
-        return services.request.postMultipartAsync(`${settings.imageUploader}/api/persistent`, formData);
+        return services.request.request({
+            url: `${settings.imageUploader}/api/persistent`,
+            method: types.httpMethod.post,
+            formData,
+            headers: {},
+        });
     });
 }
 

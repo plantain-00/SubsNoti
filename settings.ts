@@ -78,12 +78,6 @@ export const imagePaths = {
     avatar: "avatar-",
 };
 
-export const cors = {
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
-    origin: (process.env.SUBS_NOTI_CORS_ORIGIN as string || "http://localhost:8888").split(","),
-};
-
 export const rateLimit = {
     user: 5000,
     ip: 600,

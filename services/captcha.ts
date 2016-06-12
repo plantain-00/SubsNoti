@@ -27,7 +27,7 @@ export async function create(id: string): Promise<{ url: string; code: string; }
 
     return {
         url: canvas.toDataURL(),
-        code: code,
+        code,
     };
 }
 
@@ -39,8 +39,5 @@ export async function validate(id: string, code: string): Promise<void> {
     const targetCode = await services.redis.get(key);
 
     await services.redis.del(key);
-
-    if (code.toUpperCase() !== targetCode) {
-        throw libs.util.format(services.error.parameterIsInvalid, "code");
-    }
+    libs.assert(code.toUpperCase() === targetCode, services.error.parameterIsInvalid, "code");
 }

@@ -12,9 +12,9 @@ export function connect() {
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     const mailOptions = {
         from: settings.smtp.auth.user,
-        to: to,
-        subject: subject,
-        html: html,
+        to,
+        subject,
+        html,
     };
     return new Promise<void>((resolve, reject) => {
         transporter.sendMail(mailOptions, error => {

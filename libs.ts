@@ -29,9 +29,6 @@ import * as util from "util";
 export {util};
 
 
-import * as assert from "assert";
-export {assert};
-
 import * as nodemailer from "nodemailer";
 export {nodemailer};
 
@@ -70,8 +67,6 @@ export {qs};
 
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
-
-export const cors = require("cors");
 
 const colors = require("colors");
 
@@ -133,3 +128,15 @@ export const omit: (object: {}, props: string | string[]) => any = require("loda
 export const pick: (object: {}, ...props: string[]) => any = require("lodash.pick");
 
 export const minimist: ((args: string[]) => any) = require("minimist");
+
+export function assert(value: any, message: any, extra?: string) {
+    if (typeof message !== "string") {
+        message = JSON.stringify(message);
+    }
+    if (!value) {
+        if (extra) {
+            throw util.format(message, extra);
+        }
+        throw message;
+    }
+}

@@ -16,16 +16,8 @@ export async function invite(request: libs.Request, response: libs.Response) {
     }
 
     const params: Params = request.params;
-
-    if (typeof params.organization_id !== "string"
-        || !libs.validator.isMongoId(params.organization_id)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "organization_id");
-    }
-
-    if (typeof params.user_email !== "string"
-        || !libs.validator.isEmail(params.user_email)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "user_email");
-    }
+    libs.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
+    libs.assert(typeof params.user_email === "string" && libs.validator.isEmail(params.user_email), services.error.parameterIsInvalid, "user_email");
 
     const organizationId = new libs.ObjectId(params.organization_id);
     const email = libs.validator.trim(params.user_email).toLowerCase();
@@ -36,22 +28,16 @@ export async function invite(request: libs.Request, response: libs.Response) {
     const organization = await services.mongo.Organization.findOne({ _id: organizationId })
         .select("members")
         .exec();
-    if (!organization) {
-        throw libs.util.format(services.error.parameterIsInvalid, "organization_id");
-    }
+    libs.assert(organization, services.error.parameterIsInvalid, "organization_id");
 
     // the email should belong to one of users.
     const user = await services.mongo.User.findOne({ email: email })
         .select("_id joinedOrganizations")
         .exec();
-    if (!user) {
-        throw libs.util.format(services.error.parameterIsInvalid, "user_email");
-    }
+    libs.assert(user, services.error.parameterIsInvalid, "user_email");
 
     // current user should be a member of the organization
-    if (!organization.members.find((m: libs.ObjectId) => m.equals(request.userId))) {
-        throw services.error.theOrganizationIsPrivate;
-    }
+    libs.assert(organization.members.find((m: libs.ObjectId) => m.equals(request.userId)), services.error.theOrganizationIsPrivate);
 
     // if the user is already a member, do nothing.
     if (!organization.members.find((m: libs.ObjectId) => m.equals(user._id))) {

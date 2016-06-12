@@ -26,10 +26,7 @@ async function getVersion(caseName: string) {
         url: apiUrl + "/api/version",
     };
     const [response, body] = await services.request.request<types.VersionResponse>(options);
-
-    if (body.status !== 0 || body.version !== settings.version) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.version === settings.version, body);
 
     await operate(caseName, libs.omit(body, ["version"]));
 
@@ -46,10 +43,7 @@ async function createCaptcha(guid: string, caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.CaptchaResponse>(options);
-
-    if (body.status !== 0 || !body.code) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.code, body);
 
     await operate(caseName, libs.omit(body, ["url", "code"]));
 
@@ -61,18 +55,10 @@ async function createToken(guid: string, code: string, caseName: string, email: 
         url: apiUrl + "/api/tokens",
         headers: headers,
         method: types.httpMethod.post,
-        form: {
-            email: email,
-            name: name,
-            guid: guid,
-            code: code,
-        },
+        form: { email, name, guid, code },
     };
     const [response, body] = await services.request.request<types.TokenResponse>(options);
-
-    if (body.status !== 0 || !body.url) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.url, body);
 
     await operate(caseName, libs.omit(body, ["url"]));
 
@@ -80,18 +66,12 @@ async function createToken(guid: string, code: string, caseName: string, email: 
 }
 
 async function login(url: string, caseName: string) {
-    const options = {
-        url: url,
-        headers: headers,
-        jar: jar,
-    };
+    const options = { url, headers, jar };
     const [response, body] = await services.request.request(options, types.responseType.others);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
-    if (!authenticationCredential) {
-        throw cookies;
-    }
+    libs.assert(authenticationCredential, cookies);
 
     return operate(caseName, {
         statusCode: response.statusCode,
@@ -101,20 +81,16 @@ async function login(url: string, caseName: string) {
 async function logout(caseName: string) {
     const options = {
         url: apiUrl + "/api/user/logged_in",
-        headers: headers,
+        headers,
         method: types.httpMethod.delete,
-        jar: jar,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
-    if (body.status !== 0) {
-        throw body;
-    }
-    if (authenticationCredential) {
-        throw cookies;
-    }
+    libs.assert(body.status === 0, body);
+    libs.assert(!authenticationCredential, cookies);
 
     return operate(caseName, body);
 }
@@ -131,15 +107,12 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
     } else {
         options = {
             url: apiUrl + "/api/user",
-            headers: headers,
-            jar: jar,
+            headers,
+            jar,
         };
     }
     const [response, body] = await services.request.request<types.CurrentUserResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "user");
     result["user"] = libs.omit(body.user, ["id", "avatar"]);
@@ -152,17 +125,14 @@ async function createOrganization(caseName: string) {
     const options = {
         url: apiUrl + "/api/organizations",
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             organizationName: seeds.organization.name,
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -170,14 +140,11 @@ async function createOrganization(caseName: string) {
 async function getCreatedOrganizations(caseName: string) {
     const options = {
         url: apiUrl + "/api/user/created",
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
-
-    if (body.status !== 0 || !body.organizations) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
@@ -189,14 +156,11 @@ async function getCreatedOrganizations(caseName: string) {
 async function getJoinedOrganizations(caseName: string) {
     const options = {
         url: apiUrl + "/api/user/joined",
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
-
-    if (body.status !== 0 || !body.organizations) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
@@ -208,17 +172,14 @@ async function getJoinedOrganizations(caseName: string) {
 async function getThemesOfOrganization(organizationId: string, caseName: string) {
     const options = {
         url: apiUrl + `/api/organizations/${organizationId}/themes`,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         qs: {
             isClosed: types.yes,
         },
     };
     const [response, body] = await services.request.request<types.ThemesResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "themes");
     result.themes = body.themes.map(theme => {
@@ -238,19 +199,16 @@ async function createTheme(organizationId: string, caseName: string) {
     const options = {
         url: apiUrl + "/api/themes",
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             themeTitle: seeds.theme.title,
             themeDetail: seeds.theme.detail,
-            organizationId: organizationId,
+            organizationId,
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -259,14 +217,11 @@ async function unwatch(themeId: string, caseName: string) {
     const options = {
         url: apiUrl + `/api/user/watched/${themeId}`,
         method: types.httpMethod.delete,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -275,14 +230,11 @@ async function watch(themeId: string, caseName: string) {
     const options = {
         url: apiUrl + `/api/user/watched/${themeId}`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -291,8 +243,8 @@ async function updateTheme(themeId: string, caseName: string) {
     const options = {
         url: apiUrl + `/api/themes/${themeId}`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             title: seeds.newTheme.title,
             detail: seeds.newTheme.detail,
@@ -300,21 +252,18 @@ async function updateTheme(themeId: string, caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
 
 async function uploadAvatar(caseName: string) {
-    const fileName = "newAvatar.png";
+    const filename = "newAvatar.png";
     const formData = {};
-    formData[fileName] = {
-        value: libs.fs.createReadStream(libs.path.resolve(__dirname, fileName)),
+    formData[filename] = {
+        value: libs.fs.createReadStream(libs.path.resolve(__dirname, filename)),
         options: {
-            filename: fileName,
+            filename,
             contentType: "image/png",
         },
     };
@@ -322,15 +271,12 @@ async function uploadAvatar(caseName: string) {
     const options = {
         url: imageUploader + `/api/temperary`,
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
-        formData: formData,
+        headers,
+        jar,
+        formData,
     };
     const [response, body] = await services.request.request<types.TemperaryResponse>(options);
-
-    if (body.status !== 0 || body.names.length !== 1) {
-        throw body;
-    }
+    libs.assert(body.status === 0 && body.names.length === 1, body);
 
     await operate(caseName, libs.omit(body, ["names"]));
 
@@ -357,18 +303,15 @@ async function updateUser(caseName: string) {
     const options = {
         url: apiUrl + `/api/user`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             name: seeds.newUser.name,
             avatarFileName: name,
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -377,14 +320,11 @@ async function invite(caseName: string, email: string, organizationId: string) {
     const options = {
         url: apiUrl + `/api/users/${email}/joined/${organizationId}`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -403,13 +343,10 @@ async function getAvatar(uid: string, caseName: string) {
 async function getScopes(caseName: string) {
     const options = {
         url: apiUrl + `/api/scopes`,
-        headers: headers,
+        headers,
     };
     const [response, body] = await services.request.request<types.ScopesResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     await operate(caseName, body);
 
@@ -419,14 +356,11 @@ async function getScopes(caseName: string) {
 async function getRegisteredApplications(caseName: string) {
     const options = {
         url: apiUrl + `/api/user/registered`,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
@@ -447,8 +381,8 @@ async function registerApplication(caseName: string) {
     const options = {
         url: apiUrl + `/api/user/registered`,
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             name: seeds.application.name,
             homeUrl: seeds.application.homeUrl,
@@ -457,10 +391,7 @@ async function registerApplication(caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -469,8 +400,8 @@ async function updateApplication(caseName: string, applicationId: string) {
     const options = {
         url: apiUrl + `/api/user/registered/${applicationId}`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             name: seeds.newApplication.name,
             homeUrl: seeds.newApplication.homeUrl,
@@ -479,10 +410,7 @@ async function updateApplication(caseName: string, applicationId: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -491,14 +419,11 @@ async function deleteApplication(caseName: string, applicationId: string) {
     const options = {
         url: apiUrl + `/api/user/registered/${applicationId}`,
         method: types.httpMethod.delete,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -507,14 +432,11 @@ async function resetClientSecret(caseName: string, applicationId: string) {
     const options = {
         url: apiUrl + `/api/user/registered/${applicationId}/client_secret`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -522,13 +444,10 @@ async function resetClientSecret(caseName: string, applicationId: string) {
 async function getApplication(caseName: string, applicationId: string) {
     const options = {
         url: apiUrl + `/api/applications/${applicationId}`,
-        headers: headers,
+        headers,
     };
     const [response, body] = await services.request.request<types.ApplicationResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "application");
     result.application = {
@@ -548,14 +467,11 @@ async function getApplication(caseName: string, applicationId: string) {
 async function getAccessTokens(caseName: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens`,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.AccessTokensResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessTokens");
     result.accessTokens = body.accessTokens.map(accessToken => {
@@ -574,18 +490,15 @@ async function createAccessToken(caseName: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens`,
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             description: seeds.accessToken.description,
             scopes: [types.scopeNames.readUser, types.scopeNames.readOrganization],
         },
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
 
@@ -598,18 +511,15 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
         form: {
             description: seeds.newAccessToken.description,
             scopes: [types.scopeNames.readUser, types.scopeNames.readApplication],
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -618,14 +528,11 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens/${accessTokenId}/value`,
         method: types.httpMethod.put,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
 
@@ -638,14 +545,11 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens/${accessTokenId}`,
         method: types.httpMethod.delete,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -654,14 +558,11 @@ async function confirm(caseName: string, code: string) {
     const options = {
         url: apiUrl + `/api/user/access_tokens/${code}`,
         method: types.httpMethod.post,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -673,32 +574,22 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
         qs: {
             client_id: clientId,
             scopes: [types.scopeNames.readUser, types.scopeNames.readTheme].join(),
-            state: state,
-            code: code,
+            state,
+            code,
         },
     };
     const [response, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "code");
 
-    if (body.pageName === types.oauthAuthorization.login) {
-        throw body;
-    }
+    libs.assert(body.pageName !== types.oauthAuthorization.login, body);
     if (body.pageName === types.oauthAuthorization.authorization) {
-        if (!body.code) {
-            throw body;
-        }
+        libs.assert(body.code, body);
         await confirm("confirm", body.code);
         return oauthAuthorize(caseName, clientId, state, body.code);
     }
-
-    if (!body.code) {
-        throw body;
-    }
+    libs.assert(body.code, body);
 
     await operate(caseName, result);
 
@@ -710,18 +601,10 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
         url: apiUrl + `/api/access_tokens`,
         method: types.httpMethod.post,
         headers: headers,
-        form: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            state: state,
-            code: code,
-        },
+        form: { clientId, clientSecret, state, code },
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
     await operate(caseName, result);
@@ -732,14 +615,11 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
 async function getAuthorizedApplications(caseName: string) {
     const options = {
         url: apiUrl + `/api/user/authorized`,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
@@ -762,14 +642,11 @@ async function revokeApplication(caseName: string, applicationId: string) {
     const options = {
         url: apiUrl + `/api/user/authorized/${applicationId}`,
         method: types.httpMethod.delete,
-        headers: headers,
-        jar: jar,
+        headers,
+        jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-
-    if (body.status !== 0) {
-        throw body;
-    }
+    libs.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -810,9 +687,7 @@ async function testRegisteredApplications() {
     await registerApplication("registerApplication");
 
     let applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
-    if (applications.length === 0) {
-        throw applications;
-    }
+    libs.assert(applications.length > 0, applications);
     let application = applications[0];
 
     await updateApplication("updateApplication", application.id);
@@ -821,9 +696,7 @@ async function testRegisteredApplications() {
     await getApplication("getApplication", application.id);
 
     applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
-    if (applications.length === 0) {
-        throw applications;
-    }
+    libs.assert(applications.length > 0, applications);
     application = applications[0];
 
     return application;
@@ -834,9 +707,7 @@ async function testPrivateAccessToken() {
     await createAccessToken("createAccessToken");
 
     const accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
-    if (accessTokens.length === 0) {
-        throw accessTokens;
-    }
+    libs.assert(accessTokens.length > 0, accessTokens);
     const accessTokenId = accessTokens[0].id;
 
     await updateAccessToken("updateAccessToken", accessTokenId);
@@ -851,9 +722,7 @@ async function testOrganization() {
     await createOrganization("createOrganization");
     await getCreatedOrganizations("getCreatedOrganizations");
     const organizations = await getJoinedOrganizations("getJoinedOrganizations");
-    if (organizations.length === 0) {
-        throw organizations;
-    }
+    libs.assert(organizations.length > 0, organizations);
     return organizations[0].id;
 }
 
@@ -867,9 +736,7 @@ async function testThemes(organizationId: string) {
     await createTheme(organizationId, "createTheme");
 
     const themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterCreated");
-    if (themes.length === 0) {
-        throw themes;
-    }
+    libs.assert(themes.length > 0, themes);
     const themeId = themes[0].id;
 
     await unwatch(themeId, "unwatch");

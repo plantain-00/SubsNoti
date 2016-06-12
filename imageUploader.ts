@@ -13,8 +13,6 @@ app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 app.use(libs.bodyParser.text());
 
-app.use(libs.cors(settings.cors));
-
 services.redis.connect();
 
 services.mongo.connect();
@@ -127,9 +125,7 @@ services.rateLimit.route(app);
 const uploadIPWhiteList = settings.uploadIPWhiteList;
 
 async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-    if (!uploadIPWhiteList.find(i => i === request.ip)) {
-        throw libs.util.format(services.error.invalidIP, request.ip);
-    }
+    libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
 
     await uploadAsync(request, response);
 
@@ -139,9 +135,7 @@ async function uploadPersistentImages(request: libs.Request, response: libs.Resp
 }
 
 async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
-    if (!request.userId) {
-        throw services.error.unauthorized;
-    }
+    libs.assert(request.userId, services.error.unauthorized);
 
     await uploadAsync(request, response);
 
@@ -153,18 +147,9 @@ async function uploadTemperaryImages(request: libs.Request, response: libs.Respo
 async function moveImage(request: libs.Request, response: libs.Response) {
     const name = typeof request.body.name === "string" ? libs.validator.trim(request.body.name) : "";
     const newName = typeof request.body.newName === "string" ? libs.validator.trim(request.body.newName) : "";
-
-    if (!name) {
-        throw libs.util.format(services.error.parameterIsMissed, "name");
-    }
-
-    if (!newName) {
-        throw libs.util.format(services.error.parameterIsMissed, "newName");
-    }
-
-    if (!uploadIPWhiteList.find(i => i === request.ip)) {
-        throw libs.util.format(services.error.invalidIP, request.ip);
-    }
+    libs.assert(name, services.error.parameterIsMissed, "name");
+    libs.assert(newName, services.error.parameterIsMissed, "newName");
+    libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
 
     const path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
 

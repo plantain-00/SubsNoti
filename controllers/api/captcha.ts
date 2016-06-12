@@ -13,10 +13,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     const body: { id: string; } = request.body;
 
     const id = typeof body.id === "string" ? libs.validator.trim(body.id) : "";
-
-    if (id === "") {
-        throw libs.util.format(services.error.parameterIsMissed, "id");
-    }
+    libs.assert(id !== "", services.error.parameterIsMissed, "id");
 
     const captcha = await services.captcha.create(id);
 

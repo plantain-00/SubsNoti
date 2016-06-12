@@ -22,7 +22,7 @@ export function sendError(response: libs.Response, error: Error | string, docume
     }
     const baseResponse: types.Response = {
         status: 1,
-        errorMessage: errorMessage,
+        errorMessage,
         documentUrl: settings.documentServer + (documentUrl || response.documentUrl),
     };
 

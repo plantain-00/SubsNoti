@@ -18,18 +18,12 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     const body: Body = request.body;
-
-    if (typeof body.organizationId !== "string"
-        || !libs.validator.isMongoId(body.organizationId)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "organizationId");
-    }
+    libs.assert(typeof body.organizationId === "string" && libs.validator.isMongoId(body.organizationId), services.error.parameterIsInvalid, "organizationId");
 
     const organizationId = new libs.ObjectId(body.organizationId);
 
     const themeTitle = typeof body.themeTitle === "string" ? libs.validator.trim(body.themeTitle) : "";
-    if (themeTitle === "") {
-        throw libs.util.format(services.error.parameterIsMissed, "themeTitle");
-    }
+    libs.assert(themeTitle !== "", services.error.parameterIsMissed, "themeTitle");
 
     const themeDetail = typeof body.themeDetail === "string" ? libs.validator.trim(body.themeDetail) : "";
 
@@ -38,10 +32,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     // the organization should be public organization, or current user should join in it.
     const user = await services.mongo.User.findOne({ _id: request.userId })
         .exec();
-    if (!organizationId.equals(services.seed.publicOrganizationId)
-        && !user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId))) {
-        throw services.error.theOrganizationIsPrivate;
-    }
+    libs.assert(organizationId.equals(services.seed.publicOrganizationId) || user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
 
     const organization = await services.mongo.Organization.findOne({ _id: organizationId })
         .select("themes")
@@ -71,13 +62,15 @@ export async function create(request: libs.Request, response: libs.Response) {
     if (imageNames && imageNames.length && imageNames.length > 0 && themeDetail) {
         for (const imageName of imageNames) {
             if (themeDetail.indexOf(imageName) > -1) {
-                const json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
-                    name: imageName,
-                    newName: imageName,
+                const [incomingMessage, json] = await services.request.request({
+                    url: `${settings.imageUploader}/api/persistence`,
+                    method: types.httpMethod.post,
+                    form: {
+                        name: imageName,
+                        newName: imageName,
+                    },
                 });
-                if (json.response.statusCode >= 300) {
-                    throw JSON.stringify(json.body);
-                }
+                libs.assert(incomingMessage.statusCode < 300, json);
             }
         }
     }
@@ -98,7 +91,7 @@ export async function create(request: libs.Request, response: libs.Response) {
         createTime: theme.createTime.toISOString(),
         updateTime: theme.updateTime ? theme.updateTime.toISOString() : undefined,
         status: services.themeStatus.getType(theme.status),
-        creator: creator,
+        creator,
         owners: [creator],
         watchers: [creator],
     };
@@ -116,11 +109,7 @@ export const documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { theme_id: string; } = request.params;
-
-    if (typeof params.theme_id !== "string"
-        || !libs.validator.isMongoId(params.theme_id)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
-    }
+    libs.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
 
     interface Body {
         title: string;
@@ -150,14 +139,10 @@ export async function update(request: libs.Request, response: libs.Response) {
     const theme = await services.mongo.Theme.findOne({ _id: id })
         .populate("creator owners watchers")
         .exec();
-    if (!theme) {
-        throw libs.util.format(services.error.parameterIsInvalid, "theme_id");
-    }
+    libs.assert(theme, services.error.parameterIsInvalid, "theme_id");
 
     // current user should be one of the theme's owners.
-    if (!theme.owners.find((o: libs.ObjectId) => o.equals(request.userId))) {
-        throw services.error.theThemeIsNotOwnedByYou;
-    }
+    libs.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId)), services.error.theThemeIsNotOwnedByYou);
 
     if (title) {
         theme.title = title;
@@ -177,13 +162,15 @@ export async function update(request: libs.Request, response: libs.Response) {
     if (imageNames && imageNames.length && imageNames.length > 0 && detail) {
         for (const imageName of imageNames) {
             if (detail.indexOf(imageName) > -1) {
-                const json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
-                    name: imageName,
-                    newName: imageName,
+                const [incomingMessage, json] = await services.request.request({
+                    url: `${settings.imageUploader}/api/persistence`,
+                    method: types.httpMethod.post,
+                    form: {
+                        name: imageName,
+                        newName: imageName,
+                    },
                 });
-                if (json.response.statusCode >= 300) {
-                    throw JSON.stringify(json.body);
-                }
+                libs.assert(incomingMessage.statusCode < 300, json);
             }
         }
     }

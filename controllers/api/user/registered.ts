@@ -49,31 +49,20 @@ export async function create(request: libs.Request, response: libs.Response) {
     const body: Body = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
-    if (name === "") {
-        throw libs.util.format(services.error.parameterIsMissed, "name");
-    }
-
-    if (typeof body.homeUrl !== "string"
-        || !libs.validator.isURL(body.homeUrl)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "homeUrl");
-    }
+    libs.assert(name !== "", services.error.parameterIsMissed, "name");
+    libs.assert(typeof body.homeUrl === "string" && libs.validator.isURL(body.homeUrl), services.error.parameterIsInvalid, "homeUrl");
     const homeUrl = libs.validator.trim(body.homeUrl);
-
     const description = typeof body.description === "string" ? libs.validator.trim(body.description) : "";
-
-    if (typeof body.authorizationCallbackUrl !== "string"
-        || !libs.validator.isURL(body.authorizationCallbackUrl)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "authorizationCallbackUrl");
-    }
+    libs.assert(typeof body.authorizationCallbackUrl === "string" && libs.validator.isURL(body.authorizationCallbackUrl), services.error.parameterIsInvalid, "authorizationCallbackUrl");
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
     const application = await services.mongo.Application.create({
-        name: name,
-        homeUrl: homeUrl,
-        description: description,
-        authorizationCallbackUrl: authorizationCallbackUrl,
+        name,
+        homeUrl,
+        description,
+        authorizationCallbackUrl,
         clientId: libs.generateUuid(),
         clientSecret: libs.generateUuid(),
         creator: request.userId,
@@ -93,31 +82,17 @@ export const documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
-
-    if (typeof params.application_id !== "string"
-        || !libs.validator.isMongoId(params.application_id)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
     const body: Body = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
-    if (name === "") {
-        throw libs.util.format(services.error.parameterIsInvalid, "name");
-    }
-
-    if (typeof body.homeUrl !== "string"
-        || !libs.validator.isURL(body.homeUrl)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "homeUrl");
-    }
+    libs.assert(name !== "", services.error.parameterIsInvalid, "name");
+    libs.assert(typeof body.homeUrl === "string" && libs.validator.isURL(body.homeUrl), services.error.parameterIsInvalid, "homeUrl");
     const homeUrl = libs.validator.trim(body.homeUrl);
 
     const description = typeof body.description === "string" ? libs.validator.trim(body.description) : "";
-
-    if (typeof body.authorizationCallbackUrl !== "string"
-        || !libs.validator.isURL(body.authorizationCallbackUrl)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "authorizationCallbackUrl");
-    }
+    libs.assert(typeof body.authorizationCallbackUrl === "string" && libs.validator.isURL(body.authorizationCallbackUrl), services.error.parameterIsInvalid, "authorizationCallbackUrl");
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
     const id = new libs.ObjectId(params.application_id);
@@ -127,9 +102,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     // the application should be available.
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
-    if (!application) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(application, services.error.parameterIsInvalid, "application_id");
 
     application.name = name;
     application.homeUrl = homeUrl;
@@ -150,11 +123,7 @@ export const documentOfRemove: types.Document = {
 
 export async function remove(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
-
-    if (typeof params.application_id !== "string"
-        || !libs.validator.isMongoId(params.application_id)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
     const id = new libs.ObjectId(params.application_id);
 
@@ -163,9 +132,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     // the application should be available.
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
-    if (!application) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(application, services.error.parameterIsInvalid, "application_id");
 
     await services.mongo.AccessToken.remove({ application: application._id }).exec();
 

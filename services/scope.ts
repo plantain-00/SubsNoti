@@ -4,13 +4,7 @@ import * as settings from "../settings";
 import * as services from "../services";
 
 export function shouldValidateAndContainScope(request: libs.Request, scopeName: types.ScopeName) {
-    if (!request.userId) {
-        throw services.error.unauthorized;
-    }
-
-    if (!contain(request, scopeName)) {
-        throw services.error.unauthorized;
-    }
+    libs.assert(request.userId && contain(request, scopeName), services.error.unauthorized);
 }
 
 export function contain(request: libs.Request, scopeName: types.ScopeName) {

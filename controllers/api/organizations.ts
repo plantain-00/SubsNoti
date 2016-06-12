@@ -13,29 +13,21 @@ export async function create(request: libs.Request, response: libs.Response) {
     const body: { organizationName: string; } = request.body;
 
     const organizationName = typeof body.organizationName === "string" ? libs.validator.trim(body.organizationName) : "";
-    if (organizationName === "") {
-        throw libs.util.format(services.error.parameterIsMissed, "organizationName");
-    }
+    libs.assert(organizationName !== "", services.error.parameterIsMissed, "organizationName");
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
 
     // the name should not be used by other organizations.
-    if (organizationName === services.seed.publicOrganizationName) {
-        throw services.error.theOrganizationNameAlreadyExists;
-    }
+    libs.assert(organizationName !== services.seed.publicOrganizationName, services.error.theOrganizationNameAlreadyExists);
     const organizationCount = await services.mongo.Organization.count({ name: organizationName })
         .exec();
-    if (organizationCount > 0) {
-        throw services.error.theOrganizationNameAlreadyExists;
-    }
+    libs.assert(organizationCount === 0, services.error.theOrganizationNameAlreadyExists);
 
     // current user should not create too many organizations.
     const user = await services.mongo.User.findOne({ _id: request.userId })
         .select("createdOrganizations joinedOrganizations")
         .exec();
-    if (user.createdOrganizations.length >= settings.maxOrganizationNumberUserCanCreate) {
-        throw `you already created ${user.createdOrganizations.length} organizations.`;
-    }
+    libs.assert(user.createdOrganizations.length < settings.maxOrganizationNumberUserCanCreate, `you already created ${user.createdOrganizations.length} organizations.`);
 
     const organization = await services.mongo.Organization.create({
         name: organizationName,

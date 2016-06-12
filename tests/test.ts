@@ -9,9 +9,7 @@ let index = 1;
 integration.setOperation(async (caseName, body) => {
     const expected = JSON.stringify(baseline[caseName]);
     const actually = JSON.stringify(body);
-    if (expected !== actually) {
-        throw new Error(`error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
-    }
+    libs.assert(expected === actually, `error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     libs.green(`${index++}: case "${caseName}" is passed.`);
 });
 

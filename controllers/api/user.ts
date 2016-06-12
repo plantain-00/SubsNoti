@@ -19,7 +19,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 
     const result: types.UserResult = {
         user: {
-            id: id,
+            id,
             email: user.email,
             name: user.name,
             createdOrganizationCount: user.createdOrganizations.length,
@@ -63,17 +63,20 @@ export async function update(request: libs.Request, response: libs.Response) {
     // if change avatar, then move image.
     if (avatarFileName) {
         const newName = settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
-
-        const json = await services.request.postAsync(`${settings.imageUploader}/api/persistence`, {
-            name: avatarFileName,
-            newName: newName,
+        const [incomingMessage, json] = await services.request.request({
+            url: `${settings.imageUploader}/api/persistence`,
+            method: types.httpMethod.post,
+            form: {
+                name: avatarFileName,
+                newName,
+            },
         });
 
         // save new avatar name.
         user.avatar = newName;
         user.save();
 
-        response.status(json.response.statusCode).json(json.body);
+        response.status(incomingMessage.statusCode).json(json);
     } else {
         services.response.sendSuccess(response);
     }

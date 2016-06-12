@@ -52,11 +52,7 @@ export const documentOfRemove: types.Document = {
 
 export async function remove(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
-
-    if (typeof params.application_id !== "string"
-        || !libs.validator.isMongoId(params.application_id)) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
     const id = new libs.ObjectId(params.application_id);
 
@@ -65,9 +61,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     // the application should be available.
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
-    if (!application) {
-        throw libs.util.format(services.error.parameterIsInvalid, "application_id");
-    }
+    libs.assert(application, services.error.parameterIsInvalid, "application_id");
 
     await services.mongo.AccessToken.findOneAndRemove({ creator: request.userId, application: id })
         .exec();

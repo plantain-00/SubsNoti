@@ -8,7 +8,7 @@ export function logRequest(url: string, request: libs.Request) {
         time: libs.moment().format(),
         type: "http request",
         content: {
-            url: url,
+            url,
         },
     };
 
