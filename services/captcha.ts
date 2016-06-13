@@ -2,10 +2,31 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as services from "../services";
 
+export const documentOfCreate: types.Document = {
+    url: "/api/captchas",
+    method: types.httpMethod.post,
+    documentUrl: "/api/authentication/create an captcha.html",
+};
+
+export async function create(request: libs.Request, response: libs.Response) {
+    const body: { id: string; } = request.body;
+
+    const id = typeof body.id === "string" ? libs.validator.trim(body.id) : "";
+    services.utils.assert(id !== "", services.error.parameterIsMissed, "id");
+
+    const captcha = await createInternal(id);
+
+    const result: types.CaptchaResult = {
+        url: captcha.url,
+        code: services.settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
+    };
+    services.response.sendSuccess(response, result);
+}
+
 /**
  * create a code, store it in cache, create an image, return an base64 url of it.
  */
-export async function create(id: string): Promise<{ url: string; code: string; }> {
+export async function createInternal(id: string): Promise<{ url: string; code: string; }> {
     await services.frequency.limitCaptcha(id);
 
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.

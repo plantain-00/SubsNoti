@@ -4,6 +4,20 @@ import * as services from "../services";
 
 const documentUrl = "/api/request/parameters.html";
 
+export const documentOfGet: types.Document = {
+    url: services.settings.urls.version,
+    method: types.httpMethod.get,
+    documentUrl: "/api/version.html",
+};
+
+export async function get(request: libs.Request, response: libs.Response) {
+    const result: types.VersionResult = {
+        version: services.settings.version,
+    };
+
+    services.response.sendSuccess(response, result);
+}
+
 export function route(app: libs.express.Application) {
     app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
         if (request.path === services.settings.urls.version && request.method === "GET") {

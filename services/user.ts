@@ -1,6 +1,6 @@
-import * as types from "../../share/types";
-import * as libs from "../../libs";
-import * as services from "../../services";
+import * as types from "../share/types";
+import * as libs from "../libs";
+import * as services from "../services";
 
 export const documentOfGet: types.Document = {
     url: "/api/user",

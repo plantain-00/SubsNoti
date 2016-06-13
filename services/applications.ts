@@ -1,14 +1,112 @@
-import * as types from "../../../share/types";
-import * as libs from "../../../libs";
-import * as services from "../../../services";
+import * as types from "../share/types";
+import * as libs from "../libs";
+import * as services from "../services";
 
-export const documentOfGet: types.Document = {
+export const documentOfReset: types.Document = {
+    url: "/api/user/registered/:application_id/client_secret",
+    method: types.httpMethod.put,
+    documentUrl: "/api/application/reset client secret.html",
+};
+
+export async function reset(request: libs.Request, response: libs.Response) {
+    interface Params {
+        application_id: string;
+    }
+
+    const params: Params = request.params;
+    services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
+
+    const id = new libs.ObjectId(params.application_id);
+
+    services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
+
+    // the application should be available.
+    const application = await services.mongo.Application.findOne({ _id: id })
+        .exec();
+    services.utils.assert(application, services.error.parameterIsInvalid, "application_id");
+
+    application.clientSecret = services.utils.generateUuid();
+
+    application.save();
+
+    services.logger.logRequest(documentOfReset.url, request);
+    services.response.sendSuccess(response);
+}
+
+export const documentOfGetAuthorized: types.Document = {
+    url: "/api/user/authorized",
+    method: types.httpMethod.get,
+    documentUrl: "/api/application/get authorized applications.html",
+};
+
+export async function getAuthorized(request: libs.Request, response: libs.Response) {
+    services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
+
+    const accessTokens = await services.mongo.AccessToken.find({ creator: request.userId })
+        .populate("application")
+        .exec();
+
+    for (const accessToken of accessTokens) {
+        await services.mongo.User.populate(accessToken.application, "creator");
+    }
+
+    const result: types.ApplicationsResult = {
+        applications: accessTokens.filter(ac => !!ac.application).map(ac => {
+            const a = ac.application as services.mongo.ApplicationDocument;
+            const creator = a.creator as services.mongo.UserDocument;
+            const creatorId = creator._id.toHexString();
+            return {
+                id: a._id.toHexString(),
+                name: a.name,
+                homeUrl: a.homeUrl,
+                description: a.description,
+                creator: {
+                    id: creatorId,
+                    name: creator.name,
+                    avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
+                },
+                scopes: services.settings.scopes.filter(s => ac.scopes.some(sc => sc === s.name)),
+                lastUsed: ac.lastUsed ? ac.lastUsed.toISOString() : null,
+            };
+        }),
+    };
+
+    services.response.sendSuccess(response, result);
+}
+
+export const documentOfRemoveAuthorized: types.Document = {
+    url: "/api/user/authorized/:application_id",
+    method: types.httpMethod.delete,
+    documentUrl: "/api/application/revoke an application.html",
+};
+
+export async function removeAuthorized(request: libs.Request, response: libs.Response) {
+    const params: { application_id: string; } = request.params;
+    services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
+
+    const id = new libs.ObjectId(params.application_id);
+
+    services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteApplication);
+
+    // the application should be available.
+    const application = await services.mongo.Application.findOne({ _id: id })
+        .exec();
+    services.utils.assert(application, services.error.parameterIsInvalid, "application_id");
+
+    await services.mongo.AccessToken.findOneAndRemove({ creator: request.userId, application: id })
+        .exec();
+
+    services.logger.logRequest(documentOfRemoveAuthorized.url, request);
+    services.response.sendSuccess(response);
+}
+
+export const documentOfGetRegistered: types.Document = {
     url: "/api/user/registered",
     method: types.httpMethod.get,
     documentUrl: "/api/application/get registered applications.html",
 };
 
-export async function get(request: libs.Request, response: libs.Response) {
+export async function getRegistered(request: libs.Request, response: libs.Response) {
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.readApplication);
 
     const applications = await services.mongo.Application.find({ creator: request.userId })
@@ -139,4 +237,39 @@ export async function remove(request: libs.Request, response: libs.Response) {
 
     services.logger.logRequest(documentOfRemove.url, request);
     services.response.sendSuccess(response);
+}
+
+export const documentOfGet: types.Document = {
+    url: "/api/applications/:id",
+    method: types.httpMethod.get,
+    documentUrl: "/api/application/get an application.html",
+};
+
+export async function get(request: libs.Request, response: libs.Response) {
+    const params: { id: string; } = request.params;
+    services.utils.assert(typeof params.id === "string" && libs.validator.isMongoId(params.id), services.error.parameterIsInvalid, "id");
+
+    const id = new libs.ObjectId(params.id);
+    const application = await services.mongo.Application.findOne({ _id: id })
+        .populate("creator")
+        .exec();
+    services.utils.assert(application, services.error.parameterIsInvalid, "id");
+
+    const creator = application.creator as services.mongo.UserDocument;
+    const creatorId = creator._id.toHexString();
+    const result: types.ApplicationResult = {
+        application: {
+            id: application._id.toHexString(),
+            name: application.name,
+            homeUrl: application.homeUrl,
+            description: application.description,
+            creator: {
+                id: creatorId,
+                name: creator.name,
+                avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
+            },
+        },
+    };
+
+    services.response.sendSuccess(response, result);
 }

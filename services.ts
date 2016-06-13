@@ -66,3 +66,24 @@ export {settings};
 
 import * as utils from "./services/utils";
 export {utils};
+
+import * as html from "./services/html";
+export {html};
+
+import * as user from "./services/user";
+export {user};
+
+import * as access_tokens from "./services/access_tokens";
+export {access_tokens};
+
+import * as joined from "./services/joined";
+export {joined};
+
+import * as applications from "./services/applications";
+export {applications};
+
+import * as organizations from "./services/organizations";
+export {organizations};
+
+import * as watched from "./services/watched";
+export {watched};
