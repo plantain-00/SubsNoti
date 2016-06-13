@@ -1,6 +1,5 @@
 import * as types from "../../../share/types";
 import * as libs from "../../../libs";
-import * as settings from "../../../settings";
 import * as services from "../../../services";
 
 export const documentOfDelete: types.Document = {
@@ -10,8 +9,8 @@ export const documentOfDelete: types.Document = {
 };
 
 export async function deleteThis(request: libs.Request, response: libs.Response) {
-    response.clearCookie(settings.cookieKeys.authenticationCredential, {
-        domain: settings.cookieDomains,
+    response.clearCookie(services.settings.cookieKeys.authenticationCredential, {
+        domain: services.settings.cookieDomains,
     });
 
     services.response.sendSuccess(response);

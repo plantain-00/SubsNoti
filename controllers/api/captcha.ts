@@ -1,6 +1,5 @@
 import * as types from "../../share/types";
 import * as libs from "../../libs";
-import * as settings from "../../settings";
 import * as services from "../../services";
 
 export const documentOfCreate: types.Document = {
@@ -19,7 +18,7 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const result: types.CaptchaResult = {
         url: captcha.url,
-        code: settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
+        code: services.settings.currentEnvironment === types.environment.test ? captcha.code : undefined,
     };
     services.response.sendSuccess(response, result);
 }

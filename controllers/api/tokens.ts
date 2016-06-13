@@ -1,6 +1,5 @@
 import * as types from "../../share/types";
 import * as libs from "../../libs";
-import * as settings from "../../settings";
 import * as services from "../../services";
 
 export const documentOfCreate: types.Document = {
@@ -33,13 +32,13 @@ export async function create(request: libs.Request, response: libs.Response) {
 
     const token = await services.tokens.create(email, documentOfCreate.url, request, name);
 
-    const url = `${settings.api}${settings.urls.login}?` + libs.qs.stringify({
+    const url = `${services.settings.api}${services.settings.urls.login}?` + libs.qs.stringify({
         authentication_credential: token,
         redirect_url: redirectUrl,
     });
 
     let result: types.TokenResult;
-    if (settings.currentEnvironment === types.environment.test) {
+    if (services.settings.currentEnvironment === types.environment.test) {
         result = { url };
     } else {
         await services.email.sendAsync(email, "your token", `you can click <a href='${url}'>${url}</a> to access the website`);

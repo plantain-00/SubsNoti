@@ -1,6 +1,5 @@
 import * as types from "../../../share/types";
 import * as libs from "../../../libs";
-import * as settings from "../../../settings";
 import * as services from "../../../services";
 
 export const documentOfGet: types.Document = {
@@ -32,7 +31,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         page = libs.validator.toInt(query.page);
     }
 
-    let limit = settings.defaultItemLimit;
+    let limit = 10;
     if (typeof query.limit === "string"
         && libs.validator.isNumeric(query.limit)) {
         limit = libs.validator.toInt(query.limit);

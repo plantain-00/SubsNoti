@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 export function getType(status: types.ThemeStatus): types.ThemeStatusType {

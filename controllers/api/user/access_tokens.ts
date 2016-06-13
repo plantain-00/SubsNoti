@@ -1,6 +1,5 @@
 import * as types from "../../../share/types";
 import * as libs from "../../../libs";
-import * as settings from "../../../settings";
 import * as services from "../../../services";
 
 export const documentOfGet: types.Document = {
@@ -20,7 +19,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             return {
                 id: a._id.toHexString(),
                 description: a.description,
-                scopes: settings.scopes.filter(s => a.scopes.some(sc => sc === s.name)),
+                scopes: services.settings.scopes.filter(s => a.scopes.some(sc => sc === s.name)),
                 lastUsed: a.lastUsed ? a.lastUsed.toISOString() : null,
             };
         }),

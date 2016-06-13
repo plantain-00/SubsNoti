@@ -1,6 +1,5 @@
 import * as types from "../../share/types";
 import * as libs from "../../libs";
-import * as settings from "../../settings";
 import * as services from "../../services";
 
 export const documentOfGet: types.Document = {
@@ -62,9 +61,9 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     // if change avatar, then move image.
     if (avatarFileName) {
-        const newName = settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
+        const newName = services.settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
         const [incomingMessage, json] = await services.request.request({
-            url: `${settings.imageUploader}/api/persistence`,
+            url: `${services.settings.imageUploader}/api/persistence`,
             method: types.httpMethod.post,
             form: {
                 name: avatarFileName,

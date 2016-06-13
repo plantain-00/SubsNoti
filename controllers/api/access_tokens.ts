@@ -1,6 +1,5 @@
 import * as types from "../../share/types";
 import * as libs from "../../libs";
-import * as settings from "../../settings";
 import * as services from "../../services";
 
 export const documentOfCreate: types.Document = {
@@ -28,7 +27,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
     libs.assert(code !== "", services.error.parameterIsMissed, "code");
 
-    const value = await services.redis.get(settings.cacheKeys.oauthLoginCode + code);
+    const value = await services.redis.get(services.settings.cacheKeys.oauthLoginCode + code);
     libs.assert(value, services.error.parameterIsInvalid, "code");
 
     const json: types.OAuthCodeValue = JSON.parse(value);

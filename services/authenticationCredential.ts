@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 export function create(userId: string, salt: string): string {
@@ -12,11 +11,11 @@ export function create(userId: string, salt: string): string {
  * identify current user.
  */
 export async function authenticateHeader(request: libs.Request): Promise<void> {
-    const authorization = request.header(settings.headerNames.authorization);
+    const authorization = request.header(services.settings.headerNames.authorization);
     if (typeof authorization === "string"
-        && authorization.length > settings.authorizationHeaders.token.length
-        && authorization.startsWith(settings.authorizationHeaders.token)) {
-        const token = authorization.substring(settings.authorizationHeaders.token.length);
+        && authorization.length > services.settings.authorizationHeaders.token.length
+        && authorization.startsWith(services.settings.authorizationHeaders.token)) {
+        const token = authorization.substring(services.settings.authorizationHeaders.token.length);
         const accessToken = await services.mongo.AccessToken.findOne({ value: token })
             .exec();
         if (accessToken) {
@@ -33,7 +32,7 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
  * identify current user.
  */
 export async function authenticate(request: libs.Request): Promise<void> {
-    const userId = await authenticateCookie(request.cookies[settings.cookieKeys.authenticationCredential]);
+    const userId = await authenticateCookie(request.cookies[services.settings.cookieKeys.authenticationCredential]);
     request.userId = userId;
 }
 
@@ -48,7 +47,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
     const authenticationCredential = cookie.trim();
 
     // may be it is already in cache.
-    const reply = await services.redis.get(settings.cacheKeys.user + authenticationCredential);
+    const reply = await services.redis.get(services.settings.cacheKeys.user + authenticationCredential);
     if (reply) {
         return new libs.ObjectId(reply);
     }
@@ -79,7 +78,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId>
 
     // should be verified.
     if (libs.md5(user.salt + milliseconds + userId) === tmp[0]) {
-        services.redis.set(settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
+        services.redis.set(services.settings.cacheKeys.user + authenticationCredential, userId, 8 * 60 * 60);
 
         return id;
     } else {

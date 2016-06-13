@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 /**
@@ -11,7 +10,7 @@ export async function createIfNotExistsAsync(id: string): Promise<void> {
     const fileName = getDefaultName(id);
     const [existResponse] = await services.request.request<string>({
         method: types.httpMethod.get,
-        url: `${settings.imageServer}/${fileName}`,
+        url: `${services.settings.imageServer}/${fileName}`,
     }, types.responseType.others);
     if (existResponse.statusCode === 200) {
         services.logger.logInfo("exists:" + fileName);
@@ -69,7 +68,7 @@ function createAsync(seed: string, fileName: string) {
         };
 
         return services.request.request({
-            url: `${settings.imageUploader}/api/persistent`,
+            url: `${services.settings.imageUploader}/api/persistent`,
             method: types.httpMethod.post,
             formData,
             headers: {},
@@ -78,5 +77,5 @@ function createAsync(seed: string, fileName: string) {
 }
 
 export function getDefaultName(id: string): string {
-    return settings.imagePaths.avatar + id + ".png";
+    return services.settings.imagePaths.avatar + id + ".png";
 }

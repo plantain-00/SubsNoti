@@ -1,7 +1,8 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
+
+const documentServer: string = process.env.SUBS_NOTI_DOCUMENT_URL || "http://localhost:9997";
 
 export function sendSuccess(response: libs.Response, result: Object = {}) {
     const baseResponse: types.Response = {
@@ -23,10 +24,10 @@ export function sendError(response: libs.Response, error: Error | string, docume
     const baseResponse: types.Response = {
         status: 1,
         errorMessage,
-        documentUrl: settings.documentServer + (documentUrl || response.documentUrl),
+        documentUrl: services.settings.documentServer + (documentUrl || response.documentUrl),
     };
 
-    if (settings.currentEnvironment !== types.environment.production) {
+    if (services.settings.currentEnvironment !== types.environment.production) {
         baseResponse.stack = stack;
     }
 

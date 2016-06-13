@@ -1,17 +1,23 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 let transporter: libs.nodemailer.Transporter;
+const config = {
+    host: process.env.SUBS_NOTI_SMTP_HOST,
+    auth: {
+        user: process.env.SUBS_NOTI_SMTP_USER,
+        pass: process.env.SUBS_NOTI_SMTP_PASSWORD,
+    },
+};
 
 export function connect() {
-    transporter = libs.nodemailer.createTransport(settings.smtp);
+    transporter = libs.nodemailer.createTransport(config);
 }
 
 export function sendAsync(to: string, subject: string, html: string): Promise<void> {
     const mailOptions = {
-        from: settings.smtp.auth.user,
+        from: config.auth.user,
         to,
         subject,
         html,

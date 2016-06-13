@@ -1,24 +1,31 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
+const config = {
+    github: {
+        clientId: process.env.SUBS_NOTI_GITHUB_CLIENT_ID,
+        clientSecret: process.env.SUBS_NOTI_GITHUB_CLIENT_SECRET,
+    },
+};
+const frontendsServer: string = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
+
 function redirectToErrorPage(response: libs.Response, message: string) {
-    response.redirect(settings.frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
+    response.redirect(frontendsServer + "/error.html?" + libs.qs.stringify({ message: encodeURIComponent(message) }));
 }
 
 function setCookie(request: libs.Request, response: libs.Response, token: string, redirectUrl?: string) {
     if (!token) {
-        response.redirect(settings.frontendsServer + "/success.html");
+        response.redirect(frontendsServer + "/success.html");
     } else {
-        response.cookie(settings.cookieKeys.authenticationCredential, token, {
+        response.cookie(services.settings.cookieKeys.authenticationCredential, token, {
             expires: libs.moment().clone().add(1, "months").toDate(),
             httpOnly: true,
-            domain: settings.cookieDomains,
-            secure: settings.currentEnvironment === types.environment.production,
+            domain: services.settings.cookieDomains,
+            secure: services.settings.currentEnvironment === types.environment.production,
         });
 
-        response.redirect(settings.frontendsServer + "/success.html?" + libs.qs.stringify({
+        response.redirect(frontendsServer + "/success.html?" + libs.qs.stringify({
             clear_previous_status: types.yes,
             redirect_url: redirectUrl,
         }));
@@ -26,7 +33,7 @@ function setCookie(request: libs.Request, response: libs.Response, token: string
 }
 
 export const documentOfLogin: types.Document = {
-    url: settings.urls.login,
+    url: services.settings.urls.login,
     method: types.httpMethod.get,
     documentUrl: "/html.html",
 };
@@ -43,8 +50,8 @@ export const documentOfLoginWithGithub: types.Document = {
 
 export async function loginWithGithub(request: libs.Request, response: libs.Response) {
     const state = libs.generateUuid();
-    services.redis.set(settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
-    response.redirect(`https://github.com/login/oauth/authorize?client_id=${settings.login.github.clientId}&scope=user:email&state=${state}`);
+    services.redis.set(services.settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
+    response.redirect(`https://github.com/login/oauth/authorize?client_id=${config.github.clientId}&scope=user:email&state=${state}`);
 }
 
 export const documentOfGithubCode: types.Document = {
@@ -66,7 +73,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         const code = typeof query.code === "string" ? libs.validator.trim(query.code) : "";
         libs.assert(state !== "", services.error.parameterIsMissed, "state");
         libs.assert(code !== "", services.error.parameterIsMissed, "code");
-        const value = await services.redis.get(settings.cacheKeys.githubLoginCode + state);
+        const value = await services.redis.get(services.settings.cacheKeys.githubLoginCode + state);
         libs.assert(value, services.error.parameterIsInvalid, "state");
 
         const [incomingMessage, json] = await services.request.request<{ access_token: string; scope: string; token_type: string; }>({
@@ -76,8 +83,8 @@ export async function githubCode(request: libs.Request, response: libs.Response)
                 Accept: "application/json",
             },
             form: {
-                client_id: settings.login.github.clientId,
-                client_secret: settings.login.github.clientSecret,
+                client_id: config.github.clientId,
+                client_secret: config.github.clientSecret,
                 code,
                 state,
             },
@@ -133,7 +140,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // if not logged in, redirected to login page, keep `client_id`, `scopes` and `state` as parameters, then retry this.
         if (!request.userId) {
-            if (settings.currentEnvironment === types.environment.test) {
+            if (services.settings.currentEnvironment === types.environment.test) {
                 const result: types.OAuthAuthorizationResult = {
                     pageName: types.oauthAuthorization.login,
                 };
@@ -152,11 +159,11 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         // after authorized, there is a code in `query`, check that in cache
         if (query.code) {
-            const value = await services.redis.get(settings.cacheKeys.oauthLoginCode + query.code);
+            const value = await services.redis.get(services.settings.cacheKeys.oauthLoginCode + query.code);
             if (value) {
                 const json: types.OAuthCodeValue = JSON.parse(value);
                 if (json.confirmed) {
-                    if (settings.currentEnvironment === types.environment.test) {
+                    if (services.settings.currentEnvironment === types.environment.test) {
                         const result: types.OAuthAuthorizationResult = {
                             code: query.code,
                         };
@@ -193,9 +200,9 @@ export async function authorize(request: libs.Request, response: libs.Response) 
                     state,
                     confirmed: true,
                 };
-                services.redis.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
+                services.redis.set(services.settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
-                if (settings.currentEnvironment === types.environment.test) {
+                if (services.settings.currentEnvironment === types.environment.test) {
                     const result: types.OAuthAuthorizationResult = {
                         code: query.code,
                     };
@@ -217,10 +224,10 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             state,
             confirmed: false,
         };
-        services.redis.set(settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
+        services.redis.set(services.settings.cacheKeys.oauthLoginCode + query.code, JSON.stringify(value), 30 * 60);
 
         // if not confirmed, redirected to authorization page
-        if (settings.currentEnvironment === types.environment.test) {
+        if (services.settings.currentEnvironment === types.environment.test) {
             const result: types.OAuthAuthorizationResult = {
                 pageName: types.oauthAuthorization.authorization,
                 code: query.code,
@@ -235,7 +242,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             application_id: application._id.toHexString(),
         }));
     } catch (error) {
-        if (settings.currentEnvironment === types.environment.test) {
+        if (services.settings.currentEnvironment === types.environment.test) {
             services.response.sendError(response, error, documentOfAuthorize.documentUrl);
             return;
         }

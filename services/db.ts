@@ -1,14 +1,15 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 let pool: libs.mysql.IPool;
 
 import MysqlConnection = libs.mysql.IConnection;
 
+const config: { host: string; user: string; password: string; database: string; } = undefined;
+
 export function connect() {
-    pool = libs.mysql.createPool(settings.db);
+    pool = libs.mysql.createPool(config);
 }
 
 function getConnection(): Promise<MysqlConnection> {

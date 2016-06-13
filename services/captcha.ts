@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 /**
@@ -12,7 +11,7 @@ export async function create(id: string): Promise<{ url: string; code: string; }
     // 60466176 == 36 ** 5, the code will be a string of 6 characters. the character is number or upper case letter.
     const code = Math.round((Math.random() * 35 + 1) * 60466176).toString(36).toUpperCase();
 
-    services.redis.set(settings.cacheKeys.userCaptcha + id, code, 60);
+    services.redis.set(services.settings.cacheKeys.userCaptcha + id, code, 60);
 
     const width = 140;
     const height = 45;
@@ -35,7 +34,7 @@ export async function create(id: string): Promise<{ url: string; code: string; }
  * validate the code matched the one from the cache.
  */
 export async function validate(id: string, code: string): Promise<void> {
-    const key = settings.cacheKeys.userCaptcha + id;
+    const key = services.settings.cacheKeys.userCaptcha + id;
     const targetCode = await services.redis.get(key);
 
     await services.redis.del(key);

@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 interface Rate {
@@ -23,41 +22,41 @@ export function route(app: libs.express.Application) {
         }
 
         // do not limit rate when in test environment
-        if (settings.currentEnvironment === types.environment.test) {
+        if (services.settings.currentEnvironment === types.environment.test) {
             next();
             return;
         }
 
         if (request.userId) {
             if (request.method === "POST") {
-                const key = settings.cacheKeys.rateLimit.contentCreation + request.userId.toHexString();
+                const key = services.settings.cacheKeys.rateLimit.contentCreation + request.userId.toHexString();
                 const count = await services.redis.incr(key);
                 response.setHeader("X-Count", count.toString());
                 if (count === 1) {
                     services.redis.expire(key, 60 * 60);
-                } else if (count > settings.rateLimit.contentCreation) {
+                } else if (count > services.settings.rateLimit.contentCreation) {
                     services.response.sendError(response, "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.", documentUrl);
                     return;
                 }
             } else {
-                const key = settings.cacheKeys.rateLimit.userId + request.userId.toHexString();
+                const key = services.settings.cacheKeys.rateLimit.userId + request.userId.toHexString();
                 const count = await services.redis.incr(key);
                 response.setHeader("X-Count", count.toString());
                 if (count === 1) {
                     services.redis.expire(key, 60 * 60);
-                } else if (count > settings.rateLimit.user) {
+                } else if (count > services.settings.rateLimit.user) {
                     services.response.sendError(response, "API rate limit exceeded for current user.", documentUrl);
                     return;
                 }
             }
         } else {
             const ip = request.header("X-Real-IP");
-            const key = settings.cacheKeys.rateLimit.ip + ip;
+            const key = services.settings.cacheKeys.rateLimit.ip + ip;
             const count = await services.redis.incr(key);
             response.setHeader("X-Count", count.toString());
             if (count === 1) {
                 services.redis.expire(key, 60 * 60);
-            } else if (count > settings.rateLimit.ip) {
+            } else if (count > services.settings.rateLimit.ip) {
                 services.response.sendError(response, `API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`, documentUrl);
                 return;
             }

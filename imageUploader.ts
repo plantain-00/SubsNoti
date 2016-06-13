@@ -1,6 +1,5 @@
 import * as types from "./share/types";
 import * as libs from "./libs";
-import * as settings from "./settings";
 import * as services from "./services";
 
 const app = libs.express();
@@ -69,14 +68,14 @@ const uploadAsync = (request: libs.Request, response: libs.Response) => {
         let uploadPath: string = null;
         if (request.path === documentOfUploadPersistentImages.url
             || request.path === "/api/persistent/images") {
-            if (settings.currentEnvironment === types.environment.test) {
+            if (services.settings.currentEnvironment === types.environment.test) {
                 uploadPath = "test_images/";
             } else {
                 uploadPath = "images/";
             }
         } else if (request.path === documentOfUploadTemperaryImages.url
             || request.path === "/api/temperary/images") {
-            if (settings.currentEnvironment === types.environment.test) {
+            if (services.settings.currentEnvironment === types.environment.test) {
                 uploadPath = "test_images/tmp/";
             } else {
                 uploadPath = "images/tmp/";
@@ -122,7 +121,7 @@ const uploadAsync = (request: libs.Request, response: libs.Response) => {
 services.version.route(app);
 services.rateLimit.route(app);
 
-const uploadIPWhiteList = settings.uploadIPWhiteList;
+const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
 
 async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
     libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
@@ -151,7 +150,7 @@ async function moveImage(request: libs.Request, response: libs.Response) {
     libs.assert(newName, services.error.parameterIsMissed, "newName");
     libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
 
-    const path = settings.currentEnvironment === types.environment.test ? "test_images" : "images";
+    const path = services.settings.currentEnvironment === types.environment.test ? "test_images" : "images";
 
     await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
 
@@ -167,5 +166,5 @@ const port = argv.p || 9999;
 const host = argv.h || "localhost";
 
 app.listen(port, host, () => {
-    services.logger.logInfo(`Image uploader is listening: ${host}:${port} and in ${settings.currentEnvironment}`);
+    services.logger.logInfo(`Image uploader is listening: ${host}:${port} and in ${services.settings.currentEnvironment}`);
 });

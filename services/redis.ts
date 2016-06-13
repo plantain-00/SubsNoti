@@ -1,12 +1,18 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 let client: IORedis.Redis;
+const config = {
+    host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
+    port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
+    options: {
+        pass: process.env.SUBS_NOTI_REDIS_PASSWORD,
+    },
+};
 
 export function connect() {
-    client = new libs.Redis(settings.redis.port, settings.redis.host, settings.redis.options);
+    client = new libs.Redis(config.port, config.host, config.options);
     client.on("error", error => {
         services.logger.logError(error);
     });

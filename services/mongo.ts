@@ -1,7 +1,14 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
+
+const config = {
+    url: process.env.SUBS_NOTI_MONGODB_URL || "mongodb://127.0.0.1:27017/log_db_test",
+    options: {
+        user: process.env.SUBS_NOTI_MONGODB_USER,
+        pass: process.env.SUBS_NOTI_MONGODB_PASSWORD,
+    },
+};
 
 import Schema = libs.mongoose.Schema;
 
@@ -77,7 +84,7 @@ export interface AccessTokenDocument extends libs.mongoose.Document {
 }
 
 export function connect() {
-    libs.mongoose.connect(settings.mongodb.url, settings.mongodb.options);
+    libs.mongoose.connect(config.url, config.options);
 
     libs.mongoose.connection.on("error", console.error.bind(console, "connection error:"));
 

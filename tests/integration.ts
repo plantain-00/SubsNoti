@@ -1,12 +1,10 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
-
 import * as services from "../services";
 
-const apiUrl = settings.api;
-const imageServer = settings.imageServer;
-const imageUploader = settings.imageUploader;
+const apiUrl = services.settings.api;
+const imageServer = services.settings.imageServer;
+const imageUploader = services.settings.imageUploader;
 
 const jar = libs.request.jar();
 
@@ -26,7 +24,7 @@ async function getVersion(caseName: string) {
         url: apiUrl + "/api/version",
     };
     const [response, body] = await services.request.request<types.VersionResponse>(options);
-    libs.assert(body.status === 0 && body.version === settings.version, body);
+    libs.assert(body.status === 0 && body.version === services.settings.version, body);
 
     await operate(caseName, libs.omit(body, ["version"]));
 
@@ -70,7 +68,7 @@ async function login(url: string, caseName: string) {
     const [response, body] = await services.request.request(options, types.responseType.others);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
-    const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
+    const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
     libs.assert(authenticationCredential, cookies);
 
     return operate(caseName, {
@@ -88,7 +86,7 @@ async function logout(caseName: string) {
     const [response, body] = await services.request.request<types.Response>(options);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
-    const authenticationCredential = cookies[settings.cookieKeys.authenticationCredential];
+    const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
     libs.assert(body.status === 0, body);
     libs.assert(!authenticationCredential, cookies);
 
@@ -98,7 +96,7 @@ async function logout(caseName: string) {
 async function getCurrentUser(caseName: string, accessToken?: string) {
     let options;
     if (accessToken) {
-        headersWithAuthorization[settings.headerNames.authorization] = settings.authorizationHeaders.token + accessToken;
+        headersWithAuthorization[services.settings.headerNames.authorization] = services.settings.authorizationHeaders.token + accessToken;
 
         options = {
             url: apiUrl + "/api/user",
@@ -655,8 +653,8 @@ async function revokeApplication(caseName: string, applicationId: string) {
 async function testVersion() {
     const version = await getVersion("getVersion");
 
-    headers[settings.headerNames.version] = version;
-    headersWithAuthorization[settings.headerNames.version] = version;
+    headers[services.settings.headerNames.version] = version;
+    headersWithAuthorization[services.settings.headerNames.version] = version;
 }
 
 async function resetMongodb() {

@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as settings from "../settings";
 import * as services from "../services";
 
 export async function create(email: string, url: string, request: libs.Request, name: string): Promise<string> {

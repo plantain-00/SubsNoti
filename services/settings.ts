@@ -1,33 +1,8 @@
-import * as types from "./share/types";
-import * as libs from "./libs";
+import * as types from "../share/types";
+import * as libs from "../libs";
+import * as services from "../services";
 
 export let currentEnvironment: types.Environment = process.env.NODE_ENV || types.environment.production;
-
-export const db: { host: string; user: string; password: string; database: string; } = undefined;
-
-export const smtp = {
-    host: process.env.SUBS_NOTI_SMTP_HOST,
-    auth: {
-        user: process.env.SUBS_NOTI_SMTP_USER,
-        pass: process.env.SUBS_NOTI_SMTP_PASSWORD,
-    },
-};
-
-export const redis = {
-    host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
-    port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
-    options: {
-        pass: process.env.SUBS_NOTI_REDIS_PASSWORD,
-    },
-};
-
-export const mongodb = {
-    url: process.env.SUBS_NOTI_MONGODB_URL || "mongodb://127.0.0.1:27017/log_db_test",
-    options: {
-        user: process.env.SUBS_NOTI_MONGODB_USER,
-        pass: process.env.SUBS_NOTI_MONGODB_PASSWORD,
-    },
-};
 
 export const api: string = process.env.SUBS_NOTI_API_URL || "http://localhost:9998";
 
@@ -38,13 +13,7 @@ export const urls = {
 
 export const imageUploader: string = process.env.SUBS_NOTI_IMAGE_UPLOADER_URL || "http://localhost:9999";
 
-export const documentServer: string = process.env.SUBS_NOTI_DOCUMENT_URL || "http://localhost:9997";
-
 export const imageServer: string = process.env.SUBS_NOTI_IMAGE_SERVER_URL || "http://localhost:7777";
-
-export const frontendsServer: string = process.env.SUBS_NOTI_FRONTEND_SERVER || "http://localhost:8888";
-
-export const maxOrganizationNumberUserCanCreate = 3;
 
 export const cookieKeys = {
     authenticationCredential: "authentication_credential",
@@ -64,13 +33,9 @@ export const cacheKeys = {
     oauthLoginCode: "oauth_login_",
 };
 
-export const defaultItemLimit = 10;
-
 export const authorizationHeaders = {
     token: "token ",
 };
-
-export const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
 
 export const cookieDomains: string = process.env.SUBS_NOTI_COOKIE_DOMAIN || undefined;
 
@@ -84,13 +49,6 @@ export const rateLimit = {
     contentCreation: 10,
     sendEmail: 3600,
     userCaptcha: 1,
-};
-
-export const login = {
-    github: {
-        clientId: process.env.SUBS_NOTI_GITHUB_CLIENT_ID,
-        clientSecret: process.env.SUBS_NOTI_GITHUB_CLIENT_SECRET,
-    },
 };
 
 const pjson = require("./package.json");

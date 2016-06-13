@@ -1,6 +1,5 @@
 import * as types from "./share/types";
 import * as libs from "./libs";
-import * as settings from "./settings";
 import * as services from "./services";
 
 import * as user from "./controllers/api/user";
@@ -109,7 +108,7 @@ const port = argv.p || 9998;
 const host = argv.h || "localhost";
 
 const server = app.listen(port, host, () => {
-    services.logger.logInfo(`api Server is listening: ${host}:${port} and in ${settings.currentEnvironment}`);
+    services.logger.logInfo(`api Server is listening: ${host}:${port} and in ${services.settings.currentEnvironment}`);
 });
 
 services.push.connect(server);

@@ -60,3 +60,6 @@ export {tokens};
 
 import * as scope from "./services/scope";
 export {scope};
+
+import * as settings from "./services/settings";
+export {settings};
