@@ -46,13 +46,13 @@ export async function create(request: libs.Request, response: libs.Response) {
     if (typeof body.description === "string") {
         description = libs.validator.trim(body.description);
     }
-    libs.assert(description !== "", services.error.parameterIsMissed, "description");
+    services.utils.assert(description !== "", services.error.parameterIsMissed, "description");
 
     const scopes = body.scopes;
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    const value = libs.generateUuid();
+    const value = services.utils.generateUuid();
     const accessToken = await services.mongo.AccessToken.create({
         description,
         value,
@@ -78,7 +78,7 @@ export const documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
-    libs.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
 
     const body: Body = request.body;
 
@@ -86,7 +86,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     if (typeof body.description === "string") {
         description = libs.validator.trim(body.description);
     }
-    libs.assert(description !== "", services.error.parameterIsInvalid, "description");
+    services.utils.assert(description !== "", services.error.parameterIsInvalid, "description");
 
     const scopes = body.scopes;
 
@@ -97,7 +97,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     // the sccess token should be available.
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
-    libs.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
 
     accessToken.description = description;
     accessToken.scopes = scopes;
@@ -116,7 +116,7 @@ export const documentOfRemove: types.Document = {
 
 export async function remove(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
-    libs.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
 
     const id = new libs.ObjectId(params.access_token_id);
 
@@ -125,7 +125,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     // the access token should be available.
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
-    libs.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
 
     accessToken.remove();
 

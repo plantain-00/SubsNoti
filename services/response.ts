@@ -24,7 +24,7 @@ export function sendError(response: libs.Response, error: Error | string, docume
     const baseResponse: types.Response = {
         status: 1,
         errorMessage,
-        documentUrl: services.settings.documentServer + (documentUrl || response.documentUrl),
+        documentUrl: documentServer + (documentUrl || response.documentUrl),
     };
 
     if (services.settings.currentEnvironment !== types.environment.production) {

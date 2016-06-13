@@ -63,3 +63,6 @@ export {scope};
 
 import * as settings from "./services/settings";
 export {settings};
+
+import * as utils from "./services/utils";
+export {utils};

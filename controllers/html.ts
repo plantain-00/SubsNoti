@@ -49,7 +49,7 @@ export const documentOfLoginWithGithub: types.Document = {
 };
 
 export async function loginWithGithub(request: libs.Request, response: libs.Response) {
-    const state = libs.generateUuid();
+    const state = services.utils.generateUuid();
     services.redis.set(services.settings.cacheKeys.githubLoginCode + state, "1", 10 * 60);
     response.redirect(`https://github.com/login/oauth/authorize?client_id=${config.github.clientId}&scope=user:email&state=${state}`);
 }
@@ -71,10 +71,10 @@ export async function githubCode(request: libs.Request, response: libs.Response)
 
         const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
         const code = typeof query.code === "string" ? libs.validator.trim(query.code) : "";
-        libs.assert(state !== "", services.error.parameterIsMissed, "state");
-        libs.assert(code !== "", services.error.parameterIsMissed, "code");
+        services.utils.assert(state !== "", services.error.parameterIsMissed, "state");
+        services.utils.assert(code !== "", services.error.parameterIsMissed, "code");
         const value = await services.redis.get(services.settings.cacheKeys.githubLoginCode + state);
-        libs.assert(value, services.error.parameterIsInvalid, "state");
+        services.utils.assert(value, services.error.parameterIsInvalid, "state");
 
         const [incomingMessage, json] = await services.request.request<{ access_token: string; scope: string; token_type: string; }>({
             method: types.httpMethod.post,
@@ -102,7 +102,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         const email = emailJson.find(b => {
             return b.verified && b.primary;
         });
-        libs.assert(email, "no verified email");
+        services.utils.assert(email, "no verified email");
 
         const verifiedEmail = email.email.toLowerCase();
         const token = await services.tokens.create(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
@@ -133,8 +133,8 @@ export async function authorize(request: libs.Request, response: libs.Response) 
         const clientId = typeof query.client_id === "string" ? libs.validator.trim(query.client_id) : "";
         const scopes = typeof query.scopes === "string" ? libs.validator.trim(query.scopes) : "";
         const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
-        libs.assert(clientId !== "", services.error.parameterIsMissed, "clientId");
-        libs.assert(state !== "", services.error.parameterIsMissed, "state");
+        services.utils.assert(clientId !== "", services.error.parameterIsMissed, "clientId");
+        services.utils.assert(state !== "", services.error.parameterIsMissed, "state");
 
         await services.authenticationCredential.authenticate(request);
 
@@ -155,7 +155,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
 
         const application = await services.mongo.Application.findOne({ clientId: clientId })
             .exec();
-        libs.assert(application, services.error.parameterIsInvalid, "client id");
+        services.utils.assert(application, services.error.parameterIsInvalid, "client id");
 
         // after authorized, there is a code in `query`, check that in cache
         if (query.code) {
@@ -179,7 +179,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             }
         }
 
-        query.code = libs.generateUuid();
+        query.code = services.utils.generateUuid();
 
         const accessToken = await services.mongo.AccessToken.findOne({
             creator: request.userId,

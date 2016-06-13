@@ -19,29 +19,29 @@ export async function create(request: libs.Request, response: libs.Response) {
     const body: Body = request.body;
 
     const clientId = typeof body.clientId === "string" ? libs.validator.trim(body.clientId) : "";
-    libs.assert(clientId !== "", services.error.parameterIsMissed, "clientId");
+    services.utils.assert(clientId !== "", services.error.parameterIsMissed, "clientId");
     const clientSecret = typeof body.clientSecret === "string" ? libs.validator.trim(body.clientSecret) : "";
-    libs.assert(clientSecret !== "", services.error.parameterIsMissed, "clientSecret");
+    services.utils.assert(clientSecret !== "", services.error.parameterIsMissed, "clientSecret");
     const state = typeof body.state === "string" ? libs.validator.trim(body.state) : "";
-    libs.assert(state !== "", services.error.parameterIsMissed, "state");
+    services.utils.assert(state !== "", services.error.parameterIsMissed, "state");
     const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
-    libs.assert(code !== "", services.error.parameterIsMissed, "code");
+    services.utils.assert(code !== "", services.error.parameterIsMissed, "code");
 
     const value = await services.redis.get(services.settings.cacheKeys.oauthLoginCode + code);
-    libs.assert(value, services.error.parameterIsInvalid, "code");
+    services.utils.assert(value, services.error.parameterIsInvalid, "code");
 
     const json: types.OAuthCodeValue = JSON.parse(value);
-    libs.assert(state === json.state, services.error.parameterIsInvalid, "state");
+    services.utils.assert(state === json.state, services.error.parameterIsInvalid, "state");
 
     const application = await services.mongo.Application.findOne({
         clientId: clientId,
         clientSecret: clientSecret,
     }).exec();
-    libs.assert(application, services.error.parameterIsInvalid, "client id or client secret");
+    services.utils.assert(application, services.error.parameterIsInvalid, "client id or client secret");
 
     const creator = new libs.ObjectId(json.creator);
 
-    const accessTokenValue = libs.generateUuid();
+    const accessTokenValue = services.utils.generateUuid();
     const applicationId = new libs.ObjectId(json.application);
 
     // remove old access token, the old one may have smaller scopes

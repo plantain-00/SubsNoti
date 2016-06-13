@@ -3,7 +3,7 @@ import * as libs from "../libs";
 import * as services from "../services";
 
 export function shouldValidateAndContainScope(request: libs.Request, scopeName: types.ScopeName) {
-    libs.assert(request.userId && contain(request, scopeName), services.error.unauthorized);
+    services.utils.assert(request.userId && contain(request, scopeName), services.error.unauthorized);
 }
 
 export function contain(request: libs.Request, scopeName: types.ScopeName) {

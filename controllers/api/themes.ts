@@ -17,12 +17,12 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     const body: Body = request.body;
-    libs.assert(typeof body.organizationId === "string" && libs.validator.isMongoId(body.organizationId), services.error.parameterIsInvalid, "organizationId");
+    services.utils.assert(typeof body.organizationId === "string" && libs.validator.isMongoId(body.organizationId), services.error.parameterIsInvalid, "organizationId");
 
     const organizationId = new libs.ObjectId(body.organizationId);
 
     const themeTitle = typeof body.themeTitle === "string" ? libs.validator.trim(body.themeTitle) : "";
-    libs.assert(themeTitle !== "", services.error.parameterIsMissed, "themeTitle");
+    services.utils.assert(themeTitle !== "", services.error.parameterIsMissed, "themeTitle");
 
     const themeDetail = typeof body.themeDetail === "string" ? libs.validator.trim(body.themeDetail) : "";
 
@@ -31,7 +31,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     // the organization should be public organization, or current user should join in it.
     const user = await services.mongo.User.findOne({ _id: request.userId })
         .exec();
-    libs.assert(organizationId.equals(services.seed.publicOrganizationId) || user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organizationId.equals(services.seed.publicOrganizationId) || user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
 
     const organization = await services.mongo.Organization.findOne({ _id: organizationId })
         .select("themes")
@@ -69,7 +69,7 @@ export async function create(request: libs.Request, response: libs.Response) {
                         newName: imageName,
                     },
                 });
-                libs.assert(incomingMessage.statusCode < 300, json);
+                services.utils.assert(incomingMessage.statusCode < 300, json);
             }
         }
     }
@@ -108,7 +108,7 @@ export const documentOfUpdate: types.Document = {
 
 export async function update(request: libs.Request, response: libs.Response) {
     const params: { theme_id: string; } = request.params;
-    libs.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
+    services.utils.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
 
     interface Body {
         title: string;
@@ -138,10 +138,10 @@ export async function update(request: libs.Request, response: libs.Response) {
     const theme = await services.mongo.Theme.findOne({ _id: id })
         .populate("creator owners watchers")
         .exec();
-    libs.assert(theme, services.error.parameterIsInvalid, "theme_id");
+    services.utils.assert(theme, services.error.parameterIsInvalid, "theme_id");
 
     // current user should be one of the theme's owners.
-    libs.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId)), services.error.theThemeIsNotOwnedByYou);
+    services.utils.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId)), services.error.theThemeIsNotOwnedByYou);
 
     if (title) {
         theme.title = title;
@@ -169,7 +169,7 @@ export async function update(request: libs.Request, response: libs.Response) {
                         newName: imageName,
                     },
                 });
-                libs.assert(incomingMessage.statusCode < 300, json);
+                services.utils.assert(incomingMessage.statusCode < 300, json);
             }
         }
     }

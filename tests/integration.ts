@@ -24,7 +24,7 @@ async function getVersion(caseName: string) {
         url: apiUrl + "/api/version",
     };
     const [response, body] = await services.request.request<types.VersionResponse>(options);
-    libs.assert(body.status === 0 && body.version === services.settings.version, body);
+    services.utils.assert(body.status === 0 && body.version === services.settings.version, body);
 
     await operate(caseName, libs.omit(body, ["version"]));
 
@@ -41,7 +41,7 @@ async function createCaptcha(guid: string, caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.CaptchaResponse>(options);
-    libs.assert(body.status === 0 && body.code, body);
+    services.utils.assert(body.status === 0 && body.code, body);
 
     await operate(caseName, libs.omit(body, ["url", "code"]));
 
@@ -56,7 +56,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
         form: { email, name, guid, code },
     };
     const [response, body] = await services.request.request<types.TokenResponse>(options);
-    libs.assert(body.status === 0 && body.url, body);
+    services.utils.assert(body.status === 0 && body.url, body);
 
     await operate(caseName, libs.omit(body, ["url"]));
 
@@ -69,7 +69,7 @@ async function login(url: string, caseName: string) {
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
-    libs.assert(authenticationCredential, cookies);
+    services.utils.assert(authenticationCredential, cookies);
 
     return operate(caseName, {
         statusCode: response.statusCode,
@@ -87,8 +87,8 @@ async function logout(caseName: string) {
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
-    libs.assert(body.status === 0, body);
-    libs.assert(!authenticationCredential, cookies);
+    services.utils.assert(body.status === 0, body);
+    services.utils.assert(!authenticationCredential, cookies);
 
     return operate(caseName, body);
 }
@@ -110,7 +110,7 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
         };
     }
     const [response, body] = await services.request.request<types.CurrentUserResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "user");
     result["user"] = libs.omit(body.user, ["id", "avatar"]);
@@ -130,7 +130,7 @@ async function createOrganization(caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -142,7 +142,7 @@ async function getCreatedOrganizations(caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
-    libs.assert(body.status === 0 && body.organizations, body);
+    services.utils.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
@@ -158,7 +158,7 @@ async function getJoinedOrganizations(caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
-    libs.assert(body.status === 0 && body.organizations, body);
+    services.utils.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
@@ -177,7 +177,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
         },
     };
     const [response, body] = await services.request.request<types.ThemesResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "themes");
     result.themes = body.themes.map(theme => {
@@ -206,7 +206,7 @@ async function createTheme(organizationId: string, caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -219,7 +219,7 @@ async function unwatch(themeId: string, caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -232,7 +232,7 @@ async function watch(themeId: string, caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -250,7 +250,7 @@ async function updateTheme(themeId: string, caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -274,7 +274,7 @@ async function uploadAvatar(caseName: string) {
         formData,
     };
     const [response, body] = await services.request.request<types.TemperaryResponse>(options);
-    libs.assert(body.status === 0 && body.names.length === 1, body);
+    services.utils.assert(body.status === 0 && body.names.length === 1, body);
 
     await operate(caseName, libs.omit(body, ["names"]));
 
@@ -309,7 +309,7 @@ async function updateUser(caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -322,7 +322,7 @@ async function invite(caseName: string, email: string, organizationId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -344,7 +344,7 @@ async function getScopes(caseName: string) {
         headers,
     };
     const [response, body] = await services.request.request<types.ScopesResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     await operate(caseName, body);
 
@@ -358,7 +358,7 @@ async function getRegisteredApplications(caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
@@ -389,7 +389,7 @@ async function registerApplication(caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -408,7 +408,7 @@ async function updateApplication(caseName: string, applicationId: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -421,7 +421,7 @@ async function deleteApplication(caseName: string, applicationId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -434,7 +434,7 @@ async function resetClientSecret(caseName: string, applicationId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -445,7 +445,7 @@ async function getApplication(caseName: string, applicationId: string) {
         headers,
     };
     const [response, body] = await services.request.request<types.ApplicationResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "application");
     result.application = {
@@ -469,7 +469,7 @@ async function getAccessTokens(caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.AccessTokensResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessTokens");
     result.accessTokens = body.accessTokens.map(accessToken => {
@@ -496,7 +496,7 @@ async function createAccessToken(caseName: string) {
         },
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
 
@@ -517,7 +517,7 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
         },
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -530,7 +530,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
 
@@ -547,7 +547,7 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -560,7 +560,7 @@ async function confirm(caseName: string, code: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -577,17 +577,17 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
         },
     };
     const [response, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "code");
 
-    libs.assert(body.pageName !== types.oauthAuthorization.login, body);
+    services.utils.assert(body.pageName !== types.oauthAuthorization.login, body);
     if (body.pageName === types.oauthAuthorization.authorization) {
-        libs.assert(body.code, body);
+        services.utils.assert(body.code, body);
         await confirm("confirm", body.code);
         return oauthAuthorize(caseName, clientId, state, body.code);
     }
-    libs.assert(body.code, body);
+    services.utils.assert(body.code, body);
 
     await operate(caseName, result);
 
@@ -602,7 +602,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
         form: { clientId, clientSecret, state, code },
     };
     const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
     await operate(caseName, result);
@@ -617,7 +617,7 @@ async function getAuthorizedApplications(caseName: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
@@ -644,7 +644,7 @@ async function revokeApplication(caseName: string, applicationId: string) {
         jar,
     };
     const [response, body] = await services.request.request<types.Response>(options);
-    libs.assert(body.status === 0, body);
+    services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
@@ -668,13 +668,13 @@ async function resetMongodb() {
 }
 
 async function testClientLogin() {
-    const guid = libs.generateUuid();
+    const guid = services.utils.generateUuid();
     const code = await createCaptcha(guid, "createCaptcha-client");
     return createToken(guid, code, "createToken-client", seeds.clientUser.email, seeds.clientUser.name);
 }
 
 async function testLogin() {
-    const guid = libs.generateUuid();
+    const guid = services.utils.generateUuid();
     const code = await createCaptcha(guid, "createCaptcha");
     const loginUrl = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
     return login(loginUrl, "login");
@@ -685,7 +685,7 @@ async function testRegisteredApplications() {
     await registerApplication("registerApplication");
 
     let applications = await getRegisteredApplications("getRegisteredApplications-afterRegistered");
-    libs.assert(applications.length > 0, applications);
+    services.utils.assert(applications.length > 0, applications);
     let application = applications[0];
 
     await updateApplication("updateApplication", application.id);
@@ -694,7 +694,7 @@ async function testRegisteredApplications() {
     await getApplication("getApplication", application.id);
 
     applications = await getRegisteredApplications("getRegisteredApplications-afterClientSecretReset");
-    libs.assert(applications.length > 0, applications);
+    services.utils.assert(applications.length > 0, applications);
     application = applications[0];
 
     return application;
@@ -705,7 +705,7 @@ async function testPrivateAccessToken() {
     await createAccessToken("createAccessToken");
 
     const accessTokens = await getAccessTokens("getAccessTokens-afterCreated");
-    libs.assert(accessTokens.length > 0, accessTokens);
+    services.utils.assert(accessTokens.length > 0, accessTokens);
     const accessTokenId = accessTokens[0].id;
 
     await updateAccessToken("updateAccessToken", accessTokenId);
@@ -720,7 +720,7 @@ async function testOrganization() {
     await createOrganization("createOrganization");
     await getCreatedOrganizations("getCreatedOrganizations");
     const organizations = await getJoinedOrganizations("getJoinedOrganizations");
-    libs.assert(organizations.length > 0, organizations);
+    services.utils.assert(organizations.length > 0, organizations);
     return organizations[0].id;
 }
 
@@ -734,7 +734,7 @@ async function testThemes(organizationId: string) {
     await createTheme(organizationId, "createTheme");
 
     const themes = await getThemesOfOrganization(organizationId, "getThemesOfOrganization-afterCreated");
-    libs.assert(themes.length > 0, themes);
+    services.utils.assert(themes.length > 0, themes);
     const themeId = themes[0].id;
 
     await unwatch(themeId, "unwatch");
@@ -747,7 +747,7 @@ async function testThemes(organizationId: string) {
 
 async function testAccessToken(application: types.Application) {
     await getAuthorizedApplications("getAuthorizedApplications");
-    const state = libs.generateUuid();
+    const state = services.utils.generateUuid();
     const code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
     const accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
     await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");

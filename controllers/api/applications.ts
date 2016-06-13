@@ -10,13 +10,13 @@ export const documentOfGet: types.Document = {
 
 export async function get(request: libs.Request, response: libs.Response) {
     const params: { id: string; } = request.params;
-    libs.assert(typeof params.id === "string" && libs.validator.isMongoId(params.id), services.error.parameterIsInvalid, "id");
+    services.utils.assert(typeof params.id === "string" && libs.validator.isMongoId(params.id), services.error.parameterIsInvalid, "id");
 
     const id = new libs.ObjectId(params.id);
     const application = await services.mongo.Application.findOne({ _id: id })
         .populate("creator")
         .exec();
-    libs.assert(application, services.error.parameterIsInvalid, "id");
+    services.utils.assert(application, services.error.parameterIsInvalid, "id");
 
     const creator = application.creator as services.mongo.UserDocument;
     const creatorId = creator._id.toHexString();

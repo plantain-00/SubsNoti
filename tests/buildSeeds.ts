@@ -2,6 +2,7 @@ import * as faker from "faker";
 
 import * as types from "../share/types";
 import * as libs from "../libs";
+import * as services from "../services";
 
 const seeds: types.TestSeed = require("./seeds.json");
 
@@ -77,6 +78,6 @@ if (!seeds.newAccessToken) {
 
 libs.fs.writeFile("./tests/seeds.json", JSON.stringify(seeds, null, "    "), error => {
     if (error) {
-        libs.red(error as any);
+        services.utils.red(error as any);
     }
 });

@@ -54,7 +54,7 @@ const storage = libs.multer.diskStorage({
             next(null, file.fieldname);
         } else if (request.path === documentOfUploadTemperaryImages.url
             || request.path === "/api/temperary/images") {
-            next(null, libs.generateUuid() + "." + libs.mime.extension(file.mimetype));
+            next(null, services.utils.generateUuid() + "." + libs.mime.extension(file.mimetype));
         } else {
             next("can not upload files at this url:" + request.path);
         }
@@ -124,7 +124,7 @@ services.rateLimit.route(app);
 const uploadIPWhiteList: string[] = (process.env.SUBS_NOTI_UPLOAD_IP_WHITE_LIST as string || "127.0.0.1").split(",");
 
 async function uploadPersistentImages(request: libs.Request, response: libs.Response) {
-    libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
+    services.utils.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
 
     await uploadAsync(request, response);
 
@@ -134,7 +134,7 @@ async function uploadPersistentImages(request: libs.Request, response: libs.Resp
 }
 
 async function uploadTemperaryImages(request: libs.Request, response: libs.Response) {
-    libs.assert(request.userId, services.error.unauthorized);
+    services.utils.assert(request.userId, services.error.unauthorized);
 
     await uploadAsync(request, response);
 
@@ -146,13 +146,13 @@ async function uploadTemperaryImages(request: libs.Request, response: libs.Respo
 async function moveImage(request: libs.Request, response: libs.Response) {
     const name = typeof request.body.name === "string" ? libs.validator.trim(request.body.name) : "";
     const newName = typeof request.body.newName === "string" ? libs.validator.trim(request.body.newName) : "";
-    libs.assert(name, services.error.parameterIsMissed, "name");
-    libs.assert(newName, services.error.parameterIsMissed, "newName");
-    libs.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
+    services.utils.assert(name, services.error.parameterIsMissed, "name");
+    services.utils.assert(newName, services.error.parameterIsMissed, "newName");
+    services.utils.assert(uploadIPWhiteList.find(i => i === request.ip), services.error.invalidIP, request.ip);
 
     const path = services.settings.currentEnvironment === types.environment.test ? "test_images" : "images";
 
-    await libs.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
+    await services.utils.renameAsync(libs.path.join(__dirname, `${path}/tmp/${name}`), libs.path.join(__dirname, `${path}/${newName}`));
 
     services.response.sendSuccess(response);
 }

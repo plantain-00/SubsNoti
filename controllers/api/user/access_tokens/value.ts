@@ -10,7 +10,7 @@ export const documentOfRegenerate: types.Document = {
 
 export async function regenerate(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
-    libs.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
@@ -19,9 +19,9 @@ export async function regenerate(request: libs.Request, response: libs.Response)
     // the sccess token should be available.
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
         .exec();
-    libs.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
+    services.utils.assert(accessToken, services.error.parameterIsInvalid, "access_token_id");
 
-    accessToken.value = libs.generateUuid();
+    accessToken.value = services.utils.generateUuid();
 
     accessToken.save();
 

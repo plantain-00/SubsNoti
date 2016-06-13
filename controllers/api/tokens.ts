@@ -18,15 +18,15 @@ export async function create(request: libs.Request, response: libs.Response) {
     }
 
     const body: Body = request.body;
-    libs.assert(typeof body.email === "string" && libs.validator.isEmail(body.email), services.error.parameterIsInvalid, "email");
+    services.utils.assert(typeof body.email === "string" && libs.validator.isEmail(body.email), services.error.parameterIsInvalid, "email");
 
     const email = typeof body.email === "string" ? libs.validator.trim(body.email).toLowerCase() : "";
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     const code = typeof body.code === "string" ? libs.validator.trim(body.code) : "";
     const guid = typeof body.guid === "string" ? libs.validator.trim(body.guid) : "";
     const redirectUrl = typeof body.redirectUrl === "string" ? libs.validator.trim(body.redirectUrl) : "";
-    libs.assert(code !== "", services.error.parameterIsInvalid, "code");
-    libs.assert(guid !== "", services.error.parameterIsInvalid, "guid");
+    services.utils.assert(code !== "", services.error.parameterIsInvalid, "code");
+    services.utils.assert(guid !== "", services.error.parameterIsInvalid, "guid");
 
     await services.captcha.validate(guid, code);
 

@@ -13,7 +13,7 @@ export async function create(email: string, url: string, request: libs.Request, 
     let user = await services.mongo.User.findOne({ email })
         .exec();
     if (!user) {
-        const salt = libs.generateUuid();
+        const salt = services.utils.generateUuid();
         user = await services.mongo.User.create({
             email,
             name,

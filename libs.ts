@@ -38,6 +38,7 @@ export {mysql};
 export const md5 = require("md5");
 
 import * as uuid from "node-uuid";
+export {uuid};
 
 import * as moment from "moment";
 export {moment};
@@ -68,15 +69,7 @@ export {qs};
 import ObjectId = mongoose.Types.ObjectId;
 export {ObjectId};
 
-const colors = require("colors");
-
-export function green(message: string) {
-    console.log(colors.green(message));
-}
-
-export function red(message: string) {
-    console.log(colors.red(message));
-}
+export const colors = require("colors");
 
 import * as mime from "mime";
 export {mime};
@@ -103,24 +96,8 @@ export interface Response extends express.Response {
 import * as socket from "socket.io";
 export {socket};
 
-export function generateUuid() {
-    return uuid.v4().replace(/-/g, "");
-}
-
 import * as bluebird from "bluebird";
 global.Promise = bluebird;
-
-export const renameAsync = (oldPath: string, newPath: string) => {
-    return new Promise((resolve, reject) => {
-        fs.rename(oldPath, newPath, error => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
-    });
-};
 
 export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.difference");
 export const isEmpty: (value: any) => boolean = require("lodash.isempty");
@@ -128,15 +105,3 @@ export const omit: (object: {}, props: string | string[]) => any = require("loda
 export const pick: (object: {}, ...props: string[]) => any = require("lodash.pick");
 
 export const minimist: ((args: string[]) => any) = require("minimist");
-
-export function assert(value: any, message: any, extra?: string) {
-    if (typeof message !== "string") {
-        message = JSON.stringify(message);
-    }
-    if (!value) {
-        if (extra) {
-            throw util.format(message, extra);
-        }
-        throw message;
-    }
-}

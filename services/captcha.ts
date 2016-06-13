@@ -38,5 +38,5 @@ export async function validate(id: string, code: string): Promise<void> {
     const targetCode = await services.redis.get(key);
 
     await services.redis.del(key);
-    libs.assert(code.toUpperCase() === targetCode, services.error.parameterIsInvalid, "code");
+    services.utils.assert(code.toUpperCase() === targetCode, services.error.parameterIsInvalid, "code");
 }

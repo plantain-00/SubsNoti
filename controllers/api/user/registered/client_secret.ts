@@ -14,7 +14,7 @@ export async function reset(request: libs.Request, response: libs.Response) {
     }
 
     const params: Params = request.params;
-    libs.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
+    services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
     const id = new libs.ObjectId(params.application_id);
 
@@ -23,9 +23,9 @@ export async function reset(request: libs.Request, response: libs.Response) {
     // the application should be available.
     const application = await services.mongo.Application.findOne({ _id: id })
         .exec();
-    libs.assert(application, services.error.parameterIsInvalid, "application_id");
+    services.utils.assert(application, services.error.parameterIsInvalid, "application_id");
 
-    application.clientSecret = libs.generateUuid();
+    application.clientSecret = services.utils.generateUuid();
 
     application.save();
 

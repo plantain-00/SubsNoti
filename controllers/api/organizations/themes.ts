@@ -19,7 +19,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     }
 
     const params: { organization_id: string } = request.params;
-    libs.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
+    services.utils.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
 
     const query: Query = request.query;
 
@@ -50,7 +50,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("joinedOrganizations")
             .exec();
 
-        libs.assert(user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
+        services.utils.assert(user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
     }
 
     let themesQuery = services.mongo.Theme.find({
