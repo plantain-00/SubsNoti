@@ -28,6 +28,8 @@ export {url};
 import * as util from "util";
 export {util};
 
+import * as crypto from "crypto";
+
 
 import * as nodemailer from "nodemailer";
 export {nodemailer};
@@ -35,7 +37,9 @@ export {nodemailer};
 import * as mysql from "mysql";
 export {mysql};
 
-export const md5 = require("md5");
+export function md5(str: string) {
+    return crypto.createHash("md5").update(str).digest("hex");
+};
 
 import * as uuid from "node-uuid";
 export {uuid};
