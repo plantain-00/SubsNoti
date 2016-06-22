@@ -37,6 +37,9 @@ export {nodemailer};
 import * as mysql from "mysql";
 export {mysql};
 
+import * as mssql from "mssql";
+export {mssql};
+
 export function md5(str: string) {
     return crypto.createHash("md5").update(str).digest("hex");
 };

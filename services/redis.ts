@@ -111,6 +111,9 @@ export function srem(key: string | number, member: string | number) {
 export function smembers(key: string | number): Promise<string[]> {
     return client.smembers(key);
 }
+export async function scard(key: string | number): Promise<number> {
+    return +(await client.scard(key));
+}
 
 // sorted set
 
@@ -125,6 +128,9 @@ export function zscore(key: string | number, member: string | number): Promise<s
 }
 export function zrank(key: string | number, member: string | number): Promise<string> {
     return client.zrank(key, member);
+}
+export async function zcard(key: string | number): Promise<number> {
+    return +(await client.zcard(key));
 }
 export function zrevrank(key: string | number, member: string | number): Promise<string> {
     return client.zrevrank(key, member);
@@ -157,6 +163,28 @@ export function zrevrangebyscoreNoLimit(key: string | number): Promise<string[]>
 }
 export async function zrevrangebyscoreWithScores(key: string | number, offset: number, count: number): Promise<{ member: string, score: number }[]> {
     const raw: string[] = await client.zrevrangebyscore(key, "+inf", "-inf", "WITHSCORES", "LIMIT", offset, count);
+    const result: { member: string, score: number }[] = [];
+    for (let i = 0; i < raw.length; i += 2) {
+        result.push({
+            member: raw[i],
+            score: +raw[i + 1],
+        });
+    }
+    return result;
+}
+export async function zrevrangebyscoreWithScoresNoLimit(key: string | number): Promise<{ member: string, score: number }[]> {
+    const raw: string[] = await client.zrevrangebyscore(key, "+inf", "-inf", "WITHSCORES");
+    const result: { member: string, score: number }[] = [];
+    for (let i = 0; i < raw.length; i += 2) {
+        result.push({
+            member: raw[i],
+            score: +raw[i + 1],
+        });
+    }
+    return result;
+}
+export async function zrangebyscoreWithScoresNoLimit(key: string | number): Promise<{ member: string, score: number }[]> {
+    const raw: string[] = await client.zrangebyscore(key, "-inf", "+inf", "WITHSCORES");
     const result: { member: string, score: number }[] = [];
     for (let i = 0; i < raw.length; i += 2) {
         result.push({

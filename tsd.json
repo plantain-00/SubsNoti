@@ -6,7 +6,7 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "node/node.d.ts": {
-            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
+            "commit": "cc3b657f2655c8c7cd290ff83dc052be637d8fe2"
         },
         "serve-static/serve-static.d.ts": {
             "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
@@ -91,6 +91,9 @@
         },
         "bluebird/bluebird.d.ts": {
             "commit": "6052959591c9bc6f8463c58220965c7030ba934d"
+        },
+        "mssql/mssql.d.ts": {
+            "commit": "cc3b657f2655c8c7cd290ff83dc052be637d8fe2"
         }
     }
 }
