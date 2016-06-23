@@ -46,8 +46,8 @@ export async function getAuthorized(request: libs.Request, response: libs.Respon
         .populate("application")
         .exec();
 
-    for (const accessToken of accessTokens) {
-        await services.mongo.User.populate(accessToken.application, "creator");
+    for (const {application} of accessTokens) {
+        await services.mongo.User.populate(application, "creator");
     }
 
     const result: types.ApplicationsResult = {

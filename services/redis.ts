@@ -114,6 +114,9 @@ export function smembers(key: string | number): Promise<string[]> {
 export async function scard(key: string | number): Promise<number> {
     return +(await client.scard(key));
 }
+export function spop(key: string | number, count: number): Promise<string[]> {
+    return client.spop(key, count);
+}
 
 // sorted set
 
