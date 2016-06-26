@@ -102,11 +102,11 @@ export function hdel(key: string | number, field: string | number) {
 export function sismember(key: string | number, member: string | number): Promise<boolean> {
     return client.sismember(key, member);
 }
-export function sadd(key: string | number, member: string | number) {
-    client.sadd(key, member);
+export function sadd(key: string | number, ...members: (string | number)[]) {
+    client.sadd(key, ...members);
 }
-export function srem(key: string | number, member: string | number) {
-    client.srem(key, member);
+export function srem(key: string | number, ...members: (string | number)[]) {
+    client.srem(key, ...members);
 }
 export function smembers(key: string | number): Promise<string[]> {
     return client.smembers(key);
@@ -116,6 +116,9 @@ export async function scard(key: string | number): Promise<number> {
 }
 export function spop(key: string | number, count: number): Promise<string[]> {
     return client.spop(key, count);
+}
+export function srandmember(key: string | number, count?: number): Promise<string[]> {
+    return client.srandmember(key, count);
 }
 
 // sorted set
