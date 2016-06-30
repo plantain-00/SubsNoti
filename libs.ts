@@ -81,6 +81,9 @@ export const colors = require("colors");
 import * as mime from "mime";
 export {mime};
 
+import * as xml2js from "xml2js";
+export {xml2js};
+
 export interface Request extends express.Request {
     // version
     v: string;

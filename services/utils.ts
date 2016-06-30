@@ -37,3 +37,7 @@ export function green(message: string) {
 export function red(message: string) {
     console.log(libs.colors.red(message));
 }
+
+export function randomInteger(min: number, range: number) {
+    return Math.floor(Math.random() * range) + min;
+}

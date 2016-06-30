@@ -50,7 +50,7 @@ export function route(app: libs.express.Application) {
                 }
             }
         } else {
-            const ip = request.header("X-Real-IP");
+            const ip = services.ip.getFromHttp(request);
             const key = services.settings.cacheKeys.rateLimit.ip + ip;
             const count = await services.redis.incr(key);
             response.setHeader("X-Count", count.toString());
