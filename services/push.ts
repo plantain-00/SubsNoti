@@ -2,8 +2,8 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as services from "../services";
 
-let io;
-let themes;
+let io: SocketIO.Server;
+let themes: SocketIO.Namespace;
 
 export function emitTheme(event: types.ThemePushEvent, theme: types.Theme) {
     themes.to(theme.organizationId).emit(event, theme);
@@ -21,7 +21,7 @@ export function connect(server: libs.http.Server) {
                 socket.disconnect(true);
             } else {
                 socket.on("change organization", (data: { to: string; }) => {
-                    for (const room of socket.rooms) {
+                    for (const room in socket.rooms) {
                         socket.leave(room);
                     }
                     socket.join(data.to);
