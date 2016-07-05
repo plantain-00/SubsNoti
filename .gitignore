@@ -4,3 +4,4 @@ images/
 test_images/
 typings
 .vscode
+*.js.map

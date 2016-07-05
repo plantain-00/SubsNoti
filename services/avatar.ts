@@ -17,7 +17,7 @@ export async function createIfNotExistsAsync(id: string): Promise<void> {
     } else {
         services.logger.logInfo("statusCode:" + existResponse.statusCode);
         services.logger.logInfo("creating:" + fileName);
-        const [creationResponse, json] = await createAsync(seed, fileName);
+        const [, json] = await createAsync(seed, fileName);
         services.logger.logInfo(json);
     }
 }
@@ -47,20 +47,20 @@ function createAsync(seed: string, fileName: string) {
         }
     }
 
-    return new Promise<any>((resolve, reject) => {
-        canvas.toBuffer(function (error, buf) {
+    return new Promise<Buffer>((resolve, reject) => {
+        canvas.toBuffer((error: Error, buffer: Buffer) => {
             if (error) {
                 reject(error);
             } else {
-                resolve(buf);
+                resolve(buffer);
             }
 
 
         });
-    }).then(buf => {
-        const formData = {};
+    }).then(buffer => {
+        const formData: any = {};
         formData[fileName] = {
-            value: buf,
+            value: buffer,
             options: {
                 filename: fileName,
                 contentType: "image/png",

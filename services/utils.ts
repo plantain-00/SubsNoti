@@ -1,6 +1,4 @@
-import * as types from "../share/types";
 import * as libs from "../libs";
-import * as services from "../services";
 
 export function assert(value: any, message: any, extra?: string) {
     if (typeof message !== "string") {
@@ -34,7 +32,7 @@ export function green(message: string) {
     console.log(libs.colors.green(message));
 }
 
-export function red(message: string) {
+export function red(message: Error | string) {
     console.log(libs.colors.red(message));
 }
 

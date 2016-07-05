@@ -33,9 +33,9 @@ const documentOfMoveImage: types.Document = {
     method: types.httpMethod.post,
     documentUrl: "/api/image/move image from temperary directory to persistent directory.html",
 };
-
+type File = { mimetype: string; fieldname: string; };
 const storage = libs.multer.diskStorage({
-    destination: function (request: libs.Request, file, next) {
+    destination: function (request: libs.Request, file: File, next: Function) {
         const mimeType: string = file.mimetype;
         if (!mimeType.startsWith("image/")) {
             next(new Error("not image"));
@@ -43,7 +43,7 @@ const storage = libs.multer.diskStorage({
         }
         next(null, request.uploadPath);
     },
-    filename: function (request: libs.Request, file, next) {
+    filename: function (request: libs.Request, file: File, next: Function) {
         const mimeType: string = file.mimetype;
         if (!mimeType.startsWith("image/")) {
             next(new Error("not image"));
@@ -101,7 +101,7 @@ const uploadAsync = (request: libs.Request, response: libs.Response) => {
                 });
             }
         } else if (contentType === "") {
-            upload(request, response, error => {
+            upload(request, response, (error: Error) => {
                 if (error) {
                     reject(error);
                 } else {

@@ -2,15 +2,10 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as services from "../services";
 
-interface Rate {
-    remain: number;
-    resetMoment: string;
-}
-
 const documentUrl = "/api/response.html";
 
 export function route(app: libs.express.Application) {
-    app.all("/api/*", async (request: libs.Request, response: libs.Response, next) => {
+    app.all("/api/*", async (request: libs.Request, response: libs.Response, next: Function) => {
         await services.authenticationCredential.authenticate(request);
 
         if (!request.userId) {

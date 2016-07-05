@@ -76,7 +76,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         const value = await services.redis.get(services.settings.cacheKeys.githubLoginCode + state);
         services.utils.assert(value, services.error.parameterIsInvalid, "state");
 
-        const [incomingMessage, json] = await services.request.request<{ access_token: string; scope: string; token_type: string; }>({
+        const [, json] = await services.request.request<{ access_token: string; scope: string; token_type: string; }>({
             method: types.httpMethod.post,
             url: "https://github.com/login/oauth/access_token",
             headers: {
@@ -90,7 +90,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
             },
         });
         const accessToken = json.access_token;
-        const [emailIncomingMessage, emailJson] = await services.request.request<{ email: string; verified: boolean; primary: boolean; }[]>({
+        const [, emailJson] = await services.request.request<{ email: string; verified: boolean; primary: boolean; }[]>({
             url: "https://api.github.com/user/emails",
             headers: {
                 Authorization: `token ${accessToken}`,

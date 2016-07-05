@@ -3,7 +3,7 @@ import * as libs from "../libs";
 import * as services from "../services";
 import * as integration from "./integration";
 
-const responses = {};
+const responses: any = {};
 
 integration.setOperation(async (caseName, body) => {
     responses[caseName] = body;

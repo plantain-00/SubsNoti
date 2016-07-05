@@ -1,4 +1,3 @@
-import * as types from "../share/types";
 import * as libs from "../libs";
 import * as services from "../services";
 
@@ -13,7 +12,7 @@ const config = {
 
 export function connect() {
     client = new libs.Redis(config.port, config.host, config.options);
-    client.on("error", error => {
+    client.on("error", (error: Error) => {
         services.logger.logError(error);
     });
 }
@@ -33,7 +32,7 @@ export function ttl(key: string | number): Promise<number> {
     return client.ttl(key);
 }
 export function pexpire(key: string | number, milliseconds: number) {
-    client["pexpire"](key, milliseconds);
+    (client as any).pexpire(key, milliseconds);
 }
 
 // string
@@ -87,7 +86,7 @@ export function hget(key: string | number, field: string | number): Promise<stri
 export function hgetall(key: string | number): Promise<{ [field: string]: string }> {
     return client.hgetall(key);
 }
-export function hmget(key: string | number, fields: (string | number)[]): Promise<string[]> {
+export function hmget(key: string | number, ...fields: (string | number)[]): Promise<string[]> {
     return client.hmget(key, fields);
 }
 export function hset(key: string | number, field: string | number, value: string | number) {

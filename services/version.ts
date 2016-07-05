@@ -19,7 +19,7 @@ export async function get(request: libs.Request, response: libs.Response) {
 }
 
 export function route(app: libs.express.Application) {
-    app.all("/api/*", (request: libs.Request, response: libs.Response, next) => {
+    app.all("/api/*", (request: libs.Request, response: libs.Response, next: Function) => {
         if (request.path === services.settings.urls.version && request.method === "GET") {
             next();
             return;

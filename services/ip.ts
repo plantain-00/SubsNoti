@@ -1,6 +1,4 @@
-import * as types from "../share/types";
 import * as libs from "../libs";
-import * as services from "../services";
 
 const key = "x-real-ip";
 

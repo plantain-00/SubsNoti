@@ -1,6 +1,5 @@
 import * as types from "../share/types";
 import * as libs from "../libs";
-import * as services from "../services";
 
 const config = {
     url: process.env.SUBS_NOTI_MONGODB_URL || "mongodb://127.0.0.1:27017/log_db_test",
@@ -19,7 +18,7 @@ export let Application: libs.mongoose.Model<ApplicationDocument>;
 export let AccessToken: libs.mongoose.Model<AccessTokenDocument>;
 
 export interface MongooseArray<T> extends Array<T> {
-    pull: (T) => void;
+    pull: (t: T) => void;
 }
 
 export interface OrganizationDocument extends libs.mongoose.Document {

@@ -1,6 +1,4 @@
-import * as types from "../share/types";
 import * as libs from "../libs";
-import * as services from "../services";
 
 export function parse(xml: string) {
     return new Promise<any>((resolve, reject) => {
@@ -8,7 +6,7 @@ export function parse(xml: string) {
             trim: true,
             explicitArray: false,
             explicitRoot: false,
-        }).parseString(xml, (error, result) => {
+        }).parseString(xml, (error: Error, result: any) => {
             if (error) {
                 reject(error);
             } else {

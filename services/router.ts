@@ -3,7 +3,7 @@ import * as libs from "../libs";
 import * as services from "../services";
 
 export function bind(document: types.Document, handler: (request: libs.Request, response: libs.Response) => Promise<void>, app: libs.express.Application) {
-    app[document.method](document.url, async (request: libs.Request, response: libs.Response) => {
+    (app as any)[document.method](document.url, async (request: libs.Request, response: libs.Response) => {
         response.documentUrl = document.documentUrl;
         try {
             await handler(request, response);
@@ -14,7 +14,7 @@ export function bind(document: types.Document, handler: (request: libs.Request, 
 }
 
 export function bindObsolete(document: types.ObsoleteDocument, handler: (request: libs.Request, response: libs.Response) => Promise<void>, app: libs.express.Application) {
-    app[document.method](document.url, async (request: libs.Request, response: libs.Response) => {
+    (app as any)[document.method](document.url, async (request: libs.Request, response: libs.Response) => {
         if (services.version.isNotExpired(request.v, document.versionRange, document.expiredDate)) {
             response.documentUrl = document.documentUrl;
             try {

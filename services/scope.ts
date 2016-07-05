@@ -12,7 +12,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     const result: types.ScopesResult = {
         scopes: services.settings.scopes,
     };
-    services.response.sendSuccess(response);
+    services.response.sendSuccess(response, result);
 }
 
 export function shouldValidateAndContainScope(request: libs.Request, scopeName: types.ScopeName) {

@@ -1,5 +1,4 @@
 const exit = require("exit");
-import * as libs from "../libs";
 import * as services from "../services";
 import * as integration from "./integration";
 
@@ -8,7 +7,7 @@ const baseline: any[] = require("./baseline.json");
 let index = 1;
 
 integration.setOperation(async (caseName, body) => {
-    const expected = JSON.stringify(baseline[caseName]);
+    const expected = JSON.stringify((baseline as any)[caseName]);
     const actually = JSON.stringify(body);
     services.utils.assert(expected === actually, `error in case: "${caseName}" expected: ${expected} /n.but actually: ${actually}`);
     services.utils.green(`${index++}: case "${caseName}" is passed.`);

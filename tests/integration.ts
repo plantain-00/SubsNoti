@@ -8,8 +8,8 @@ const imageUploader = services.settings.imageUploader;
 
 const jar = libs.request.jar();
 
-const headers = {};
-const headersWithAuthorization = {};
+const headers: any = {};
+const headersWithAuthorization: any = {};
 
 let operate: (caseName: string, body: any) => Promise<void>;
 
@@ -23,7 +23,7 @@ async function getVersion(caseName: string) {
     const options = {
         url: apiUrl + "/api/version",
     };
-    const [response, body] = await services.request.request<types.VersionResponse>(options);
+    const [, body] = await services.request.request<types.VersionResponse>(options);
     services.utils.assert(body.status === 0 && body.version === services.settings.version, body);
 
     await operate(caseName, libs.omit(body, ["version"]));
@@ -40,7 +40,7 @@ async function createCaptcha(guid: string, caseName: string) {
             id: guid,
         },
     };
-    const [response, body] = await services.request.request<types.CaptchaResponse>(options);
+    const [, body] = await services.request.request<types.CaptchaResponse>(options);
     services.utils.assert(body.status === 0 && body.code, body);
 
     await operate(caseName, libs.omit(body, ["url", "code"]));
@@ -55,7 +55,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
         method: types.httpMethod.post,
         form: { email, name, guid, code },
     };
-    const [response, body] = await services.request.request<types.TokenResponse>(options);
+    const [, body] = await services.request.request<types.TokenResponse>(options);
     services.utils.assert(body.status === 0 && body.url, body);
 
     await operate(caseName, libs.omit(body, ["url"]));
@@ -65,7 +65,7 @@ async function createToken(guid: string, code: string, caseName: string, email: 
 
 async function login(url: string, caseName: string) {
     const options = { url, headers, jar };
-    const [response, body] = await services.request.request(options, types.responseType.others);
+    const [response] = await services.request.request(options, types.responseType.others);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
@@ -83,7 +83,7 @@ async function logout(caseName: string) {
         method: types.httpMethod.delete,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
 
     const cookies = libs.cookie.parse(jar.getCookieString(apiUrl));
     const authenticationCredential = cookies[services.settings.cookieKeys.authenticationCredential];
@@ -94,7 +94,7 @@ async function logout(caseName: string) {
 }
 
 async function getCurrentUser(caseName: string, accessToken?: string) {
-    let options;
+    let options: any;
     if (accessToken) {
         headersWithAuthorization[services.settings.headerNames.authorization] = services.settings.authorizationHeaders.token + accessToken;
 
@@ -109,7 +109,7 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
             jar,
         };
     }
-    const [response, body] = await services.request.request<types.CurrentUserResponse>(options);
+    const [, body] = await services.request.request<types.CurrentUserResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "user");
@@ -129,7 +129,7 @@ async function createOrganization(caseName: string) {
             organizationName: seeds.organization.name,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -141,7 +141,7 @@ async function getCreatedOrganizations(caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
+    const [, body] = await services.request.request<types.OrganizationsResponse>(options);
     services.utils.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
@@ -157,7 +157,7 @@ async function getJoinedOrganizations(caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.OrganizationsResponse>(options);
+    const [, body] = await services.request.request<types.OrganizationsResponse>(options);
     services.utils.assert(body.status === 0 && body.organizations, body);
 
     const result = libs.omit(body, "organizations");
@@ -176,7 +176,7 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
             isClosed: types.yes,
         },
     };
-    const [response, body] = await services.request.request<types.ThemesResponse>(options);
+    const [, body] = await services.request.request<types.ThemesResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "themes");
@@ -205,7 +205,7 @@ async function createTheme(organizationId: string, caseName: string) {
             organizationId,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -218,7 +218,7 @@ async function unwatch(themeId: string, caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -231,7 +231,7 @@ async function watch(themeId: string, caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -249,7 +249,7 @@ async function updateTheme(themeId: string, caseName: string) {
             status: types.themeStatus.closed,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -257,7 +257,7 @@ async function updateTheme(themeId: string, caseName: string) {
 
 async function uploadAvatar(caseName: string) {
     const filename = "newAvatar.png";
-    const formData = {};
+    const formData: any = {};
     formData[filename] = {
         value: libs.fs.createReadStream(libs.path.resolve(__dirname, filename)),
         options: {
@@ -273,7 +273,7 @@ async function uploadAvatar(caseName: string) {
         jar,
         formData,
     };
-    const [response, body] = await services.request.request<types.TemperaryResponse>(options);
+    const [, body] = await services.request.request<types.TemperaryResponse>(options);
     services.utils.assert(body.status === 0 && body.names.length === 1, body);
 
     await operate(caseName, libs.omit(body, ["names"]));
@@ -285,7 +285,7 @@ async function getTemperaryImage(fileName: string, caseName: string) {
     const options = {
         url: imageServer + `/tmp/${fileName}`,
     };
-    const [response, body] = await services.request.request(options, types.responseType.others);
+    const [response] = await services.request.request(options, types.responseType.others);
 
     return operate(caseName, {
         statusCode: response.statusCode,
@@ -308,7 +308,7 @@ async function updateUser(caseName: string) {
             avatarFileName: name,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -321,7 +321,7 @@ async function invite(caseName: string, email: string, organizationId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -331,7 +331,7 @@ async function getAvatar(uid: string, caseName: string) {
     const options = {
         url: imageServer + `/avatar-${uid}.png`,
     };
-    const [response, body] = await services.request.request(options, types.responseType.others);
+    const [response] = await services.request.request(options, types.responseType.others);
 
     return operate(caseName, {
         statusCode: response.statusCode,
@@ -343,7 +343,7 @@ async function getScopes(caseName: string) {
         url: apiUrl + `/api/scopes`,
         headers,
     };
-    const [response, body] = await services.request.request<types.ScopesResponse>(options);
+    const [, body] = await services.request.request<types.ScopesResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     await operate(caseName, body);
@@ -357,7 +357,7 @@ async function getRegisteredApplications(caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
+    const [, body] = await services.request.request<types.ApplicationsResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
@@ -388,7 +388,7 @@ async function registerApplication(caseName: string) {
             authorizationCallbackUrl: seeds.application.authorizationCallbackUrl,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -407,7 +407,7 @@ async function updateApplication(caseName: string, applicationId: string) {
             authorizationCallbackUrl: seeds.newApplication.authorizationCallbackUrl,
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -420,7 +420,7 @@ async function deleteApplication(caseName: string, applicationId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -433,7 +433,7 @@ async function resetClientSecret(caseName: string, applicationId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -444,7 +444,7 @@ async function getApplication(caseName: string, applicationId: string) {
         url: apiUrl + `/api/applications/${applicationId}`,
         headers,
     };
-    const [response, body] = await services.request.request<types.ApplicationResponse>(options);
+    const [, body] = await services.request.request<types.ApplicationResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "application");
@@ -468,7 +468,7 @@ async function getAccessTokens(caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.AccessTokensResponse>(options);
+    const [, body] = await services.request.request<types.AccessTokensResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessTokens");
@@ -495,7 +495,7 @@ async function createAccessToken(caseName: string) {
             scopes: [types.scopeNames.readUser, types.scopeNames.readOrganization],
         },
     };
-    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
+    const [, body] = await services.request.request<types.AccessTokenResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
@@ -516,7 +516,7 @@ async function updateAccessToken(caseName: string, accessTokenId: string) {
             scopes: [types.scopeNames.readUser, types.scopeNames.readApplication],
         },
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -529,7 +529,7 @@ async function regenerateAccessToken(caseName: string, accessTokenId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
+    const [, body] = await services.request.request<types.AccessTokenResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
@@ -546,7 +546,7 @@ async function deleteAccessToken(caseName: string, accessTokenId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
@@ -559,13 +559,13 @@ async function confirm(caseName: string, code: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
 }
 
-async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string) {
+async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string): Promise<string> {
     const options = {
         url: apiUrl + `/oauth/authorize`,
         jar: jar,
@@ -576,7 +576,7 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
             code,
         },
     };
-    const [response, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
+    const [, body] = await services.request.request<types.OAuthAuthorizationResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "code");
@@ -601,7 +601,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
         headers: headers,
         form: { clientId, clientSecret, state, code },
     };
-    const [response, body] = await services.request.request<types.AccessTokenResponse>(options);
+    const [, body] = await services.request.request<types.AccessTokenResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "accessToken");
@@ -616,7 +616,7 @@ async function getAuthorizedApplications(caseName: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.ApplicationsResponse>(options);
+    const [, body] = await services.request.request<types.ApplicationsResponse>(options);
     services.utils.assert(body.status === 0, body);
 
     const result = libs.omit(body, "applications");
@@ -643,7 +643,7 @@ async function revokeApplication(caseName: string, applicationId: string) {
         headers,
         jar,
     };
-    const [response, body] = await services.request.request<types.Response>(options);
+    const [, body] = await services.request.request<types.Response>(options);
     services.utils.assert(body.status === 0, body);
 
     return operate(caseName, body);
