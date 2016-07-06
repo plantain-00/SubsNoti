@@ -104,7 +104,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         });
         services.utils.assert(email, "no verified email");
 
-        const verifiedEmail = email.email.toLowerCase();
+        const verifiedEmail = email!.email.toLowerCase();
         const token = await services.tokens.createInternally(verifiedEmail, documentOfGithubCode.url, request, verifiedEmail.split("@")[0]);
 
         setCookie(request, response, token);

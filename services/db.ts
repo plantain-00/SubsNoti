@@ -4,7 +4,7 @@ let pool: libs.mysql.IPool;
 
 import MysqlConnection = libs.mysql.IConnection;
 
-const config: { host: string; user: string; password: string; database: string; } = undefined;
+let config: { host: string; user: string; password: string; database: string; };
 
 export function connect() {
     pool = libs.mysql.createPool(config);

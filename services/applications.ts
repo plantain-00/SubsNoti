@@ -66,7 +66,7 @@ export async function getAuthorized(request: libs.Request, response: libs.Respon
                     avatar: creator.avatar || services.avatar.getDefaultName(creatorId),
                 },
                 scopes: services.settings.scopes.filter(s => ac.scopes.some(sc => sc === s.name)),
-                lastUsed: ac.lastUsed ? ac.lastUsed.toISOString() : null,
+                lastUsed: ac.lastUsed ? ac.lastUsed.toISOString() : undefined,
             };
         }),
     };

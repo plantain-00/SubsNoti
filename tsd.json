@@ -6,7 +6,7 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "node/node.d.ts": {
-            "commit": "cc3b657f2655c8c7cd290ff83dc052be637d8fe2"
+            "commit": "8df97176d2f27399ffc562098409223fef6c2304"
         },
         "serve-static/serve-static.d.ts": {
             "commit": "aed176536a202b9a2475ce1989ea6d2d0226a185"
@@ -87,7 +87,7 @@
             "commit": "78d36dd49b6b55b9fdfe61776a12bf05c8b07777"
         },
         "ioredis/ioredis.d.ts": {
-            "commit": "641df27e73ca67fa7199a3deedae104198d41a17"
+            "commit": "8df97176d2f27399ffc562098409223fef6c2304"
         },
         "bluebird/bluebird.d.ts": {
             "commit": "6052959591c9bc6f8463c58220965c7030ba934d"

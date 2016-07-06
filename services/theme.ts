@@ -257,7 +257,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     const title = typeof body.title === "string" ? libs.validator.trim(body.title) : "";
     const detail = typeof body.detail === "string" ? libs.validator.trim(body.detail) : "";
-    let status: types.ThemeStatus = null;
+    let status: types.ThemeStatus | null = null;
 
     if (body.status === types.themeStatus.open) {
         status = types.ThemeStatus.open;
@@ -277,7 +277,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     services.utils.assert(theme, services.error.parameterIsInvalid, "theme_id");
 
     // current user should be one of the theme's owners.
-    services.utils.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId)), services.error.theThemeIsNotOwnedByYou);
+    services.utils.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId!)), services.error.theThemeIsNotOwnedByYou);
 
     if (title) {
         theme.title = title;

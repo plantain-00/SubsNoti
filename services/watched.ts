@@ -29,16 +29,16 @@ export async function watch(request: libs.Request, response: libs.Response) {
 
     // current user should be the member of the organization that the theme in, or the organization is public.
     const organization = theme.organization as services.mongo.OrganizationDocument;
-    services.utils.assert(organization._id.equals(services.seed.publicOrganizationId) || organization.members.find((m: libs.ObjectId) => m.equals(request.userId)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organization._id.equals(services.seed.publicOrganizationId) || organization.members.find((m: libs.ObjectId) => m.equals(request.userId!)), services.error.theOrganizationIsPrivate);
 
     // if current user already watched the theme, then do nothing.
-    if (!theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId))) {
+    if (!theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId!))) {
         const user = await services.mongo.User.findOne({ _id: request.userId })
             .select("watchedThemes")
             .exec();
 
         user.watchedThemes.push(themeId);
-        theme.watchers.push(request.userId);
+        theme.watchers.push(request.userId!);
         theme.updateTime = new Date();
 
         user.save();
@@ -78,16 +78,16 @@ export async function unwatch(request: libs.Request, response: libs.Response) {
 
     // current user should be the member of the organization that the theme in, or the organization is public.
     const organization = theme.organization as services.mongo.OrganizationDocument;
-    services.utils.assert(organization._id.equals(services.seed.publicOrganizationId) || organization.members.find((m: libs.ObjectId) => m.equals(request.userId)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organization._id.equals(services.seed.publicOrganizationId) || organization.members.find((m: libs.ObjectId) => m.equals(request.userId!)), services.error.theOrganizationIsPrivate);
 
     // if current user already unwatched the theme, then do nothing.
-    if (theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId))) {
+    if (theme.watchers.find((w: libs.ObjectId) => w.equals(request.userId!))) {
         const user = await services.mongo.User.findOne({ _id: request.userId })
             .select("watchedThemes")
             .exec();
 
         (user.watchedThemes as services.mongo.MongooseArray<libs.ObjectId>).pull(themeId);
-        (theme.watchers as services.mongo.MongooseArray<libs.ObjectId>).pull(request.userId);
+        (theme.watchers as services.mongo.MongooseArray<libs.ObjectId>).pull(request.userId!);
         theme.updateTime = new Date();
 
         user.save();

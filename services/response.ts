@@ -14,7 +14,7 @@ export function sendSuccess(response: libs.Response, result: Object = {}) {
 
 export function sendError(response: libs.Response, error: Error | string, documentUrl?: string) {
     let errorMessage: string;
-    let stack: string;
+    let stack: string | undefined;
     if (typeof error === "string") {
         errorMessage = error;
     } else {

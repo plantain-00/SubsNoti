@@ -91,7 +91,7 @@ export interface Request extends express.Request {
     file: any;
     files: any[];
     // user's id for validation in cookies or headers
-    userId: ObjectId;
+    userId: ObjectId | null;
     // scopes that this access token can be used in
     scopes: string[];
     // application's id that this access token can be used for

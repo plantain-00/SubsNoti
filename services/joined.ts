@@ -74,7 +74,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
     services.utils.assert(user, services.error.parameterIsInvalid, "user_email");
 
     // current user should be a member of the organization
-    services.utils.assert(organization.members.find((m: libs.ObjectId) => m.equals(request.userId)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organization.members.find((m: libs.ObjectId) => m.equals(request.userId!)), services.error.theOrganizationIsPrivate);
 
     // if the user is already a member, do nothing.
     if (!organization.members.find((m: libs.ObjectId) => m.equals(user._id))) {

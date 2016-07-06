@@ -48,7 +48,7 @@ async function createCaptcha(guid: string, caseName: string) {
     return body.code;
 }
 
-async function createToken(guid: string, code: string, caseName: string, email: string, name: string) {
+async function createToken(guid: string, code: string | undefined, caseName: string, email: string, name: string) {
     const options = {
         url: apiUrl + "/api/tokens",
         headers: headers,
@@ -453,7 +453,7 @@ async function getApplication(caseName: string, applicationId: string) {
         homeUrl: body.application.homeUrl,
         description: body.application.description,
         creator: {
-            name: body.application.creator.name,
+            name: body.application.creator!.name,
         },
     };
 
@@ -584,14 +584,14 @@ async function oauthAuthorize(caseName: string, clientId: string, state: string,
     services.utils.assert(body.pageName !== types.oauthAuthorization.login, body);
     if (body.pageName === types.oauthAuthorization.authorization) {
         services.utils.assert(body.code, body);
-        await confirm("confirm", body.code);
-        return oauthAuthorize(caseName, clientId, state, body.code);
+        await confirm("confirm", body.code!);
+        return oauthAuthorize(caseName, clientId, state, body.code!);
     }
     services.utils.assert(body.code, body);
 
     await operate(caseName, result);
 
-    return body.code;
+    return body.code!;
 }
 
 async function createAccessTokenForApplication(caseName: string, clientId: string, clientSecret: string, state: string, code: string) {
@@ -626,8 +626,8 @@ async function getAuthorizedApplications(caseName: string) {
             homeUrl: application.homeUrl,
             description: application.description,
             creator: {
-                name: application.creator.name,
-                avatar: application.creator.email,
+                name: application.creator!.name,
+                avatar: application.creator!.email,
             },
             scopes: application.scopes,
         };
@@ -677,7 +677,7 @@ async function testLogin() {
     const guid = services.utils.generateUuid();
     const code = await createCaptcha(guid, "createCaptcha");
     const loginUrl = await createToken(guid, code, "createToken", seeds.user.email, seeds.user.name);
-    return login(loginUrl, "login");
+    return login(loginUrl!, "login");
 }
 
 async function testRegisteredApplications() {
@@ -748,8 +748,8 @@ async function testThemes(organizationId: string) {
 async function testAccessToken(application: types.Application) {
     await getAuthorizedApplications("getAuthorizedApplications");
     const state = services.utils.generateUuid();
-    const code = await oauthAuthorize("oauthAuthorize", application.clientId, state, "");
-    const accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId, application.clientSecret, state, code);
+    const code = await oauthAuthorize("oauthAuthorize", application.clientId!, state, "");
+    const accessToken = await createAccessTokenForApplication("createAccessTokenForApplication", application.clientId!, application.clientSecret!, state, code);
     await getAuthorizedApplications("getAuthorizedApplications-afterConfirmed");
     await getCurrentUser("getCurrentUser-client-withAccessToken", accessToken);
     await revokeApplication("revokeApplication", application.id);
@@ -762,7 +762,7 @@ export async function run() {
     await resetMongodb();
 
     const clientLoginUrl = await testClientLogin();
-    await login(clientLoginUrl, "login-client");
+    await login(clientLoginUrl!, "login-client");
 
     const client = await getCurrentUser("getCurrentUser-client");
     await getAvatar(client.user.id, "getAvatar-client");
@@ -788,14 +788,14 @@ export async function run() {
     await updateUser("updateUser");
     await getCurrentUser("getCurrentUser-afterUpdated");
 
-    await invite("invite", client.user.email, organizationId);
+    await invite("invite", client.user.email!, organizationId);
 
     await testAccessToken(registeredApplication);
 
     await logout("logout");
 
 
-    await login(clientLoginUrl, "login-client-afterInvited");
+    await login(clientLoginUrl!, "login-client-afterInvited");
     await getCurrentUser("getCurrentUser-client-afterInvited");
     await getJoinedOrganizations("getJoinedOrganizations-client-afterInvited");
 

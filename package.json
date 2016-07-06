@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "tslint": "tslint \"controllers/**/*.ts\" \"data_maintenances/*.ts\" \"services/*.ts\" \"tests/*.ts\" \"*.ts\"",
-    "init": "npm i -g typescript tsd tslint npm-check",
+    "init": "npm i -g typescript@next tsd tslint npm-check",
     "restore": "tsd install && npm i"
   },
   "dependencies": {
@@ -45,7 +45,8 @@
   "devDependencies": {
     "exit": "^0.1.2",
     "faker": "^3.1.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "typescript": "^2.0.0-dev.20160706"
   },
   "engines": {
     "node": ">=6.0.0"

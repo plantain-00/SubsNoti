@@ -65,7 +65,7 @@ const upload = libs.multer({ storage: storage }).any();
 
 const uploadAsync = (request: libs.Request, response: libs.Response) => {
     return new Promise((resolve, reject) => {
-        let uploadPath: string = null;
+        let uploadPath: string;
         if (request.path === documentOfUploadPersistentImages.url
             || request.path === "/api/persistent/images") {
             if (services.settings.currentEnvironment === types.environment.test) {
@@ -82,6 +82,7 @@ const uploadAsync = (request: libs.Request, response: libs.Response) => {
             }
         } else {
             reject("can not upload files at this url:" + request.path);
+            return;
         }
         request.uploadPath = uploadPath;
 

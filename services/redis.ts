@@ -32,7 +32,7 @@ export function ttl(key: string | number): Promise<number> {
     return client.ttl(key);
 }
 export function pexpire(key: string | number, milliseconds: number) {
-    (client as any).pexpire(key, milliseconds);
+    client.pexpire(key, milliseconds);
 }
 
 // string

@@ -38,7 +38,7 @@ export async function authenticate(request: libs.Request): Promise<void> {
 /**
  * identify current user.
  */
-export async function authenticateCookie(cookie: string): Promise<libs.ObjectId> {
+export async function authenticateCookie(cookie: string): Promise<libs.ObjectId | null> {
     if (typeof cookie !== "string") {
         return null;
     }

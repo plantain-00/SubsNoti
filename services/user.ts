@@ -14,7 +14,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     const user = await services.mongo.User.findOne({ _id: request.userId })
         .select("email name createdOrganizations joinedOrganizations avatar")
         .exec();
-    const id = request.userId.toHexString();
+    const id = request.userId!.toHexString();
 
     const result: types.UserResult = {
         user: {
@@ -61,7 +61,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     // if change avatar, then move image.
     if (avatarFileName) {
-        const newName = services.settings.imagePaths.avatar + request.userId.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
+        const newName = services.settings.imagePaths.avatar + request.userId!.toHexString() + libs.path.extname(avatarFileName).toLowerCase();
         const [incomingMessage, json] = await services.request.request({
             url: `${services.settings.imageUploader}/api/persistence`,
             method: types.httpMethod.post,
@@ -75,7 +75,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         user.avatar = newName;
         user.save();
 
-        response.status(incomingMessage.statusCode).json(json);
+        response.status(incomingMessage.statusCode!).json(json);
     } else {
         services.response.sendSuccess(response);
     }

@@ -70,7 +70,7 @@ export async function get(request: libs.Request, response: libs.Response) {
                 id: a._id.toHexString(),
                 description: a.description,
                 scopes: services.settings.scopes.filter(s => a.scopes.some(sc => sc === s.name)),
-                lastUsed: a.lastUsed ? a.lastUsed.toISOString() : null,
+                lastUsed: a.lastUsed ? a.lastUsed.toISOString() : undefined,
             };
         }),
     };
