@@ -45,14 +45,13 @@ export function route(app: libs.express.Application) {
                 }
             }
         } else {
-            const ip = services.ip.getFromHttp(request);
-            const key = services.settings.cacheKeys.rateLimit.ip + ip;
+            const key = services.settings.cacheKeys.rateLimit.ip + request.ip;
             const count = await services.redis.incr(key);
             response.setHeader("X-Count", count.toString());
             if (count === 1) {
                 services.redis.expire(key, 60 * 60);
             } else if (count > services.settings.rateLimit.ip) {
-                services.response.sendError(response, `API rate limit exceeded for ${ip}, you can login to get a higher rate limit.`, documentUrl);
+                services.response.sendError(response, `API rate limit exceeded for ${request.ip}, you can login to get a higher rate limit.`, documentUrl);
                 return;
             }
         }
