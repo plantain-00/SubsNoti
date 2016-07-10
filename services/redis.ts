@@ -47,8 +47,8 @@ export function set(key: string | number, value: string | number, expire?: numbe
         client.set(key, value);
     }
 }
-export function decr(key: string | number): Promise<number> {
-    return client.decr(key);
+export async function decr(key: string | number): Promise<number> {
+    return +(await client.decr(key));
 }
 export function incrby(key: string | number, increment: number) {
     client.incrby(key, increment);
