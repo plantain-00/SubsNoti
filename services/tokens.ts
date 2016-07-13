@@ -23,15 +23,13 @@ export const documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    interface Body {
+    const body: {
         email: string;
         name: string;
         code: string;
         guid: string;
         redirectUrl: string;
-    }
-
-    const body: Body = request.body;
+    } = request.body;
     services.utils.assert(typeof body.email === "string" && libs.validator.isEmail(body.email), services.error.parameterIsInvalid, "email");
 
     const email = typeof body.email === "string" ? libs.validator.trim(body.email).toLowerCase() : "";

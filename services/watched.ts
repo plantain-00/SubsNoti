@@ -8,15 +8,11 @@ export const documentOfWatch: types.Document = {
     documentUrl: "/api/theme/watch a theme.html",
 };
 
-interface Params {
-    theme_id: string;
-}
-
 export async function watch(request: libs.Request, response: libs.Response) {
-    const params: Params = request.params;
-    services.utils.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
+    const {theme_id} = request.params;
+    services.utils.assert(typeof theme_id === "string" && libs.validator.isMongoId(theme_id), services.error.parameterIsInvalid, "theme_id");
 
-    const themeId = new libs.ObjectId(params.theme_id);
+    const themeId = new libs.ObjectId(theme_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
@@ -62,10 +58,10 @@ export const documentOfUnwatch: types.Document = {
 };
 
 export async function unwatch(request: libs.Request, response: libs.Response) {
-    const params: Params = request.params;
-    services.utils.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
+    const {theme_id} = request.params;
+    services.utils.assert(typeof theme_id === "string" && libs.validator.isMongoId(theme_id), services.error.parameterIsInvalid, "theme_id");
 
-    const themeId = new libs.ObjectId(params.theme_id);
+    const themeId = new libs.ObjectId(theme_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 

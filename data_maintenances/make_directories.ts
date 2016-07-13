@@ -1,6 +1,5 @@
 import * as services from "../services";
-
-const mkdirp = require("mkdirp");
+import * as mkdirp from "mkdirp";
 
 mkdirp("images/tmp", (error: Error) => {
     if (error) {

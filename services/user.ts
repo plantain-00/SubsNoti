@@ -37,12 +37,10 @@ export const documentOfUpdate: types.Document = {
 };
 
 export async function update(request: libs.Request, response: libs.Response) {
-    interface Body {
+    const body: {
         name: string;
         avatarFileName: string;
-    }
-
-    const body: Body = request.body;
+    } = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     const avatarFileName = typeof body.avatarFileName === "string" ? libs.validator.trim(body.avatarFileName) : "";

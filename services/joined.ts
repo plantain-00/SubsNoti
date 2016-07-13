@@ -47,17 +47,12 @@ export const documentOfInvite: types.Document = {
 };
 
 export async function invite(request: libs.Request, response: libs.Response) {
-    interface Params {
-        organization_id: string;
-        user_email: string;
-    }
+    const {organization_id, user_email} = request.params;
+    services.utils.assert(typeof organization_id === "string" && libs.validator.isMongoId(organization_id), services.error.parameterIsInvalid, "organization_id");
+    services.utils.assert(typeof user_email === "string" && libs.validator.isEmail(user_email), services.error.parameterIsInvalid, "user_email");
 
-    const params: Params = request.params;
-    services.utils.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
-    services.utils.assert(typeof params.user_email === "string" && libs.validator.isEmail(params.user_email), services.error.parameterIsInvalid, "user_email");
-
-    const organizationId = new libs.ObjectId(params.organization_id);
-    const email = libs.validator.trim(params.user_email).toLowerCase();
+    const organizationId = new libs.ObjectId(organization_id);
+    const email = libs.validator.trim(user_email).toLowerCase();
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
 

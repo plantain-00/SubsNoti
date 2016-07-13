@@ -78,11 +78,6 @@ export async function get(request: libs.Request, response: libs.Response) {
     services.response.sendSuccess(response, result);
 }
 
-interface Body {
-    description: string;
-    scopes: string[];
-}
-
 export const documentOfCreate: types.Document = {
     url: "/api/user/access_tokens",
     method: types.httpMethod.post,
@@ -90,7 +85,10 @@ export const documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    const body: Body = request.body;
+    const body: {
+        description: string;
+        scopes: string[];
+    } = request.body;
 
     let description = "";
     if (typeof body.description === "string") {
@@ -130,7 +128,10 @@ export async function update(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
     services.utils.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
 
-    const body: Body = request.body;
+    const body: {
+        description: string;
+        scopes: string[];
+    } = request.body;
 
     let description = libs.validator.trim(body.description);
     if (typeof body.description === "string") {
@@ -190,14 +191,12 @@ export const documentOfCreateForApplication: types.Document = {
 };
 
 export async function createForApplication(request: libs.Request, response: libs.Response) {
-    interface Body {
+    const body: {
         clientId: string;
         clientSecret: string;
         state: string;
         code: string;
-    }
-
-    const body: Body = request.body;
+    } = request.body;
 
     const clientId = typeof body.clientId === "string" ? libs.validator.trim(body.clientId) : "";
     services.utils.assert(clientId !== "", services.error.parameterIsMissed, "clientId");

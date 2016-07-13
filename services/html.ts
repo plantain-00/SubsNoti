@@ -62,12 +62,10 @@ export const documentOfGithubCode: types.Document = {
 
 export async function githubCode(request: libs.Request, response: libs.Response) {
     try {
-        interface Query {
+        const query: {
             state: string;
             code: string;
-        }
-
-        const query: Query = request.query;
+        } = request.query;
 
         const state = typeof query.state === "string" ? libs.validator.trim(query.state) : "";
         const code = typeof query.code === "string" ? libs.validator.trim(query.code) : "";
@@ -120,15 +118,13 @@ export const documentOfAuthorize: types.Document = {
 };
 
 export async function authorize(request: libs.Request, response: libs.Response) {
-    interface Query {
-        client_id: string;
-        scopes: string;
-        state: string;
-        code: string;
-    }
-
     try {
-        const query: Query = request.query;
+        const query: {
+            client_id: string;
+            scopes: string;
+            state: string;
+            code: string;
+        } = request.query;
 
         const clientId = typeof query.client_id === "string" ? libs.validator.trim(query.client_id) : "";
         const scopes = typeof query.scopes === "string" ? libs.validator.trim(query.scopes) : "";

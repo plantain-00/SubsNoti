@@ -97,6 +97,12 @@
         },
         "xml2js/xml2js.d.ts": {
             "commit": "785cf6fe9922fb75d5e3b5c09821f44a10df7d8f"
+        },
+        "minimist/minimist.d.ts": {
+            "commit": "b66d6115d7a8cd74af45e59d36c4447e5d1e9a52"
+        },
+        "mkdirp/mkdirp.d.ts": {
+            "commit": "b66d6115d7a8cd74af45e59d36c4447e5d1e9a52"
         }
     }
 }

@@ -11,6 +11,7 @@ export function emitTheme(event: types.ThemePushEvent, theme: types.Theme) {
 
 export function connect(server: libs.http.Server) {
     io = libs.socket(server);
+    io.adapter(libs.socketioRedis({ host: services.redis.config.host, port: services.redis.config.port }));
     themes = io.of("/themes");
 
     themes.on("connection", socket => {

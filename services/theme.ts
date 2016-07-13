@@ -9,19 +9,17 @@ export const documentOfGet: types.Document = {
 };
 
 export async function get(request: libs.Request, response: libs.Response) {
-    interface Query {
+    const params: { organization_id: string } = request.params;
+    services.utils.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
+
+    const query: {
         page: string;
         limit: string;
         q: string;
         isOpen: string;
         isClosed: string;
         order: string;
-    }
-
-    const params: { organization_id: string } = request.params;
-    services.utils.assert(typeof params.organization_id === "string" && libs.validator.isMongoId(params.organization_id), services.error.parameterIsInvalid, "organization_id");
-
-    const query: Query = request.query;
+    } = request.query;
 
     const organizationId = new libs.ObjectId(params.organization_id);
 
@@ -145,14 +143,12 @@ export const documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    interface Body {
+    const body: {
         organizationId: string;
         themeTitle: string;
         themeDetail: string;
         imageNames: string[];
-    }
-
-    const body: Body = request.body;
+    } = request.body;
     services.utils.assert(typeof body.organizationId === "string" && libs.validator.isMongoId(body.organizationId), services.error.parameterIsInvalid, "organizationId");
 
     const organizationId = new libs.ObjectId(body.organizationId);
@@ -246,14 +242,12 @@ export async function update(request: libs.Request, response: libs.Response) {
     const params: { theme_id: string; } = request.params;
     services.utils.assert(typeof params.theme_id === "string" && libs.validator.isMongoId(params.theme_id), services.error.parameterIsInvalid, "theme_id");
 
-    interface Body {
+    const body: {
         title: string;
         detail: string;
         status: types.ThemeStatusType;
         imageNames: string[];
-    }
-
-    const body: Body = request.body;
+    } = request.body;
 
     const title = typeof body.title === "string" ? libs.validator.trim(body.title) : "";
     const detail = typeof body.detail === "string" ? libs.validator.trim(body.detail) : "";

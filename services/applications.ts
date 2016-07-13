@@ -9,14 +9,10 @@ export const documentOfReset: types.Document = {
 };
 
 export async function reset(request: libs.Request, response: libs.Response) {
-    interface Params {
-        application_id: string;
-    }
+    const {application_id} = request.params;
+    services.utils.assert(typeof application_id === "string" && libs.validator.isMongoId(application_id), services.error.parameterIsInvalid, "application_id");
 
-    const params: Params = request.params;
-    services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
-
-    const id = new libs.ObjectId(params.application_id);
+    const id = new libs.ObjectId(application_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
@@ -129,13 +125,6 @@ export async function getRegistered(request: libs.Request, response: libs.Respon
     services.response.sendSuccess(response, result);
 }
 
-interface Body {
-    name: string;
-    homeUrl: string;
-    description: string;
-    authorizationCallbackUrl: string;
-}
-
 export const documentOfCreate: types.Document = {
     url: "/api/user/registered",
     method: types.httpMethod.post,
@@ -143,7 +132,12 @@ export const documentOfCreate: types.Document = {
 };
 
 export async function create(request: libs.Request, response: libs.Response) {
-    const body: Body = request.body;
+    const body: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    } = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     services.utils.assert(name !== "", services.error.parameterIsMissed, "name");
@@ -181,7 +175,12 @@ export async function update(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
     services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
-    const body: Body = request.body;
+    const body: {
+        name: string;
+        homeUrl: string;
+        description: string;
+        authorizationCallbackUrl: string;
+    } = request.body;
 
     const name = typeof body.name === "string" ? libs.validator.trim(body.name) : "";
     services.utils.assert(name !== "", services.error.parameterIsInvalid, "name");

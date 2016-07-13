@@ -3,8 +3,6 @@ import * as services from "./services";
 
 const app = libs.express();
 
-app.use(libs.compression());
-
 app.use(libs.cookieParser());
 
 app.use(libs.bodyParser.json());
@@ -82,8 +80,8 @@ services.seed.init().then(() => {
 });
 
 const argv = libs.minimist(process.argv.slice(2));
-const port = argv.p || 9998;
-const host = argv.h || "localhost";
+const port = argv["p"] || 9998;
+const host = argv["h"] || "localhost";
 
 const server = app.listen(port, host, () => {
     services.logger.logInfo(`api Server is listening: ${host}:${port} and in ${services.settings.currentEnvironment}`);

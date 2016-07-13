@@ -2,7 +2,7 @@ import * as libs from "../libs";
 import * as services from "../services";
 
 let client: IORedis.Redis;
-const config = {
+export const config = {
     host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
     port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
     options: {

@@ -17,11 +17,11 @@ export let Theme: libs.mongoose.Model<ThemeDocument>;
 export let Application: libs.mongoose.Model<ApplicationDocument>;
 export let AccessToken: libs.mongoose.Model<AccessTokenDocument>;
 
-export interface MongooseArray<T> extends Array<T> {
+export type MongooseArray<T> = Array<T> & {
     pull: (t: T) => void;
-}
+};
 
-export interface OrganizationDocument extends libs.mongoose.Document {
+export type OrganizationDocument = libs.mongoose.Document & {
     name: string;
     status: types.OrganizationStatus;
 
@@ -29,9 +29,9 @@ export interface OrganizationDocument extends libs.mongoose.Document {
     members: Array<UserDocument | libs.ObjectId>;
 
     themes: Array<ThemeDocument | libs.ObjectId>;
-}
+};
 
-export interface UserDocument extends libs.mongoose.Document {
+export type UserDocument = libs.mongoose.Document & {
     email: string;
     name: string;
     salt: string;
@@ -44,9 +44,9 @@ export interface UserDocument extends libs.mongoose.Document {
     ownedThemes: Array<ThemeDocument | libs.ObjectId>;
     watchedThemes: Array<ThemeDocument | libs.ObjectId>;
     createdThemes: Array<ThemeDocument | libs.ObjectId>;
-}
+};
 
-export interface ThemeDocument extends libs.mongoose.Document {
+export type ThemeDocument = libs.mongoose.Document & {
     title: string;
     detail: string;
     status: types.ThemeStatus;
@@ -58,9 +58,9 @@ export interface ThemeDocument extends libs.mongoose.Document {
     watchers: Array<UserDocument | libs.ObjectId>;
 
     organization: OrganizationDocument | libs.ObjectId;
-}
+};
 
-export interface ApplicationDocument extends libs.mongoose.Document {
+export type ApplicationDocument = libs.mongoose.Document & {
     name: string;
     homeUrl: string;
     description: string;
@@ -69,9 +69,9 @@ export interface ApplicationDocument extends libs.mongoose.Document {
     clientSecret: string;
 
     creator: UserDocument | libs.ObjectId;
-}
+};
 
-export interface AccessTokenDocument extends libs.mongoose.Document {
+export type AccessTokenDocument = libs.mongoose.Document & {
     description: string;
     value: string;
     scopes: string[];
@@ -80,7 +80,7 @@ export interface AccessTokenDocument extends libs.mongoose.Document {
     creator: UserDocument | libs.ObjectId;
 
     application: ApplicationDocument | libs.ObjectId;
-}
+};
 
 export function connect() {
     libs.mongoose.connect(config.url, config.options);

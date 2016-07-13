@@ -39,3 +39,28 @@ export function red(message: Error | string) {
 export function randomInteger(min: number, range: number) {
     return Math.floor(Math.random() * range) + min;
 }
+
+export function randomPop<T>(array: T[], count: number): { pick: T[]; remain: T[] } {
+    if (count <= 0) {
+        return { pick: [], remain: array };
+    }
+    if (count >= array.length) {
+        return { pick: array, remain: [] };
+    }
+    if (count <= array.length / 2) {
+        const pick: T[] = [];
+        for (let i = 0; i < count; i++) {
+            const index = randomInteger(0, array.length);
+            pick.push(array.splice(index, 1)[0]);
+        }
+        return { pick, remain: array };
+    } else {
+        const remainCount = array.length - count;
+        const remain: T[] = [];
+        for (let i = 0; i < remainCount; i++) {
+            const index = randomInteger(0, array.length);
+            remain.push(array.splice(index, 1)[0]);
+        }
+        return { pick: array, remain };
+    }
+}

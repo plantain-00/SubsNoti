@@ -4,8 +4,6 @@ import * as services from "./services";
 
 const app = libs.express();
 
-app.use(libs.compression());
-
 app.use(libs.cookieParser());
 
 app.use(libs.bodyParser.json());
@@ -165,8 +163,8 @@ services.router.bind(documentOfUploadTemperaryImages, uploadTemperaryImages, app
 services.router.bind(documentOfMoveImage, moveImage, app);
 
 const argv = libs.minimist(process.argv.slice(2));
-const port = argv.p || 9999;
-const host = argv.h || "localhost";
+const port = argv["p"] || 9999;
+const host = argv["h"] || "localhost";
 
 app.listen(port, host, () => {
     services.logger.logInfo(`Image uploader is listening: ${host}:${port} and in ${services.settings.currentEnvironment}`);

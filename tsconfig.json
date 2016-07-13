@@ -6,7 +6,8 @@
         "sourceMap": true,
         "noUnusedLocals": true,
         "noImplicitThis": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "noImplicitReturns": true
     },
     "exclude": [
         "node_modules",
