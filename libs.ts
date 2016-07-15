@@ -1,5 +1,3 @@
-/// <reference path="./typings/tsd.d.ts" />
-
 import * as express from "express";
 export { express };
 
@@ -9,7 +7,8 @@ export { cookieParser };
 import * as cookie from "cookie";
 export { cookie };
 
-export const bodyParser = require("body-parser");
+import * as bodyParser from "body-parser";
+export { bodyParser };
 
 export const Canvas = require("canvas");
 export const Image = Canvas.Image;
@@ -63,7 +62,8 @@ export { mongoose };
 import * as semver from "semver";
 export { semver };
 
-export const multer = require("multer");
+import * as multer from "multer";
+export { multer };
 
 import * as request from "request";
 export { request };
@@ -82,12 +82,22 @@ export { mime };
 import * as xml2js from "xml2js";
 export { xml2js };
 
+type File = {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    size: number;
+    destination: string;
+    filename: string;
+    path: string;
+    buffer: Buffer;
+};
+
 export type Request = express.Request & {
     // version
     v: string;
     // files upload
-    file: any;
-    files: any[];
     // user's id for validation in cookies or headers
     userId: ObjectId | null;
     // scopes that this access token can be used in
@@ -95,6 +105,10 @@ export type Request = express.Request & {
     // application's id that this access token can be used for
     application: ObjectId;
     uploadPath: string;
+    file: File;
+    files: File[] & {
+        [fieldname: string]: File;
+    };
 };
 
 export type Response = express.Response & {
