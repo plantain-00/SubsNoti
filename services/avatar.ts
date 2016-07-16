@@ -55,7 +55,6 @@ function createAsync(seed: string, fileName: string) {
                 resolve(buffer);
             }
 
-
         });
     }).then(buffer => {
         const formData: any = {};

@@ -649,7 +649,6 @@ async function revokeApplication(caseName: string, applicationId: string) {
     return operate(caseName, body);
 }
 
-
 async function testVersion() {
     const version = await getVersion("getVersion");
 
@@ -776,7 +775,6 @@ export async function run() {
 
     await logout("logout-client");
 
-
     await testLogin();
 
     await testUser();
@@ -793,7 +791,6 @@ export async function run() {
     await testAccessToken(registeredApplication);
 
     await logout("logout");
-
 
     await login(clientLoginUrl!, "login-client-afterInvited");
     await getCurrentUser("getCurrentUser-client-afterInvited");
