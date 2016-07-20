@@ -1,7 +1,7 @@
 import * as libs from "../libs";
 import * as services from "../services";
 
-let client: any; // todo
+let client: libs.Redis.Redis;
 export const config = {
     host: process.env.SUBS_NOTI_REDIS_HOST || "localhost",
     port: process.env.SUBS_NOTI_REDIS_PORT || 6379,
@@ -31,9 +31,9 @@ export function del(key: string | number): Promise<number> {
 export function ttl(key: string | number): Promise<number> {
     return client.ttl(key);
 }
-export function pexpire(key: string | number, milliseconds: number) {
-    client.pexpire(key, milliseconds);
-}
+// export function pexpire(key: string | number, milliseconds: number) {
+//     client.pexpire(key, milliseconds);
+// }
 
 // string
 

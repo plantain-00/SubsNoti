@@ -70,6 +70,7 @@ import * as bluebird from "bluebird";
 global.Promise = bluebird;
 
 import * as minimist from "minimist";
+import * as socketioRedis from "socket.io-redis";
 
 export {
     express, minimist, cookieParser, cookie, bodyParser,
@@ -77,11 +78,10 @@ export {
     mysql, mssql, uuid, moment, Redis,
     fs, validator, mongoose, semver, multer,
     request, qs, mime, xml2js, socket,
+    socketioRedis,
 };
 
 export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.difference");
 export const isEmpty: (value: any) => boolean = require("lodash.isempty");
 export const omit: (object: {}, props: string | string[]) => any = require("lodash.omit");
 export const pick: (object: {}, ...props: string[]) => any = require("lodash.pick");
-
-export const socketioRedis: (options: { port: number; host: string; }) => any = require("socket.io-redis");
