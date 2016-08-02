@@ -45,7 +45,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId 
 
     const authenticationCredential = cookie.trim();
 
-    // may be it is already in cache.
+    // maybe it is already in cache.
     const reply = await services.redis.get(services.settings.cacheKeys.user + authenticationCredential);
     if (reply) {
         return new libs.ObjectId(reply);

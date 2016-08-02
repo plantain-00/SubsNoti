@@ -12,9 +12,12 @@ import * as crypto from "crypto";
 import * as nodemailer from "nodemailer";
 import * as mysql from "mysql";
 import * as mssql from "mssql";
-export function md5(str: string) {
+export function md5(str: string): string {
     return crypto.createHash("md5").update(str).digest("hex");
 };
+export function sha256(str: string): string {
+    return crypto.createHash("sha256").update(str).digest("base64");
+}
 import * as uuid from "node-uuid";
 import * as moment from "moment";
 import * as Redis from "ioredis";

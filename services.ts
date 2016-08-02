@@ -32,11 +32,11 @@ import * as ip from "./services/ip";
 import * as xml from "./services/xml";
 
 export {
-error, email, response, db, redis, logger,
-frequency, authenticationCredential, mongo, seed, avatar,
-captcha, request, push, themeStatus, theme,
-version, router, rateLimit, tokens, scope,
-settings, utils, html, user, access_tokens,
-joined, applications, organizations, watched, ip,
-xml,
+    error, email, response, db, redis, logger,
+    frequency, authenticationCredential, mongo, seed, avatar,
+    captcha, request, push, themeStatus, theme,
+    version, router, rateLimit, tokens, scope,
+    settings, utils, html, user, access_tokens,
+    joined, applications, organizations, watched, ip,
+    xml,
 };

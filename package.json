@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "tslint": "tslint \"controllers/**/*.ts\" \"data_maintenances/*.ts\" \"services/*.ts\" \"tests/*.ts\" \"*.ts\"",
-    "init": "npm i -g typescript@beta tslint npm-check"
+    "build": "tsc"
   },
   "dependencies": {
     "bluebird": "^3.4.1",
@@ -69,6 +69,7 @@
     "exit": "^0.1.2",
     "faker": "^3.1.0",
     "mkdirp": "^0.5.1",
+    "tslint": "^3.14.0",
     "typescript": "^2.0.0"
   },
   "engines": {

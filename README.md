@@ -2,9 +2,8 @@
 [![devDependency Status](https://david-dm.org/plantain-00/SubsNoti/dev-status.svg)](https://david-dm.org/plantain-00/SubsNoti#info=devDependencies)
 [![Build Status](https://travis-ci.org/plantain-00/SubsNoti.svg?branch=master)](https://travis-ci.org/plantain-00/SubsNoti)
 
-# tools and global npm packages
+# tools
 
-+ `npm run init`
 + mongodb
 + redis
 + node-gyp build environment
@@ -13,5 +12,5 @@
 # development
 
 + `npm i`
-+ `tsc`
++ `npm run build`
 + `npm run tslint`
