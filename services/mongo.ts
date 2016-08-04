@@ -25,10 +25,10 @@ export type OrganizationDocument = libs.mongoose.Document & {
     name: string;
     status: types.OrganizationStatus;
 
-    creator: UserDocument | libs.ObjectId;
-    members: Array<UserDocument | libs.ObjectId>;
+    creator: UserDocument | libs.mongoose.Types.ObjectId;
+    members: Array<UserDocument | libs.mongoose.Types.ObjectId>;
 
-    themes: Array<ThemeDocument | libs.ObjectId>;
+    themes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
 };
 
 export type UserDocument = libs.mongoose.Document & {
@@ -38,12 +38,12 @@ export type UserDocument = libs.mongoose.Document & {
     status: types.UserStatus;
     avatar: string;
 
-    joinedOrganizations: Array<OrganizationDocument | libs.ObjectId>;
-    createdOrganizations: Array<OrganizationDocument | libs.ObjectId>;
+    joinedOrganizations: Array<OrganizationDocument | libs.mongoose.Types.ObjectId>;
+    createdOrganizations: Array<OrganizationDocument | libs.mongoose.Types.ObjectId>;
 
-    ownedThemes: Array<ThemeDocument | libs.ObjectId>;
-    watchedThemes: Array<ThemeDocument | libs.ObjectId>;
-    createdThemes: Array<ThemeDocument | libs.ObjectId>;
+    ownedThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
+    watchedThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
+    createdThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
 };
 
 export type ThemeDocument = libs.mongoose.Document & {
@@ -53,11 +53,11 @@ export type ThemeDocument = libs.mongoose.Document & {
     createTime: Date;
     updateTime: Date;
 
-    creator: UserDocument | libs.ObjectId;
-    owners: Array<UserDocument | libs.ObjectId>;
-    watchers: Array<UserDocument | libs.ObjectId>;
+    creator: UserDocument | libs.mongoose.Types.ObjectId;
+    owners: Array<UserDocument | libs.mongoose.Types.ObjectId>;
+    watchers: Array<UserDocument | libs.mongoose.Types.ObjectId>;
 
-    organization: OrganizationDocument | libs.ObjectId;
+    organization: OrganizationDocument | libs.mongoose.Types.ObjectId;
 };
 
 export type ApplicationDocument = libs.mongoose.Document & {
@@ -68,7 +68,7 @@ export type ApplicationDocument = libs.mongoose.Document & {
     clientId: string;
     clientSecret: string;
 
-    creator: UserDocument | libs.ObjectId;
+    creator: UserDocument | libs.mongoose.Types.ObjectId;
 };
 
 export type AccessTokenDocument = libs.mongoose.Document & {
@@ -77,9 +77,9 @@ export type AccessTokenDocument = libs.mongoose.Document & {
     scopes: string[];
     lastUsed: Date;
 
-    creator: UserDocument | libs.ObjectId;
+    creator: UserDocument | libs.mongoose.Types.ObjectId;
 
-    application: ApplicationDocument | libs.ObjectId;
+    application: ApplicationDocument | libs.mongoose.Types.ObjectId;
 };
 
 export function connect() {

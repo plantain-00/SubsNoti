@@ -14,7 +14,7 @@ export async function regenerate(request: libs.Request, response: libs.Response)
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    const id = new libs.ObjectId(params.access_token_id);
+    const id = new libs.mongoose.Types.ObjectId(params.access_token_id);
 
     // the sccess token should be available.
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
@@ -143,7 +143,7 @@ export async function update(request: libs.Request, response: libs.Response) {
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeAccessToken);
 
-    const id = new libs.ObjectId(params.access_token_id);
+    const id = new libs.mongoose.Types.ObjectId(params.access_token_id);
 
     // the sccess token should be available.
     const accessToken = await services.mongo.AccessToken.findOne({ _id: id, application: null })
@@ -169,7 +169,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     const params: { access_token_id: string; } = request.params;
     services.utils.assert(typeof params.access_token_id === "string" && libs.validator.isMongoId(params.access_token_id), services.error.parameterIsInvalid, "access_token_id");
 
-    const id = new libs.ObjectId(params.access_token_id);
+    const id = new libs.mongoose.Types.ObjectId(params.access_token_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteAccessToken);
 
@@ -219,10 +219,10 @@ export async function createForApplication(request: libs.Request, response: libs
     }).exec();
     services.utils.assert(application, services.error.parameterIsInvalid, "client id or client secret");
 
-    const creator = new libs.ObjectId(json.creator);
+    const creator = new libs.mongoose.Types.ObjectId(json.creator);
 
     const accessTokenValue = services.utils.generateUuid();
-    const applicationId = new libs.ObjectId(json.application);
+    const applicationId = new libs.mongoose.Types.ObjectId(json.application);
 
     // remove old access token, the old one may have smaller scopes
     await services.mongo.AccessToken.remove({

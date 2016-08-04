@@ -19,8 +19,8 @@ export async function authenticateHeader(request: libs.Request): Promise<void> {
             .exec();
         if (accessToken) {
             request.scopes = accessToken.scopes;
-            request.application = accessToken.application as libs.ObjectId;
-            request.userId = accessToken.creator as libs.ObjectId;
+            request.application = accessToken.application as libs.mongoose.Types.ObjectId;
+            request.userId = accessToken.creator as libs.mongoose.Types.ObjectId;
 
             accessToken.lastUsed = new Date();
             accessToken.save();
@@ -38,7 +38,7 @@ export async function authenticate(request: libs.Request): Promise<void> {
 /**
  * identify current user.
  */
-export async function authenticateCookie(cookie: string): Promise<libs.ObjectId | null> {
+export async function authenticateCookie(cookie: string): Promise<libs.mongoose.Types.ObjectId | null> {
     if (typeof cookie !== "string") {
         return null;
     }
@@ -48,7 +48,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId 
     // maybe it is already in cache.
     const reply = await services.redis.get(services.settings.cacheKeys.user + authenticationCredential);
     if (reply) {
-        return new libs.ObjectId(reply);
+        return new libs.mongoose.Types.ObjectId(reply);
     }
 
     const tmp = authenticationCredential.split("g");
@@ -58,7 +58,7 @@ export async function authenticateCookie(cookie: string): Promise<libs.ObjectId 
 
     const milliseconds = parseInt(tmp[1], 16);
     const userId = tmp[2];
-    const id = new libs.ObjectId(userId);
+    const id = new libs.mongoose.Types.ObjectId(userId);
     const now = new Date().getTime();
 
     // should not expire.

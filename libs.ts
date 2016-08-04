@@ -28,13 +28,11 @@ import * as semver from "semver";
 import * as multer from "multer";
 import * as request from "request";
 import * as qs from "qs";
-import ObjectId = mongoose.Types.ObjectId;
-export { ObjectId };
 export const colors = require("colors");
 import * as mime from "mime";
 import * as xml2js from "xml2js";
 
-type File = {
+export type File = {
     fieldname: string;
     originalname: string;
     encoding: string;
@@ -51,11 +49,11 @@ export type Request = express.Request & {
     v: string;
     // files upload
     // user's id for validation in cookies or headers
-    userId: ObjectId | null;
+    userId: mongoose.Types.ObjectId | null;
     // scopes that this access token can be used in
     scopes: string[];
     // application's id that this access token can be used for
-    application: ObjectId;
+    application: mongoose.Types.ObjectId;
     uploadPath: string;
     file: File;
     files: File[] & {

@@ -21,7 +21,7 @@ export async function get(request: libs.Request, response: libs.Response) {
         order: string;
     } = request.query;
 
-    const organizationId = new libs.ObjectId(params.organization_id);
+    const organizationId = new libs.mongoose.Types.ObjectId(params.organization_id);
 
     let page = 1;
     if (typeof query.page === "string"
@@ -48,7 +48,7 @@ export async function get(request: libs.Request, response: libs.Response) {
             .select("joinedOrganizations")
             .exec();
 
-        services.utils.assert(user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
+        services.utils.assert(user.joinedOrganizations.find((o: libs.mongoose.Types.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
     }
 
     let themesQuery = services.mongo.Theme.find({
@@ -103,7 +103,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
         id: theme._id.toHexString(),
         title: theme.title,
         detail: theme.detail,
-        organizationId: (theme.organization as libs.ObjectId).toHexString(),
+        organizationId: (theme.organization as libs.mongoose.Types.ObjectId).toHexString(),
         createTime: theme.createTime.toISOString(),
         updateTime: theme.updateTime ? theme.updateTime.toISOString() : undefined,
         status: services.themeStatus.getType(theme.status),
@@ -151,7 +151,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     } = request.body;
     services.utils.assert(typeof body.organizationId === "string" && libs.validator.isMongoId(body.organizationId), services.error.parameterIsInvalid, "organizationId");
 
-    const organizationId = new libs.ObjectId(body.organizationId);
+    const organizationId = new libs.mongoose.Types.ObjectId(body.organizationId);
 
     const themeTitle = typeof body.themeTitle === "string" ? libs.validator.trim(body.themeTitle) : "";
     services.utils.assert(themeTitle !== "", services.error.parameterIsMissed, "themeTitle");
@@ -163,7 +163,7 @@ export async function create(request: libs.Request, response: libs.Response) {
     // the organization should be public organization, or current user should join in it.
     const user = await services.mongo.User.findOne({ _id: request.userId })
         .exec();
-    services.utils.assert(organizationId.equals(services.seed.publicOrganizationId) || user.joinedOrganizations.find((o: libs.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organizationId.equals(services.seed.publicOrganizationId) || user.joinedOrganizations.find((o: libs.mongoose.Types.ObjectId) => o.equals(organizationId)), services.error.theOrganizationIsPrivate);
 
     const organization = await services.mongo.Organization.findOne({ _id: organizationId })
         .select("themes")
@@ -260,7 +260,7 @@ export async function update(request: libs.Request, response: libs.Response) {
         status = types.ThemeStatus.closed;
     }
 
-    const id = new libs.ObjectId(params.theme_id);
+    const id = new libs.mongoose.Types.ObjectId(params.theme_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeTheme);
 
@@ -271,7 +271,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     services.utils.assert(theme, services.error.parameterIsInvalid, "theme_id");
 
     // current user should be one of the theme's owners.
-    services.utils.assert(theme.owners.find((o: libs.ObjectId) => o.equals(request.userId!)), services.error.theThemeIsNotOwnedByYou);
+    services.utils.assert(theme.owners.find((o: libs.mongoose.Types.ObjectId) => o.equals(request.userId!)), services.error.theThemeIsNotOwnedByYou);
 
     if (title) {
         theme.title = title;

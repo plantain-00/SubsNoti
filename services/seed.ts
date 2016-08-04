@@ -2,7 +2,7 @@ import * as types from "../share/types";
 import * as libs from "../libs";
 import * as services from "../services";
 
-export let publicOrganizationId: libs.ObjectId;
+export let publicOrganizationId: libs.mongoose.Types.ObjectId;
 export const publicOrganizationName = "public";
 
 export async function init() {

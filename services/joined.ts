@@ -51,7 +51,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
     services.utils.assert(typeof organization_id === "string" && libs.validator.isMongoId(organization_id), services.error.parameterIsInvalid, "organization_id");
     services.utils.assert(typeof user_email === "string" && libs.validator.isEmail(user_email), services.error.parameterIsInvalid, "user_email");
 
-    const organizationId = new libs.ObjectId(organization_id);
+    const organizationId = new libs.mongoose.Types.ObjectId(organization_id);
     const email = libs.validator.trim(user_email).toLowerCase();
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeOrganization);
@@ -69,10 +69,10 @@ export async function invite(request: libs.Request, response: libs.Response) {
     services.utils.assert(user, services.error.parameterIsInvalid, "user_email");
 
     // current user should be a member of the organization
-    services.utils.assert(organization.members.find((m: libs.ObjectId) => m.equals(request.userId!)), services.error.theOrganizationIsPrivate);
+    services.utils.assert(organization.members.find((m: libs.mongoose.Types.ObjectId) => m.equals(request.userId!)), services.error.theOrganizationIsPrivate);
 
     // if the user is already a member, do nothing.
-    if (!organization.members.find((m: libs.ObjectId) => m.equals(user._id))) {
+    if (!organization.members.find((m: libs.mongoose.Types.ObjectId) => m.equals(user._id))) {
         user.joinedOrganizations.push(organizationId);
         organization.members.push(user._id);
 

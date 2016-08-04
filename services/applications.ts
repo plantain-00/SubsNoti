@@ -12,7 +12,7 @@ export async function reset(request: libs.Request, response: libs.Response) {
     const {application_id} = request.params;
     services.utils.assert(typeof application_id === "string" && libs.validator.isMongoId(application_id), services.error.parameterIsInvalid, "application_id");
 
-    const id = new libs.ObjectId(application_id);
+    const id = new libs.mongoose.Types.ObjectId(application_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
@@ -43,7 +43,7 @@ export async function getAuthorized(request: libs.Request, response: libs.Respon
         .exec();
 
     for (const {application} of accessTokens) {
-        await services.mongo.User.populate(application, "creator");
+        await services.mongo.User.populate(application, "creator" as any);
     }
 
     const result: types.ApplicationsResult = {
@@ -80,7 +80,7 @@ export async function removeAuthorized(request: libs.Request, response: libs.Res
     const params: { application_id: string; } = request.params;
     services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
-    const id = new libs.ObjectId(params.application_id);
+    const id = new libs.mongoose.Types.ObjectId(params.application_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteApplication);
 
@@ -191,7 +191,7 @@ export async function update(request: libs.Request, response: libs.Response) {
     services.utils.assert(typeof body.authorizationCallbackUrl === "string" && libs.validator.isURL(body.authorizationCallbackUrl), services.error.parameterIsInvalid, "authorizationCallbackUrl");
     const authorizationCallbackUrl = libs.validator.trim(body.authorizationCallbackUrl);
 
-    const id = new libs.ObjectId(params.application_id);
+    const id = new libs.mongoose.Types.ObjectId(params.application_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.writeApplication);
 
@@ -221,7 +221,7 @@ export async function remove(request: libs.Request, response: libs.Response) {
     const params: { application_id: string; } = request.params;
     services.utils.assert(typeof params.application_id === "string" && libs.validator.isMongoId(params.application_id), services.error.parameterIsInvalid, "application_id");
 
-    const id = new libs.ObjectId(params.application_id);
+    const id = new libs.mongoose.Types.ObjectId(params.application_id);
 
     services.scope.shouldValidateAndContainScope(request, types.scopeNames.deleteApplication);
 
@@ -248,7 +248,7 @@ export async function get(request: libs.Request, response: libs.Response) {
     const params: { id: string; } = request.params;
     services.utils.assert(typeof params.id === "string" && libs.validator.isMongoId(params.id), services.error.parameterIsInvalid, "id");
 
-    const id = new libs.ObjectId(params.id);
+    const id = new libs.mongoose.Types.ObjectId(params.id);
     const application = await services.mongo.Application.findOne({ _id: id })
         .populate("creator")
         .exec();
