@@ -31,6 +31,7 @@ import * as qs from "qs";
 export const colors = require("colors");
 import * as mime from "mime";
 import * as xml2js from "xml2js";
+import * as helmet from "helmet";
 
 export type File = {
     fieldname: string;
@@ -79,7 +80,7 @@ export {
     mysql, mssql, uuid, moment, Redis,
     fs, validator, mongoose, semver, multer,
     request, qs, mime, xml2js, socket,
-    socketioRedis,
+    socketioRedis, helmet,
 };
 
 export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.difference");

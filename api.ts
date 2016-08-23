@@ -8,6 +8,8 @@ app.use(libs.cookieParser());
 app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 
+app.use(libs.helmet());
+
 app.set("trust proxy", true);
 
 services.version.route(app);

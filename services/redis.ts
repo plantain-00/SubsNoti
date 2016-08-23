@@ -218,3 +218,12 @@ export function rpop(key: string | number): Promise<string> {
 export function ltrim(key: string | number, start: number, stop: number) {
     client.ltrim(key, start, stop);
 }
+export function rpush(key: string | number, value: string | number) {
+    client.rpush(key, value);
+}
+export function lpop(key: string | number): Promise<string> {
+    return client.lpop(key);
+}
+export function lrem(key: string | number, count: number, value: string | number) {
+    client.lrem(key, count, value);
+}

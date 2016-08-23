@@ -10,6 +10,8 @@ app.use(libs.bodyParser.json());
 app.use(libs.bodyParser.urlencoded({ extended: true }));
 app.use(libs.bodyParser.text());
 
+app.use(libs.helmet());
+
 app.set("trust proxy", true);
 
 services.redis.connect();
