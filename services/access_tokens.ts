@@ -214,8 +214,8 @@ export async function createForApplication(request: libs.Request, response: libs
     services.utils.assert(state === json.state, services.error.parameterIsInvalid, "state");
 
     const application = await services.mongo.Application.findOne({
-        clientId: clientId,
-        clientSecret: clientSecret,
+        clientId,
+        clientSecret,
     }).exec();
     services.utils.assert(application, services.error.parameterIsInvalid, "client id or client secret");
 

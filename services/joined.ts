@@ -63,7 +63,7 @@ export async function invite(request: libs.Request, response: libs.Response) {
     services.utils.assert(organization, services.error.parameterIsInvalid, "organization_id");
 
     // the email should belong to one of users.
-    const user = await services.mongo.User.findOne({ email: email })
+    const user = await services.mongo.User.findOne({ email })
         .select("_id joinedOrganizations")
         .exec();
     services.utils.assert(user, services.error.parameterIsInvalid, "user_email");

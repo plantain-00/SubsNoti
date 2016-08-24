@@ -64,7 +64,7 @@ const storage = libs.multer.diskStorage({
     },
 });
 
-const upload = libs.multer({ storage: storage }).any();
+const upload = libs.multer({ storage }).any();
 
 const uploadAsync = (request: libs.Request, response: libs.Response) => {
     return new Promise((resolve, reject) => {

@@ -5,7 +5,7 @@ import * as services from "../services";
 const documentUrl = "/api/response.html";
 
 export function route(app: libs.express.Application) {
-    app.all("/api/*", async (request: libs.Request, response: libs.Response, next: Function) => {
+    app.all("/api/*", async (request: libs.Request, response: libs.Response, next: () => void) => {
         await services.authenticationCredential.authenticate(request);
 
         if (!request.userId) {

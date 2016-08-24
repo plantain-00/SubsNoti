@@ -149,7 +149,7 @@ export async function authorize(request: libs.Request, response: libs.Response) 
             return;
         }
 
-        const application = await services.mongo.Application.findOne({ clientId: clientId })
+        const application = await services.mongo.Application.findOne({ clientId })
             .exec();
         services.utils.assert(application, services.error.parameterIsInvalid, "client id");
 

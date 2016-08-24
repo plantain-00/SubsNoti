@@ -116,7 +116,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
         owners: (theme.owners as services.mongo.UserDocument[]).map(o => {
             const id = o._id.toHexString();
             return {
-                id: id,
+                id,
                 name: o.name,
                 email: o.email,
                 avatar: o.avatar || services.avatar.getDefaultName(id),
@@ -125,7 +125,7 @@ export function convert(theme: services.mongo.ThemeDocument): types.Theme {
         watchers: (theme.watchers as services.mongo.UserDocument[]).map(w => {
             const id = w._id.toHexString();
             return {
-                id: id,
+                id,
                 name: w.name,
                 email: w.email,
                 avatar: w.avatar || services.avatar.getDefaultName(id),

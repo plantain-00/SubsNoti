@@ -34,7 +34,7 @@ async function getVersion(caseName: string) {
 async function createCaptcha(guid: string, caseName: string) {
     const options = {
         url: apiUrl + "/api/captchas",
-        headers: headers,
+        headers,
         method: types.httpMethod.post,
         form: {
             id: guid,
@@ -51,7 +51,7 @@ async function createCaptcha(guid: string, caseName: string) {
 async function createToken(guid: string, code: string | undefined, caseName: string, email: string, name: string) {
     const options = {
         url: apiUrl + "/api/tokens",
-        headers: headers,
+        headers,
         method: types.httpMethod.post,
         form: { email, name, guid, code },
     };
@@ -568,7 +568,7 @@ async function confirm(caseName: string, code: string) {
 async function oauthAuthorize(caseName: string, clientId: string, state: string, code: string): Promise<string> {
     const options = {
         url: apiUrl + `/oauth/authorize`,
-        jar: jar,
+        jar,
         qs: {
             client_id: clientId,
             scopes: [types.scopeNames.readUser, types.scopeNames.readTheme].join(),
@@ -598,7 +598,7 @@ async function createAccessTokenForApplication(caseName: string, clientId: strin
     const options = {
         url: apiUrl + `/api/access_tokens`,
         method: types.httpMethod.post,
-        headers: headers,
+        headers,
         form: { clientId, clientSecret, state, code },
     };
     const [, body] = await services.request.request<types.AccessTokenResponse>(options);
