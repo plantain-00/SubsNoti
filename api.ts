@@ -10,6 +10,8 @@ app.use(libs.bodyParser.urlencoded({ extended: true }));
 
 app.use(libs.helmet());
 
+app.disable("x-powered-by");
+
 app.set("trust proxy", true);
 
 services.version.route(app);

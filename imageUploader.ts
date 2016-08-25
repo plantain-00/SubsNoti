@@ -14,6 +14,8 @@ app.use(libs.helmet());
 
 app.set("trust proxy", true);
 
+app.disable("x-powered-by");
+
 services.redis.connect();
 
 services.mongo.connect();
