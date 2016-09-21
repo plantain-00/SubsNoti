@@ -96,7 +96,7 @@ export function hdel(key: string | number, field: string | number) {
     client.hdel(key, field);
 }
 export function hincrbyfloat(key: string | number, field: string | number, increment: number): Promise<string> {
-    return (client as any)["hincrbyfloat"](key, field, increment);
+    return client.hincrbyfloat(key, field, increment);
 }
 
 // set

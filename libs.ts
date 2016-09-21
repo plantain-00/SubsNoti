@@ -73,6 +73,7 @@ global.Promise = bluebird;
 
 import * as minimist from "minimist";
 import * as socketioRedis from "socket.io-redis";
+import { __awaiter } from "tslib";
 
 export {
     express, minimist, cookieParser, cookie, bodyParser,
@@ -80,7 +81,7 @@ export {
     mysql, mssql, uuid, moment, Redis,
     fs, validator, mongoose, semver, multer,
     request, qs, mime, xml2js, socket,
-    socketioRedis, helmet,
+    socketioRedis, helmet, __awaiter,
 };
 
 export const difference: <T>(array1: T[], array2: T[]) => T[] = require("lodash.difference");
