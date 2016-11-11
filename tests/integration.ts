@@ -112,7 +112,7 @@ async function getCurrentUser(caseName: string, accessToken?: string) {
     const [, body] = await services.request.request<types.CurrentUserResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "user");
+    const result: any = libs.omit(body, "user");
     result["user"] = libs.omit(body.user, ["id", "avatar"]);
     await operate(caseName, result);
 
@@ -144,7 +144,7 @@ async function getCreatedOrganizations(caseName: string) {
     const [, body] = await services.request.request<types.OrganizationsResponse>(options);
     services.utils.assert(body.status === 0 && body.organizations, body);
 
-    const result = libs.omit(body, "organizations");
+    const result: any = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
     await operate(caseName, result);
 
@@ -160,7 +160,7 @@ async function getJoinedOrganizations(caseName: string) {
     const [, body] = await services.request.request<types.OrganizationsResponse>(options);
     services.utils.assert(body.status === 0 && body.organizations, body);
 
-    const result = libs.omit(body, "organizations");
+    const result: any = libs.omit(body, "organizations");
     result["organizations"] = body.organizations.map(organization => libs.omit(organization, "id"));
     await operate(caseName, result);
 
@@ -179,9 +179,9 @@ async function getThemesOfOrganization(organizationId: string, caseName: string)
     const [, body] = await services.request.request<types.ThemesResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "themes");
+    const result: any = libs.omit(body, "themes");
     result.themes = body.themes.map(theme => {
-        const t = libs.pick(theme, "title", "detail", "status");
+        const t: any = libs.pick(theme, "title", "detail", "status");
         t.creator = libs.pick(theme.creator, "name", "email");
         t.owners = theme.owners.map(owner => libs.pick(owner, "name", "email"));
         t.watchers = theme.watchers.map(watcher => libs.pick(watcher, "name", "email"));
@@ -360,7 +360,7 @@ async function getRegisteredApplications(caseName: string) {
     const [, body] = await services.request.request<types.ApplicationsResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "applications");
+    const result: any = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
         return {
             name: application.name,
@@ -447,7 +447,7 @@ async function getApplication(caseName: string, applicationId: string) {
     const [, body] = await services.request.request<types.ApplicationResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "application");
+    const result: any = libs.omit(body, "application");
     result.application = {
         name: body.application.name,
         homeUrl: body.application.homeUrl,
@@ -471,7 +471,7 @@ async function getAccessTokens(caseName: string) {
     const [, body] = await services.request.request<types.AccessTokensResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "accessTokens");
+    const result: any = libs.omit(body, "accessTokens");
     result.accessTokens = body.accessTokens.map(accessToken => {
         return {
             description: accessToken.description,
@@ -619,7 +619,7 @@ async function getAuthorizedApplications(caseName: string) {
     const [, body] = await services.request.request<types.ApplicationsResponse>(options);
     services.utils.assert(body.status === 0, body);
 
-    const result = libs.omit(body, "applications");
+    const result: any = libs.omit(body, "applications");
     result.applications = body.applications.map(application => {
         return {
             name: application.name,
