@@ -91,7 +91,7 @@ export async function githubCode(request: libs.Request, response: libs.Response)
         const [, emailJson] = await services.request.request<{ email: string; verified: boolean; primary: boolean; }[]>({
             url: "https://api.github.com/user/emails",
             headers: {
-                Authorization: `token ${accessToken}`,
+                "Authorization": `token ${accessToken}`,
                 "User-Agent": "SubsNoti",
             },
             method: types.httpMethod.get,

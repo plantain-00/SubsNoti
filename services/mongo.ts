@@ -17,7 +17,7 @@ export let Theme: libs.mongoose.Model<ThemeDocument>;
 export let Application: libs.mongoose.Model<ApplicationDocument>;
 export let AccessToken: libs.mongoose.Model<AccessTokenDocument>;
 
-export type MongooseArray<T> = Array<T> & {
+export type MongooseArray<T> = T[] & {
     pull: (t: T) => void;
 };
 
@@ -26,9 +26,9 @@ export type OrganizationDocument = libs.mongoose.Document & {
     status: types.OrganizationStatus;
 
     creator: UserDocument | libs.mongoose.Types.ObjectId;
-    members: Array<UserDocument | libs.mongoose.Types.ObjectId>;
+    members: (UserDocument | libs.mongoose.Types.ObjectId)[];
 
-    themes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
+    themes: (ThemeDocument | libs.mongoose.Types.ObjectId)[];
 };
 
 export type UserDocument = libs.mongoose.Document & {
@@ -38,12 +38,12 @@ export type UserDocument = libs.mongoose.Document & {
     status: types.UserStatus;
     avatar: string;
 
-    joinedOrganizations: Array<OrganizationDocument | libs.mongoose.Types.ObjectId>;
-    createdOrganizations: Array<OrganizationDocument | libs.mongoose.Types.ObjectId>;
+    joinedOrganizations: (OrganizationDocument | libs.mongoose.Types.ObjectId)[];
+    createdOrganizations: (OrganizationDocument | libs.mongoose.Types.ObjectId)[];
 
-    ownedThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
-    watchedThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
-    createdThemes: Array<ThemeDocument | libs.mongoose.Types.ObjectId>;
+    ownedThemes: (ThemeDocument | libs.mongoose.Types.ObjectId)[];
+    watchedThemes: (ThemeDocument | libs.mongoose.Types.ObjectId)[];
+    createdThemes: (ThemeDocument | libs.mongoose.Types.ObjectId)[];
 };
 
 export type ThemeDocument = libs.mongoose.Document & {
@@ -54,8 +54,8 @@ export type ThemeDocument = libs.mongoose.Document & {
     updateTime: Date;
 
     creator: UserDocument | libs.mongoose.Types.ObjectId;
-    owners: Array<UserDocument | libs.mongoose.Types.ObjectId>;
-    watchers: Array<UserDocument | libs.mongoose.Types.ObjectId>;
+    owners: (UserDocument | libs.mongoose.Types.ObjectId)[];
+    watchers: (UserDocument | libs.mongoose.Types.ObjectId)[];
 
     organization: OrganizationDocument | libs.mongoose.Types.ObjectId;
 };
